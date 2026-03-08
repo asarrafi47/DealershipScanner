@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Listings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="page">
+
+        <nav class="topbar">
+            <div class="logo">Dealership Scanner</div>
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/listings">Listings</a>
+                <a href="/login">Logout</a>
+            </div>
+        </nav>
+
+        <section class="page-header">
+            <p class="eyebrow">Inventory</p>
+            <h1>Listings</h1>
+            <p class="hero-text">
+                Browse available vehicles in a clean, modern layout.
+            </p>
+        </section>
+
+        <section class="listings-grid">
+
+            <div class="listing-card">
+                <div class="listing-image"></div>
+                <div class="listing-content">
+                    <h2>2022 BMW M340i</h2>
+                    <p class="listing-price">$48,995</p>
+                    <p class="listing-meta">32,000 miles • Automatic • Charlotte, NC</p>
+                    <button class="secondary-button">View Details</button>
+                </div>
+            </div>
+
+            <div class="listing-card">
+                <div class="listing-image"></div>
+                <div class="listing-content">
+                    <h2>2021 Porsche Macan S</h2>
+                    <p class="listing-price">$56,400</p>
+                    <p class="listing-meta">21,500 miles • Automatic • Atlanta, GA</p>
+                    <button class="secondary-button">View Details</button>
+                </div>
+            </div>
+
+            <div class="listing-card">
+                <div class="listing-image"></div>
+                <div class="listing-content">
+                    <h2>2023 Audi S5 Sportback</h2>
+                    <p class="listing-price">$52,800</p>
+                    <p class="listing-meta">14,200 miles • Automatic • Tampa, FL</p>
+                    <button class="secondary-button">View Details</button>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

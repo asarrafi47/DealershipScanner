@@ -1,36 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>Login</title>
-
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
-<div class="container">
+    <div class="page">
 
-<h2>Login</h2>
+        <nav class="topbar">
+            <div class="logo">Dealership Scanner</div>
+            <div class="nav-links">
+                <a href="/register">Create Account</a>
+            </div>
+        </nav>
 
-<form method="POST" action="/login">
+        <section class="auth-section">
+            <div class="auth-card">
+                <p class="eyebrow">Welcome</p>
+                <h1>Login</h1>
 
-<label>Username or Email</label>
-<input type="text" name="login" required>
+                {% if error %}
+                <div class="error-box">{{ error }}</div>
+                {% endif %}
 
-<label>Password</label>
-<input type="password" name="password" required>
+                <form method="POST" action="/login" class="auth-form">
+                    <div class="field-group">
+                        <label>Username or Email</label>
+                        <input type="text" name="login" required>
+                    </div>
 
-<button type="submit">Login</button>
+                    <div class="field-group">
+                        <label>Password</label>
+                        <input type="password" name="password" required>
+                    </div>
 
-</form>
+                    <button type="submit" class="primary-button full-width">Login</button>
+                </form>
 
-<a href="/register">Create an account</a>
+                <p class="auth-footer">Don't have an account? <a href="/register">Create one</a></p>
+            </div>
+        </section>
 
-</div>
+    </div>
 
-<script src="{{ url_for('static', filename='main.js') }}"></script>
-
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

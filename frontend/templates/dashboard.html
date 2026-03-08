@@ -1,24 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>Dashboard</title>
-
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
-<div class="container">
+    <div class="page">
 
-<h1>Dashboard</h1>
+        <nav class="topbar">
+            <div class="logo">Dealership Scanner</div>
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/listings">Listings</a>
+                <a href="/login">Logout</a>
+            </div>
+        </nav>
 
-<p style="text-align:center;">You are logged in.</p>
+        <section class="hero">
+            <div class="hero-content">
+                <p class="eyebrow">Welcome Back</p>
+                <h1>Dashboard</h1>
+                <p class="hero-text">
+                    Search inventory, view results, and keep your workflow organized.
+                </p>
+                <a href="/listings" class="primary-button">View Listings</a>
+            </div>
+        </section>
 
-</div>
+        <section class="dashboard-grid">
+            <div class="info-card">
+                <h2>Quick Search</h2>
+                <p>Start a new vehicle search and filter by what matters most.</p>
+            </div>
 
-<script src="{{ url_for('static', filename='main.js') }}"></script>
+            <div class="info-card">
+                <h2>Saved Results</h2>
+                <p>Keep track of vehicles you want to revisit later.</p>
+            </div>
 
+            <div class="info-card">
+                <h2>Recent Activity</h2>
+                <p>See the latest searches and listing views in one place.</p>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

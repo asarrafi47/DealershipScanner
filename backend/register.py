@@ -12,5 +12,3 @@ def save_users(username, email, password):
     conn.commit()
     conn.close()
 
-    return redirect("/dashboard")
-

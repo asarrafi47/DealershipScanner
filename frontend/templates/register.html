@@ -1,39 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>Register</title>
-
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
-<div class="container">
+    <div class="page">
 
-<h2>Create Account</h2>
+        <nav class="topbar">
+            <div class="logo">Dealership Scanner</div>
+            <div class="nav-links">
+                <a href="/login">Login</a>
+            </div>
+        </nav>
 
-<form method="POST" action="/register">
+        <section class="auth-section">
+            <div class="auth-card">
+                <p class="eyebrow">Get Started</p>
+                <h1>Create Account</h1>
 
-<label>Username</label>
-<input type="text" name="username" required>
+                <form method="POST" action="/register" class="auth-form">
+                    <div class="field-group">
+                        <label>Username</label>
+                        <input type="text" name="username" required>
+                    </div>
 
-<label>Email</label>
-<input type="text" name="email" required>
+                    <div class="field-group">
+                        <label>Email</label>
+                        <input type="text" name="email" required>
+                    </div>
 
-<label>Password</label>
-<input type="password" name="password" required>
+                    <div class="field-group">
+                        <label>Password</label>
+                        <input type="password" name="password" required>
+                    </div>
 
-<button type="submit">Register</button>
+                    <button type="submit" class="primary-button full-width">Register</button>
+                </form>
 
-</form>
+                <p class="auth-footer">Already have an account? <a href="/login">Login</a></p>
+            </div>
+        </section>
 
-<a href="/login">Already have an account? Login</a>
+    </div>
 
-</div>
-
-<script src="{{ url_for('static', filename='main.js') }}"></script>
-
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
