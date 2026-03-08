@@ -257,6 +257,29 @@ h1 {
     border-color: rgba(255, 255, 255, 0.3);
 }
 
+.search-select {
+    background: #141414;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: #ffffff;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    width: 100%;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+    transition: border-color 0.2s ease;
+}
+
+.search-select:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
 .full-width {
     width: 100%;
     text-align: center;
@@ -279,9 +302,192 @@ h1 {
     text-decoration: underline;
 }
 
+/* ── Search ── */
+
+.search-section {
+    padding: 0 48px 48px 48px;
+}
+
+.search-form {
+    background: #111111;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 20px;
+    padding: 28px;
+}
+
+.search-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.search-row .field-group {
+    flex: 1;
+    min-width: 140px;
+}
+
+.search-btn {
+    flex-shrink: 0;
+    height: 50px;
+    padding: 0 28px;
+    margin-bottom: 0;
+}
+
+/* ── Results ── */
+
+.results-section {
+    padding: 0 48px 64px 48px;
+}
+
+.results-count {
+    font-size: 13px;
+    color: #888;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.result-card {
+    background: #111111;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: block;
+}
+
+.result-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+.result-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    background-color: #1a1a1a;
+}
+
+.result-content {
+    padding: 20px;
+}
+
+.result-content h2 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.result-price {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.result-dealer {
+    font-size: 13px;
+    color: #888;
+}
+
+.no-results {
+    color: #888;
+    font-size: 15px;
+    padding: 40px 0;
+}
+
+/* ── Car Detail ── */
+
+.car-detail {
+    padding: 48px;
+    max-width: 1200px;
+}
+
+.back-link {
+    color: #888;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-block;
+    margin-bottom: 32px;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: #fff;
+}
+
+.car-detail-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+}
+
+.car-detail-image {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 20px;
+    background-size: cover;
+    background-position: center;
+    background-color: #1a1a1a;
+}
+
+.car-detail-info h1 {
+    font-size: 36px;
+    margin-bottom: 12px;
+}
+
+.car-detail-price {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 32px;
+}
+
+.car-specs {
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    margin-bottom: 32px;
+}
+
+.spec-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.spec-label {
+    font-size: 13px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.spec-value {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.car-detail-actions {
+    display: flex;
+    gap: 12px;
+}
+
 @media (max-width: 1000px) {
     .dashboard-grid,
-    .listings-grid {
+    .listings-grid,
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .car-detail-layout {
         grid-template-columns: 1fr;
     }
 
@@ -301,8 +507,19 @@ h1 {
     .hero,
     .page-header,
     .dashboard-grid,
-    .listings-grid {
+    .listings-grid,
+    .search-section,
+    .results-section,
+    .car-detail {
         padding-left: 20px;
         padding-right: 20px;
+    }
+
+    .search-row {
+        flex-direction: column;
+    }
+
+    .search-btn {
+        width: 100%;
     }
 }

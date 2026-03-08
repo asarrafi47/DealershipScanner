@@ -21,29 +21,99 @@
             <div class="hero-content">
                 <p class="eyebrow">Welcome Back</p>
                 <h1>Dashboard</h1>
-                <p class="hero-text">
-                    Search inventory, view results, and keep your workflow organized.
-                </p>
-                <a href="/listings" class="primary-button">View Listings</a>
+                <p class="hero-text">Search local inventory across dealerships in your area.</p>
             </div>
         </section>
 
+        <section class="search-section">
+            <form class="search-form" method="GET" action="/search">
+                <div class="search-row">
+                    <div class="field-group">
+                        <label>Make</label>
+                        <input type="text" name="make" placeholder="e.g. BMW" value="{{ query.make if query else '' }}">
+                    </div>
+                    <div class="field-group">
+                        <label>Model</label>
+                        <input type="text" name="model" placeholder="e.g. M3" value="{{ query.model if query else '' }}">
+                    </div>
+                    <div class="field-group">
+                        <label>Max Price</label>
+                        <select name="max_price" class="search-select">
+                            <option value="" {% if not query or not query.max_price %}selected{% endif %}>Any price</option>
+                            <option value="25000"  {% if query and query.max_price == '25000'  %}selected{% endif %}>Under $25,000</option>
+                            <option value="35000"  {% if query and query.max_price == '35000'  %}selected{% endif %}>Under $35,000</option>
+                            <option value="50000"  {% if query and query.max_price == '50000'  %}selected{% endif %}>Under $50,000</option>
+                            <option value="75000"  {% if query and query.max_price == '75000'  %}selected{% endif %}>Under $75,000</option>
+                            <option value="100000" {% if query and query.max_price == '100000' %}selected{% endif %}>Under $100,000</option>
+                            <option value="150000" {% if query and query.max_price == '150000' %}selected{% endif %}>Under $150,000</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label>Zip Code</label>
+                        <input type="text" name="zip_code" placeholder="e.g. 28202" maxlength="5" value="{{ query.zip_code if query else '' }}">
+                    </div>
+                    <div class="field-group">
+                        <label>Radius</label>
+                        <select name="radius" class="search-select">
+                            <option value="" {% if not query or not query.radius %}selected{% endif %}>Any distance</option>
+                            <option value="50"  {% if query and query.radius == '50'  %}selected{% endif %}>50 miles</option>
+                            <option value="100" {% if query and query.radius == '100' %}selected{% endif %}>100 miles</option>
+                            <option value="150" {% if query and query.radius == '150' %}selected{% endif %}>150 miles</option>
+                            <option value="200" {% if query and query.radius == '200' %}selected{% endif %}>200 miles</option>
+                            <option value="250" {% if query and query.radius == '250' %}selected{% endif %}>250 miles</option>
+                            <option value="300" {% if query and query.radius == '300' %}selected{% endif %}>300 miles</option>
+                            <option value="400" {% if query and query.radius == '400' %}selected{% endif %}>400 miles</option>
+                            <option value="500" {% if query and query.radius == '500' %}selected{% endif %}>500 miles</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="primary-button search-btn">Search</button>
+                </div>
+            </form>
+        </section>
+
+        {% if results is defined %}
+        <section class="results-section">
+            {% if results %}
+            <p class="results-count">{{ results|length }} vehicle{{ 's' if results|length != 1 }} found</p>
+            <div class="results-grid">
+                {% for car in results %}
+                <a href="/car/{{ car.id }}" class="result-card">
+                    <div class="result-image" style="background-image: url('{{ car.image_url }}')"></div>
+                    <div class="result-content">
+                        <h2>{{ car.title }}</h2>
+                        <p class="result-price">${{ "{:,.0f}".format(car.price) }}</p>
+                        <p class="result-dealer">
+                            {{ car.dealer_name }}
+                            {% if car.distance_miles is defined %}
+                             &middot; {{ car.distance_miles }} mi away
+                            {% endif %}
+                        </p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="no-results">No vehicles matched your search. Try broadening your filters.</p>
+            {% endif %}
+        </section>
+        {% endif %}
+
+        {% if results is not defined %}
         <section class="dashboard-grid">
             <div class="info-card">
                 <h2>Quick Search</h2>
-                <p>Start a new vehicle search and filter by what matters most.</p>
+                <p>Use the search bar above to filter by make, model, zip code, or price.</p>
             </div>
-
             <div class="info-card">
                 <h2>Saved Results</h2>
                 <p>Keep track of vehicles you want to revisit later.</p>
             </div>
-
             <div class="info-card">
                 <h2>Recent Activity</h2>
                 <p>See the latest searches and listing views in one place.</p>
             </div>
         </section>
+        {% endif %}
 
     </div>
 
