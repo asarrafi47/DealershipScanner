@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="../frontend/templates")
 
 
 @app.route("/")
@@ -25,11 +25,7 @@ def dashboard():
 
 def user():
     username = request.form["username"]
-    emailAddress = request.form["emailAddress"]
+    email = request.form["email"]
     password = request.form["password"]
 
-    return username, emailAddress, password
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    return username, email, password
