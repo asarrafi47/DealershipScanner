@@ -315,23 +315,224 @@ h1 {
     padding: 28px;
 }
 
-.search-row {
+.filter-row {
     display: flex;
-    gap: 16px;
-    align-items: flex-end;
     flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
 }
 
-.search-row .field-group {
-    flex: 1;
-    min-width: 140px;
+.search-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
 }
 
-.search-btn {
+/* ── Filter group (shared wrapper) ── */
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 130px;
+}
+
+.filter-plain-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #888;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* ── Custom checkbox trigger button ── */
+.filter-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #141414;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: #ffffff;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.2s ease;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.filter-trigger:hover,
+.filter-trigger.open {
+    border-color: rgba(255, 255, 255, 0.28);
+}
+
+.filter-trigger.has-selection {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.filter-trigger.electric-mode {
+    border-color: rgba(100, 200, 255, 0.5);
+    cursor: default;
+}
+
+.filter-trigger.electric-mode .filter-label-text {
+    color: #7dd3fc;
+}
+
+.filter-label-text {
+    font-size: 12px;
+    font-weight: 500;
+    color: #888;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.filter-trigger.has-selection .filter-label-text {
+    color: #fff;
+}
+
+.filter-count {
+    background: #ffffff;
+    color: #000000;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 99px;
+    padding: 1px 7px;
+    line-height: 1.6;
+}
+
+.chevron {
+    color: #666;
     flex-shrink: 0;
-    height: 50px;
-    padding: 0 28px;
-    margin-bottom: 0;
+    transition: transform 0.2s ease;
+}
+
+.filter-trigger.open .chevron {
+    transform: rotate(180deg);
+}
+
+/* ── Dropdown panel ── */
+.filter-dropdown {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 8px;
+    min-width: 190px;
+    max-height: 260px;
+    overflow-y: auto;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    margin-top: 4px;
+}
+
+.filter-dropdown.open {
+    display: block;
+}
+
+.filter-group {
+    position: relative;
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.filter-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #d0d0d0;
+    transition: background 0.15s ease;
+    user-select: none;
+}
+
+.filter-option:hover {
+    background: rgba(255,255,255,0.06);
+}
+
+.filter-option input[type="checkbox"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    border-radius: 5px;
+    background: transparent;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.filter-option input[type="checkbox"]:checked {
+    background: #ffffff;
+    border-color: #ffffff;
+}
+
+.filter-option input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 1.5px;
+    width: 5px;
+    height: 8px;
+    border: 2px solid #000;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+}
+
+/* ── Plain selects & input inside filter row ── */
+.search-select,
+.search-input {
+    background: #141414;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: #ffffff;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.2s ease;
+}
+
+.search-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+}
+
+.search-select:focus,
+.search-input:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Result meta line ── */
+.result-trim {
+    font-size: 12px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+}
+
+.result-meta {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 6px;
 }
 
 /* ── Results ── */

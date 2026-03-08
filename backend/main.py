@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect
 from backend.db.users_db import init_users_db, check_user, save_user
-from backend.db.inventory_db import init_inventory_db, search_cars, get_car_by_id
+from backend.db.inventory_db import init_inventory_db, search_cars, get_car_by_id, get_filter_options
 from backend.listings import listings_page
 
 app = Flask(
@@ -39,28 +39,48 @@ def register_page():
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html")
+    return render_template("dashboard.html", options=get_filter_options())
 
 
 @app.route("/search")
 def search():
-    make      = request.args.get("make", "").strip()
-    model     = request.args.get("model", "").strip()
+    g = request.args.getlist
+
     zip_code  = request.args.get("zip_code", "").strip()
     radius    = request.args.get("radius", "").strip()
     max_price = request.args.get("max_price", "").strip()
+    max_mileage = request.args.get("max_mileage", "").strip()
 
     results = search_cars(
-        make=make or None,
-        model=model or None,
+        makes=g("make") or None,
+        models=g("model") or None,
+        trims=g("trim") or None,
+        fuel_types=g("fuel_type") or None,
+        cylinders=g("cylinders") or None,
+        transmissions=g("transmission") or None,
+        drivetrains=g("drivetrain") or None,
+        exterior_colors=g("exterior_color") or None,
+        interior_colors=g("interior_color") or None,
         max_price=float(max_price) if max_price else None,
+        max_mileage=int(max_mileage) if max_mileage else None,
         zip_code=zip_code or None,
         radius_miles=float(radius) if radius else None,
     )
-    return render_template("dashboard.html", results=results, query={
-        "make": make, "model": model, "zip_code": zip_code,
-        "radius": radius, "max_price": max_price,
-    })
+
+    active = {
+        "make": g("make"), "model": g("model"), "trim": g("trim"),
+        "fuel_type": g("fuel_type"),
+        "cylinders": g("cylinders"), "transmission": g("transmission"),
+        "drivetrain": g("drivetrain"), "exterior_color": g("exterior_color"),
+        "interior_color": g("interior_color"),
+        "max_price": max_price, "max_mileage": max_mileage,
+        "zip_code": zip_code, "radius": radius,
+    }
+
+    return render_template("dashboard.html",
+                           results=results,
+                           active=active,
+                           options=get_filter_options())
 
 
 @app.route("/car/<int:car_id>")

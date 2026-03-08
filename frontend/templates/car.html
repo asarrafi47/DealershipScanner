@@ -44,12 +44,36 @@
                             <span class="spec-value">{{ car.model }}</span>
                         </div>
                         <div class="spec-row">
-                            <span class="spec-label">VIN</span>
-                            <span class="spec-value">{{ car.vin }}</span>
+                            <span class="spec-label">Trim</span>
+                            <span class="spec-value">{{ car.trim }}</span>
                         </div>
                         <div class="spec-row">
-                            <span class="spec-label">Zip Code</span>
-                            <span class="spec-value">{{ car.zip_code }}</span>
+                            <span class="spec-label">Mileage</span>
+                            <span class="spec-value">{{ "{:,}".format(car.mileage) }} mi</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Cylinders</span>
+                            <span class="spec-value">{{ "Electric" if car.cylinders == 0 else car.cylinders|string ~ "-cyl" }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Transmission</span>
+                            <span class="spec-value">{{ car.transmission }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Drivetrain</span>
+                            <span class="spec-value">{{ car.drivetrain }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Exterior</span>
+                            <span class="spec-value">{{ car.exterior_color }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Interior</span>
+                            <span class="spec-value">{{ car.interior_color }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">VIN</span>
+                            <span class="spec-value">{{ car.vin }}</span>
                         </div>
                     </div>
 

@@ -6,117 +6,319 @@
 </head>
 <body>
 
-    <div class="page">
+{# ── Embed the full relationship table as JSON so JS can cascade bidirectionally ── #}
+<script>
+const CAR_ROWS = {{ options.car_rows | tojson }};
+</script>
 
-        <nav class="topbar">
-            <div class="logo">Dealership Scanner</div>
-            <div class="nav-links">
-                <a href="/dashboard">Dashboard</a>
-                <a href="/listings">Listings</a>
-                <a href="/login">Logout</a>
-            </div>
-        </nav>
+<div class="page">
 
-        <section class="hero">
-            <div class="hero-content">
-                <p class="eyebrow">Welcome Back</p>
-                <h1>Dashboard</h1>
-                <p class="hero-text">Search local inventory across dealerships in your area.</p>
-            </div>
-        </section>
+    <nav class="topbar">
+        <div class="logo">Dealership Scanner</div>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/listings">Listings</a>
+            <a href="/login">Logout</a>
+        </div>
+    </nav>
 
-        <section class="search-section">
-            <form class="search-form" method="GET" action="/search">
-                <div class="search-row">
-                    <div class="field-group">
-                        <label>Make</label>
-                        <input type="text" name="make" placeholder="e.g. BMW" value="{{ query.make if query else '' }}">
+    <section class="hero">
+        <div class="hero-content">
+            <p class="eyebrow">Welcome Back</p>
+            <h1>Dashboard</h1>
+            <p class="hero-text">Search local inventory across dealerships in your area.</p>
+        </div>
+    </section>
+
+    <section class="search-section">
+        <form class="search-form" method="GET" action="/search" id="search-form">
+
+            <div class="filter-row">
+
+                {# ── Make ── #}
+                <div class="filter-group">
+                    <button type="button" class="filter-trigger" data-param="make">
+                        <span class="filter-label-text">Make</span>
+                        <span class="filter-count" id="count-make" style="display:none"></span>
+                        <svg class="chevron" viewBox="0 0 10 6" width="10"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="filter-dropdown" id="dropdown-make">
+                        <div class="filter-options" id="options-make">
+                            {% for make in options.makes %}
+                            <label class="filter-option">
+                                <input type="checkbox" name="make" value="{{ make }}"
+                                    {% if active is defined and make in active.get('make', []) %}checked{% endif %}>
+                                <span>{{ make }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
                     </div>
-                    <div class="field-group">
-                        <label>Model</label>
-                        <input type="text" name="model" placeholder="e.g. M3" value="{{ query.model if query else '' }}">
-                    </div>
-                    <div class="field-group">
-                        <label>Max Price</label>
-                        <select name="max_price" class="search-select">
-                            <option value="" {% if not query or not query.max_price %}selected{% endif %}>Any price</option>
-                            <option value="25000"  {% if query and query.max_price == '25000'  %}selected{% endif %}>Under $25,000</option>
-                            <option value="35000"  {% if query and query.max_price == '35000'  %}selected{% endif %}>Under $35,000</option>
-                            <option value="50000"  {% if query and query.max_price == '50000'  %}selected{% endif %}>Under $50,000</option>
-                            <option value="75000"  {% if query and query.max_price == '75000'  %}selected{% endif %}>Under $75,000</option>
-                            <option value="100000" {% if query and query.max_price == '100000' %}selected{% endif %}>Under $100,000</option>
-                            <option value="150000" {% if query and query.max_price == '150000' %}selected{% endif %}>Under $150,000</option>
-                        </select>
-                    </div>
-                    <div class="field-group">
-                        <label>Zip Code</label>
-                        <input type="text" name="zip_code" placeholder="e.g. 28202" maxlength="5" value="{{ query.zip_code if query else '' }}">
-                    </div>
-                    <div class="field-group">
-                        <label>Radius</label>
-                        <select name="radius" class="search-select">
-                            <option value="" {% if not query or not query.radius %}selected{% endif %}>Any distance</option>
-                            <option value="50"  {% if query and query.radius == '50'  %}selected{% endif %}>50 miles</option>
-                            <option value="100" {% if query and query.radius == '100' %}selected{% endif %}>100 miles</option>
-                            <option value="150" {% if query and query.radius == '150' %}selected{% endif %}>150 miles</option>
-                            <option value="200" {% if query and query.radius == '200' %}selected{% endif %}>200 miles</option>
-                            <option value="250" {% if query and query.radius == '250' %}selected{% endif %}>250 miles</option>
-                            <option value="300" {% if query and query.radius == '300' %}selected{% endif %}>300 miles</option>
-                            <option value="400" {% if query and query.radius == '400' %}selected{% endif %}>400 miles</option>
-                            <option value="500" {% if query and query.radius == '500' %}selected{% endif %}>500 miles</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="primary-button search-btn">Search</button>
                 </div>
-            </form>
-        </section>
 
-        {% if results is defined %}
-        <section class="results-section">
-            {% if results %}
-            <p class="results-count">{{ results|length }} vehicle{{ 's' if results|length != 1 }} found</p>
-            <div class="results-grid">
-                {% for car in results %}
-                <a href="/car/{{ car.id }}" class="result-card">
-                    <div class="result-image" style="background-image: url('{{ car.image_url }}')"></div>
-                    <div class="result-content">
-                        <h2>{{ car.title }}</h2>
-                        <p class="result-price">${{ "{:,.0f}".format(car.price) }}</p>
-                        <p class="result-dealer">
-                            {{ car.dealer_name }}
-                            {% if car.distance_miles is defined %}
-                             &middot; {{ car.distance_miles }} mi away
-                            {% endif %}
-                        </p>
+                {# ── Model ── #}
+                <div class="filter-group">
+                    <button type="button" class="filter-trigger" data-param="model">
+                        <span class="filter-label-text">Model</span>
+                        <span class="filter-count" id="count-model" style="display:none"></span>
+                        <svg class="chevron" viewBox="0 0 10 6" width="10"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="filter-dropdown" id="dropdown-model">
+                        <div class="filter-options" id="options-model">
+                            {% for make, model in options.model_rows %}
+                            <label class="filter-option" data-make="{{ make }}">
+                                <input type="checkbox" name="model" value="{{ model }}"
+                                    data-make="{{ make }}"
+                                    {% if active is defined and model in active.get('model', []) %}checked{% endif %}>
+                                <span>{{ model }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
                     </div>
-                </a>
-                {% endfor %}
+                </div>
+
+                {# ── Trim ── #}
+                <div class="filter-group">
+                    <button type="button" class="filter-trigger" data-param="trim">
+                        <span class="filter-label-text">Trim</span>
+                        <span class="filter-count" id="count-trim" style="display:none"></span>
+                        <svg class="chevron" viewBox="0 0 10 6" width="10"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="filter-dropdown" id="dropdown-trim">
+                        <div class="filter-options" id="options-trim">
+                            {% for make, model, trim in options.trim_rows %}
+                            <label class="filter-option" data-make="{{ make }}" data-model="{{ model }}">
+                                <input type="checkbox" name="trim" value="{{ trim }}"
+                                    data-make="{{ make }}" data-model="{{ model }}"
+                                    {% if active is defined and trim in active.get('trim', []) %}checked{% endif %}>
+                                <span>{{ trim }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                {# ── Fuel Type ── #}
+                <div class="filter-group">
+                    <button type="button" class="filter-trigger" data-param="fuel_type">
+                        <span class="filter-label-text">Fuel</span>
+                        <span class="filter-count" id="count-fuel_type" style="display:none"></span>
+                        <svg class="chevron" viewBox="0 0 10 6" width="10"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="filter-dropdown" id="dropdown-fuel_type">
+                        <div class="filter-options" id="options-fuel_type">
+                            {% for fuel in options.fuel_types %}
+                            <label class="filter-option">
+                                <input type="checkbox" name="fuel_type" value="{{ fuel }}"
+                                    {% if active is defined and fuel in active.get('fuel_type', []) %}checked{% endif %}>
+                                <span>{{ fuel }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                {# ── Cylinders — collapses to "Electric" when all-electric context ── #}
+                <div class="filter-group">
+                    <button type="button" class="filter-trigger" data-param="cylinders" id="trigger-cylinders">
+                        <span class="filter-label-text" id="label-cylinders">Cylinders</span>
+                        <span class="filter-count" id="count-cylinders" style="display:none"></span>
+                        <svg class="chevron" id="chevron-cylinders" viewBox="0 0 10 6" width="10"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="filter-dropdown" id="dropdown-cylinders">
+                        <div class="filter-options" id="options-cylinders">
+                            {% for item in options.cylinders %}
+                            <label class="filter-option">
+                                <input type="checkbox" name="cylinders" value="{{ item }}"
+                                    {% if active is defined and item|string in active.get('cylinders', []) %}checked{% endif %}>
+                                <span>{{ "Electric" if item == 0 else item ~ "-cyl" }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                {# ── Transmission ── #}
+                <div class="filter-group">
+                    <button type="button" class="filter-trigger" data-param="transmission">
+                        <span class="filter-label-text">Transmission</span>
+                        <span class="filter-count" id="count-transmission" style="display:none"></span>
+                        <svg class="chevron" viewBox="0 0 10 6" width="10"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="filter-dropdown" id="dropdown-transmission">
+                        <div class="filter-options" id="options-transmission">
+                            {% for t in options.transmissions %}
+                            <label class="filter-option">
+                                <input type="checkbox" name="transmission" value="{{ t }}"
+                                    {% if active is defined and t in active.get('transmission', []) %}checked{% endif %}>
+                                <span>{{ t }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                {# ── Drivetrain ── #}
+                <div class="filter-group">
+                    <button type="button" class="filter-trigger" data-param="drivetrain">
+                        <span class="filter-label-text">Drivetrain</span>
+                        <span class="filter-count" id="count-drivetrain" style="display:none"></span>
+                        <svg class="chevron" viewBox="0 0 10 6" width="10"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="filter-dropdown" id="dropdown-drivetrain">
+                        <div class="filter-options" id="options-drivetrain">
+                            {% for d in options.drivetrains %}
+                            <label class="filter-option">
+                                <input type="checkbox" name="drivetrain" value="{{ d }}"
+                                    {% if active is defined and d in active.get('drivetrain', []) %}checked{% endif %}>
+                                <span>{{ d }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                {# ── Exterior Color ── #}
+                <div class="filter-group">
+                    <button type="button" class="filter-trigger" data-param="exterior_color">
+                        <span class="filter-label-text">Ext. Color</span>
+                        <span class="filter-count" id="count-exterior_color" style="display:none"></span>
+                        <svg class="chevron" viewBox="0 0 10 6" width="10"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="filter-dropdown" id="dropdown-exterior_color">
+                        <div class="filter-options">
+                            {% for c in options.exterior_colors %}
+                            <label class="filter-option">
+                                <input type="checkbox" name="exterior_color" value="{{ c }}"
+                                    {% if active is defined and c in active.get('exterior_color', []) %}checked{% endif %}>
+                                <span>{{ c }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                {# ── Interior Color ── #}
+                <div class="filter-group">
+                    <button type="button" class="filter-trigger" data-param="interior_color">
+                        <span class="filter-label-text">Int. Color</span>
+                        <span class="filter-count" id="count-interior_color" style="display:none"></span>
+                        <svg class="chevron" viewBox="0 0 10 6" width="10"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="filter-dropdown" id="dropdown-interior_color">
+                        <div class="filter-options">
+                            {% for c in options.interior_colors %}
+                            <label class="filter-option">
+                                <input type="checkbox" name="interior_color" value="{{ c }}"
+                                    {% if active is defined and c in active.get('interior_color', []) %}checked{% endif %}>
+                                <span>{{ c }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                {# ── Max Price ── #}
+                <div class="filter-group">
+                    <label class="filter-plain-label">Max Price</label>
+                    <select name="max_price" class="search-select">
+                        <option value="" {% if not active or not active.max_price %}selected{% endif %}>Any</option>
+                        <option value="25000"  {% if active and active.max_price == '25000'  %}selected{% endif %}>$25,000</option>
+                        <option value="35000"  {% if active and active.max_price == '35000'  %}selected{% endif %}>$35,000</option>
+                        <option value="50000"  {% if active and active.max_price == '50000'  %}selected{% endif %}>$50,000</option>
+                        <option value="75000"  {% if active and active.max_price == '75000'  %}selected{% endif %}>$75,000</option>
+                        <option value="100000" {% if active and active.max_price == '100000' %}selected{% endif %}>$100,000</option>
+                        <option value="150000" {% if active and active.max_price == '150000' %}selected{% endif %}>$150,000</option>
+                    </select>
+                </div>
+
+                {# ── Max Mileage ── #}
+                <div class="filter-group">
+                    <label class="filter-plain-label">Max Mileage</label>
+                    <select name="max_mileage" class="search-select">
+                        <option value="" {% if not active or not active.max_mileage %}selected{% endif %}>Any</option>
+                        {% for mi in [5000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 75000, 100000] %}
+                        <option value="{{ mi }}" {% if active and active.max_mileage == mi|string %}selected{% endif %}>
+                            Under {{ "{:,}".format(mi) }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                {# ── Zip + Radius ── #}
+                <div class="filter-group">
+                    <label class="filter-plain-label">Zip Code</label>
+                    <input type="text" name="zip_code" placeholder="e.g. 28202" maxlength="5"
+                        value="{{ active.zip_code if active else '' }}" class="search-input">
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-plain-label">Radius</label>
+                    <select name="radius" class="search-select">
+                        <option value="" {% if not active or not active.radius %}selected{% endif %}>Any</option>
+                        {% for r in [50, 100, 150, 200, 250, 300, 400, 500] %}
+                        <option value="{{ r }}" {% if active and active.radius == r|string %}selected{% endif %}>{{ r }} mi</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
             </div>
-            {% else %}
-            <p class="no-results">No vehicles matched your search. Try broadening your filters.</p>
-            {% endif %}
-        </section>
+
+            <div class="search-actions">
+                <button type="submit" class="primary-button">Search</button>
+                <a href="/dashboard" class="secondary-button">Clear</a>
+            </div>
+
+        </form>
+    </section>
+
+    {% if results is defined %}
+    <section class="results-section">
+        {% if results %}
+        <p class="results-count">{{ results|length }} vehicle{{ 's' if results|length != 1 }} found</p>
+        <div class="results-grid">
+            {% for car in results %}
+            <a href="/car/{{ car.id }}" class="result-card">
+                <div class="result-image" style="background-image: url('{{ car.image_url }}')"></div>
+                <div class="result-content">
+                    <h2>{{ car.title }}</h2>
+                    <p class="result-trim">{{ car.trim }}</p>
+                    <p class="result-price">${{ "{:,.0f}".format(car.price) }}</p>
+                    <p class="result-meta">
+                        {{ "{:,}".format(car.mileage) }} mi
+                        &middot; {{ car.fuel_type }}
+                        &middot; {{ car.drivetrain }}
+                        {% if car.distance_miles is defined %}&middot; {{ car.distance_miles }} mi away{% endif %}
+                    </p>
+                    <p class="result-dealer">{{ car.dealer_name }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="no-results">No vehicles matched your filters. Try broadening your search.</p>
         {% endif %}
+    </section>
+    {% endif %}
 
-        {% if results is not defined %}
-        <section class="dashboard-grid">
-            <div class="info-card">
-                <h2>Quick Search</h2>
-                <p>Use the search bar above to filter by make, model, zip code, or price.</p>
-            </div>
-            <div class="info-card">
-                <h2>Saved Results</h2>
-                <p>Keep track of vehicles you want to revisit later.</p>
-            </div>
-            <div class="info-card">
-                <h2>Recent Activity</h2>
-                <p>See the latest searches and listing views in one place.</p>
-            </div>
-        </section>
-        {% endif %}
+    {% if results is not defined %}
+    <section class="dashboard-grid">
+        <div class="info-card">
+            <h2>Quick Search</h2>
+            <p>Use the filters above to narrow by make, model, trim, mileage, and more.</p>
+        </div>
+        <div class="info-card">
+            <h2>Saved Results</h2>
+            <p>Keep track of vehicles you want to revisit later.</p>
+        </div>
+        <div class="info-card">
+            <h2>Recent Activity</h2>
+            <p>See the latest searches and listing views in one place.</p>
+        </div>
+    </section>
+    {% endif %}
 
-    </div>
+</div>
 
-    <script src="{{ url_for('static', filename='main.js') }}"></script>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
