@@ -1,26 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Register</title>
+
+<title>Register</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 </head>
+
 <body>
 
-    <h2>Create Account</h2>
+<div class="container">
 
-    <form method="POST" action="/register">
-        <label>Username</label><br>
-        <input type="text" name="username" required><br><br>
+<h2>Create Account</h2>
 
-        <label>Email</label><br>
-        <input type="text" name="email" required><br><br>
+<form method="POST" action="/register">
 
-        <label>Password</label><br>
-        <input type="password" name="password" required><br><br>
+<label>Username</label>
+<input type="text" name="username" required>
 
-        <button type="submit">Register</button>
-    </form>
+<label>Email</label>
+<input type="text" name="email" required>
 
-    <a href="/login">Already have an account? Login</a>
+<label>Password</label>
+<input type="password" name="password" required>
+
+<button type="submit">Register</button>
+
+</form>
+
+<a href="/login">Already have an account? Login</a>
+
+</div>
+
+<script src="{{ url_for('static', filename='main.js') }}"></script>
 
 </body>
 </html>

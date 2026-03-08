@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+
+<title>Dashboard</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 </head>
+
 <body>
+
+<div class="container">
 
 <h1>Dashboard</h1>
 
-<p>You are logged in.</p>
+<p style="text-align:center;">You are logged in.</p>
+
+</div>
+
+<script src="{{ url_for('static', filename='main.js') }}"></script>
 
 </body>
 </html>

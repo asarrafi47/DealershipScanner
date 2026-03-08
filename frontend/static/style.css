@@ -1,0 +1,83 @@
+/* Reset basic browser styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Page styling */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: #0a0a0a;
+    color: #ffffff;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Main container */
+.container {
+    background: #111;
+    padding: 40px;
+    border-radius: 12px;
+    width: 360px;
+
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+/* Headings */
+h1, h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Form fields */
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #1a1a1a;
+    color: white;
+}
+
+/* Buttons */
+button {
+    width: 100%;
+    padding: 12px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #ffffff;
+    color: black;
+
+    font-weight: bold;
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background: #cccccc;
+}
+
+/* Links */
+a {
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+
+    color: #aaaaaa;
+    text-decoration: none;
+}
+
+a:hover {
+    color: white;
+}

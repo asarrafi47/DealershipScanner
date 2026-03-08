@@ -2,6 +2,11 @@ from flask import Flask, request, render_template, redirect
 
 app = Flask(__name__, template_folder="../frontend/templates")
 
+app = Flask(
+    __name__,
+    template_folder="../frontend/templates",
+    static_folder="../frontend/static"
+)
 
 @app.route("/")
 def home():
