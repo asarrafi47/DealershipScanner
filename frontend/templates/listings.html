@@ -7,7 +7,8 @@
 <body>
 
 <script>
-const CAR_ROWS = {{ options.car_rows | tojson }};
+const CAR_ROWS  = {{ options.car_rows | tojson }};
+const ALL_CARS  = {{ options.all_cars | tojson }};
 </script>
 
 <div class="page">
@@ -193,7 +194,6 @@ const CAR_ROWS = {{ options.car_rows | tojson }};
                 </div>
 
                 <div class="pill-actions">
-                    <button type="submit" class="primary-button pill-search-btn">Search</button>
                     <a href="/listings" class="pill-clear-btn">Clear</a>
                 </div>
             </div>
@@ -371,7 +371,6 @@ const CAR_ROWS = {{ options.car_rows | tojson }};
                 </div>
 
                 <div class="docked-footer">
-                    <button type="submit" class="primary-button docked-search-btn">Search</button>
                     <a href="/listings" class="secondary-button docked-clear-btn">Clear</a>
                 </div>
             </div>
@@ -379,37 +378,14 @@ const CAR_ROWS = {{ options.car_rows | tojson }};
         </form>
     </div>
 
-    {# ── Main content ── #}
+    {# ── Main content — rendered entirely by JS ── #}
     <div class="dash-content" id="dash-content">
-
-        {% if results %}
-        <p class="results-count">{{ results|length }} vehicle{{ 's' if results|length != 1 }} found</p>
-        <div class="results-grid">
-            {% for car in results %}
-            <a href="/car/{{ car.id }}" class="result-card">
-                <div class="result-image" style="background-image: url('{{ car.image_url }}')"></div>
-                <div class="result-content">
-                    <h2>{{ car.title }}</h2>
-                    <p class="result-trim">{{ car.trim }}</p>
-                    <p class="result-price">${{ "{:,.0f}".format(car.price) }}</p>
-                    <p class="result-meta">
-                        {{ "{:,}".format(car.mileage) }} mi
-                        &middot; {{ car.fuel_type }}
-                        &middot; {{ car.drivetrain }}
-                        {% if 'distance_miles' in car %}&middot; {{ car.distance_miles }} mi away{% endif %}
-                    </p>
-                    <p class="result-dealer">{{ car.dealer_name }}</p>
-                </div>
-            </a>
-            {% endfor %}
-        </div>
-        {% else %}
-        <div class="empty-state">
+        <p class="results-count" id="results-count"></p>
+        <div class="results-grid" id="results-grid"></div>
+        <div class="empty-state" id="empty-state" style="display:none">
             <p class="no-results">No vehicles matched your filters.</p>
             <p class="no-results-sub">Try removing some filters to broaden your search.</p>
         </div>
-        {% endif %}
-
     </div>
 
 </div>

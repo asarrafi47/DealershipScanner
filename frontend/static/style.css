@@ -959,6 +959,188 @@ h1 {
     gap: 12px;
 }
 
+/* ── Dashboard ── */
+
+.db-layout {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 48px 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+}
+
+.db-section {}
+
+.db-section-header {
+    margin-bottom: 20px;
+}
+
+.db-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+.db-section-title {
+    font-size: 28px;
+    font-weight: 600;
+}
+
+/* Find Cars card */
+
+.find-cars-card {
+    display: block;
+    background: #111;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px;
+    padding: 28px 32px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.find-cars-card:hover {
+    background: #161616;
+    border-color: rgba(255,255,255,0.14);
+}
+
+.find-cars-card-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 22px;
+}
+
+.find-cars-label {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.find-cars-sub {
+    font-size: 13px;
+    color: #888;
+    line-height: 1.55;
+    max-width: 520px;
+}
+
+.find-cars-arrow {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.find-cars-card:hover .find-cars-arrow {
+    transform: translateX(4px);
+}
+
+.find-cars-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 999px;
+    padding: 5px 12px;
+    color: #888;
+}
+
+/* Saved Cars */
+
+.saved-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.saved-card {
+    background: #111;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: block;
+}
+
+.saved-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+
+.saved-image {
+    height: 140px;
+    background-size: cover;
+    background-position: center;
+    background-color: #1a1a1a;
+}
+
+.saved-info {
+    padding: 14px 16px;
+}
+
+.saved-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.saved-trim {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.saved-price {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.saved-meta {
+    font-size: 11px;
+    color: #666;
+}
+
+.saved-empty {
+    background: #111;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 48px 40px;
+    text-align: center;
+}
+
+.saved-empty-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.saved-empty-sub {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.55;
+}
+
 @media (max-width: 1400px) {
     .results-grid { grid-template-columns: repeat(3, 1fr); }
 }

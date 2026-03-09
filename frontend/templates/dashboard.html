@@ -17,8 +17,67 @@
         </div>
     </nav>
 
-    <div class="dash-content" style="padding-top: 80px;">
-        <p style="color: #555; text-align: center; margin-top: 120px;">Dashboard — coming soon.</p>
+    <div class="db-layout">
+
+        {# ── Find Cars ── #}
+        <section class="db-section">
+            <div class="db-section-header">
+                <p class="db-eyebrow">Browse Inventory</p>
+                <h2 class="db-section-title">Find Cars</h2>
+            </div>
+            <a href="/listings" class="find-cars-card">
+                <div class="find-cars-card-inner">
+                    <div class="find-cars-text">
+                        <p class="find-cars-label">Ready to search?</p>
+                        <p class="find-cars-sub">Filter by make, model, price, mileage, drivetrain and more across local inventory.</p>
+                    </div>
+                    <span class="find-cars-arrow">
+                        <svg viewBox="0 0 24 24" width="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M13 6l6 6-6 6"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="find-cars-tags">
+                    <span class="tag">Make &amp; Model</span>
+                    <span class="tag">Price Range</span>
+                    <span class="tag">Mileage</span>
+                    <span class="tag">Drivetrain</span>
+                    <span class="tag">Fuel Type</span>
+                    <span class="tag">Zip + Radius</span>
+                </div>
+            </a>
+        </section>
+
+        {# ── Saved Cars ── #}
+        <section class="db-section">
+            <div class="db-section-header">
+                <p class="db-eyebrow">Your List</p>
+                <h2 class="db-section-title">Saved Cars</h2>
+            </div>
+
+            {% if saved_cars %}
+            <div class="saved-grid">
+                {% for car in saved_cars %}
+                <a href="/car/{{ car.id }}" class="saved-card">
+                    <div class="saved-image" style="background-image: url('{{ car.image_url }}')"></div>
+                    <div class="saved-info">
+                        <p class="saved-title">{{ car.title }}</p>
+                        <p class="saved-trim">{{ car.trim }}</p>
+                        <p class="saved-price">${{ "{:,.0f}".format(car.price) }}</p>
+                        <p class="saved-meta">{{ "{:,}".format(car.mileage) }} mi &middot; {{ car.fuel_type }}</p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="saved-empty">
+                <p class="saved-empty-title">No saved cars yet.</p>
+                <p class="saved-empty-sub">When you find a car you like, save it and it will appear here.</p>
+                <a href="/listings" class="primary-button" style="margin-top: 20px; display: inline-block;">Browse Listings</a>
+            </div>
+            {% endif %}
+        </section>
+
     </div>
 
 </div>

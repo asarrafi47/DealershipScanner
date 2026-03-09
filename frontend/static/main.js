@@ -197,13 +197,120 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ── Wire all checkboxes → cascade ──────────────────────────────────
+    // ── Wire all checkboxes → sync twin + cascade + live render ───────
 
     document.querySelectorAll(".filter-option input[type=checkbox]").forEach(cb => {
-        cb.addEventListener("change", runCascade);
+        cb.addEventListener("change", () => {
+            // Mirror state to the twin checkbox (pill ↔ accordion)
+            document.querySelectorAll(`input[type=checkbox][name="${cb.name}"]`).forEach(twin => {
+                if (twin !== cb && twin.value === cb.value) twin.checked = cb.checked;
+            });
+            runCascade();
+            renderResults();
+        });
     });
 
+    // Wire scalar filters (price, mileage, zip, radius) → live render
+    // Read from both pill and sidebar selects; use whichever is non-empty.
+    function scalarVal(name) {
+        const vals = [...document.querySelectorAll(`[name="${name}"]`)]
+            .map(el => el.value.trim()).filter(Boolean);
+        return vals[0] || "";
+    }
+
+    document.querySelectorAll(".pill-select, .sidebar-select, .pill-zip, .sidebar-input").forEach(el => {
+        el.addEventListener("change", renderResults);
+        el.addEventListener("input",  renderResults);
+    });
+
+    // ── Live results renderer ──────────────────────────────────────────
+
+    const resultsGrid  = document.getElementById("results-grid");
+    const resultsCount = document.getElementById("results-count");
+    const emptyState   = document.getElementById("empty-state");
+
+    function fmt(n)  { return Number(n).toLocaleString(); }
+    function fmtUSD(n) { return "$" + Number(n).toLocaleString("en-US", {maximumFractionDigits: 0}); }
+
+    function renderResults() {
+        if (!resultsGrid) return;
+
+        const makes       = checked("make");
+        const models      = checked("model");
+        const trims       = checked("trim");
+        const fuels       = checked("fuel_type");
+        const cyls        = checked("cylinders");
+        const trans       = checked("transmission");
+        const drives      = checked("drivetrain");
+        const extColors   = checked("exterior_color");
+        const intColors   = checked("interior_color");
+        const maxPrice    = parseFloat(scalarVal("max_price"))   || null;
+        const maxMileage  = parseInt(scalarVal("max_mileage"))   || null;
+        const zipCode     = scalarVal("zip_code");
+        const radiusMi    = parseFloat(scalarVal("radius"))      || null;
+
+        let cars = ALL_CARS.filter(c => {
+            if (makes.length      && !makes.includes(c.make))            return false;
+            if (models.length     && !models.includes(c.model))          return false;
+            if (trims.length      && !trims.includes(c.trim))            return false;
+            if (fuels.length      && !fuels.includes(c.fuel_type))       return false;
+            if (cyls.length       && !cyls.includes(String(c.cylinders)))return false;
+            if (trans.length      && !trans.includes(c.transmission))    return false;
+            if (drives.length     && !drives.includes(c.drivetrain))     return false;
+            if (extColors.length  && !extColors.includes(c.exterior_color)) return false;
+            if (intColors.length  && !intColors.includes(c.interior_color)) return false;
+            if (maxPrice    && c.price   > maxPrice)   return false;
+            if (maxMileage  && c.mileage > maxMileage) return false;
+            return true;
+        });
+
+        // Geo filter (zip + radius) — only if both provided and haversine available
+        if (zipCode && radiusMi && typeof haversineJS === "function") {
+            const origin = zipCoordsJS(zipCode);
+            if (origin) {
+                cars = cars.filter(c => {
+                    const dest = zipCoordsJS(c.zip_code);
+                    if (!dest) return false;
+                    return haversineJS(origin[0], origin[1], dest[0], dest[1]) <= radiusMi;
+                });
+            }
+        }
+
+        // Render cards
+        if (cars.length === 0) {
+            resultsGrid.innerHTML = "";
+            if (emptyState) emptyState.style.display = "";
+            if (resultsCount) resultsCount.textContent = "";
+            return;
+        }
+
+        if (emptyState) emptyState.style.display = "none";
+        if (resultsCount) {
+            resultsCount.textContent = `${cars.length} vehicle${cars.length !== 1 ? "s" : ""} found`;
+        }
+
+        resultsGrid.innerHTML = cars.map(c => {
+            const cylLabel = c.cylinders === 0 ? "Electric" : `${c.cylinders}-cyl`;
+            return `
+            <a href="/car/${c.id}" class="result-card">
+                <div class="result-image" style="background-image:url('${c.image_url || ""}')"></div>
+                <div class="result-content">
+                    <h2>${c.title}</h2>
+                    <p class="result-trim">${c.trim || ""}</p>
+                    <p class="result-price">${fmtUSD(c.price)}</p>
+                    <p class="result-meta">
+                        ${fmt(c.mileage)} mi
+                        &middot; ${c.fuel_type || ""}
+                        &middot; ${c.drivetrain || ""}
+                    </p>
+                    <p class="result-dealer">${c.dealer_name || ""}</p>
+                </div>
+            </a>`;
+        }).join("");
+    }
+
     runCascade();
+    renderResults();
 
     // ── Pill dropdown open/close ───────────────────────────────────────
 
@@ -234,22 +341,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelectorAll(".pill-dropdown").forEach(d => {
         d.addEventListener("click", e => e.stopPropagation());
-    });
-
-    // ── Sync scalar fields on submit to prevent duplicates ────────────
-    // The form has two copies of max_price, max_mileage, zip_code, radius.
-    // Disable the pill set when docked, and the sidebar set when undocked,
-    // so only the active set's values get submitted.
-
-    const pillSelects   = document.querySelectorAll(".filter-top-row select, .filter-top-row input[type=text]");
-    const dockedSelects = document.querySelectorAll(".filter-docked-inner select, .filter-docked-inner input[type=text]");
-
-    document.getElementById("search-form").addEventListener("submit", () => {
-        if (isDocked) {
-            pillSelects.forEach(el => el.disabled = true);
-        } else {
-            dockedSelects.forEach(el => el.disabled = true);
-        }
     });
 
     // ── Accordion open/close (docked sidebar) ─────────────────────────

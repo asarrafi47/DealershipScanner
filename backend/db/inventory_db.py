@@ -284,6 +284,16 @@ def get_filter_options():
         if (make, model, trim) not in seen_trims:
             seen_trims.append((make, model, trim))
 
+    # Full per-car data for client-side live filtering and rendering
+    conn2 = get_conn()
+    conn2.row_factory = sqlite3.Row
+    all_cars_cursor = conn2.cursor()
+    all_cars_cursor.execute(
+        "SELECT * FROM cars ORDER BY price ASC"
+    )
+    all_cars = [dict(r) for r in all_cars_cursor.fetchall()]
+    conn2.close()
+
     return {
         "makes":           seen_makes,
         "model_rows":      seen_models,
@@ -294,10 +304,12 @@ def get_filter_options():
         "drivetrains":     drivetrains,
         "exterior_colors": exterior_colors,
         "interior_colors": interior_colors,
-        # Full relationship table as list of dicts for JS embedding
+        # Full relationship table for cascade engine
         "car_rows":        [
             {"make": r[0], "model": r[1], "trim": r[2],
              "fuel": r[3], "cyl": r[4], "drive": r[5]}
             for r in car_rows
         ],
+        # Complete car objects for client-side live rendering
+        "all_cars":        all_cars,
     }
