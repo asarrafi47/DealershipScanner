@@ -39,9 +39,7 @@ def register_page():
 
 @app.route("/dashboard")
 def dashboard():
-    results = search_cars()
-    return render_template("dashboard.html", options=get_filter_options(),
-                           results=results, active={})
+    return render_template("dashboard.html")
 
 
 @app.route("/search")
@@ -83,7 +81,7 @@ def search():
         "zip_code": zip_code, "radius": radius,
     }
 
-    return render_template("dashboard.html",
+    return render_template("listings.html",
                            results=results,
                            active=active,
                            options=get_filter_options())
