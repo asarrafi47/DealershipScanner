@@ -302,187 +302,424 @@ h1 {
     text-decoration: underline;
 }
 
-/* ── Search ── */
+/* ══════════════════════════════════════════════════
+   FILTER BAR — starts centered top, docks left on scroll
+══════════════════════════════════════════════════ */
 
-.search-section {
-    padding: 0 48px 48px 48px;
+.filter-bar {
+    position: fixed;
+    top: 73px;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    pointer-events: none; /* children handle their own events */
 }
 
-.search-form {
-    background: #111111;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 20px;
-    padding: 28px;
-}
+/* ── TOP MODE: centered horizontal pill row ── */
 
-.filter-row {
+.filter-top-row {
+    pointer-events: all;
     display: flex;
+    align-items: center;
+    justify-content: center;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.search-actions {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-/* ── Filter group (shared wrapper) ── */
-.filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    min-width: 130px;
-}
-
-.filter-plain-label {
-    font-size: 12px;
-    font-weight: 500;
-    color: #888;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-
-/* ── Custom checkbox trigger button ── */
-.filter-trigger {
-    display: flex;
-    align-items: center;
     gap: 8px;
-    background: #141414;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 12px 14px;
-    color: #ffffff;
-    font-size: 14px;
+    padding: 14px 32px;
+    background: rgba(10, 10, 10, 0.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* hidden when docked */
+.filter-bar.docked .filter-top-row {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+}
+
+/* ── Pill buttons ── */
+
+.pill-group {
+    position: relative;
+}
+
+.pill-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    padding: 7px 14px;
+    color: #ccc;
+    font-size: 13px;
     font-family: inherit;
     cursor: pointer;
     white-space: nowrap;
-    transition: border-color 0.2s ease;
-    width: 100%;
-    justify-content: space-between;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-.filter-trigger:hover,
-.filter-trigger.open {
-    border-color: rgba(255, 255, 255, 0.28);
-}
-
-.filter-trigger.has-selection {
-    border-color: rgba(255, 255, 255, 0.4);
-}
-
-.filter-trigger.electric-mode {
-    border-color: rgba(100, 200, 255, 0.5);
-    cursor: default;
-}
-
-.filter-trigger.electric-mode .filter-label-text {
-    color: #7dd3fc;
-}
-
-.filter-label-text {
-    font-size: 12px;
-    font-weight: 500;
-    color: #888;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-
-.filter-trigger.has-selection .filter-label-text {
+.pill-trigger:hover {
+    background: rgba(255,255,255,0.1);
     color: #fff;
 }
 
-.filter-count {
-    background: #ffffff;
-    color: #000000;
-    font-size: 11px;
+.pill-trigger.has-selection {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.35);
+    color: #fff;
+}
+
+.pill-trigger.electric-mode {
+    border-color: rgba(100,200,255,0.4);
+    color: #7dd3fc;
+    cursor: default;
+}
+
+.pill-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+}
+
+.pill-count {
+    background: #fff;
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 99px;
+    padding: 1px 5px;
+    line-height: 1.6;
+}
+
+.pill-chevron {
+    color: #666;
+    transition: transform 0.2s ease;
+}
+
+.pill-trigger.open .pill-chevron {
+    transform: rotate(180deg);
+}
+
+/* ── Pill dropdowns ── */
+
+.pill-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1c1c1c;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 6px;
+    min-width: 180px;
+    max-height: 240px;
+    overflow-y: auto;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    z-index: 100;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+.pill-dropdown.open {
+    display: block;
+}
+
+.pill-options {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Pill inline selects (price, mileage, zip, radius) ── */
+
+.pill-select-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+}
+
+.pill-select-label {
+    font-size: 10px;
+    color: #555;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-left: 2px;
+}
+
+.pill-select {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    padding: 7px 28px 7px 12px;
+    color: #ccc;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%23666' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.pill-select:focus {
+    border-color: rgba(255,255,255,0.3);
+}
+
+.pill-zip {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    padding: 7px 12px;
+    color: #ccc;
+    font-size: 12px;
+    font-family: inherit;
+    width: 80px;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.pill-zip:focus {
+    border-color: rgba(255,255,255,0.3);
+}
+
+.pill-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 4px;
+}
+
+.pill-search-btn {
+    padding: 7px 18px;
+    font-size: 13px;
+    border-radius: 999px;
+}
+
+.pill-clear-btn {
+    font-size: 12px;
+    color: #666;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.pill-clear-btn:hover {
+    color: #aaa;
+}
+
+/* ── DOCKED MODE: vertical sidebar ── */
+
+.filter-docked-inner {
+    pointer-events: all;
+    position: fixed;
+    top: 73px;
+    left: 0;
+    width: 240px;
+    height: calc(100vh - 73px);
+    background: #0d0d0d;
+    border-right: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    flex-direction: column;
+    /* hidden by default — JS adds .docked to .filter-bar to show */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.filter-bar.docked .filter-docked-inner {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
+}
+
+.docked-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 18px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+}
+
+.docked-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #666;
+}
+
+.docked-count {
+    background: #fff;
+    color: #000;
+    font-size: 10px;
     font-weight: 700;
     border-radius: 99px;
     padding: 1px 7px;
     line-height: 1.6;
 }
 
-.chevron {
-    color: #666;
-    flex-shrink: 0;
-    transition: transform 0.2s ease;
-}
-
-.filter-trigger.open .chevron {
-    transform: rotate(180deg);
-}
-
-/* ── Dropdown panel ── */
-.filter-dropdown {
-    display: none;
-    position: absolute;
-    z-index: 100;
-    background: #1a1a1a;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
-    padding: 8px;
-    min-width: 190px;
-    max-height: 260px;
+.docked-body {
+    flex: 1;
     overflow-y: auto;
-    box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-    margin-top: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.08) transparent;
 }
 
-.filter-dropdown.open {
-    display: block;
+.docked-body::-webkit-scrollbar { width: 3px; }
+.docked-body::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
 }
 
-.filter-group {
-    position: relative;
-}
-
-.filter-options {
+.docked-footer {
+    padding: 14px;
+    border-top: 1px solid rgba(255,255,255,0.06);
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    gap: 8px;
+    flex-shrink: 0;
 }
+
+.docked-search-btn {
+    flex: 1;
+    text-align: center;
+    padding: 11px 14px;
+    font-size: 13px;
+}
+
+.docked-clear-btn {
+    padding: 11px 14px;
+    font-size: 13px;
+    text-align: center;
+}
+
+/* ── Accordion (docked sidebar) ── */
+
+.acc-section {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.acc-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    padding: 11px 18px;
+    cursor: pointer;
+    color: #fff;
+    font-family: inherit;
+    transition: background 0.12s ease;
+}
+
+.acc-trigger:hover {
+    background: rgba(255,255,255,0.04);
+}
+
+.acc-trigger.has-selection .acc-label { color: #fff; }
+.acc-trigger.electric-mode { cursor: default; }
+.acc-trigger.electric-mode .acc-label { color: #7dd3fc; }
+
+.acc-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #999;
+    text-align: left;
+}
+
+.acc-right {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+}
+
+.acc-count {
+    background: #fff;
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 99px;
+    padding: 1px 5px;
+    line-height: 1.6;
+}
+
+.acc-chevron {
+    color: #555;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.acc-trigger.open .acc-chevron { transform: rotate(180deg); }
+
+.acc-body {
+    display: none;
+    padding-bottom: 4px;
+}
+
+.acc-body.open { display: block; }
+
+.acc-options { display: flex; flex-direction: column; }
+
+.acc-plain-group {
+    padding: 10px 0 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.acc-plain-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: #555;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0 18px 5px 18px;
+}
+
+/* ── Shared checkbox options ── */
 
 .filter-option {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 9px 12px;
-    border-radius: 8px;
+    gap: 9px;
+    padding: 7px 18px;
     cursor: pointer;
-    font-size: 14px;
-    color: #d0d0d0;
-    transition: background 0.15s ease;
+    font-size: 13px;
+    color: #bbb;
+    transition: background 0.1s ease;
     user-select: none;
 }
 
-.filter-option:hover {
-    background: rgba(255,255,255,0.06);
-}
+.filter-option:hover { background: rgba(255,255,255,0.05); }
 
 .filter-option input[type="checkbox"] {
     appearance: none;
-    width: 16px;
-    height: 16px;
-    border: 1.5px solid rgba(255,255,255,0.25);
-    border-radius: 5px;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
     background: transparent;
     flex-shrink: 0;
     cursor: pointer;
     position: relative;
-    transition: background 0.15s ease, border-color 0.15s ease;
+    transition: background 0.12s ease, border-color 0.12s ease;
 }
 
 .filter-option input[type="checkbox"]:checked {
-    background: #ffffff;
-    border-color: #ffffff;
+    background: #fff;
+    border-color: #fff;
 }
 
 .filter-option input[type="checkbox"]:checked::after {
     content: "";
     position: absolute;
-    left: 4px;
-    top: 1.5px;
+    left: 3px;
+    top: 1px;
     width: 5px;
     height: 8px;
     border: 2px solid #000;
@@ -491,74 +728,96 @@ h1 {
     transform: rotate(45deg);
 }
 
-/* ── Plain selects & input inside filter row ── */
-.search-select,
-.search-input {
-    background: #141414;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 12px 14px;
-    color: #ffffff;
-    font-size: 14px;
+/* ── Shared sidebar selects / input ── */
+
+.sidebar-select,
+.sidebar-input {
+    display: block;
+    width: calc(100% - 36px);
+    margin: 0 18px 10px 18px;
+    background: #161616;
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 9px;
+    padding: 9px 11px;
+    color: #fff;
+    font-size: 12px;
     font-family: inherit;
     outline: none;
-    width: 100%;
     transition: border-color 0.2s ease;
 }
 
-.search-select {
+.sidebar-select {
     cursor: pointer;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
+    background-position: right 10px center;
+    padding-right: 28px;
 }
 
-.search-select:focus,
-.search-input:focus {
-    border-color: rgba(255, 255, 255, 0.3);
+.sidebar-select:focus,
+.sidebar-input:focus {
+    border-color: rgba(255,255,255,0.25);
 }
 
-/* ── Result meta line ── */
-.result-trim {
-    font-size: 12px;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 6px;
+/* ── Main content area ── */
+
+.dash-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 140px 40px 80px 40px; /* top pad = filter bar height */
+    transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                padding-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.result-meta {
-    font-size: 13px;
-    color: #888;
-    margin-bottom: 6px;
+/* When docked: shift content right of sidebar */
+.page.docked .dash-content {
+    margin-left: 240px;
+    max-width: none;
+    padding-top: 32px;
+}
+
+/* ── Welcome state ── */
+
+.welcome-state {
+    margin-bottom: 48px;
+    text-align: center;
+}
+
+.welcome-state h1 {
+    font-size: 52px;
+    margin-bottom: 14px;
+}
+
+.welcome-state .hero-text {
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 /* ── Results ── */
 
-.results-section {
-    padding: 0 48px 64px 48px;
-}
-
 .results-count {
-    font-size: 13px;
-    color: #888;
-    letter-spacing: 0.06em;
+    font-size: 12px;
+    color: #555;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .results-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    gap: 20px;
+}
+
+.page.docked .results-grid {
+    grid-template-columns: repeat(2, 1fr);
 }
 
 .result-card {
-    background: #111111;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 20px;
+    background: #111;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 18px;
     overflow: hidden;
     text-decoration: none;
     color: inherit;
@@ -567,42 +826,61 @@ h1 {
 }
 
 .result-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.4);
 }
 
 .result-image {
-    height: 200px;
+    height: 180px;
     background-size: cover;
     background-position: center;
     background-color: #1a1a1a;
 }
 
-.result-content {
-    padding: 20px;
-}
+.result-content { padding: 18px; }
 
 .result-content h2 {
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.result-trim {
+    font-size: 11px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     margin-bottom: 8px;
 }
 
 .result-price {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
     margin-bottom: 6px;
 }
 
-.result-dealer {
-    font-size: 13px;
-    color: #888;
+.result-meta {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
 }
+
+.result-dealer {
+    font-size: 12px;
+    color: #444;
+}
+
+.empty-state { padding: 60px 0; }
 
 .no-results {
     color: #888;
-    font-size: 15px;
-    padding: 40px 0;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.no-results-sub {
+    color: #555;
+    font-size: 14px;
 }
 
 /* ── Car Detail ── */
@@ -682,45 +960,22 @@ h1 {
 }
 
 @media (max-width: 1000px) {
-    .dashboard-grid,
-    .listings-grid,
-    .results-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .car-detail-layout {
-        grid-template-columns: 1fr;
-    }
-
-    h1 {
-        font-size: 44px;
-    }
+    .results-grid { grid-template-columns: repeat(2, 1fr); }
+    .dashboard-grid, .listings-grid { grid-template-columns: 1fr; }
+    .car-detail-layout { grid-template-columns: 1fr; }
+    h1 { font-size: 44px; }
 }
 
 @media (max-width: 700px) {
     .topbar {
-        padding: 20px 20px;
+        padding: 20px;
         flex-direction: column;
         gap: 14px;
         align-items: flex-start;
     }
-
-    .hero,
-    .page-header,
-    .dashboard-grid,
-    .listings-grid,
-    .search-section,
-    .results-section,
-    .car-detail {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-
-    .search-row {
-        flex-direction: column;
-    }
-
-    .search-btn {
-        width: 100%;
-    }
+    .results-grid { grid-template-columns: 1fr; }
+    .dash-content { padding: 120px 20px 60px 20px; }
+    .filter-docked-inner { display: none; }
+    .page.docked .dash-content { margin-left: 0; }
+    .car-detail { padding: 20px; }
 }
