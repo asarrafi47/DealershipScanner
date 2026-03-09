@@ -382,56 +382,32 @@ const CAR_ROWS = {{ options.car_rows | tojson }};
     {# ── Main content ── #}
     <div class="dash-content" id="dash-content">
 
-        {% if results is not defined %}
-        <div class="welcome-state">
-            <p class="eyebrow">Welcome Back</p>
-            <h1>Find Your Next Car</h1>
-            <p class="hero-text">Use the filters above to search inventory across local dealerships.</p>
+        {% if results %}
+        <p class="results-count">{{ results|length }} vehicle{{ 's' if results|length != 1 }} found</p>
+        <div class="results-grid">
+            {% for car in results %}
+            <a href="/car/{{ car.id }}" class="result-card">
+                <div class="result-image" style="background-image: url('{{ car.image_url }}')"></div>
+                <div class="result-content">
+                    <h2>{{ car.title }}</h2>
+                    <p class="result-trim">{{ car.trim }}</p>
+                    <p class="result-price">${{ "{:,.0f}".format(car.price) }}</p>
+                    <p class="result-meta">
+                        {{ "{:,}".format(car.mileage) }} mi
+                        &middot; {{ car.fuel_type }}
+                        &middot; {{ car.drivetrain }}
+                        {% if 'distance_miles' in car %}&middot; {{ car.distance_miles }} mi away{% endif %}
+                    </p>
+                    <p class="result-dealer">{{ car.dealer_name }}</p>
+                </div>
+            </a>
+            {% endfor %}
         </div>
-        <div class="dashboard-grid">
-            <div class="info-card">
-                <h2>Quick Search</h2>
-                <p>Filter by make, model, trim, mileage, fuel type, and more.</p>
-            </div>
-            <div class="info-card">
-                <h2>Saved Results</h2>
-                <p>Keep track of vehicles you want to revisit later.</p>
-            </div>
-            <div class="info-card">
-                <h2>Stay Updated</h2>
-                <p>Inventory refreshes automatically so you always see current listings.</p>
-            </div>
+        {% else %}
+        <div class="empty-state">
+            <p class="no-results">No vehicles matched your filters.</p>
+            <p class="no-results-sub">Try removing some filters to broaden your search.</p>
         </div>
-        {% endif %}
-
-        {% if results is defined %}
-            {% if results %}
-            <p class="results-count">{{ results|length }} vehicle{{ 's' if results|length != 1 }} found</p>
-            <div class="results-grid">
-                {% for car in results %}
-                <a href="/car/{{ car.id }}" class="result-card">
-                    <div class="result-image" style="background-image: url('{{ car.image_url }}')"></div>
-                    <div class="result-content">
-                        <h2>{{ car.title }}</h2>
-                        <p class="result-trim">{{ car.trim }}</p>
-                        <p class="result-price">${{ "{:,.0f}".format(car.price) }}</p>
-                        <p class="result-meta">
-                            {{ "{:,}".format(car.mileage) }} mi
-                            &middot; {{ car.fuel_type }}
-                            &middot; {{ car.drivetrain }}
-                            {% if car.distance_miles is defined %}&middot; {{ car.distance_miles }} mi away{% endif %}
-                        </p>
-                        <p class="result-dealer">{{ car.dealer_name }}</p>
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
-            {% else %}
-            <div class="empty-state">
-                <p class="no-results">No vehicles matched your filters.</p>
-                <p class="no-results-sub">Try removing some filters to broaden your search.</p>
-            </div>
-            {% endif %}
         {% endif %}
 
     </div>

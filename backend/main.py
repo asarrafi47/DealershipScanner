@@ -39,17 +39,23 @@ def register_page():
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html", options=get_filter_options())
+    results = search_cars()
+    return render_template("dashboard.html", options=get_filter_options(),
+                           results=results, active={})
 
 
 @app.route("/search")
 def search():
     g = request.args.getlist
 
-    zip_code  = request.args.get("zip_code", "").strip()
-    radius    = request.args.get("radius", "").strip()
-    max_price = request.args.get("max_price", "").strip()
-    max_mileage = request.args.get("max_mileage", "").strip()
+    def scalar(key):
+        vals = [v.strip() for v in request.args.getlist(key) if v.strip()]
+        return vals[-1] if vals else ""
+
+    zip_code    = scalar("zip_code")
+    radius      = scalar("radius")
+    max_price   = scalar("max_price")
+    max_mileage = scalar("max_mileage")
 
     results = search_cars(
         makes=g("make") or None,

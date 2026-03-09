@@ -9,27 +9,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (typeof CAR_ROWS === "undefined") return;
 
-    // ── Scroll: dock filter bar when user scrolls past threshold ──────
+    // ── Dock filter bar ────────────────────────────────────────────────
+    // Docks immediately if results are present (page loaded after a search),
+    // or when the user scrolls past the threshold on the landing page.
 
-    const DOCK_THRESHOLD = 80; // px scrolled before docking
     const filterBar = document.getElementById("filter-bar");
-    const page = document.querySelector(".page");
+    const page      = document.querySelector(".page");
+    const DOCK_AT   = 60;   // dock when scrolled past this
+    const UNDOCK_AT = 20;   // only undock when scrolled back below this (hysteresis)
+    let isDocked    = false;
+
+    function setDocked(on) {
+        if (isDocked === on) return;
+        isDocked = on;
+        filterBar.classList.toggle("docked", on);
+        page.classList.toggle("docked", on);
+    }
 
     function onScroll() {
-        const docked = window.scrollY > DOCK_THRESHOLD;
-        filterBar.classList.toggle("docked", docked);
-        page.classList.toggle("docked", docked);
+        if (!isDocked && window.scrollY > DOCK_AT)   setDocked(true);
+        if (isDocked  && window.scrollY < UNDOCK_AT) setDocked(false);
     }
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll(); // run once on load (e.g. if page is refreshed mid-scroll)
+
+    // Always start undocked at top; scroll listener handles docking
 
     // ── Helpers ────────────────────────────────────────────────────────
 
-    // Collect checked values from BOTH pill inputs and docked accordion inputs
+    // Collect unique checked values (pill + accordion share names, deduplicate)
     function checked(name) {
+        const seen = new Set();
         return [...document.querySelectorAll(`input[name="${name}"]:checked`)]
-            .map(cb => cb.value);
+            .map(cb => cb.value)
+            .filter(v => seen.has(v) ? false : seen.add(v));
     }
 
     function compatibleRows(excluding) {
@@ -123,10 +136,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // ── Badge counts ───────────────────────────────────────────────────
 
     function updateCount(param) {
+        const seen = new Set();
         const visibleChecked = [...document.querySelectorAll(`input[name="${param}"]:checked`)]
             .filter(cb => {
                 const opt = cb.closest(".filter-option");
-                return opt ? opt.style.display !== "none" : true;
+                if (opt && opt.style.display === "none") return false;
+                if (seen.has(cb.value)) return false;
+                seen.add(cb.value);
+                return true;
             }).length;
 
         // pill count
@@ -217,6 +234,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelectorAll(".pill-dropdown").forEach(d => {
         d.addEventListener("click", e => e.stopPropagation());
+    });
+
+    // ── Sync scalar fields on submit to prevent duplicates ────────────
+    // The form has two copies of max_price, max_mileage, zip_code, radius.
+    // Disable the pill set when docked, and the sidebar set when undocked,
+    // so only the active set's values get submitted.
+
+    const pillSelects   = document.querySelectorAll(".filter-top-row select, .filter-top-row input[type=text]");
+    const dockedSelects = document.querySelectorAll(".filter-docked-inner select, .filter-docked-inner input[type=text]");
+
+    document.getElementById("search-form").addEventListener("submit", () => {
+        if (isDocked) {
+            pillSelects.forEach(el => el.disabled = true);
+        } else {
+            dockedSelects.forEach(el => el.disabled = true);
+        }
     });
 
     // ── Accordion open/close (docked sidebar) ─────────────────────────
