@@ -237,6 +237,16 @@ def get_car_by_id(car_id):
     return dict(row) if row else None
 
 
+def get_car_by_vin(vin):
+    conn = get_conn()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM cars WHERE vin = ?", (vin,))
+    row = cursor.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+
 def get_filter_options():
     """
     Returns all filter option data with full relationship maps so the

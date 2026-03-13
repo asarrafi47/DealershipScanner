@@ -520,7 +520,7 @@ h1 {
 /* ── DOCKED MODE: vertical sidebar ── */
 
 .filter-docked-inner {
-    pointer-events: all;
+    pointer-events: none;
     position: fixed;
     top: 73px;
     left: 0;
@@ -530,17 +530,13 @@ h1 {
     border-right: 1px solid rgba(255,255,255,0.07);
     display: flex;
     flex-direction: column;
-    /* hidden by default — JS adds .docked to .filter-bar to show */
     opacity: 0;
-    pointer-events: none;
     transform: translateX(-20px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    /* Animated by Motion.dev on listings page when docking */
 }
 
 .filter-bar.docked .filter-docked-inner {
-    opacity: 1;
     pointer-events: all;
-    transform: translateX(0);
 }
 
 .docked-header {
@@ -724,14 +720,14 @@ h1 {
 .filter-option input[type="checkbox"]:checked::after {
     content: "";
     position: absolute;
-    left: 3px;
-    top: 1px;
+    left: 50%;
+    top: 50%;
     width: 5px;
     height: 8px;
     border: 2px solid #000;
     border-top: none;
     border-left: none;
-    transform: rotate(45deg);
+    transform: translate(-50%, -50%) rotate(45deg);
 }
 
 /* ── Shared sidebar selects / input ── */
@@ -771,12 +767,10 @@ h1 {
 .dash-content {
     margin: 0 auto;
     padding: 150px 40px 80px 40px;
-    transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                padding-top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    /* margin-left animated by Motion.dev on listings page when filter docks */
 }
 
 .page.docked .dash-content {
-    margin-left: 248px;
     margin-right: 0;
     padding: 36px 32px 80px 32px;
 }
@@ -910,6 +904,17 @@ h1 {
     align-items: start;
 }
 
+.car-detail-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+}
+
+.car-detail-gallery .car-chatbot {
+    margin: 24px 0 32px 0;
+}
+
 .car-detail-image {
     width: 100%;
     aspect-ratio: 16 / 10;
@@ -917,6 +922,133 @@ h1 {
     background-size: cover;
     background-position: center;
     background-color: #1a1a1a;
+}
+
+/* ── Car page chatbot (same width as image gallery, dark bubble chat) ── */
+
+#car-chatbot.car-chatbot {
+    width: 100%;
+    height: 76px;
+    display: flex;
+    flex-direction: column;
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    overflow: hidden;
+    /* Height animated by Motion.dev in car-chatbot.js */
+}
+
+.car-chatbot-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+    max-height: 320px;
+}
+
+#car-chatbot.car-chatbot:not(.expanded) .car-chatbot-messages {
+    min-height: 0;
+    overflow: hidden;
+    padding: 0 16px;
+}
+
+.car-chatbot-message {
+    max-width: 88%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.car-chatbot-message.user {
+    align-self: flex-end;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+
+.car-chatbot-message.bot {
+    align-self: flex-start;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: #e0e0e0;
+    border-bottom-left-radius: 4px;
+}
+
+.car-chatbot-message.loading {
+    align-self: flex-start;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.car-chatbot-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: car-chatbot-spin 0.7s linear infinite;
+}
+
+@keyframes car-chatbot-spin {
+    to { transform: rotate(360deg); }
+}
+
+.car-chatbot-input-row {
+    display: flex;
+    gap: 10px;
+    padding: 14px 16px 26px 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0d0d0d;
+}
+
+.car-chatbot-input {
+    flex: 1;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #fff;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.car-chatbot-input:focus {
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.car-chatbot-input::placeholder {
+    color: #666;
+}
+
+.car-chatbot-send {
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.car-chatbot-send:hover {
+    background: #e0e0e0;
+}
+
+.car-chatbot-send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .car-detail-info h1 {

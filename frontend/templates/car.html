@@ -23,7 +23,16 @@
 
             <div class="car-detail-layout">
 
-                <div class="car-detail-image" style="background-image: url('{{ car.image_url }}')"></div>
+                <div class="car-detail-gallery">
+                    <div class="car-detail-image" style="background-image: url('{{ car.image_url }}')"></div>
+                    <div id="car-chatbot" class="car-chatbot" data-vin="{{ car.vin }}">
+                        <div class="car-chatbot-messages" id="car-chatbot-messages"></div>
+                        <div class="car-chatbot-input-row">
+                            <input type="text" id="car-chatbot-input" class="car-chatbot-input" placeholder="Ask about this car..." autocomplete="off">
+                            <button type="button" id="car-chatbot-send" class="car-chatbot-send">Send</button>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="car-detail-info">
                     <p class="eyebrow">{{ car.dealer_name }}</p>
@@ -89,5 +98,6 @@
     </div>
 
     <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='car-chatbot.js') }}"></script>
 </body>
 </html>
