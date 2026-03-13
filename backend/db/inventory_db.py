@@ -2,6 +2,22 @@ import sqlite3
 
 DB_PATH = "inventory.db"
 
+# Major automakers by country of origin (for country filter)
+MAKE_TO_COUNTRY = {
+    "BMW": "Germany", "Mercedes-Benz": "Germany", "Audi": "Germany",
+    "Porsche": "Germany", "Volkswagen": "Germany", "VW": "Germany",
+    "Toyota": "Japan", "Honda": "Japan", "Nissan": "Japan", "Lexus": "Japan",
+    "Mazda": "Japan", "Subaru": "Japan", "Mitsubishi": "Japan",
+    "Acura": "Japan", "Infiniti": "Japan",
+    "Ford": "USA", "Chevrolet": "USA", "GM": "USA", "Ram": "USA",
+    "Tesla": "USA", "Jeep": "USA", "Dodge": "USA", "Cadillac": "USA",
+    "Buick": "USA", "GMC": "USA",
+    "Hyundai": "South Korea", "Kia": "South Korea", "Genesis": "South Korea",
+    "Jaguar": "UK", "Land Rover": "UK", "Bentley": "UK", "Mini": "UK",
+    "Ferrari": "Italy", "Lamborghini": "Italy", "Fiat": "Italy", "Maserati": "Italy",
+    "Renault": "France", "Peugeot": "France", "Citroën": "France",
+}
+
 
 def get_conn():
     return sqlite3.connect(DB_PATH)
@@ -169,9 +185,18 @@ def _placeholders(lst):
     return ", ".join("?" * len(lst))
 
 
+def _makes_for_countries(countries):
+    """Return set of makes whose country of origin is in the given list."""
+    if not countries:
+        return None
+    countries_set = set(c.strip() for c in countries if c and c.strip())
+    return {make for make, country in MAKE_TO_COUNTRY.items() if country in countries_set}
+
+
 def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 cylinders=None, transmissions=None, drivetrains=None,
                 exterior_colors=None, interior_colors=None,
+                countries=None,
                 max_price=None, max_mileage=None,
                 zip_code=None, radius_miles=None):
 
@@ -190,6 +215,13 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
             query += f" AND {col} IN ({_placeholders(values)})"
             params.extend(values)
 
+    # Country of origin filter: resolve countries to makes, combine with explicit makes
+    makes_for_countries = _makes_for_countries(countries)
+    if makes_for_countries is not None:
+        if makes:
+            makes = list(set(makes) & makes_for_countries)
+        else:
+            makes = list(makes_for_countries)
     add_multi("make", makes)
     add_multi("model", models)
     add_multi("trim", trims)
@@ -304,6 +336,18 @@ def get_filter_options():
     all_cars = [dict(r) for r in all_cars_cursor.fetchall()]
     conn2.close()
 
+    # Countries that have at least one make in our DB
+    country_set = set()
+    country_to_makes = {}
+    for make in seen_makes:
+        c = MAKE_TO_COUNTRY.get(make)
+        if c:
+            country_set.add(c)
+            country_to_makes.setdefault(c, []).append(make)
+    for lst in country_to_makes.values():
+        lst.sort()
+    countries = sorted(country_set)
+
     return {
         "makes":           seen_makes,
         "model_rows":      seen_models,
@@ -314,6 +358,8 @@ def get_filter_options():
         "drivetrains":     drivetrains,
         "exterior_colors": exterior_colors,
         "interior_colors": interior_colors,
+        "countries":       countries,
+        "country_to_makes": country_to_makes,
         # Full relationship table for cascade engine
         "car_rows":        [
             {"make": r[0], "model": r[1], "trim": r[2],

@@ -7,8 +7,9 @@
 <body>
 
 <script>
-const CAR_ROWS  = {{ options.car_rows | tojson }};
-const ALL_CARS  = {{ options.all_cars | tojson }};
+const CAR_ROWS        = {{ options.car_rows | tojson }};
+const ALL_CARS        = {{ options.all_cars | tojson }};
+const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
 </script>
 
 <div class="page">
@@ -42,6 +43,18 @@ const ALL_CARS  = {{ options.all_cars | tojson }};
                     </div>
                 </div>
                 {% endmacro %}
+
+                {% call pill("Country", "country") %}
+                <div class="pill-options" id="options-country">
+                    {% for country in options.countries %}
+                    <label class="filter-option">
+                        <input type="checkbox" name="country" value="{{ country }}"
+                            {% if active is defined and country in active.get('country', []) %}checked{% endif %}>
+                        <span>{{ country }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% endcall %}
 
                 {% call pill("Make", "make") %}
                 <div class="pill-options" id="options-make">
@@ -223,6 +236,18 @@ const ALL_CARS  = {{ options.all_cars | tojson }};
                         </div>
                     </div>
                     {% endmacro %}
+
+                    {% call acc("Country", "country") %}
+                    <div class="acc-options" id="acc-options-country">
+                        {% for country in options.countries %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="country" value="{{ country }}"
+                                {% if active is defined and country in active.get('country', []) %}checked{% endif %}>
+                            <span>{{ country }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
 
                     {% call acc("Make", "make") %}
                     <div class="acc-options" id="acc-options-make">

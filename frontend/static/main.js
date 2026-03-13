@@ -86,6 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function runCascade() {
         cascadeParam("make",        r => r.make,        ["options-make",        "acc-options-make"]);
+        cascadeMakeByCountry();
         cascadeParam("model",       r => r.model,       ["options-model",       "acc-options-model"]);
         cascadeParam("trim",        r => r.trim,        ["options-trim",        "acc-options-trim"]);
         cascadeParam("fuel_type",   r => r.fuel,        ["options-fuel_type",   "acc-options-fuel_type"]);
@@ -93,6 +94,36 @@ document.addEventListener("DOMContentLoaded", () => {
         cascadeParam("cylinders",   r => String(r.cyl), ["options-cylinders",   "acc-options-cylinders"]);
         updateCylinders();
         updateAllCounts();
+    }
+
+    function cascadeMakeByCountry() {
+        if (typeof COUNTRY_TO_MAKES !== "object") return;
+        const countries = checked("country");
+        const makeContainerIds = ["options-make", "acc-options-make"];
+        if (!countries.length) {
+            makeContainerIds.forEach(id => {
+                const container = document.getElementById(id);
+                if (!container) return;
+                container.querySelectorAll('.filter-option input[name="make"]').forEach(cb => {
+                    cb.closest(".filter-option").style.display = "";
+                });
+            });
+            cascadeParam("make", r => r.make, makeContainerIds);
+            return;
+        }
+        const allowedMakes = new Set(countries.flatMap(c => COUNTRY_TO_MAKES[c] || []));
+        makeContainerIds.forEach(id => {
+            const container = document.getElementById(id);
+            if (!container) return;
+            container.querySelectorAll(".filter-option").forEach(label => {
+                const cb = label.querySelector('input[name="make"]');
+                if (!cb) return;
+                if (!allowedMakes.has(cb.value)) {
+                    label.style.display = "none";
+                    cb.checked = false;
+                }
+            });
+        });
     }
 
     function cascadeParam(param, rowKey, containerIds) {
@@ -195,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateAllCounts() {
-        ["make", "model", "trim", "fuel_type", "cylinders",
+        ["country", "make", "model", "trim", "fuel_type", "cylinders",
          "transmission", "drivetrain", "exterior_color", "interior_color"]
             .forEach(updateCount);
 
@@ -259,13 +290,22 @@ document.addEventListener("DOMContentLoaded", () => {
         const drives      = checked("drivetrain");
         const extColors   = checked("exterior_color");
         const intColors   = checked("interior_color");
+        const countries   = checked("country");
         const maxPrice    = parseFloat(scalarVal("max_price"))   || null;
         const maxMileage  = parseInt(scalarVal("max_mileage"))   || null;
         const zipCode     = scalarVal("zip_code");
         const radiusMi    = parseFloat(scalarVal("radius"))      || null;
 
+        let makesFilter = makes.slice();
+        if (countries.length && typeof COUNTRY_TO_MAKES === "object") {
+            const fromCountries = countries.flatMap(c => COUNTRY_TO_MAKES[c] || []);
+            makesFilter = makesFilter.length
+                ? makesFilter.filter(m => fromCountries.includes(m))
+                : fromCountries;
+        }
+
         let cars = ALL_CARS.filter(c => {
-            if (makes.length      && !makes.includes(c.make))            return false;
+            if (makesFilter.length && !makesFilter.includes(c.make))     return false;
             if (models.length     && !models.includes(c.model))          return false;
             if (trims.length      && !trims.includes(c.trim))            return false;
             if (fuels.length      && !fuels.includes(c.fuel_type))       return false;

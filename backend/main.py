@@ -139,6 +139,7 @@ def search():
         drivetrains=g("drivetrain") or None,
         exterior_colors=g("exterior_color") or None,
         interior_colors=g("interior_color") or None,
+        countries=g("country") or None,
         max_price=float(max_price) if max_price else None,
         max_mileage=int(max_mileage) if max_mileage else None,
         zip_code=zip_code or None,
@@ -151,6 +152,7 @@ def search():
         "cylinders": g("cylinders"), "transmission": g("transmission"),
         "drivetrain": g("drivetrain"), "exterior_color": g("exterior_color"),
         "interior_color": g("interior_color"),
+        "country": g("country"),
         "max_price": max_price, "max_mileage": max_mileage,
         "zip_code": zip_code, "radius": radius,
     }
