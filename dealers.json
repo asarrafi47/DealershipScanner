@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Long Beach BMW",
+    "url": "https://www.longbeachbmw.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "long-beach-bmw"
+  },
+  {
+    "name": "Irvine BMW",
+    "url": "https://www.irvinebmw.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "irvine-bmw"
+  },
+  {
+    "name": "Tuttle Click Ford",
+    "url": "https://www.tuttleclickford.com",
+    "provider": "dealer_on",
+    "dealer_id": "tuttle-click-ford"
+  },
+  {
+    "name": "Tuttle Click Mazda",
+    "url": "https://www.tuttleclickmazda.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "tuttle-click-mazda"
+  }
+]

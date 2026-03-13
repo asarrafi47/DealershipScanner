@@ -1,4 +1,6 @@
 flask
 requests
 duckduckgo-search
-sqlite3
+pgeocode
+playwright
+playwright-stealth
