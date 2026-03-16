@@ -18,6 +18,8 @@ from backend.parsers.base import (
 logger = logging.getLogger(__name__)
 
 DEFAULT_STR = "N/A"
+# Fallback when no images; frontend resolves /static/ relative to app
+FALLBACK_IMAGE_URL = "/static/placeholder.svg"
 
 
 def _safe_str(v, default: str = DEFAULT_STR) -> str:
@@ -41,7 +43,7 @@ def _extract_title(obj: dict, year: int, make: str, model: str) -> str:
 
 
 def _extract_price_dealer_com(obj: dict) -> int:
-    """Map trackingPricing['internetPrice'] to price. Strip $ and , and convert to integer. Fallback: pricing.retailPrice."""
+    """Map trackingPricing['internetPrice'] to price. Strip $ and , convert to int. Fallback: pricing, then trackingAttributes price/msrp."""
     tracking = obj.get("trackingPricing") or obj.get("tracking_pricing")
     if isinstance(tracking, dict):
         v = tracking.get("internetPrice") or tracking.get("internet_price")
@@ -54,6 +56,13 @@ def _extract_price_dealer_com(obj: dict) -> int:
         else:
             v = obj.get("price") or obj.get("internetPrice")
     raw = norm_float(v)
+    # If still $0, check attributes array for 'price' or 'msrp' label
+    if raw == 0:
+        arr = obj.get("trackingAttributes") or obj.get("tracking_attributes") or obj.get("attributes")
+        if isinstance(arr, list):
+            v2 = find_tracking_attr(arr, "price", "value") or find_tracking_attr(arr, "msrp", "value")
+            if v2 is not None and str(v2).strip():
+                raw = norm_float(v2)
     return int(round(raw))
 
 
@@ -69,19 +78,37 @@ def _extract_mileage_dealer_com(obj: dict) -> int:
     return norm_int(v)
 
 
-def _extract_gallery(obj: dict, base_url: str) -> list[str]:
-    """Map vehicle.images array to list of URLs using uri. Missing or empty array -> []."""
-    images = obj.get("images") or obj.get("Images")
-    if not isinstance(images, list) or len(images) == 0:
-        return []
-    out = []
-    for item in images:
-        if not isinstance(item, dict):
+def _extract_featured_or_thumbnail(obj: dict, base_url: str) -> str:
+    """If vehicle.images is empty, use featuredImage or thumbnail as backup. Returns URL or ''."""
+    for key in ("featuredImage", "featured_image", "thumbnail", "Thumbnail", "primaryImage", "primary_image"):
+        val = obj.get(key)
+        if val is None:
             continue
-        u = item.get("uri") or item.get("url") or item.get("URL")
-        if u and isinstance(u, str) and u.strip():
-            out.append(clean_image_url(u.strip(), base_url))
-    return out
+        if isinstance(val, str) and val.strip():
+            return clean_image_url(val.strip(), base_url)
+        if isinstance(val, dict):
+            u = val.get("uri") or val.get("url") or val.get("URL")
+            if u and isinstance(u, str) and u.strip():
+                return clean_image_url(u.strip(), base_url)
+    return ""
+
+
+def _extract_gallery(obj: dict, base_url: str) -> list[str]:
+    """Map vehicle.images to list of URLs (uri). If images empty, try featuredImage/thumbnail as backup."""
+    images = obj.get("images") or obj.get("Images")
+    if isinstance(images, list) and len(images) > 0:
+        out = []
+        for item in images:
+            if not isinstance(item, dict):
+                continue
+            u = item.get("uri") or item.get("url") or item.get("URL")
+            if u and isinstance(u, str) and u.strip():
+                out.append(clean_image_url(u.strip(), base_url))
+        if out:
+            return out
+    # Backup: single image from featuredImage or thumbnail
+    one = _extract_featured_or_thumbnail(obj, base_url)
+    return [one] if one else []
 
 
 def _extract_exterior_color(obj: dict) -> str:
@@ -117,6 +144,10 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
     mileage = _extract_mileage_dealer_com(obj)
     gallery = _extract_gallery(obj, base_url)
     image_url = gallery[0] if gallery else ""
+    # Fallback image when gallery and image_url are empty
+    if not image_url or not gallery:
+        image_url = image_url or FALLBACK_IMAGE_URL
+        gallery = gallery if gallery else [FALLBACK_IMAGE_URL]
     exterior_color = _extract_exterior_color(obj)
     fuel_type = _safe_str(obj.get("fuelType") or obj.get("fuel_type"))
 

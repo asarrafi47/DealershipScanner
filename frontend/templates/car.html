@@ -26,7 +26,7 @@
                 <div class="car-detail-gallery" id="car-gallery" data-gallery="{{ (car.gallery or []) | tojson }}">
                     <div class="car-gallery-main">
                         <div class="car-gallery-hero" id="car-gallery-hero">
-                            <div class="car-detail-image" id="car-gallery-image" style="background-image: url('{{ (car.gallery[0] if car.gallery and car.gallery|length else car.image_url) or "" }}')"></div>
+                            <div class="car-detail-image" id="car-gallery-image" style="background-image: url('{{ (car.gallery[0] if car.gallery and car.gallery|length else car.image_url) or "/static/placeholder.svg" }}')"></div>
                             {% if car.gallery and car.gallery|length > 1 %}
                             <button type="button" class="car-gallery-arrow car-gallery-arrow-prev" id="car-gallery-prev-hero" aria-label="Previous image">‹</button>
                             <button type="button" class="car-gallery-arrow car-gallery-arrow-next" id="car-gallery-next-hero" aria-label="Next image">›</button>
@@ -55,7 +55,7 @@
                 <div class="car-detail-info">
                     <p class="eyebrow">{{ car.dealer_name }}</p>
                     <h1>{{ car.title }}</h1>
-                    <p class="car-detail-price">${{ "{:,.0f}".format(car.price) }}</p>
+                    <p class="car-detail-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
 
                     <div class="car-specs">
                         <div class="spec-row">

@@ -276,7 +276,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const emptyState   = document.getElementById("empty-state");
 
     function fmt(n)  { return Number(n).toLocaleString(); }
-    function fmtUSD(n) { return "$" + Number(n).toLocaleString("en-US", {maximumFractionDigits: 0}); }
+    function fmtUSD(n) {
+        if (n == null || n === "" || Number(n) === 0) return "Call for Price";
+        return "$" + Number(n).toLocaleString("en-US", {maximumFractionDigits: 0});
+    }
 
     function renderResults() {
         if (!resultsGrid) return;
@@ -347,7 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
         resultsGrid.innerHTML = cars.map(c => {
             const cylLabel = c.cylinders === 0 ? "Electric" : `${c.cylinders}-cyl`;
             const gallery = Array.isArray(c.gallery) ? c.gallery : [];
-            const imgSrc = (gallery.length && gallery[0]) ? gallery[0] : (c.image_url || "");
+            const imgSrc = (gallery.length && gallery[0]) ? gallery[0] : (c.image_url || "") || "/static/placeholder.svg";
             const esc = (s) => (s || "").replace(/\\/g, "\\\\").replace(/'/g, "\\'");
             const photoCount = gallery.length;
             const photoLabel = photoCount > 1 ? `${photoCount} photos` : "";

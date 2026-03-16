@@ -59,11 +59,11 @@
             <div class="saved-grid">
                 {% for car in saved_cars %}
                 <a href="/car/{{ car.id }}" class="saved-card">
-                    <div class="saved-image" style="background-image: url('{{ car.image_url }}')"></div>
+                    <div class="saved-image" style="background-image: url('{{ car.image_url or "/static/placeholder.svg" }}')"></div>
                     <div class="saved-info">
                         <p class="saved-title">{{ car.title }}</p>
                         <p class="saved-trim">{{ car.trim }}</p>
-                        <p class="saved-price">${{ "{:,.0f}".format(car.price) }}</p>
+                        <p class="saved-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
                         <p class="saved-meta">{{ "{:,}".format(car.mileage) }} mi &middot; {{ car.fuel_type }}</p>
                     </div>
                 </a>
