@@ -165,6 +165,24 @@ def clean_image_url(url: str, base_url: str) -> str:
     return url
 
 
+def find_tracking_attr(arr, name_key: str, value_key: str = "value"):
+    """Find object in array where obj[name_key] == name_key (or matches). Return obj[value_key] or None. Defensive."""
+    if not arr or not isinstance(arr, list):
+        return None
+    want = (name_key or "").strip().lower()
+    if not want:
+        return None
+    for item in arr:
+        if not isinstance(item, dict):
+            continue
+        n = item.get("name") or item.get("key") or item.get("id")
+        if n is None:
+            continue
+        if str(n).strip().lower() == want:
+            return item.get(value_key) or item.get("value")
+    return None
+
+
 def norm_float(v) -> float:
     if v is None:
         return 0.0

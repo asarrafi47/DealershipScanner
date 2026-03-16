@@ -346,9 +346,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         resultsGrid.innerHTML = cars.map(c => {
             const cylLabel = c.cylinders === 0 ? "Electric" : `${c.cylinders}-cyl`;
+            const gallery = Array.isArray(c.gallery) ? c.gallery : [];
+            const imgSrc = (gallery.length && gallery[0]) ? gallery[0] : (c.image_url || "");
+            const esc = (s) => (s || "").replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+            const photoCount = gallery.length;
+            const photoLabel = photoCount > 1 ? `${photoCount} photos` : "";
             return `
             <a href="/car/${c.id}" class="result-card">
-                <div class="result-image" style="background-image:url('${c.image_url || ""}')"></div>
+                <div class="result-image-wrap">
+                    <div class="result-image" style="background-image:url('${esc(imgSrc)}')"></div>
+                    ${photoLabel ? `<span class="result-photo-count">${photoLabel}</span>` : ""}
+                </div>
                 <div class="result-content">
                     <h2>${c.title}</h2>
                     <p class="result-trim">${c.trim || ""}</p>

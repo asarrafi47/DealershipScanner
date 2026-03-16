@@ -824,11 +824,26 @@ h1 {
     box-shadow: 0 14px 36px rgba(0,0,0,0.4);
 }
 
+.result-image-wrap {
+    position: relative;
+}
+
 .result-image {
     height: 200px;
     background-size: cover;
     background-position: center;
     background-color: #1a1a1a;
+}
+
+.result-photo-count {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 6px;
 }
 
 .result-content { padding: 18px; }
@@ -915,6 +930,11 @@ h1 {
     margin: 24px 0 32px 0;
 }
 
+.car-gallery-main {
+    position: relative;
+    width: 100%;
+}
+
 .car-detail-image {
     width: 100%;
     aspect-ratio: 16 / 10;
@@ -922,6 +942,47 @@ h1 {
     background-size: cover;
     background-position: center;
     background-color: #1a1a1a;
+}
+
+.car-gallery-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.car-gallery-counter {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    min-width: 64px;
+    text-align: center;
+}
+
+.car-gallery-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.car-gallery-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.car-gallery-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
 /* ── Car page chatbot (same width as image gallery, dark bubble chat) ── */

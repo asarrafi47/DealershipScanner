@@ -23,8 +23,17 @@
 
             <div class="car-detail-layout">
 
-                <div class="car-detail-gallery">
-                    <div class="car-detail-image" style="background-image: url('{{ car.image_url }}')"></div>
+                <div class="car-detail-gallery" id="car-gallery" data-gallery="{{ (car.gallery or []) | tojson }}">
+                    <div class="car-gallery-main">
+                        <div class="car-detail-image" id="car-gallery-image" style="background-image: url('{{ (car.gallery[0] if car.gallery and car.gallery|length else car.image_url) or "" }}')"></div>
+                        {% if car.gallery and car.gallery|length > 1 %}
+                        <div class="car-gallery-controls">
+                            <button type="button" class="car-gallery-btn car-gallery-prev" id="car-gallery-prev" aria-label="Previous image">‹</button>
+                            <span class="car-gallery-counter" id="car-gallery-counter">1 of {{ car.gallery|length }}</span>
+                            <button type="button" class="car-gallery-btn car-gallery-next" id="car-gallery-next" aria-label="Next image">›</button>
+                        </div>
+                        {% endif %}
+                    </div>
                     <div id="car-chatbot" class="car-chatbot" data-vin="{{ car.vin }}">
                         <div class="car-chatbot-messages" id="car-chatbot-messages"></div>
                         <div class="car-chatbot-input-row">
@@ -84,6 +93,12 @@
                             <span class="spec-label">VIN</span>
                             <span class="spec-value">{{ car.vin }}</span>
                         </div>
+                        {% if car.stock_number %}
+                        <div class="spec-row">
+                            <span class="spec-label">Stock #</span>
+                            <span class="spec-value">{{ car.stock_number }}</span>
+                        </div>
+                        {% endif %}
                     </div>
 
                     <div class="car-detail-actions">
@@ -98,6 +113,32 @@
     </div>
 
     <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <script>
+    (function() {
+        var el = document.getElementById('car-gallery');
+        var imgEl = document.getElementById('car-gallery-image');
+        var prevBtn = document.getElementById('car-gallery-prev');
+        var nextBtn = document.getElementById('car-gallery-next');
+        var counterEl = document.getElementById('car-gallery-counter');
+        if (!el || !imgEl) return;
+        var gallery = [];
+        try {
+            var raw = el.getAttribute('data-gallery');
+            if (raw) gallery = JSON.parse(raw);
+        } catch (e) {}
+        if (!Array.isArray(gallery) || gallery.length <= 1) return;
+        var idx = 0;
+        function show() {
+            if (gallery[idx]) imgEl.style.backgroundImage = "url('" + gallery[idx].replace(/'/g, "\\'") + "')";
+            if (counterEl) counterEl.textContent = (idx + 1) + ' of ' + gallery.length;
+            if (prevBtn) prevBtn.disabled = idx === 0;
+            if (nextBtn) nextBtn.disabled = idx === gallery.length - 1;
+        }
+        if (prevBtn) prevBtn.addEventListener('click', function() { if (idx > 0) { idx--; show(); } });
+        if (nextBtn) nextBtn.addEventListener('click', function() { if (idx < gallery.length - 1) { idx++; show(); } });
+        show();
+    })();
+    </script>
     <script type="module" src="{{ url_for('static', filename='car-chatbot.js') }}"></script>
 </body>
 </html>

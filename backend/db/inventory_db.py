@@ -1,6 +1,23 @@
+import json
 import sqlite3
 
 DB_PATH = "inventory.db"
+
+
+def _parse_car_gallery(car_dict):
+    """Ensure car_dict['gallery'] is a list (parse from JSON string if needed)."""
+    if not car_dict:
+        return
+    g = car_dict.get("gallery")
+    if isinstance(g, list):
+        return
+    if g is None or g == "":
+        car_dict["gallery"] = []
+        return
+    try:
+        car_dict["gallery"] = json.loads(g) if isinstance(g, str) else []
+    except (TypeError, ValueError):
+        car_dict["gallery"] = []
 
 # Major automakers by country of origin (for country filter)
 MAKE_TO_COUNTRY = {
@@ -47,7 +64,10 @@ def init_inventory_db():
             image_url        TEXT,
             dealer_name      TEXT,
             dealer_url       TEXT,
-            scraped_at       TEXT
+            scraped_at       TEXT,
+            dealer_id        TEXT,
+            stock_number     TEXT,
+            gallery          TEXT
         )
     """)
     cursor.execute("""
@@ -254,8 +274,12 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                     if dist <= radius_miles:
                         car["distance_miles"] = round(dist, 1)
                         filtered.append(car)
+            for c in filtered:
+                _parse_car_gallery(c)
             return sorted(filtered, key=lambda c: c["distance_miles"])
 
+    for c in results:
+        _parse_car_gallery(c)
     return sorted(results, key=lambda c: c["price"])
 
 
@@ -266,7 +290,10 @@ def get_car_by_id(car_id):
     cursor.execute("SELECT * FROM cars WHERE id = ?", (car_id,))
     row = cursor.fetchone()
     conn.close()
-    return dict(row) if row else None
+    car = dict(row) if row else None
+    if car:
+        _parse_car_gallery(car)
+    return car
 
 
 def get_car_by_vin(vin):
@@ -276,7 +303,10 @@ def get_car_by_vin(vin):
     cursor.execute("SELECT * FROM cars WHERE vin = ?", (vin,))
     row = cursor.fetchone()
     conn.close()
-    return dict(row) if row else None
+    car = dict(row) if row else None
+    if car:
+        _parse_car_gallery(car)
+    return car
 
 
 def get_filter_options():
@@ -334,6 +364,8 @@ def get_filter_options():
         "SELECT * FROM cars ORDER BY price ASC"
     )
     all_cars = [dict(r) for r in all_cars_cursor.fetchall()]
+    for c in all_cars:
+        _parse_car_gallery(c)
     conn2.close()
 
     # Countries that have at least one make in our DB
