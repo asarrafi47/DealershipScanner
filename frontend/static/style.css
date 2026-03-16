@@ -935,6 +935,55 @@ h1 {
     width: 100%;
 }
 
+.car-gallery-hero {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+}
+
+.car-gallery-hero:focus {
+    outline: none;
+}
+
+.car-gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    z-index: 2;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.car-gallery-arrow:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.75);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.car-gallery-arrow:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.car-gallery-arrow-prev {
+    left: 16px;
+}
+
+.car-gallery-arrow-next {
+    right: 16px;
+}
+
 .car-detail-image {
     width: 100%;
     aspect-ratio: 16 / 10;
@@ -983,6 +1032,56 @@ h1 {
 .car-gallery-btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+}
+
+/* Scrollable thumbnail strip */
+.car-gallery-thumbs-wrap {
+    margin-top: 16px;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    -webkit-overflow-scrolling: touch;
+}
+
+.car-gallery-thumbs-wrap::-webkit-scrollbar {
+    height: 6px;
+}
+
+.car-gallery-thumbs-wrap::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.car-gallery-thumbs {
+    display: flex;
+    gap: 10px;
+    padding: 4px 0;
+    min-height: 72px;
+}
+
+.car-gallery-thumb {
+    flex: 0 0 96px;
+    width: 96px;
+    height: 64px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-size: cover;
+    background-position: center;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    padding: 0;
+    transition: border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.car-gallery-thumb:hover {
+    opacity: 0.95;
+}
+
+.car-gallery-thumb.active {
+    border-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 
 /* ── Car page chatbot (same width as image gallery, dark bubble chat) ── */

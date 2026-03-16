@@ -25,12 +25,21 @@
 
                 <div class="car-detail-gallery" id="car-gallery" data-gallery="{{ (car.gallery or []) | tojson }}">
                     <div class="car-gallery-main">
-                        <div class="car-detail-image" id="car-gallery-image" style="background-image: url('{{ (car.gallery[0] if car.gallery and car.gallery|length else car.image_url) or "" }}')"></div>
+                        <div class="car-gallery-hero" id="car-gallery-hero">
+                            <div class="car-detail-image" id="car-gallery-image" style="background-image: url('{{ (car.gallery[0] if car.gallery and car.gallery|length else car.image_url) or "" }}')"></div>
+                            {% if car.gallery and car.gallery|length > 1 %}
+                            <button type="button" class="car-gallery-arrow car-gallery-arrow-prev" id="car-gallery-prev-hero" aria-label="Previous image">‹</button>
+                            <button type="button" class="car-gallery-arrow car-gallery-arrow-next" id="car-gallery-next-hero" aria-label="Next image">›</button>
+                            {% endif %}
+                        </div>
                         {% if car.gallery and car.gallery|length > 1 %}
                         <div class="car-gallery-controls">
                             <button type="button" class="car-gallery-btn car-gallery-prev" id="car-gallery-prev" aria-label="Previous image">‹</button>
                             <span class="car-gallery-counter" id="car-gallery-counter">1 of {{ car.gallery|length }}</span>
                             <button type="button" class="car-gallery-btn car-gallery-next" id="car-gallery-next" aria-label="Next image">›</button>
+                        </div>
+                        <div class="car-gallery-thumbs-wrap">
+                            <div class="car-gallery-thumbs" id="car-gallery-thumbs" role="tablist"></div>
                         </div>
                         {% endif %}
                     </div>
@@ -117,9 +126,13 @@
     (function() {
         var el = document.getElementById('car-gallery');
         var imgEl = document.getElementById('car-gallery-image');
+        var heroEl = document.getElementById('car-gallery-hero');
         var prevBtn = document.getElementById('car-gallery-prev');
         var nextBtn = document.getElementById('car-gallery-next');
+        var prevHero = document.getElementById('car-gallery-prev-hero');
+        var nextHero = document.getElementById('car-gallery-next-hero');
         var counterEl = document.getElementById('car-gallery-counter');
+        var thumbsEl = document.getElementById('car-gallery-thumbs');
         if (!el || !imgEl) return;
         var gallery = [];
         try {
@@ -127,15 +140,62 @@
             if (raw) gallery = JSON.parse(raw);
         } catch (e) {}
         if (!Array.isArray(gallery) || gallery.length <= 1) return;
+
+        function esc(s) { return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+
         var idx = 0;
+        function goPrev(e) { if (e) e.preventDefault(); if (idx > 0) { idx--; show(); } }
+        function goNext(e) { if (e) e.preventDefault(); if (idx < gallery.length - 1) { idx++; show(); } }
+
         function show() {
-            if (gallery[idx]) imgEl.style.backgroundImage = "url('" + gallery[idx].replace(/'/g, "\\'") + "')";
+            var url = gallery[idx];
+            if (url) imgEl.style.backgroundImage = "url('" + esc(url) + "')";
             if (counterEl) counterEl.textContent = (idx + 1) + ' of ' + gallery.length;
             if (prevBtn) prevBtn.disabled = idx === 0;
             if (nextBtn) nextBtn.disabled = idx === gallery.length - 1;
+            if (prevHero) prevHero.disabled = idx === 0;
+            if (nextHero) nextHero.disabled = idx === gallery.length - 1;
+            if (thumbsEl) {
+                var tabs = thumbsEl.querySelectorAll('.car-gallery-thumb');
+                tabs.forEach(function(t, i) { t.classList.toggle('active', i === idx); t.setAttribute('aria-selected', i === idx); });
+                var activeThumb = thumbsEl.querySelector('.car-gallery-thumb.active');
+                if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+            }
         }
-        if (prevBtn) prevBtn.addEventListener('click', function() { if (idx > 0) { idx--; show(); } });
-        if (nextBtn) nextBtn.addEventListener('click', function() { if (idx < gallery.length - 1) { idx++; show(); } });
+
+        if (heroEl) {
+            heroEl.addEventListener('click', function(e) {
+                if (e.target.closest('button')) return;
+                var rect = heroEl.getBoundingClientRect();
+                var x = e.clientX - rect.left;
+                if (x < rect.width / 2) goPrev(e); else goNext(e);
+            });
+        }
+        if (prevBtn) prevBtn.addEventListener('click', goPrev);
+        if (nextBtn) nextBtn.addEventListener('click', goNext);
+        if (prevHero) prevHero.addEventListener('click', goPrev);
+        if (nextHero) nextHero.addEventListener('click', goNext);
+
+        if (thumbsEl) {
+            gallery.forEach(function(url, i) {
+                var t = document.createElement('button');
+                t.type = 'button';
+                t.className = 'car-gallery-thumb' + (i === 0 ? ' active' : '');
+                t.setAttribute('role', 'tab');
+                t.setAttribute('aria-selected', i === 0);
+                t.setAttribute('aria-label', 'Image ' + (i + 1) + ' of ' + gallery.length);
+                t.style.backgroundImage = "url('" + esc(url) + "')";
+                t.addEventListener('click', function() { idx = i; show(); });
+                thumbsEl.appendChild(t);
+            });
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.target.matches('input, textarea')) return;
+            if (e.key === 'ArrowLeft') { goPrev(e); e.preventDefault(); }
+            if (e.key === 'ArrowRight') { goNext(e); e.preventDefault(); }
+        });
+
         show();
     })();
     </script>

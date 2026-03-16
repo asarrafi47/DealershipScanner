@@ -79,8 +79,30 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
         if not vin:
             continue
         title = v.get("title") or f"{v.get('year')} {v.get('make')} {v.get('model')} {v.get('trim') or ''}".strip()
+        # Price: ensure number (strip $ and , already done in parser); store as int/float
+        try:
+            price = v.get("price")
+            price = int(round(float(price))) if price is not None and str(price).strip() != "" else 0
+        except (TypeError, ValueError):
+            price = 0
+        # Mileage: ensure integer
+        try:
+            mileage = v.get("mileage")
+            mileage = int(mileage) if mileage is not None and str(mileage).strip() != "" else 0
+        except (TypeError, ValueError):
+            mileage = 0
+        # Gallery: SQLite stores arrays as JSON string; always use json.dumps(list)
         gallery = v.get("gallery")
-        gallery_json = json.dumps(gallery) if isinstance(gallery, list) else (gallery or "[]")
+        if isinstance(gallery, list):
+            gallery_json = json.dumps(gallery)
+        elif gallery is not None and isinstance(gallery, str):
+            try:
+                json.loads(gallery)
+                gallery_json = gallery
+            except (TypeError, ValueError):
+                gallery_json = "[]"
+        else:
+            gallery_json = "[]"
         cursor.execute(
             """
             INSERT INTO cars (
@@ -108,8 +130,8 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 v.get("make") or "",
                 v.get("model") or "",
                 v.get("trim") or "",
-                v.get("price"),
-                v.get("mileage"),
+                price,
+                mileage,
                 v.get("image_url") or "",
                 v.get("dealer_name") or "",
                 v.get("dealer_url") or "",

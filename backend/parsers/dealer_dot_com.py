@@ -29,7 +29,7 @@ def _safe_str(v, default: str = DEFAULT_STR) -> str:
 
 
 def _extract_title(obj: dict, year: int, make: str, model: str) -> str:
-    """Dealer.com returns title as array e.g. ["Used 2026 BMW", "i5 eDrive40"]. Join with ' '. Fallback: year make model."""
+    """Dealer.com: title is an array. Join with ' ' (e.g. vehicle['title'].join(' ')). Fallback: year make model."""
     raw = obj.get("title") or obj.get("name")
     if raw is None:
         return f"{year or ''} {make or ''} {model or ''}".strip() or DEFAULT_STR
@@ -40,33 +40,37 @@ def _extract_title(obj: dict, year: int, make: str, model: str) -> str:
     return s if s else f"{year or ''} {make or ''} {model or ''}".strip() or DEFAULT_STR
 
 
-def _extract_price_dealer_com(obj: dict) -> float:
-    """Exact path: vehicle.trackingPricing.internetPrice. Fallback: vehicle.pricing.retailPrice. Strip $ and ','."""
-    tracking = obj.get("trackingPricing") if isinstance(obj.get("trackingPricing"), dict) else None
-    v = None
-    if tracking is not None:
-        v = tracking.get("internetPrice")
+def _extract_price_dealer_com(obj: dict) -> int:
+    """Map trackingPricing['internetPrice'] to price. Strip $ and , and convert to integer. Fallback: pricing.retailPrice."""
+    tracking = obj.get("trackingPricing") or obj.get("tracking_pricing")
+    if isinstance(tracking, dict):
+        v = tracking.get("internetPrice") or tracking.get("internet_price")
+    else:
+        v = None
     if v is None or (isinstance(v, str) and "contact" in (v or "").lower()):
-        pricing = obj.get("pricing") if isinstance(obj.get("pricing"), dict) else None
-        v = pricing.get("retailPrice") if pricing else None
-    if v is None:
-        pricing = obj.get("pricing") if isinstance(obj.get("pricing"), dict) else None
-        v = obj.get("price") or obj.get("internetPrice") or (pricing.get("salePrice") if pricing else None)
-    return norm_float(v)
+        pricing = obj.get("pricing") or obj.get("trackingPricing") or obj.get("tracking_pricing")
+        if isinstance(pricing, dict):
+            v = pricing.get("retailPrice") or pricing.get("retail_price") or pricing.get("salePrice") or pricing.get("internetPrice")
+        else:
+            v = obj.get("price") or obj.get("internetPrice")
+    raw = norm_float(v)
+    return int(round(raw))
 
 
 def _extract_mileage_dealer_com(obj: dict) -> int:
-    """Find in vehicle.trackingAttributes where name === 'odometer', extract value. Default 0."""
-    arr = obj.get("trackingAttributes")
+    """Find object in trackingAttributes where name == 'odometer' and map its value to mileage. Default 0."""
+    arr = obj.get("trackingAttributes") or obj.get("tracking_attributes")
     v = find_tracking_attr(arr, "odometer", "value")
     if v is not None and v != "":
         return norm_int(v)
-    v = obj.get("odometer") or obj.get("mileage") or (find_tracking_attr(arr, "mileage", "value") if arr else None)
+    v = obj.get("odometer") or obj.get("mileage")
+    if v is None and isinstance(arr, list):
+        v = find_tracking_attr(arr, "mileage", "value")
     return norm_int(v)
 
 
 def _extract_gallery(obj: dict, base_url: str) -> list[str]:
-    """Map vehicle.images to list of URLs using uri. Defensive: missing or empty array -> []."""
+    """Map vehicle.images array to list of URLs using uri. Missing or empty array -> []."""
     images = obj.get("images") or obj.get("Images")
     if not isinstance(images, list) or len(images) == 0:
         return []
@@ -82,7 +86,7 @@ def _extract_gallery(obj: dict, base_url: str) -> list[str]:
 
 def _extract_exterior_color(obj: dict) -> str:
     """Find in vehicle.trackingAttributes where name === 'exteriorColor'. Default N/A."""
-    arr = obj.get("trackingAttributes")
+    arr = obj.get("trackingAttributes") or obj.get("tracking_attributes")
     v = find_tracking_attr(arr, "exteriorColor", "value")
     if v is not None and str(v).strip():
         return norm_str(v) or DEFAULT_STR

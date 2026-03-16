@@ -176,6 +176,10 @@ async def run_dealer(playwright, dealer: dict, browser_type="chromium"):
                 v.setdefault("dealer_url", url)
 
         if all_vehicles:
+            # Ensure gallery is always a list for DB (stored as json.dumps(gallery) in database.py)
+            for v in all_vehicles:
+                g = v.get("gallery")
+                v["gallery"] = g if isinstance(g, list) else []
             count = upsert_vehicles(all_vehicles)
             logger.info("Parsing: %s — extracted %d vehicles (deduped by VIN), upserted %d", name, len(all_vehicles), count)
             return count
