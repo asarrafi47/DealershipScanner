@@ -66,25 +66,34 @@ def _get_nested(obj: dict, *paths) -> any:
 
 
 def extract_price(obj: dict) -> float:
-    """Price: salePrice, internetPrice, askingPrice, price, or pricing.internetPrice. If $0 or 'Contact Dealer', fallback to msrp/internetPrice."""
+    """Price: prefer nested pricing.internetPrice, then msrp, salePrice, price. Strips $ and commas."""
     v = _get_nested(
         obj,
-        ("salePrice",),
+        ("pricing", "internetPrice"),
+        ("pricing", "msrp"),
+        ("pricing", "salePrice"),
+        ("pricing", "price"),
         ("internetPrice",),
+        ("msrp",),
+        ("salePrice",),
         ("askingPrice",),
         ("price",),
         ("Price",),
         ("sellingPrice",),
         ("listPrice",),
-        ("pricing", "internetPrice"),
-        ("pricing", "salePrice"),
-        ("pricing", "price"),
-        ("msrp",),
     )
     price = norm_float(v)
     raw = v
     if price == 0 or (isinstance(raw, str) and "contact" in (raw or "").lower()):
-        fallback = _get_nested(obj, ("msrp",), ("internetPrice",), ("pricing", "internetPrice"), ("pricing", "msrp"))
+        fallback = _get_nested(
+            obj,
+            ("pricing", "msrp"),
+            ("pricing", "internetPrice"),
+            ("pricing", "salePrice"),
+            ("msrp",),
+            ("internetPrice",),
+            ("price",),
+        )
         price = norm_float(fallback)
     return price
 
@@ -96,37 +105,49 @@ def _is_placeholder_url(url: str) -> bool:
     return "coming-soon" in u or "placeholder" in u or "no-image" in u or "default" in u
 
 
+def _image_url_from_media_item(item, base_url: str) -> str:
+    """Get URL from a single image dict (url, URL, or uri). Returns empty if placeholder."""
+    if not isinstance(item, dict):
+        return ""
+    u = item.get("url") or item.get("URL") or item.get("uri")
+    if u and isinstance(u, str) and not _is_placeholder_url(u):
+        return clean_image_url(u, base_url)
+    return ""
+
+
 def extract_image_url(obj: dict, base_url: str) -> str:
-    """Images: primaryImage.url, image.url, images[0].url, or photoUrl. If placeholder (e.g. coming-soon), use second image in gallery."""
-    v = _get_nested(obj, ("primaryImage", "url"), ("image", "url"), ("photoUrl",), ("imageUrl",), ("image_url",))
-    if v and isinstance(v, str) and not _is_placeholder_url(v):
-        return clean_image_url(v, base_url)
-    images = obj.get("images") or obj.get("Images") or obj.get("image")
+    """Images: images[0].uri/url first (Dealer.com nested), then primaryImage, photoUrl, etc. Checks images exists and length > 0."""
+    images = obj.get("images") or obj.get("Images")
     if isinstance(images, list) and len(images) > 0:
         for idx in [0, 1]:
             if idx >= len(images):
                 break
-            item = images[idx]
-            if isinstance(item, dict):
-                u = item.get("url") or item.get("URL")
-                if u and isinstance(u, str) and not _is_placeholder_url(u):
-                    return clean_image_url(u, base_url)
-            elif isinstance(item, str) and not _is_placeholder_url(item):
-                return clean_image_url(item, base_url)
+            url = _image_url_from_media_item(images[idx], base_url)
+            if url:
+                return url
         first = images[0]
-        if isinstance(first, dict):
-            v = first.get("url") or first.get("URL")
-            if v:
-                return clean_image_url(v, base_url)
-        elif isinstance(first, str):
-            return clean_image_url(first, base_url)
+        url = _image_url_from_media_item(first, base_url)
+        if url:
+            return url
+    v = _get_nested(obj, ("primaryImage", "url"), ("image", "url"), ("photoUrl",), ("imageUrl",), ("image_url",))
+    if v and isinstance(v, str) and not _is_placeholder_url(v):
+        return clean_image_url(v, base_url)
     v = obj.get("photo") or obj.get("thumbnail") or obj.get("image") or ""
     return clean_image_url(v if isinstance(v, str) else "", base_url)
 
 
 def extract_mileage(obj: dict) -> int:
-    """Mileage: mileage, odometer, or miles."""
-    v = _get_nested(obj, ("mileage",), ("Mileage",), ("odometer",), ("miles",), ("kms",))
+    """Mileage: odometer first, then mileage, then attributes.mileage. Parsed as integer."""
+    v = _get_nested(
+        obj,
+        ("odometer",),
+        ("mileage",),
+        ("Mileage",),
+        ("attributes", "mileage"),
+        ("attributes", "odometer"),
+        ("miles",),
+        ("kms",),
+    )
     return norm_int(v)
 
 
