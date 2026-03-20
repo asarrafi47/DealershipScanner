@@ -895,8 +895,11 @@ h1 {
 /* ── Car Detail ── */
 
 .car-detail {
-    padding: 48px;
-    max-width: 1200px;
+    padding: 48px 24px;
+    max-width: 95%;
+    width: 1800px;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .back-link {
@@ -914,9 +917,10 @@ h1 {
 
 .car-detail-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    align-items: start;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 30px;
+    align-items: flex-start;
+    width: 100%;
 }
 
 .car-detail-gallery {
@@ -1251,6 +1255,93 @@ h1 {
     gap: 12px;
 }
 
+/* Metadata column */
+.car-detail-info {
+    padding: 24px 0 32px;
+    min-width: 0;
+}
+
+/* Column 3: Vehicle History Highlights panel */
+.car-detail-history {
+    background: #0d0d0d;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 24px;
+    min-width: 0;
+}
+
+.history-panel-title {
+    margin: 0 0 20px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.history-highlights-list {
+    list-style: none;
+    margin: 0 0 24px;
+    padding: 0;
+}
+
+.history-highlight-item {
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.history-highlight-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 18px;
+    height: 18px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300bde3' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+}
+
+.history-no-highlights {
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0 24px;
+}
+
+.carfax-report-btn {
+    display: block;
+    width: 100%;
+    padding: 16px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background: #00bde3;
+    border: none;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.15s ease;
+    box-sizing: border-box;
+}
+
+.carfax-report-btn:hover {
+    background: #0099b8;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.carfax-report-btn-secondary {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.carfax-report-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
 /* ── Dashboard ── */
 
 .db-layout {
@@ -1441,6 +1532,7 @@ h1 {
     .results-grid { grid-template-columns: repeat(2, 1fr); }
     .dashboard-grid, .listings-grid { grid-template-columns: 1fr; }
     .car-detail-layout { grid-template-columns: 1fr; }
+    .car-detail-info { padding: 24px 0 32px; }
     h1 { font-size: 44px; }
 }
 

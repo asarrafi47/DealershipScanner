@@ -111,6 +111,47 @@ def _extract_gallery(obj: dict, base_url: str) -> list[str]:
     return [one] if one else []
 
 
+def _extract_history_highlights(obj: dict) -> list[str]:
+    """Extract history badges from callout, badges, highlightedAttributes (e.g. 'No Accidents Reported', '1-Owner')."""
+    out: list[str] = []
+    seen: set[str] = set()
+
+    def add(s: str) -> None:
+        s = norm_str(s)
+        if s and s.lower() not in seen:
+            seen.add(s.lower())
+            out.append(s)
+
+    # callout: often array of badge strings or objects with text/label
+    for key in ("callout", "callouts", "badges", "Badges", "historyBadges", "history_badges"):
+        val = obj.get(key)
+        if isinstance(val, list):
+            for item in val:
+                if isinstance(item, str):
+                    add(item)
+                elif isinstance(item, dict):
+                    add(item.get("text") or item.get("label") or item.get("name") or item.get("value") or "")
+        elif isinstance(val, str):
+            add(val)
+
+    # highlightedAttributes: sometimes Condition/History summary
+    ha = obj.get("highlightedAttributes") or obj.get("highlighted_attributes")
+    if isinstance(ha, list):
+        for item in ha:
+            if isinstance(item, dict):
+                name = item.get("name") or item.get("key") or item.get("label")
+                value = item.get("value") or item.get("text")
+                if name and value:
+                    add(f"{name}: {value}")
+                elif value:
+                    add(str(value))
+                elif name:
+                    add(str(name))
+            elif isinstance(item, str):
+                add(item)
+    return out
+
+
 def _extract_exterior_color(obj: dict) -> str:
     """Find in vehicle.trackingAttributes where name === 'exteriorColor'. Default N/A."""
     arr = obj.get("trackingAttributes") or obj.get("tracking_attributes")
@@ -150,6 +191,22 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         gallery = gallery if gallery else [FALLBACK_IMAGE_URL]
     exterior_color = _extract_exterior_color(obj)
     fuel_type = _safe_str(obj.get("fuelType") or obj.get("fuel_type"))
+    # Prefer dealer VHR/partner link (vhr.carfax.com) — less likely to trigger iframe verification than consumer link
+    vhr_url = obj.get("vhr_url") or obj.get("carfax_token")
+    if vhr_url and isinstance(vhr_url, str) and vhr_url.strip().startswith("http"):
+        carfax_url = norm_str(vhr_url)
+    elif vhr_url and vin and not vin.startswith("unknown"):
+        carfax_url = f"https://vhr.carfax.com/main?vin={vin}"
+    else:
+        carfax_url = norm_str(
+            obj.get("carfax_url")
+            or obj.get("carfaxUrl")
+            or obj.get("carfaxLink")
+            or obj.get("history_report_url")
+            or obj.get("vehicleHistoryUrl")
+            or obj.get("vehicle_history_url")
+            or ""
+        )
 
     return {
         "vin": vin,
@@ -172,6 +229,8 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         "drivetrain": _safe_str(obj.get("drivetrain") or obj.get("driveType")),
         "exterior_color": exterior_color,
         "interior_color": _safe_str(obj.get("interiorColor") or obj.get("interior_color")),
+        "carfax_url": carfax_url if carfax_url else None,
+        "history_highlights": _extract_history_highlights(obj),
     }
 
 

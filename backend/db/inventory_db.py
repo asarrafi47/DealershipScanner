@@ -19,6 +19,23 @@ def _parse_car_gallery(car_dict):
     except (TypeError, ValueError):
         car_dict["gallery"] = []
 
+
+def _parse_car_history_highlights(car_dict):
+    """Ensure car_dict['history_highlights'] is a list (parse from JSON string if needed)."""
+    if not car_dict:
+        return
+    h = car_dict.get("history_highlights")
+    if isinstance(h, list):
+        return
+    if h is None or h == "":
+        car_dict["history_highlights"] = []
+        return
+    try:
+        car_dict["history_highlights"] = json.loads(h) if isinstance(h, str) else []
+    except (TypeError, ValueError):
+        car_dict["history_highlights"] = []
+
+
 # Major automakers by country of origin (for country filter)
 MAKE_TO_COUNTRY = {
     "BMW": "Germany", "Mercedes-Benz": "Germany", "Audi": "Germany",
@@ -67,7 +84,9 @@ def init_inventory_db():
             scraped_at       TEXT,
             dealer_id        TEXT,
             stock_number     TEXT,
-            gallery          TEXT
+            gallery          TEXT,
+            carfax_url       TEXT,
+            history_highlights TEXT
         )
     """)
     cursor.execute("""
@@ -276,10 +295,12 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                         filtered.append(car)
             for c in filtered:
                 _parse_car_gallery(c)
+                _parse_car_history_highlights(c)
             return sorted(filtered, key=lambda c: c["distance_miles"])
 
     for c in results:
         _parse_car_gallery(c)
+        _parse_car_history_highlights(c)
     return sorted(results, key=lambda c: c["price"])
 
 
@@ -293,6 +314,7 @@ def get_car_by_id(car_id):
     car = dict(row) if row else None
     if car:
         _parse_car_gallery(car)
+        _parse_car_history_highlights(car)
     return car
 
 
@@ -306,6 +328,7 @@ def get_car_by_vin(vin):
     car = dict(row) if row else None
     if car:
         _parse_car_gallery(car)
+        _parse_car_history_highlights(car)
     return car
 
 
@@ -366,6 +389,7 @@ def get_filter_options():
     all_cars = [dict(r) for r in all_cars_cursor.fetchall()]
     for c in all_cars:
         _parse_car_gallery(c)
+        _parse_car_history_highlights(c)
     conn2.close()
 
     # Countries that have at least one make in our DB

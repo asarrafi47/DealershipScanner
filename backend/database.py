@@ -47,7 +47,7 @@ def _ensure_schema(conn):
     conn.commit()
     cursor.execute("PRAGMA table_info(cars)")
     cols = [row[1] for row in cursor.fetchall()]
-    for col, ctype in [("dealer_id", "TEXT"), ("stock_number", "TEXT"), ("gallery", "TEXT")]:
+    for col, ctype in [("dealer_id", "TEXT"), ("stock_number", "TEXT"), ("gallery", "TEXT"), ("carfax_url", "TEXT"), ("history_highlights", "TEXT")]:
         if col not in cols:
             logger.info("Adding %s column to cars table", col)
             cursor.execute(f"ALTER TABLE cars ADD COLUMN {col} {ctype}")
@@ -103,14 +103,16 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 gallery_json = "[]"
         else:
             gallery_json = "[]"
+        highlights = v.get("history_highlights")
+        highlights_json = json.dumps(highlights) if isinstance(highlights, list) else (highlights if isinstance(highlights, str) else "[]")
         cursor.execute(
             """
             INSERT INTO cars (
                 vin, title, year, make, model, trim, price, mileage,
                 image_url, dealer_name, dealer_url, dealer_id, scraped_at,
                 zip_code, fuel_type, cylinders, transmission, drivetrain,
-                exterior_color, interior_color, stock_number, gallery
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                exterior_color, interior_color, stock_number, gallery, carfax_url, history_highlights
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(vin) DO UPDATE SET
                 title=excluded.title, year=excluded.year, make=excluded.make,
                 model=excluded.model, trim=excluded.trim, price=excluded.price,
@@ -121,7 +123,7 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 cylinders=excluded.cylinders, transmission=excluded.transmission,
                 drivetrain=excluded.drivetrain, exterior_color=excluded.exterior_color,
                 interior_color=excluded.interior_color, stock_number=excluded.stock_number,
-                gallery=excluded.gallery
+                gallery=excluded.gallery, carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights
             """,
             (
                 vin,
@@ -146,6 +148,8 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 v.get("interior_color"),
                 v.get("stock_number") or "",
                 gallery_json,
+                v.get("carfax_url") or "",
+                highlights_json,
             ),
         )
         count += 1

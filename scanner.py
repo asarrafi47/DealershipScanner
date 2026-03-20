@@ -158,7 +158,9 @@ async def run_dealer(playwright, dealer: dict, browser_type="chromium"):
                 logger.warning("Navigating: %s — %s: %s", name, full_url, e)
                 continue
 
-        # Parse all accumulated payloads and merge by VIN (upsert_vehicles dedupes)
+        # Parse all accumulated payloads and merge by VIN (upsert_vehicles dedupes).
+        # Parser extracts carfax_url, history_report_url, vhr_url, and carfax_token from getInventory;
+        # when vhr_url or carfax_token is present, uses partner link (vhr.carfax.com) for less iframe blocking.
         all_vehicles = []
         for body in intercepted_json:
             vehicles = parse(provider, body, base_url=url, dealer_id=dealer_id, dealer_name=name, dealer_url=url)

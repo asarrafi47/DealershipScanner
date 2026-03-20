@@ -115,6 +115,26 @@
                     </div>
                 </div>
 
+                <div class="car-detail-history">
+                    <h3 class="history-panel-title">Vehicle History Highlights</h3>
+                    {% if car.history_highlights and car.history_highlights|length > 0 %}
+                    <ul class="history-highlights-list">
+                        {% for item in car.history_highlights %}
+                        <li class="history-highlight-item">{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="history-no-highlights">Detailed history report available. Click below to view.</p>
+                    {% endif %}
+                    {% if car.carfax_url %}
+                    <a href="{{ car.carfax_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View Full CARFAX Report</a>
+                    {% elif car.vin and not car.vin.startswith('unknown-') %}
+                    <a href="https://www.carfax.com/VehicleHistory/p/Report.cfx?vin={{ car.vin }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View Full CARFAX Report</a>
+                    {% else %}
+                    <a href="{{ car.dealer_url }}" target="_blank" class="carfax-report-btn carfax-report-btn-secondary">Contact Dealer for History Report</a>
+                    {% endif %}
+                </div>
+
             </div>
 
         </section>
