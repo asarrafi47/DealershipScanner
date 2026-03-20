@@ -40,6 +40,18 @@ def ensure_table(conn: sqlite3.Connection) -> None:
         """
     )
     conn.execute("CREATE INDEX IF NOT EXISTS idx_epa_master_lookup ON epa_master(year, make, model)")
+    cur = conn.cursor()
+    cur.execute("PRAGMA table_info(epa_master)")
+    have = {row[1] for row in cur.fetchall()}
+    for col, typ in [
+        ("city08", "REAL"),
+        ("highway08", "REAL"),
+        ("city_e", "REAL"),
+        ("highway_e", "REAL"),
+        ("atv_type", "TEXT"),
+    ]:
+        if col not in have:
+            conn.execute(f"ALTER TABLE epa_master ADD COLUMN {col} {typ}")
     conn.commit()
 
 
@@ -87,11 +99,28 @@ def import_csv(path: str, conn: sqlite3.Connection) -> int:
         c_trany = col("trany", "transmission")
         c_drive = col("drive", "drivetrain")
         c_fuel = col("fuelType", "fuel_type", "fuelType1")
+        c_city = col("city08")
+        c_hwy = col("highway08")
+        c_citye = col("cityE")
+        c_hwye = col("highwayE")
+        # fueleconomy.gov uses atvType; some exports differ slightly
+        c_atv = col("atvType", "ATVType", "atv_type", "vehicleType", "VehType")
+        if not c_atv:
+            for fn in fieldnames:
+                n = (fn or "").strip().replace(" ", "").replace("_", "").lower()
+                if n == "atvtype" or n.endswith("atvtype"):
+                    c_atv = fn
+                    break
 
         if not c_year or not c_make or not c_model:
             print("Could not find year/make/model columns in CSV.", file=sys.stderr)
             print("Fields:", fieldnames[:20], file=sys.stderr)
             return 0
+        if not c_atv:
+            print(
+                "Note: no atvType column found in CSV — PHEV/Hybrid 'Electric +' prefix will use trim/VIN rules only.",
+                file=sys.stderr,
+            )
 
         batch = []
         for raw in reader:
@@ -112,13 +141,38 @@ def import_csv(path: str, conn: sqlite3.Connection) -> int:
             trany = get(c_trany) or None
             drive = get(c_drive) or None
             fuel = get(c_fuel) or None
-            batch.append((vid, y, mk, md, cyl, displ, trany, drive, fuel))
+            city08 = norm_float(get(c_city)) if c_city else None
+            highway08 = norm_float(get(c_hwy)) if c_hwy else None
+            city_e = norm_float(get(c_citye)) if c_citye else None
+            highway_e = norm_float(get(c_hwye)) if c_hwye else None
+            atv_type = (get(c_atv) or None) if c_atv else None
+            batch.append(
+                (
+                    vid,
+                    y,
+                    mk,
+                    md,
+                    cyl,
+                    displ,
+                    trany,
+                    drive,
+                    fuel,
+                    city08,
+                    highway08,
+                    city_e,
+                    highway_e,
+                    atv_type,
+                )
+            )
             rows += 1
             if len(batch) >= 2000:
                 conn.executemany(
                     """
-                    INSERT INTO epa_master (epa_vehicle_id, year, make, model, cylinders, displacement, trany, drive, fuel_type)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO epa_master (
+                        epa_vehicle_id, year, make, model, cylinders, displacement, trany, drive, fuel_type,
+                        city08, highway08, city_e, highway_e, atv_type
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     batch,
                 )
@@ -126,8 +180,11 @@ def import_csv(path: str, conn: sqlite3.Connection) -> int:
         if batch:
             conn.executemany(
                 """
-                INSERT INTO epa_master (epa_vehicle_id, year, make, model, cylinders, displacement, trany, drive, fuel_type)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO epa_master (
+                    epa_vehicle_id, year, make, model, cylinders, displacement, trany, drive, fuel_type,
+                    city08, highway08, city_e, highway_e, atv_type
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 batch,
             )

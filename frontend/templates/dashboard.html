@@ -4,7 +4,7 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body data-ai-page="dashboard">
 
 <div class="page">
 
@@ -83,5 +83,6 @@
 </div>
 
 <script src="{{ url_for('static', filename='main.js') }}"></script>
+<script src="{{ url_for('static', filename='ai_widget.js') }}" defer></script>
 </body>
 </html>

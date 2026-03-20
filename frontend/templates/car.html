@@ -4,7 +4,7 @@
     <title>{{ car.title }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body data-ai-page="car" data-ai-vin="{{ car.vin | e }}" data-carfax-url="{{ (car.carfax_url or '') | e }}">
 
     <div class="page">
 
@@ -20,6 +20,10 @@
         <section class="car-detail">
 
             <a href="javascript:history.back()" class="back-link">← Back to results</a>
+
+            {% if car.carfax_url %}
+            <p class="ai-carfax-hint">If Carfax shows “Verification required,” complete the challenge on their site — the co-pilot can’t read Carfax until you do.</p>
+            {% endif %}
 
             <div class="car-detail-info-wrapper">
             <div class="car-detail-layout">
@@ -74,6 +78,39 @@
                         {% endif %}
                     </p>
 
+                    <div class="engine-performance">
+                        <h3 class="engine-performance-title">Engine &amp; Performance</h3>
+                        <p class="engine-performance-sub">EPA fuel economy + rule-based power where the EPA file has no HP/torque.</p>
+                        <div class="ep-row" data-spec-field="engine">
+                            <span class="ep-ico ep-ico-engine" aria-hidden="true"></span>
+                            <div class="ep-body">
+                                <div class="ep-label">Engine</div>
+                                <div class="ep-value">{{ verified_specs.get('master_engine_string') or '—' }}</div>
+                            </div>
+                        </div>
+                        <div class="ep-row" data-spec-field="transmission">
+                            <span class="ep-ico ep-ico-trans" aria-hidden="true"></span>
+                            <div class="ep-body">
+                                <div class="ep-label">Transmission</div>
+                                <div class="ep-value">{{ verified_specs.get('transmission_display') or car.transmission }}</div>
+                            </div>
+                        </div>
+                        <div class="ep-row" data-spec-field="drivetrain">
+                            <span class="ep-ico ep-ico-drive" aria-hidden="true"></span>
+                            <div class="ep-body">
+                                <div class="ep-label">Drivetrain</div>
+                                <div class="ep-value">{{ verified_specs.get('drivetrain_display') or car.drivetrain }}{% if verified_specs.get('drivetrain_verified') %} <span class="spec-verified">(Verified)</span>{% endif %}</div>
+                            </div>
+                        </div>
+                        <div class="ep-row" data-spec-field="efficiency">
+                            <span class="ep-ico ep-ico-mpg" aria-hidden="true"></span>
+                            <div class="ep-body">
+                                <div class="ep-label">Efficiency</div>
+                                <div class="ep-value">{% if verified_specs.get('fuel_economy_display') %}{{ verified_specs.fuel_economy_display }}{% else %}—{% endif %}</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="car-specs">
                         <div class="spec-row">
                             <span class="spec-label">Year</span>
@@ -96,17 +133,9 @@
                             <span class="spec-value">{{ "{:,}".format(car.mileage) }} mi</span>
                         </div>
                         {% set vd = verified_specs.get('cylinders_display') %}
-                        <div class="spec-row">
+                        <div class="spec-row" data-spec-field="cylinders">
                             <span class="spec-label">Cylinders</span>
                             <span class="spec-value">{% if vd is not none %}{% if vd == 0 %}Electric{% else %}{{ vd }} Cylinders{% endif %}{% if verified_specs.get('cylinders_verified') %} <span class="spec-verified">(Verified)</span>{% endif %}{% else %}—{% endif %}</span>
-                        </div>
-                        <div class="spec-row">
-                            <span class="spec-label">Transmission</span>
-                            <span class="spec-value">{{ verified_specs.get('transmission_display') or car.transmission }}</span>
-                        </div>
-                        <div class="spec-row">
-                            <span class="spec-label">Drivetrain</span>
-                            <span class="spec-value">{{ verified_specs.get('drivetrain_display') or car.drivetrain }}{% if verified_specs.get('drivetrain_verified') %} <span class="spec-verified">(Verified)</span>{% endif %}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Exterior</span>
@@ -186,6 +215,7 @@
     </div>
 
     <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <script src="{{ url_for('static', filename='ai_widget.js') }}"></script>
     <script>
     (function() {
         var jsonEl = document.getElementById('car-gallery-json');

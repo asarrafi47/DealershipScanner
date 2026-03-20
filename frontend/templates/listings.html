@@ -4,7 +4,7 @@
     <title>Listings</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body data-ai-page="listings">
 
 <script>
 const CAR_ROWS        = {{ options.car_rows | tojson }};
@@ -416,5 +416,6 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
 </div>
 
 <script src="{{ url_for('static', filename='main.js') }}"></script>
+<script src="{{ url_for('static', filename='ai_widget.js') }}" defer></script>
 </body>
 </html>

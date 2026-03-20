@@ -86,6 +86,18 @@ def _ensure_schema(conn):
     cursor.execute(
         "CREATE INDEX IF NOT EXISTS idx_epa_master_lookup ON epa_master(year, make, model)"
     )
+    cursor.execute("PRAGMA table_info(epa_master)")
+    epa_cols = [row[1] for row in cursor.fetchall()]
+    for col, ctype in [
+        ("city08", "REAL"),
+        ("highway08", "REAL"),
+        ("city_e", "REAL"),
+        ("highway_e", "REAL"),
+        ("atv_type", "TEXT"),
+    ]:
+        if col not in epa_cols:
+            cursor.execute(f"ALTER TABLE epa_master ADD COLUMN {col} {ctype}")
+            conn.commit()
     conn.commit()
     conn.close()
 

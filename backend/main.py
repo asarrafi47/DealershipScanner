@@ -4,6 +4,7 @@ from backend.db.users_db import init_users_db, check_user, save_user
 from backend.db.inventory_db import init_inventory_db, search_cars, get_car_by_id, get_car_by_vin, get_filter_options
 from backend.knowledge_engine import prepare_car_detail_context
 from backend.listings import listings_page
+from backend.ai_agent import run_ai_chat, verify_car_data
 
 try:
     from duckduckgo_search import DDGS
@@ -185,6 +186,28 @@ def listings():
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 CHAT_MODEL = "llama3.2"
+
+
+@app.route("/api/ai/chat", methods=["POST"])
+def api_ai_chat():
+    """
+    GPT-4o co-pilot with EPA/trim verification. JSON body:
+    { "user_message": "...", "current_vin": "optional", "page": "listings"|"car"|"dashboard" }
+    """
+    data = request.get_json() or {}
+    user_message = (data.get("user_message") or data.get("message") or "").strip()
+    vin = (data.get("current_vin") or data.get("vin") or "").strip()
+    page = (data.get("page") or "").strip() or None
+    if not user_message:
+        return jsonify({"error": "user_message (or message) is required"}), 400
+    out = run_ai_chat(user_message, vin or None, page)
+    return jsonify(out)
+
+
+@app.route("/api/ai/verify/<vin>", methods=["GET"])
+def api_ai_verify(vin: str):
+    """Debug / tools: JSON verification for a VIN without calling OpenAI."""
+    return jsonify(verify_car_data(vin))
 
 
 @app.route("/api/chat", methods=["POST"])

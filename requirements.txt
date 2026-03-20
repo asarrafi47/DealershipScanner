@@ -1,4 +1,5 @@
 flask
+openai
 requests
 duckduckgo-search
 pgeocode

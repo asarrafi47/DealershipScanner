@@ -87,10 +87,14 @@ document.addEventListener("DOMContentLoaded", () => {
         showLoading();
         setBusy(true);
 
-        fetch("/api/chat", {
+        fetch("/api/ai/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message, vin }),
+            body: JSON.stringify({
+                user_message: message,
+                current_vin: vin,
+                page: "car",
+            }),
         })
             .then((res) => res.json())
             .then((data) => {
@@ -99,6 +103,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     appendMessage("Sorry, the assistant is unavailable. " + (data.error || ""), "bot");
                 } else {
                     appendMessage(data.reply || "No response.", "bot");
+                }
+                if (typeof window.__DS_applyAiDiscrepancyFlags === "function") {
+                    window.__DS_applyAiDiscrepancyFlags(data.discrepancy_flags || []);
                 }
             })
             .catch((err) => {

@@ -925,7 +925,7 @@ h1 {
 
 .car-detail-layout {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 0.8fr);
     gap: 30px;
     align-items: flex-start;
     width: 100%;
@@ -953,7 +953,7 @@ h1 {
 .car-gallery-hero {
     position: relative;
     width: 100%;
-    max-height: min(500px, 60vh);
+    max-height: 500px;
     cursor: pointer;
 }
 
@@ -1003,12 +1003,12 @@ h1 {
 .car-detail-image {
     position: relative;
     width: 100%;
-    height: min(500px, 60vh);
-    max-height: min(500px, 60vh);
+    height: 500px;
+    max-height: 500px;
     border-radius: 20px;
     background-color: #1a1a1a;
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
     background-position: center;
     overflow: hidden;
 }
@@ -1018,7 +1018,7 @@ h1 {
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
 }
 
@@ -1335,6 +1335,82 @@ h1 {
     font-weight: 600;
     color: rgba(120, 200, 255, 0.95);
     white-space: nowrap;
+}
+
+/* Monroney-style Engine & Performance */
+.engine-performance {
+    margin-bottom: 28px;
+    padding: 20px 20px 8px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(165deg, rgba(28, 28, 28, 0.95) 0%, rgba(14, 14, 14, 0.98) 100%);
+}
+
+.engine-performance-title {
+    margin: 0 0 6px 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.96);
+}
+
+.engine-performance-sub {
+    margin: 0 0 18px 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.ep-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ep-row:last-of-type {
+    border-bottom: none;
+}
+
+.ep-ico {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.ep-ico-engine::before { content: "⚙"; }
+.ep-ico-trans::before { content: "A"; font-size: 15px; font-weight: 700; letter-spacing: 0; }
+.ep-ico-drive::before { content: "◇"; font-size: 16px; }
+.ep-ico-mpg::before { content: "⛽"; }
+
+.ep-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.ep-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 6px;
+}
+
+.ep-value {
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.92);
+    word-wrap: break-word;
 }
 
 .car-specs {
@@ -1659,4 +1735,177 @@ h1 {
     .filter-docked-inner { display: none; }
     .page.docked .dash-content { margin-left: 0; }
     .car-detail { padding: 20px; }
+}
+
+/* ── AI co-pilot widget (floating) + discrepancy highlights ── */
+.ai-widget {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 9998;
+    font-family: inherit;
+}
+
+.ai-widget-fab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 189, 227, 0.45);
+    background: linear-gradient(145deg, #1a1a1a 0%, #0f0f0f 100%);
+    color: #e8f8fc;
+    cursor: pointer;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.ai-widget-fab:hover {
+    border-color: rgba(0, 189, 227, 0.85);
+    transform: translateY(-2px);
+}
+
+.ai-widget-fab-icon {
+    font-size: 18px;
+    color: #00bde3;
+}
+
+.ai-widget-fab-label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+.ai-widget-panel {
+    position: absolute;
+    right: 0;
+    bottom: 58px;
+    width: min(400px, calc(100vw - 40px));
+    max-height: min(500px, 70vh);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #1a1a1a;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+}
+
+.ai-widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.ai-widget-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.ai-widget-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.ai-widget-close:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.ai-widget-sub {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.ai-widget-messages {
+    flex: 1;
+    min-height: 100px;
+    max-height: 280px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px 0;
+}
+
+.ai-widget-msg {
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.45;
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+.ai-widget-msg.user {
+    align-self: flex-end;
+    background: rgba(0, 189, 227, 0.18);
+    border: 1px solid rgba(0, 189, 227, 0.35);
+    color: #e8f8fc;
+}
+
+.ai-widget-msg.bot {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.ai-widget-input-row {
+    display: flex;
+    gap: 8px;
+}
+
+.ai-widget-input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #111;
+    color: #fff;
+    font-size: 14px;
+}
+
+.ai-widget-send {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 189, 227, 0.5);
+    background: rgba(0, 189, 227, 0.15);
+    color: #00bde3;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ai-widget-send:hover {
+    background: rgba(0, 189, 227, 0.28);
+}
+
+.spec-row.ai-spec-warning,
+.ep-row.ai-spec-warning {
+    background: rgba(255, 176, 32, 0.12);
+    border-radius: 10px;
+    outline: 1px solid rgba(255, 176, 32, 0.45);
+}
+
+.ai-carfax-hint {
+    margin: 0 0 20px 0;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.75);
+    background: rgba(0, 189, 227, 0.08);
+    border: 1px solid rgba(0, 189, 227, 0.25);
+    max-width: 720px;
 }

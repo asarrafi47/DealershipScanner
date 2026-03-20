@@ -91,3 +91,16 @@ python scripts/import_epa_master.py
 Downloads `vehicles.csv` from fueleconomy.gov and fills **`epa_master`** (same DB as `inventory.db`).
 
 The existing **`model_specs`** table remains for manual overrides; the Node scanner still applies **self-correction** from `model_specs` when present.
+
+## AI co-pilot (GPT-4o + EPA verification)
+
+- **Env:** `OPENAI_API_KEY` (required for live answers). Optional: `OPENAI_CHAT_MODEL` (default `gpt-4o`).
+- **Backend:** `backend/ai_agent.py` — `verify_car_data(vin)` compares listing vs `epa_master` + trim decoder; `POST /api/ai/chat` runs the assistant with that JSON in context.
+- **Debug:** `GET /api/ai/verify/<vin>` returns verification JSON only (no OpenAI call).
+- **Frontend:** `frontend/static/ai_widget.js` — floating **Co-Pilot** on listings & dashboard; car detail uses the gallery chat + same API. Amber highlight on `data-spec-field` rows when `discrepancy_flags` is returned.
+- **Legacy:** `POST /api/chat` (Ollama) is unchanged if you still use local LLM elsewhere.
+
+```bash
+pip install openai
+export OPENAI_API_KEY=sk-...
+```
