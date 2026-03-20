@@ -42,25 +42,64 @@ def _extract_title(obj: dict, year: int, make: str, model: str) -> str:
     return s if s else f"{year or ''} {make or ''} {model or ''}".strip() or DEFAULT_STR
 
 
+def _first_price(*vals) -> float:
+    for v in vals:
+        if v is None or v is False:
+            continue
+        if isinstance(v, str) and "contact" in v.lower():
+            continue
+        n = norm_float(v)
+        if n > 0:
+            return n
+    return 0.0
+
+
 def _extract_price_dealer_com(obj: dict) -> int:
-    """Map trackingPricing['internetPrice'] to price. Strip $ and , convert to int. Fallback: pricing, then trackingAttributes price/msrp."""
+    """
+    Priority: trackingPricing.internetPrice → pricing.internetPrice → pricing.finalPrice
+    → pricing.salePrice → pricing.msrp → price → trackingAttributes price/msrp.
+    """
     tracking = obj.get("trackingPricing") or obj.get("tracking_pricing")
-    if isinstance(tracking, dict):
-        v = tracking.get("internetPrice") or tracking.get("internet_price")
-    else:
-        v = None
-    if v is None or (isinstance(v, str) and "contact" in (v or "").lower()):
-        pricing = obj.get("pricing") or obj.get("trackingPricing") or obj.get("tracking_pricing")
-        if isinstance(pricing, dict):
-            v = pricing.get("retailPrice") or pricing.get("retail_price") or pricing.get("salePrice") or pricing.get("internetPrice")
-        else:
-            v = obj.get("price") or obj.get("internetPrice")
-    raw = norm_float(v)
-    # If still $0, check attributes array for 'price' or 'msrp' label
+    pricing = obj.get("pricing") if isinstance(obj.get("pricing"), dict) else None
+
+    raw = _first_price(
+        isinstance(tracking, dict) and tracking.get("internetPrice"),
+        isinstance(tracking, dict) and tracking.get("internet_price"),
+        pricing and pricing.get("internetPrice"),
+        pricing and pricing.get("internet_price"),
+        pricing and pricing.get("finalPrice"),
+        pricing and pricing.get("final_price"),
+        pricing and pricing.get("salePrice"),
+        pricing and pricing.get("sale_price"),
+        pricing and pricing.get("msrp"),
+        pricing and pricing.get("MSRP"),
+        obj.get("price"),
+        obj.get("internetPrice"),
+        pricing and pricing.get("retailPrice"),
+        pricing and pricing.get("retail_price"),
+    )
     if raw == 0:
         arr = obj.get("trackingAttributes") or obj.get("tracking_attributes") or obj.get("attributes")
         if isinstance(arr, list):
             v2 = find_tracking_attr(arr, "price", "value") or find_tracking_attr(arr, "msrp", "value")
+            if v2 is not None and str(v2).strip():
+                raw = norm_float(v2)
+    return int(round(raw))
+
+
+def _extract_msrp_dealer_com(obj: dict) -> int:
+    """MSRP for display when sale price is hidden (Unlock Price)."""
+    pricing = obj.get("pricing") if isinstance(obj.get("pricing"), dict) else None
+    raw = _first_price(
+        pricing and pricing.get("msrp"),
+        pricing and pricing.get("MSRP"),
+        pricing and pricing.get("retailMsrp"),
+        obj.get("msrp"),
+    )
+    if raw == 0:
+        arr = obj.get("trackingAttributes") or obj.get("tracking_attributes") or obj.get("attributes")
+        if isinstance(arr, list):
+            v2 = find_tracking_attr(arr, "msrp", "value")
             if v2 is not None and str(v2).strip():
                 raw = norm_float(v2)
     return int(round(raw))
@@ -93,17 +132,40 @@ def _extract_featured_or_thumbnail(obj: dict, base_url: str) -> str:
     return ""
 
 
+def _best_image_url(item: dict, base_url: str) -> str:
+    """Prefer largest / full-res Dealer.com image fields, then fall back to thumbnail."""
+    if not isinstance(item, dict):
+        return ""
+    for key in (
+        "xxlargeUri",
+        "xlargeUri",
+        "largeUri",
+        "fullUri",
+        "hiResUri",
+        "uri",
+        "url",
+        "URL",
+        "imageUrl",
+        "thumbnailUri",
+        "thumbUrl",
+    ):
+        u = item.get(key)
+        if u and isinstance(u, str) and u.strip():
+            return clean_image_url(u.strip(), base_url)
+    return ""
+
+
 def _extract_gallery(obj: dict, base_url: str) -> list[str]:
-    """Map vehicle.images to list of URLs (uri). If images empty, try featuredImage/thumbnail as backup."""
+    """Map vehicle.images to list of URLs (prefer full-res keys over thumbnail)."""
     images = obj.get("images") or obj.get("Images")
     if isinstance(images, list) and len(images) > 0:
         out = []
+        seen: set[str] = set()
         for item in images:
-            if not isinstance(item, dict):
-                continue
-            u = item.get("uri") or item.get("url") or item.get("URL")
-            if u and isinstance(u, str) and u.strip():
-                out.append(clean_image_url(u.strip(), base_url))
+            u = _best_image_url(item, base_url) if isinstance(item, dict) else ""
+            if u and u not in seen:
+                seen.add(u)
+                out.append(u)
         if out:
             return out
     # Backup: single image from featuredImage or thumbnail
@@ -182,6 +244,7 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
 
     title = _extract_title(obj, year, make, model)
     price = _extract_price_dealer_com(obj)
+    msrp = _extract_msrp_dealer_com(obj)
     mileage = _extract_mileage_dealer_com(obj)
     gallery = _extract_gallery(obj, base_url)
     image_url = gallery[0] if gallery else ""
@@ -208,6 +271,13 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
             or ""
         )
 
+    cyl = norm_int(obj.get("cylinders") or 0)
+    if not cyl:
+        arr = obj.get("trackingAttributes") or obj.get("tracking_attributes")
+        c2 = find_tracking_attr(arr, "cylinders", "value") if isinstance(arr, list) else None
+        if c2 is not None:
+            cyl = norm_int(c2)
+
     return {
         "vin": vin,
         "stock_number": stock_number,
@@ -217,6 +287,7 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         "trim": _safe_str(obj.get("trim") or obj.get("Trim") or obj.get("trimName")),
         "title": title,
         "price": price,
+        "msrp": msrp,
         "mileage": mileage,
         "image_url": image_url,
         "gallery": gallery,
@@ -231,6 +302,7 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         "interior_color": _safe_str(obj.get("interiorColor") or obj.get("interior_color")),
         "carfax_url": carfax_url if carfax_url else None,
         "history_highlights": _extract_history_highlights(obj),
+        "cylinders": cyl or None,
     }
 
 

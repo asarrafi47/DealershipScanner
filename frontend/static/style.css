@@ -902,6 +902,14 @@ h1 {
     box-sizing: border-box;
 }
 
+/* Prevent gallery from expanding past grid; keeps 3-column proportions */
+.car-detail-info-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
 .back-link {
     color: #888;
     text-decoration: none;
@@ -917,7 +925,7 @@ h1 {
 
 .car-detail-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
     gap: 30px;
     align-items: flex-start;
     width: 100%;
@@ -928,6 +936,8 @@ h1 {
     flex-direction: column;
     gap: 32px;
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .car-detail-gallery .car-chatbot {
@@ -937,11 +947,13 @@ h1 {
 .car-gallery-main {
     position: relative;
     width: 100%;
+    min-width: 0;
 }
 
 .car-gallery-hero {
     position: relative;
     width: 100%;
+    max-height: min(500px, 60vh);
     cursor: pointer;
 }
 
@@ -989,12 +1001,25 @@ h1 {
 }
 
 .car-detail-image {
+    position: relative;
     width: 100%;
-    aspect-ratio: 16 / 10;
+    height: min(500px, 60vh);
+    max-height: min(500px, 60vh);
     border-radius: 20px;
-    background-size: cover;
-    background-position: center;
     background-color: #1a1a1a;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    overflow: hidden;
+}
+
+.car-detail-image .car-gallery-main-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
 }
 
 .car-gallery-controls {
@@ -1086,6 +1111,68 @@ h1 {
 .car-gallery-thumb.active {
     border-color: rgba(255, 255, 255, 0.8);
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.car-detail-price .price-msrp-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.verified-specs-panel {
+    margin-top: 24px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.verified-specs-title {
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.verified-specs-note {
+    margin: 0 0 12px 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.45;
+}
+
+.verified-specs-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.verified-specs-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 14px;
+}
+
+.verified-specs-list li:last-child {
+    border-bottom: none;
+}
+
+.vs-label {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.vs-val {
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 500;
+}
+
+.verified-specs-sources {
+    margin: 12px 0 0 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.45);
 }
 
 /* ── Car page chatbot (same width as image gallery, dark bubble chat) ── */
@@ -1224,6 +1311,30 @@ h1 {
     font-size: 32px;
     font-weight: 700;
     margin-bottom: 32px;
+}
+
+/* Price $0 but MSRP present — hero MSRP (large) */
+.car-detail-price .price-msrp-hero {
+    display: block;
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: rgba(255, 255, 255, 0.96);
+}
+
+.car-detail-price .price-msrp-secondary {
+    display: block;
+    margin-top: 10px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.spec-verified {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: rgba(120, 200, 255, 0.95);
+    white-space: nowrap;
 }
 
 .car-specs {

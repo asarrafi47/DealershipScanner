@@ -47,11 +47,46 @@ def _ensure_schema(conn):
     conn.commit()
     cursor.execute("PRAGMA table_info(cars)")
     cols = [row[1] for row in cursor.fetchall()]
-    for col, ctype in [("dealer_id", "TEXT"), ("stock_number", "TEXT"), ("gallery", "TEXT"), ("carfax_url", "TEXT"), ("history_highlights", "TEXT")]:
+    for col, ctype in [
+        ("dealer_id", "TEXT"),
+        ("stock_number", "TEXT"),
+        ("gallery", "TEXT"),
+        ("carfax_url", "TEXT"),
+        ("history_highlights", "TEXT"),
+        ("msrp", "REAL"),
+    ]:
         if col not in cols:
             logger.info("Adding %s column to cars table", col)
             cursor.execute(f"ALTER TABLE cars ADD COLUMN {col} {ctype}")
             conn.commit()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS model_specs (
+            make TEXT NOT NULL,
+            model TEXT NOT NULL,
+            cylinders INTEGER,
+            gears INTEGER,
+            transmission TEXT,
+            PRIMARY KEY (make, model)
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS epa_master (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            epa_vehicle_id INTEGER,
+            year INTEGER,
+            make TEXT,
+            model TEXT,
+            cylinders INTEGER,
+            displacement REAL,
+            trany TEXT,
+            drive TEXT,
+            fuel_type TEXT
+        )
+    """)
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_epa_master_lookup ON epa_master(year, make, model)"
+    )
+    conn.commit()
     conn.close()
 
 
@@ -91,6 +126,13 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
             mileage = int(mileage) if mileage is not None and str(mileage).strip() != "" else 0
         except (TypeError, ValueError):
             mileage = 0
+        try:
+            msrp_val = v.get("msrp")
+            msrp = int(round(float(msrp_val))) if msrp_val is not None and str(msrp_val).strip() != "" else None
+            if msrp is not None and msrp <= 0:
+                msrp = None
+        except (TypeError, ValueError):
+            msrp = None
         # Gallery: SQLite stores arrays as JSON string; always use json.dumps(list)
         gallery = v.get("gallery")
         if isinstance(gallery, list):
@@ -111,8 +153,8 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 vin, title, year, make, model, trim, price, mileage,
                 image_url, dealer_name, dealer_url, dealer_id, scraped_at,
                 zip_code, fuel_type, cylinders, transmission, drivetrain,
-                exterior_color, interior_color, stock_number, gallery, carfax_url, history_highlights
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                exterior_color, interior_color, stock_number, gallery, carfax_url, history_highlights, msrp
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(vin) DO UPDATE SET
                 title=excluded.title, year=excluded.year, make=excluded.make,
                 model=excluded.model, trim=excluded.trim, price=excluded.price,
@@ -123,7 +165,8 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 cylinders=excluded.cylinders, transmission=excluded.transmission,
                 drivetrain=excluded.drivetrain, exterior_color=excluded.exterior_color,
                 interior_color=excluded.interior_color, stock_number=excluded.stock_number,
-                gallery=excluded.gallery, carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights
+                gallery=excluded.gallery, carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights,
+                msrp=excluded.msrp
             """,
             (
                 vin,
@@ -150,6 +193,7 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 gallery_json,
                 v.get("carfax_url") or "",
                 highlights_json,
+                msrp,
             ),
         )
         count += 1

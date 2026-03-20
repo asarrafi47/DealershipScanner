@@ -86,9 +86,32 @@ def init_inventory_db():
             stock_number     TEXT,
             gallery          TEXT,
             carfax_url       TEXT,
-            history_highlights TEXT
+            history_highlights TEXT,
+            msrp             REAL
         )
     """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS epa_master (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            epa_vehicle_id INTEGER,
+            year INTEGER,
+            make TEXT,
+            model TEXT,
+            cylinders INTEGER,
+            displacement REAL,
+            trany TEXT,
+            drive TEXT,
+            fuel_type TEXT
+        )
+    """)
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_epa_master_lookup ON epa_master(year, make, model)"
+    )
+    cursor.execute("PRAGMA table_info(cars)")
+    car_cols = [row[1] for row in cursor.fetchall()]
+    if "msrp" not in car_cols:
+        cursor.execute("ALTER TABLE cars ADD COLUMN msrp REAL")
+    conn.commit()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS saved_cars (
             id        INTEGER PRIMARY KEY AUTOINCREMENT,

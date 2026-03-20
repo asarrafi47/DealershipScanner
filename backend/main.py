@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, redirect, jsonify
 import requests
 from backend.db.users_db import init_users_db, check_user, save_user
 from backend.db.inventory_db import init_inventory_db, search_cars, get_car_by_id, get_car_by_vin, get_filter_options
+from backend.knowledge_engine import prepare_car_detail_context
 from backend.listings import listings_page
 
 try:
@@ -168,7 +169,13 @@ def car_detail(car_id):
     car = get_car_by_id(car_id)
     if not car:
         return redirect("/dashboard")
-    return render_template("car.html", car=car)
+    ctx = prepare_car_detail_context(car)
+    return render_template(
+        "car.html",
+        car=car,
+        gallery_images=ctx.get("gallery_images") or [],
+        verified_specs=ctx.get("verified_specs") or {},
+    )
 
 
 @app.route("/listings")

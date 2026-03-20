@@ -21,21 +21,26 @@
 
             <a href="javascript:history.back()" class="back-link">← Back to results</a>
 
+            <div class="car-detail-info-wrapper">
             <div class="car-detail-layout">
 
-                <div class="car-detail-gallery" id="car-gallery" data-gallery="{{ (car.gallery or []) | tojson }}">
+                {# Col 1: Gallery — JSON in script tag avoids broken data-gallery attributes #}
+                <div class="car-detail-gallery" id="car-gallery">
+                    <script type="application/json" id="car-gallery-json">{{ gallery_images | tojson }}</script>
                     <div class="car-gallery-main">
-                        <div class="car-gallery-hero" id="car-gallery-hero">
-                            <div class="car-detail-image" id="car-gallery-image" style="background-image: url('{{ (car.gallery[0] if car.gallery and car.gallery|length else car.image_url) or "/static/placeholder.svg" }}')"></div>
-                            {% if car.gallery and car.gallery|length > 1 %}
+                        <div class="car-gallery-hero" id="car-gallery-hero" role="region" aria-label="Vehicle photo gallery">
+                            <div class="car-detail-image">
+                                <img class="car-gallery-main-img" id="car-gallery-main-img" src="{{ (gallery_images[0] if gallery_images else car.image_url) | e }}" alt="{{ car.title }} — photo gallery">
+                            </div>
+                            {% if gallery_images and gallery_images|length > 1 %}
                             <button type="button" class="car-gallery-arrow car-gallery-arrow-prev" id="car-gallery-prev-hero" aria-label="Previous image">‹</button>
                             <button type="button" class="car-gallery-arrow car-gallery-arrow-next" id="car-gallery-next-hero" aria-label="Next image">›</button>
                             {% endif %}
                         </div>
-                        {% if car.gallery and car.gallery|length > 1 %}
+                        {% if gallery_images and gallery_images|length > 1 %}
                         <div class="car-gallery-controls">
                             <button type="button" class="car-gallery-btn car-gallery-prev" id="car-gallery-prev" aria-label="Previous image">‹</button>
-                            <span class="car-gallery-counter" id="car-gallery-counter">1 of {{ car.gallery|length }}</span>
+                            <span class="car-gallery-counter" id="car-gallery-counter">1 of {{ gallery_images|length }}</span>
                             <button type="button" class="car-gallery-btn car-gallery-next" id="car-gallery-next" aria-label="Next image">›</button>
                         </div>
                         <div class="car-gallery-thumbs-wrap">
@@ -52,10 +57,22 @@
                     </div>
                 </div>
 
+                {# Col 2: Metadata + Verified tech specs #}
                 <div class="car-detail-info">
                     <p class="eyebrow">{{ car.dealer_name }}</p>
                     <h1>{{ car.title }}</h1>
-                    <p class="car-detail-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
+                    <p class="car-detail-price">
+                        {% if car.price and car.price > 0 %}
+                            ${{ "{:,.0f}".format(car.price) }}
+                            {% if car.msrp and car.msrp > 0 and car.msrp != car.price %}
+                            <span class="price-msrp-secondary">MSRP: ${{ "{:,.0f}".format(car.msrp) }}</span>
+                            {% endif %}
+                        {% elif car.msrp and car.msrp > 0 %}
+                            <span class="price-msrp-hero">MSRP: ${{ "{:,.0f}".format(car.msrp) }}</span>
+                        {% else %}
+                            Call for Price
+                        {% endif %}
+                    </p>
 
                     <div class="car-specs">
                         <div class="spec-row">
@@ -78,17 +95,18 @@
                             <span class="spec-label">Mileage</span>
                             <span class="spec-value">{{ "{:,}".format(car.mileage) }} mi</span>
                         </div>
+                        {% set vd = verified_specs.get('cylinders_display') %}
                         <div class="spec-row">
                             <span class="spec-label">Cylinders</span>
-                            <span class="spec-value">{{ "Electric" if car.cylinders == 0 else car.cylinders|string ~ "-cyl" }}</span>
+                            <span class="spec-value">{% if vd is not none %}{% if vd == 0 %}Electric{% else %}{{ vd }} Cylinders{% endif %}{% if verified_specs.get('cylinders_verified') %} <span class="spec-verified">(Verified)</span>{% endif %}{% else %}—{% endif %}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Transmission</span>
-                            <span class="spec-value">{{ car.transmission }}</span>
+                            <span class="spec-value">{{ verified_specs.get('transmission_display') or car.transmission }}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Drivetrain</span>
-                            <span class="spec-value">{{ car.drivetrain }}</span>
+                            <span class="spec-value">{{ verified_specs.get('drivetrain_display') or car.drivetrain }}{% if verified_specs.get('drivetrain_verified') %} <span class="spec-verified">(Verified)</span>{% endif %}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Exterior</span>
@@ -110,11 +128,36 @@
                         {% endif %}
                     </div>
 
+                    {% if verified_specs.get('sources') or verified_specs.get('fuel_type_hint') or verified_specs.get('cylinders_verified') or verified_specs.get('drivetrain_verified') %}
+                    <div class="verified-specs-panel">
+                        <h3 class="verified-specs-title">Verified tech specs</h3>
+                        <p class="verified-specs-note">When dealer data is missing, we infer specs using trim naming and the EPA fuel-economy database.</p>
+                        <ul class="verified-specs-list">
+                            {% if verified_specs.get('cylinders_display') is not none %}
+                            <li><span class="vs-label">Cylinders</span> <span class="vs-val">{% if verified_specs.cylinders_display == 0 %}Electric (0){% else %}{{ verified_specs.cylinders_display }}{% endif %}</span></li>
+                            {% endif %}
+                            {% if verified_specs.get('fuel_type_hint') %}
+                            <li><span class="vs-label">Fuel</span> <span class="vs-val">{{ verified_specs.fuel_type_hint }}</span></li>
+                            {% endif %}
+                            {% if verified_specs.get('gears') %}
+                            <li><span class="vs-label">Gears</span> <span class="vs-val">{{ verified_specs.gears }}-Speed</span></li>
+                            {% endif %}
+                            {% if verified_specs.get('drivetrain_display') %}
+                            <li><span class="vs-label">Drivetrain</span> <span class="vs-val">{{ verified_specs.drivetrain_display }}</span></li>
+                            {% endif %}
+                        </ul>
+                        {% if verified_specs.get('sources') %}
+                        <p class="verified-specs-sources">Sources: {{ verified_specs.sources | join(', ') }}</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
                     <div class="car-detail-actions">
                         <a href="{{ car.dealer_url }}" target="_blank" class="primary-button">View at Dealership</a>
                     </div>
                 </div>
 
+                {# Col 3: History + CARFAX #}
                 <div class="car-detail-history">
                     <h3 class="history-panel-title">Vehicle History Highlights</h3>
                     {% if car.history_highlights and car.history_highlights|length > 0 %}
@@ -136,6 +179,7 @@
                 </div>
 
             </div>
+            </div>
 
         </section>
 
@@ -144,8 +188,8 @@
     <script src="{{ url_for('static', filename='main.js') }}"></script>
     <script>
     (function() {
-        var el = document.getElementById('car-gallery');
-        var imgEl = document.getElementById('car-gallery-image');
+        var jsonEl = document.getElementById('car-gallery-json');
+        var imgEl = document.getElementById('car-gallery-main-img');
         var heroEl = document.getElementById('car-gallery-hero');
         var prevBtn = document.getElementById('car-gallery-prev');
         var nextBtn = document.getElementById('car-gallery-next');
@@ -153,42 +197,44 @@
         var nextHero = document.getElementById('car-gallery-next-hero');
         var counterEl = document.getElementById('car-gallery-counter');
         var thumbsEl = document.getElementById('car-gallery-thumbs');
-        if (!el || !imgEl) return;
+        if (!imgEl) return;
+
         var gallery = [];
         try {
-            var raw = el.getAttribute('data-gallery');
-            if (raw) gallery = JSON.parse(raw);
-        } catch (e) {}
-        if (!Array.isArray(gallery) || gallery.length <= 1) return;
+            if (jsonEl && jsonEl.textContent) gallery = JSON.parse(jsonEl.textContent);
+        } catch (e) { gallery = []; }
+        if (!Array.isArray(gallery)) gallery = [];
+        gallery = gallery.filter(function(u) { return u && typeof u === 'string'; });
+        if (gallery.length === 0) return;
 
-        function esc(s) { return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
-
-        var idx = 0;
-        function goPrev(e) { if (e) e.preventDefault(); if (idx > 0) { idx--; show(); } }
-        function goNext(e) { if (e) e.preventDefault(); if (idx < gallery.length - 1) { idx++; show(); } }
-
+        var activeImageIndex = 0;
         function show() {
-            var url = gallery[idx];
-            if (url) imgEl.style.backgroundImage = "url('" + esc(url) + "')";
-            if (counterEl) counterEl.textContent = (idx + 1) + ' of ' + gallery.length;
-            if (prevBtn) prevBtn.disabled = idx === 0;
-            if (nextBtn) nextBtn.disabled = idx === gallery.length - 1;
-            if (prevHero) prevHero.disabled = idx === 0;
-            if (nextHero) nextHero.disabled = idx === gallery.length - 1;
+            var url = gallery[activeImageIndex];
+            if (url && imgEl) imgEl.src = url;
+            if (counterEl) counterEl.textContent = (activeImageIndex + 1) + ' of ' + gallery.length;
+            if (prevBtn) prevBtn.disabled = false;
+            if (nextBtn) nextBtn.disabled = false;
+            if (prevHero) prevHero.disabled = false;
+            if (nextHero) nextHero.disabled = false;
             if (thumbsEl) {
                 var tabs = thumbsEl.querySelectorAll('.car-gallery-thumb');
-                tabs.forEach(function(t, i) { t.classList.toggle('active', i === idx); t.setAttribute('aria-selected', i === idx); });
+                tabs.forEach(function(t, i) { t.classList.toggle('active', i === activeImageIndex); t.setAttribute('aria-selected', i === activeImageIndex); });
                 var activeThumb = thumbsEl.querySelector('.car-gallery-thumb.active');
                 if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
             }
         }
+
+        function goPrev(e) { if (e) e.preventDefault(); activeImageIndex = (activeImageIndex - 1 + gallery.length) % gallery.length; show(); }
+        function goNext(e) { if (e) e.preventDefault(); activeImageIndex = (activeImageIndex + 1) % gallery.length; show(); }
 
         if (heroEl) {
             heroEl.addEventListener('click', function(e) {
                 if (e.target.closest('button')) return;
                 var rect = heroEl.getBoundingClientRect();
                 var x = e.clientX - rect.left;
-                if (x < rect.width / 2) goPrev(e); else goNext(e);
+                var w = rect.width;
+                if (x < w * 0.33) goPrev(e);
+                else if (x > w * 0.67) goNext(e);
             });
         }
         if (prevBtn) prevBtn.addEventListener('click', goPrev);
@@ -196,7 +242,7 @@
         if (prevHero) prevHero.addEventListener('click', goPrev);
         if (nextHero) nextHero.addEventListener('click', goNext);
 
-        if (thumbsEl) {
+        if (thumbsEl && gallery.length > 1) {
             gallery.forEach(function(url, i) {
                 var t = document.createElement('button');
                 t.type = 'button';
@@ -204,14 +250,15 @@
                 t.setAttribute('role', 'tab');
                 t.setAttribute('aria-selected', i === 0);
                 t.setAttribute('aria-label', 'Image ' + (i + 1) + ' of ' + gallery.length);
-                t.style.backgroundImage = "url('" + esc(url) + "')";
-                t.addEventListener('click', function() { idx = i; show(); });
+                t.style.setProperty('background-image', 'url(' + JSON.stringify(url) + ')');
+                t.addEventListener('click', function() { activeImageIndex = i; show(); });
                 thumbsEl.appendChild(t);
             });
         }
 
         document.addEventListener('keydown', function(e) {
             if (e.target.matches('input, textarea')) return;
+            if (gallery.length <= 1) return;
             if (e.key === 'ArrowLeft') { goPrev(e); e.preventDefault(); }
             if (e.key === 'ArrowRight') { goNext(e); e.preventDefault(); }
         });

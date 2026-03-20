@@ -1,0 +1,21 @@
+{
+  "name": "dealership-scanner",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Node.js/Puppeteer inventory scanner (shares inventory.db with Flask)",
+  "main": "scanner.js",
+  "scripts": {
+    "scan": "node scanner.js",
+    "start": "node scanner.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "fs-extra": "^11.2.0",
+    "puppeteer": "^24.2.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "sqlite3": "^5.1.7"
+  }
+}
