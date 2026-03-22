@@ -1,7 +1,6 @@
 flask
-openai
 requests
-duckduckgo-search
 pgeocode
 playwright
 playwright-stealth
+thefuzz

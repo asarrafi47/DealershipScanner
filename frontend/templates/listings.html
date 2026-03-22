@@ -4,7 +4,7 @@
     <title>Listings</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body data-ai-page="listings">
+<body>
 
 <script>
 const CAR_ROWS        = {{ options.car_rows | tojson }};
@@ -27,8 +27,18 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
     <div class="filter-bar" id="filter-bar">
         <form method="GET" action="/search" id="search-form">
 
-            {# TOP MODE: horizontal pill row #}
+            {# TOP MODE: search row + controls row (wraps cleanly) #}
             <div class="filter-top-row" id="filter-top-row">
+                <div class="filter-search-row">
+                    <div class="smart-search-wrap">
+                        <label class="smart-search-label" for="smart-search-input">Smart search</label>
+                        <input type="search" id="smart-search-input" class="smart-search-input"
+                            placeholder="Search by anything (e.g., White X5 under 70k)"
+                            autocomplete="off" spellcheck="false">
+                        <div id="smart-parse-chips" class="smart-parse-chips" aria-live="polite"></div>
+                    </div>
+                </div>
+                <div class="filter-controls-row filter-grid" id="filter-controls-row">
                 {% macro pill(label, param) %}
                 <div class="pill-group">
                     <button type="button" class="pill-trigger" data-param="{{ param }}" id="trigger-{{ param }}">
@@ -165,7 +175,7 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
                 {% endcall %}
 
                 {# Price / Mileage / Zip inline selects #}
-                <div class="pill-group pill-select-group">
+                <div class="pill-group pill-select-group" data-filter-param="max_price">
                     <label class="pill-select-label">Price</label>
                     <select name="max_price" class="pill-select">
                         <option value="" {% if not active or not active.max_price %}selected{% endif %}>Any</option>
@@ -178,7 +188,7 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
                     </select>
                 </div>
 
-                <div class="pill-group pill-select-group">
+                <div class="pill-group pill-select-group" data-filter-param="max_mileage">
                     <label class="pill-select-label">Mileage</label>
                     <select name="max_mileage" class="pill-select">
                         <option value="" {% if not active or not active.max_mileage %}selected{% endif %}>Any</option>
@@ -208,6 +218,7 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
 
                 <div class="pill-actions">
                     <a href="/listings" class="pill-clear-btn">Clear</a>
+                </div>
                 </div>
             </div>
 
@@ -358,7 +369,7 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
                     </div>
                     {% endcall %}
 
-                    <div class="acc-plain-group">
+                    <div class="acc-plain-group" data-filter-param="max_price">
                         <div class="acc-plain-label">Max Price</div>
                         <select name="max_price" class="sidebar-select">
                             <option value="" {% if not active or not active.max_price %}selected{% endif %}>Any</option>
@@ -370,7 +381,7 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
                             <option value="150000" {% if active and active.max_price == '150000' %}selected{% endif %}>$150,000</option>
                         </select>
                     </div>
-                    <div class="acc-plain-group">
+                    <div class="acc-plain-group" data-filter-param="max_mileage">
                         <div class="acc-plain-label">Max Mileage</div>
                         <select name="max_mileage" class="sidebar-select">
                             <option value="" {% if not active or not active.max_mileage %}selected{% endif %}>Any</option>
@@ -416,6 +427,6 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
 </div>
 
 <script src="{{ url_for('static', filename='main.js') }}"></script>
-<script src="{{ url_for('static', filename='ai_widget.js') }}" defer></script>
+<script src="{{ url_for('static', filename='listings.js') }}"></script>
 </body>
 </html>

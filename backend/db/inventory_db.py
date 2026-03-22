@@ -270,6 +270,7 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 cylinders=None, transmissions=None, drivetrains=None,
                 exterior_colors=None, interior_colors=None,
                 countries=None,
+                min_year=None, max_year=None,
                 max_price=None, max_mileage=None,
                 zip_code=None, radius_miles=None):
 
@@ -304,6 +305,13 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     add_multi("drivetrain", drivetrains)
     add_multi("exterior_color", exterior_colors)
     add_multi("interior_color", interior_colors)
+
+    if min_year is not None:
+        query += " AND year >= ?"
+        params.append(int(min_year))
+    if max_year is not None:
+        query += " AND year <= ?"
+        params.append(int(max_year))
 
     if max_price:
         query += " AND price <= ?"

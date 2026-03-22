@@ -1,15 +1,9 @@
 from flask import Flask, request, render_template, redirect, jsonify
-import requests
 from backend.db.users_db import init_users_db, check_user, save_user
 from backend.db.inventory_db import init_inventory_db, search_cars, get_car_by_id, get_car_by_vin, get_filter_options
 from backend.knowledge_engine import prepare_car_detail_context
 from backend.listings import listings_page
-from backend.ai_agent import run_ai_chat, verify_car_data
-
-try:
-    from duckduckgo_search import DDGS
-except ImportError:
-    DDGS = None
+from backend.utils.query_parser import parse_natural_query
 
 app = Flask(
     __name__,
@@ -19,74 +13,6 @@ app = Flask(
 
 init_users_db()
 init_inventory_db()
-
-
-def get_car_context(vin):
-    """Fetch all details for the given VIN and format into a string for the AI."""
-    car = get_car_by_vin(vin)
-    if not car:
-        return ""
-    parts = [
-        f"This is a {car.get('year', '')} {car.get('make', '')} {car.get('model', '')}",
-        car.get("trim") and f", Trim: {car['trim']}" or "",
-        f", Price: ${car.get('price', 0):,.0f}",
-        f", Mileage: {car.get('mileage', 0):,}",
-    ]
-    if car.get("fuel_type"):
-        parts.append(f", Fuel: {car['fuel_type']}")
-    if car.get("cylinders") is not None:
-        parts.append(", Cylinders: " + ("Electric" if car["cylinders"] == 0 else f"{car['cylinders']}-cyl"))
-    if car.get("transmission"):
-        parts.append(f", Transmission: {car['transmission']}")
-    if car.get("drivetrain"):
-        parts.append(f", Drivetrain: {car['drivetrain']}")
-    if car.get("exterior_color"):
-        parts.append(f", Exterior: {car['exterior_color']}")
-    if car.get("interior_color"):
-        parts.append(f", Interior: {car['interior_color']}")
-    if car.get("dealer_name"):
-        parts.append(f", Dealer: {car['dealer_name']}")
-    if car.get("dealer_url"):
-        parts.append(f", Dealer URL: {car['dealer_url']}")
-    if car.get("zip_code"):
-        parts.append(f", Zip: {car['zip_code']}")
-    return "".join(parts).replace(" ,", ",").strip()
-
-
-def search_web_for_car(car: dict, user_message: str, max_results: int = 6) -> str:
-    """Use DuckDuckGo to search for car specs/details. Builds a short, focused query so DDG returns useful results (e.g. '2022 Audi Q5 Premium Plus horsepower')."""
-    if DDGS is None or not car:
-        return ""
-    year = car.get("year") or ""
-    make = (car.get("make") or "").strip()
-    model = (car.get("model") or "").strip()
-    trim = (car.get("trim") or "").strip()
-    car_bits = [str(year), make, model, trim]
-    car_query = " ".join(b for b in car_bits if b).strip()
-    if not car_query:
-        return ""
-    msg = (user_message or "").strip()
-    # Focused query for DDG: "2022 Audi Q5 Premium Plus horsepower" so spec pages rank well
-    query = f"{car_query} {msg}".strip()
-    if not query:
-        return ""
-    # If the user asked something short (e.g. "horsepower?"), add "specs" to get spec pages
-    if len(msg) < 25 and msg.rstrip("?."):
-        query = f"{car_query} {msg} specs".strip()
-    try:
-        with DDGS() as ddgs:
-            results = list(ddgs.text(query, max_results=max_results))
-        if not results:
-            return ""
-        parts = []
-        for r in results:
-            body = (r.get("body") or "").strip()
-            title = (r.get("title") or "").strip()
-            if body:
-                parts.append(f"- {title}: {body[:450]}" + ("..." if len(body) > 450 else ""))
-        return "\n".join(parts) if parts else ""
-    except Exception:
-        return ""
 
 
 @app.route("/")
@@ -184,71 +110,47 @@ def listings():
     return listings_page()
 
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
-CHAT_MODEL = "llama3.2"
+def _highlight_params_from_filters(filters: dict) -> list[str]:
+    """UI filter control keys for styling (matches data-param / form names)."""
+    keys = []
+    for k in filters:
+        if k == "exterior_color":
+            keys.append("exterior_color")
+        elif k == "drivetrain":
+            keys.append("drivetrain")
+        elif k == "max_price":
+            keys.append("max_price")
+        elif k == "max_mileage":
+            keys.append("max_mileage")
+        elif k in ("min_year", "max_year"):
+            if "year" not in keys:
+                keys.append("year")
+        elif k in ("make", "model"):
+            keys.append(k)
+    return keys
 
 
-@app.route("/api/ai/chat", methods=["POST"])
-def api_ai_chat():
-    """
-    GPT-4o co-pilot with EPA/trim verification. JSON body:
-    { "user_message": "...", "current_vin": "optional", "page": "listings"|"car"|"dashboard" }
-    """
+@app.route("/api/search/smart", methods=["POST"])
+def api_search_smart():
     data = request.get_json() or {}
-    user_message = (data.get("user_message") or data.get("message") or "").strip()
-    vin = (data.get("current_vin") or data.get("vin") or "").strip()
-    page = (data.get("page") or "").strip() or None
-    if not user_message:
-        return jsonify({"error": "user_message (or message) is required"}), 400
-    out = run_ai_chat(user_message, vin or None, page)
-    return jsonify(out)
-
-
-@app.route("/api/ai/verify/<vin>", methods=["GET"])
-def api_ai_verify(vin: str):
-    """Debug / tools: JSON verification for a VIN without calling OpenAI."""
-    return jsonify(verify_car_data(vin))
-
-
-@app.route("/api/chat", methods=["POST"])
-def api_chat():
-    data = request.get_json() or {}
-    message = (data.get("message") or "").strip()
-    vin = (data.get("vin") or "").strip()
-    if not message or not vin:
-        return jsonify({"error": "message and vin are required"}), 400
-    car = get_car_by_vin(vin)
-    if not car:
-        return jsonify({"error": "Car not found for this VIN"}), 404
-    car_context = get_car_context(vin)
-    web_snippets = search_web_for_car(car, message)
-    system_parts = [
-        "You are a helpful car salesman. Use the following listing data to answer the user: ",
-        f"[{car_context}].",
-    ]
-    if web_snippets:
-        system_parts.append(
-            " Below are DuckDuckGo web search results for this car and the user's question. Use them to answer specs (horsepower, mpg, dimensions, etc.) and other details not in the listing. Prefer answers from these results when they apply.\n\n"
-            f"{web_snippets}\n\n"
+    q = (data.get("query") or data.get("q") or "").strip()
+    filters = parse_natural_query(q)
+    results = []
+    if filters:
+        results = search_cars(
+            makes=[filters["make"]] if filters.get("make") else None,
+            models=[filters["model"]] if filters.get("model") else None,
+            drivetrains=filters.get("drivetrain"),
+            exterior_colors=filters.get("exterior_color"),
+            min_year=filters.get("min_year"),
+            max_year=filters.get("max_year"),
+            max_price=filters.get("max_price"),
+            max_mileage=filters.get("max_mileage"),
         )
-    system_parts.append(
-        " Only suggest contacting the dealer if the listing and search results above do not contain the answer."
-    )
-    system_prompt = "".join(system_parts)
-    try:
-        resp = requests.post(
-            OLLAMA_URL,
-            json={
-                "model": CHAT_MODEL,
-                "prompt": message,
-                "system": system_prompt,
-                "stream": False,
-            },
-            timeout=120,
-        )
-        resp.raise_for_status()
-        body = resp.json()
-        reply = body.get("response", "").strip()
-        return jsonify({"reply": reply})
-    except requests.exceptions.RequestException as e:
-        return jsonify({"error": str(e), "reply": ""}), 502
+    else:
+        results = search_cars()
+    return jsonify({
+        "filters": filters,
+        "results": results,
+        "highlight": _highlight_params_from_filters(filters),
+    })

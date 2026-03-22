@@ -281,8 +281,53 @@ document.addEventListener("DOMContentLoaded", () => {
         return "$" + Number(n).toLocaleString("en-US", {maximumFractionDigits: 0});
     }
 
+    function renderCarGrid(cars) {
+        if (!resultsGrid) return;
+
+        if (cars.length === 0) {
+            resultsGrid.innerHTML = "";
+            if (emptyState) emptyState.style.display = "";
+            if (resultsCount) resultsCount.textContent = "";
+            return;
+        }
+
+        if (emptyState) emptyState.style.display = "none";
+        if (resultsCount) {
+            resultsCount.textContent = `${cars.length} vehicle${cars.length !== 1 ? "s" : ""} found`;
+        }
+
+        resultsGrid.innerHTML = cars.map(c => {
+            const gallery = Array.isArray(c.gallery) ? c.gallery : [];
+            const imgSrc = (gallery.length && gallery[0]) ? gallery[0] : (c.image_url || "") || "/static/placeholder.svg";
+            const esc = (s) => (s || "").replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+            const photoCount = gallery.length;
+            const photoLabel = photoCount > 1 ? `${photoCount} photos` : "";
+            return `
+            <a href="/car/${c.id}" class="result-card">
+                <div class="result-image-wrap">
+                    <div class="result-image" style="background-image:url('${esc(imgSrc)}')"></div>
+                    ${photoLabel ? `<span class="result-photo-count">${photoLabel}</span>` : ""}
+                </div>
+                <div class="result-content">
+                    <h2>${c.title}</h2>
+                    <p class="result-trim">${c.trim || ""}</p>
+                    <p class="result-price">${fmtUSD(c.price)}</p>
+                    <p class="result-meta">
+                        ${fmt(c.mileage)} mi
+                        &middot; ${c.fuel_type || ""}
+                        &middot; ${c.drivetrain || ""}
+                    </p>
+                    <p class="result-dealer">${c.dealer_name || ""}</p>
+                </div>
+            </a>`;
+        }).join("");
+    }
+
     function renderResults() {
         if (!resultsGrid) return;
+
+        const smartIn = document.getElementById("smart-search-input");
+        if (smartIn && (smartIn.value || "").trim()) return;
 
         const makes       = checked("make");
         const models      = checked("model");
@@ -322,7 +367,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return true;
         });
 
-        // Geo filter (zip + radius) — only if both provided and haversine available
         if (zipCode && radiusMi && typeof haversineJS === "function") {
             const origin = zipCoordsJS(zipCode);
             if (origin) {
@@ -334,46 +378,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Render cards
-        if (cars.length === 0) {
-            resultsGrid.innerHTML = "";
-            if (emptyState) emptyState.style.display = "";
-            if (resultsCount) resultsCount.textContent = "";
-            return;
-        }
-
-        if (emptyState) emptyState.style.display = "none";
-        if (resultsCount) {
-            resultsCount.textContent = `${cars.length} vehicle${cars.length !== 1 ? "s" : ""} found`;
-        }
-
-        resultsGrid.innerHTML = cars.map(c => {
-            const cylLabel = c.cylinders === 0 ? "Electric" : `${c.cylinders}-cyl`;
-            const gallery = Array.isArray(c.gallery) ? c.gallery : [];
-            const imgSrc = (gallery.length && gallery[0]) ? gallery[0] : (c.image_url || "") || "/static/placeholder.svg";
-            const esc = (s) => (s || "").replace(/\\/g, "\\\\").replace(/'/g, "\\'");
-            const photoCount = gallery.length;
-            const photoLabel = photoCount > 1 ? `${photoCount} photos` : "";
-            return `
-            <a href="/car/${c.id}" class="result-card">
-                <div class="result-image-wrap">
-                    <div class="result-image" style="background-image:url('${esc(imgSrc)}')"></div>
-                    ${photoLabel ? `<span class="result-photo-count">${photoLabel}</span>` : ""}
-                </div>
-                <div class="result-content">
-                    <h2>${c.title}</h2>
-                    <p class="result-trim">${c.trim || ""}</p>
-                    <p class="result-price">${fmtUSD(c.price)}</p>
-                    <p class="result-meta">
-                        ${fmt(c.mileage)} mi
-                        &middot; ${c.fuel_type || ""}
-                        &middot; ${c.drivetrain || ""}
-                    </p>
-                    <p class="result-dealer">${c.dealer_name || ""}</p>
-                </div>
-            </a>`;
-        }).join("");
+        renderCarGrid(cars);
     }
+
+    window.__DS_renderCarGrid = renderCarGrid;
+    window.__DS_runFilterRender = renderResults;
 
     runCascade();
     renderResults();

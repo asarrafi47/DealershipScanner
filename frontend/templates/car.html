@@ -4,7 +4,7 @@
     <title>{{ car.title }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body data-ai-page="car" data-ai-vin="{{ car.vin | e }}" data-carfax-url="{{ (car.carfax_url or '') | e }}">
+<body>
 
     <div class="page">
 
@@ -22,7 +22,7 @@
             <a href="javascript:history.back()" class="back-link">← Back to results</a>
 
             {% if car.carfax_url %}
-            <p class="ai-carfax-hint">If Carfax shows “Verification required,” complete the challenge on their site — the co-pilot can’t read Carfax until you do.</p>
+            <p class="carfax-hint">If Carfax shows a verification step, complete it on their site to view the report.</p>
             {% endif %}
 
             <div class="car-detail-info-wrapper">
@@ -51,13 +51,6 @@
                             <div class="car-gallery-thumbs" id="car-gallery-thumbs" role="tablist"></div>
                         </div>
                         {% endif %}
-                    </div>
-                    <div id="car-chatbot" class="car-chatbot" data-vin="{{ car.vin }}">
-                        <div class="car-chatbot-messages" id="car-chatbot-messages"></div>
-                        <div class="car-chatbot-input-row">
-                            <input type="text" id="car-chatbot-input" class="car-chatbot-input" placeholder="Ask about this car..." autocomplete="off">
-                            <button type="button" id="car-chatbot-send" class="car-chatbot-send">Send</button>
-                        </div>
                     </div>
                 </div>
 
@@ -215,7 +208,6 @@
     </div>
 
     <script src="{{ url_for('static', filename='main.js') }}"></script>
-    <script src="{{ url_for('static', filename='ai_widget.js') }}"></script>
     <script>
     (function() {
         var jsonEl = document.getElementById('car-gallery-json');
@@ -296,6 +288,5 @@
         show();
     })();
     </script>
-    <script type="module" src="{{ url_for('static', filename='car-chatbot.js') }}"></script>
 </body>
 </html>
