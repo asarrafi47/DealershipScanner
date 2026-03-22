@@ -13,7 +13,11 @@ puppeteer.use(StealthPlugin());
 
 const ROOT = path.resolve(__dirname);
 const DB_PATH = process.env.INVENTORY_DB_PATH || path.join(ROOT, "inventory.db");
-const MANIFEST_PATH = path.join(ROOT, "dealers.json");
+const MANIFEST_PATH = process.env.DEALERS_MANIFEST
+  ? path.isAbsolute(process.env.DEALERS_MANIFEST)
+    ? process.env.DEALERS_MANIFEST
+    : path.join(ROOT, process.env.DEALERS_MANIFEST)
+  : path.join(ROOT, "dealers.json");
 const DEBUG_DIR = path.join(ROOT, "debug");
 
 const FALLBACK_IMAGE_URL = "/static/placeholder.svg";
@@ -966,6 +970,8 @@ async function upsertAll(db, vehicles) {
 }
 
 async function main() {
+  console.info("Manifest:", MANIFEST_PATH);
+  console.info("Database:", DB_PATH);
   const manifest = await fs.readJson(MANIFEST_PATH);
   const dealers = manifest.filter((d) => (d.provider || "dealer_dot_com") === "dealer_dot_com" && d.url && d.dealer_id);
 

@@ -352,6 +352,234 @@ h1 {
     gap: 8px;
 }
 
+.filter-search-and-discovery {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 14px;
+    width: 100%;
+}
+
+.filter-search-and-discovery .filter-search-row {
+    flex: 1 1 240px;
+    min-width: 0;
+}
+
+.discovery-bar {
+    flex: 0 0 auto;
+}
+
+.discovery-trigger {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    padding: 10px 16px;
+    border-radius: var(--main-radius);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(80, 140, 255, 0.12);
+    color: #b8d4ff;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.discovery-trigger:hover {
+    background: rgba(80, 140, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #fff;
+}
+
+.discovery-panel {
+    width: 100%;
+    margin-top: 14px;
+    padding: 16px 18px;
+    border-radius: var(--main-radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.discovery-intro {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.5;
+    margin-bottom: 14px;
+}
+
+.discovery-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 10px 14px;
+}
+
+.discovery-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 120px;
+}
+
+.discovery-field-full {
+    width: 100%;
+    margin-top: 12px;
+}
+
+.discovery-field-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.discovery-input {
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: var(--main-radius);
+    border: 1px solid #444;
+    background: rgba(0, 0, 0, 0.35);
+    color: #fff;
+    min-width: 0;
+}
+
+.discovery-input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.discovery-select {
+    min-width: 88px;
+}
+
+.discovery-btn {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: var(--main-radius);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.discovery-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.discovery-btn.secondary {
+    background: transparent;
+    color: #aaa;
+}
+
+.discovery-status {
+    font-size: 13px;
+    margin-top: 12px;
+    min-height: 1.2em;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.discovery-status.error {
+    color: #f87171;
+}
+
+.discovery-results-wrap {
+    margin-top: 14px;
+}
+
+.discovery-results-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.discovery-check-all {
+    font-size: 13px;
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.discovery-list {
+    list-style: none;
+    max-height: 280px;
+    overflow: auto;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--main-radius);
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.discovery-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 13px;
+}
+
+.discovery-item:last-child {
+    border-bottom: none;
+}
+
+.discovery-item-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.discovery-item-name {
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.discovery-item-url {
+    font-size: 12px;
+    color: #7dd3fc;
+    word-break: break-all;
+}
+
+.discovery-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    flex-shrink: 0;
+}
+
+.discovery-badge.ok {
+    background: rgba(34, 197, 94, 0.2);
+    color: #86efac;
+    border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.discovery-badge.no {
+    background: rgba(248, 113, 113, 0.12);
+    color: #fca5a5;
+    border: 1px solid rgba(248, 113, 113, 0.25);
+}
+
+.discovery-hint {
+    margin-top: 12px;
+    padding: 12px 14px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: var(--main-radius);
+    word-break: break-word;
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+
 .filter-search-row {
     width: 100%;
     flex-shrink: 0;

@@ -1,5 +1,6 @@
 flask
 requests
+geopy
 pgeocode
 playwright
 playwright-stealth

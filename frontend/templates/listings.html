@@ -29,6 +29,7 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
 
             {# TOP MODE: search row + controls row (wraps cleanly) #}
             <div class="filter-top-row" id="filter-top-row">
+                <div class="filter-search-and-discovery">
                 <div class="filter-search-row">
                     <div class="smart-search-wrap">
                         <label class="smart-search-label" for="smart-search-input">Smart search</label>
@@ -37,6 +38,46 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
                             autocomplete="off" spellcheck="false">
                         <div id="smart-parse-chips" class="smart-parse-chips" aria-live="polite"></div>
                     </div>
+                </div>
+                <div class="discovery-bar">
+                    <button type="button" class="discovery-trigger" id="discovery-toggle-btn" aria-expanded="false" aria-controls="discovery-panel">
+                        Find Local Dealers
+                    </button>
+                </div>
+                </div>
+
+                <div class="discovery-panel" id="discovery-panel" hidden>
+                    <p class="discovery-intro">OpenStreetMap dealers near you; we probe each site for Dealer.com so the scanner can run.</p>
+                    <div class="discovery-controls">
+                        <label class="discovery-field">
+                            <span class="discovery-field-label">Zip (if not using location)</span>
+                            <input type="text" id="discovery-zip" class="discovery-input" placeholder="28202" maxlength="10" autocomplete="postal-code">
+                        </label>
+                        <label class="discovery-field">
+                            <span class="discovery-field-label">Radius (mi)</span>
+                            <select id="discovery-radius" class="discovery-select">
+                                <option value="10">10</option>
+                                <option value="25" selected>25</option>
+                                <option value="50">50</option>
+                                <option value="75">75</option>
+                            </select>
+                        </label>
+                        <button type="button" class="discovery-btn secondary" id="discovery-geo-btn">Use my location</button>
+                        <button type="button" class="discovery-btn" id="discovery-search-btn">Search map</button>
+                    </div>
+                    <label class="discovery-field discovery-field-full">
+                        <span class="discovery-field-label">Filter names (optional, e.g. BMW, Mercedes, Ford)</span>
+                        <input type="text" id="discovery-name-filter" class="discovery-input" placeholder="Comma-separated keywords">
+                    </label>
+                    <p class="discovery-status" id="discovery-status" role="status"></p>
+                    <div class="discovery-results-wrap" id="discovery-results-wrap" hidden>
+                        <div class="discovery-results-head">
+                            <label class="discovery-check-all"><input type="checkbox" id="discovery-check-all" checked> Select all</label>
+                            <button type="button" class="discovery-btn" id="discovery-scan-btn">Scan these dealers</button>
+                        </div>
+                        <ul class="discovery-list" id="discovery-list"></ul>
+                    </div>
+                    <p class="discovery-hint" id="discovery-hint" hidden></p>
                 </div>
                 <div class="filter-controls-row filter-grid" id="filter-controls-row">
                 {% macro pill(label, param) %}
@@ -428,5 +469,6 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
 
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 <script src="{{ url_for('static', filename='listings.js') }}"></script>
+<script src="{{ url_for('static', filename='discovery.js') }}"></script>
 </body>
 </html>

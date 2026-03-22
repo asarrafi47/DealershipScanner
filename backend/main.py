@@ -4,6 +4,7 @@ from backend.db.inventory_db import init_inventory_db, search_cars, get_car_by_i
 from backend.knowledge_engine import prepare_car_detail_context
 from backend.listings import listings_page
 from backend.utils.query_parser import parse_natural_query
+from backend.utils.discovery import get_dealers_from_map, write_discovery_manifest
 
 app = Flask(
     __name__,
@@ -153,4 +154,62 @@ def api_search_smart():
         "filters": filters,
         "results": results,
         "highlight": _highlight_params_from_filters(filters),
+    })
+
+
+def _parse_discovery_nearby():
+    """Shared query/body parsing for map discovery."""
+    if request.method == "POST":
+        data = request.get_json(silent=True) or {}
+        zip_code = (data.get("zip") or data.get("zip_code") or "").strip() or None
+        radius_miles = float(data.get("radius_miles") or data.get("radius") or 25)
+        lat_raw, lon_raw = data.get("lat"), data.get("lon")
+        if lat_raw is not None and lon_raw is not None:
+            lat, lon = float(lat_raw), float(lon_raw)
+        else:
+            lat, lon = None, None
+        cd = data.get("check_dealer_com", True)
+        if isinstance(cd, str):
+            check_dealer_com = cd.lower() in ("1", "true", "yes")
+        else:
+            check_dealer_com = bool(cd)
+    else:
+        zip_code = (request.args.get("zip") or request.args.get("zip_code") or "").strip() or None
+        radius_miles = float(request.args.get("radius_miles") or request.args.get("radius") or 25)
+        lat = request.args.get("lat", type=float)
+        lon = request.args.get("lon", type=float)
+        check_dealer_com = request.args.get("check_dealer_com", default="true").lower() in ("1", "true", "yes")
+    return zip_code, radius_miles, lat, lon, check_dealer_com
+
+
+@app.route("/api/discovery/nearby", methods=["GET", "POST"])
+def api_discovery_nearby():
+    zip_code, radius_miles, lat, lon, check_dealer_com = _parse_discovery_nearby()
+    out = get_dealers_from_map(
+        zip_code=zip_code,
+        radius_miles=radius_miles,
+        lat=lat,
+        lon=lon,
+        check_dealer_com=check_dealer_com,
+    )
+    return jsonify(out)
+
+
+@app.route("/api/discovery/scan", methods=["POST"])
+def api_discovery_scan():
+    """Write dealers.discovery.json for a local scanner run (local_inventory.db)."""
+    data = request.get_json() or {}
+    dealers = data.get("dealers")
+    if not isinstance(dealers, list):
+        return jsonify({"ok": False, "error": "dealers array required"}), 400
+    path = write_discovery_manifest(dealers)
+    vetted = [d for d in dealers if d.get("dealer_com") and d.get("dealer_id")]
+    return jsonify({
+        "ok": True,
+        "manifest": str(path),
+        "dealer_com_count": len(vetted),
+        "hint": (
+            "PowerShell: $env:INVENTORY_DB_PATH='local_inventory.db'; "
+            "$env:DEALERS_MANIFEST='dealers.discovery.json'; node scanner.js"
+        ),
     })
