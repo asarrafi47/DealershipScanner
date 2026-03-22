@@ -54,7 +54,7 @@
                     </div>
                 </div>
 
-                {# Col 2: Metadata + Verified tech specs #}
+                {# Col 2: Single spec sheet (knowledge engine enriches rows server-side) #}
                 <div class="car-detail-info">
                     <p class="eyebrow">{{ car.dealer_name }}</p>
                     <h1>{{ car.title }}</h1>
@@ -71,40 +71,8 @@
                         {% endif %}
                     </p>
 
-                    <div class="engine-performance">
-                        <h3 class="engine-performance-title">Engine &amp; Performance</h3>
-                        <p class="engine-performance-sub">EPA fuel economy + rule-based power where the EPA file has no HP/torque.</p>
-                        <div class="ep-row" data-spec-field="engine">
-                            <span class="ep-ico ep-ico-engine" aria-hidden="true"></span>
-                            <div class="ep-body">
-                                <div class="ep-label">Engine</div>
-                                <div class="ep-value">{{ verified_specs.get('master_engine_string') or '—' }}</div>
-                            </div>
-                        </div>
-                        <div class="ep-row" data-spec-field="transmission">
-                            <span class="ep-ico ep-ico-trans" aria-hidden="true"></span>
-                            <div class="ep-body">
-                                <div class="ep-label">Transmission</div>
-                                <div class="ep-value">{{ verified_specs.get('transmission_display') or car.transmission }}</div>
-                            </div>
-                        </div>
-                        <div class="ep-row" data-spec-field="drivetrain">
-                            <span class="ep-ico ep-ico-drive" aria-hidden="true"></span>
-                            <div class="ep-body">
-                                <div class="ep-label">Drivetrain</div>
-                                <div class="ep-value">{{ verified_specs.get('drivetrain_display') or car.drivetrain }}{% if verified_specs.get('drivetrain_verified') %} <span class="spec-verified">(Verified)</span>{% endif %}</div>
-                            </div>
-                        </div>
-                        <div class="ep-row" data-spec-field="efficiency">
-                            <span class="ep-ico ep-ico-mpg" aria-hidden="true"></span>
-                            <div class="ep-body">
-                                <div class="ep-label">Efficiency</div>
-                                <div class="ep-value">{% if verified_specs.get('fuel_economy_display') %}{{ verified_specs.fuel_economy_display }}{% else %}—{% endif %}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="car-specs">
+                    {% set vd = verified_specs.get('cylinders_display') %}
+                    <div class="car-specs car-spec-sheet">
                         <div class="spec-row">
                             <span class="spec-label">Year</span>
                             <span class="spec-value">{{ car.year }}</span>
@@ -125,18 +93,33 @@
                             <span class="spec-label">Mileage</span>
                             <span class="spec-value">{{ "{:,}".format(car.mileage) }} mi</span>
                         </div>
-                        {% set vd = verified_specs.get('cylinders_display') %}
-                        <div class="spec-row" data-spec-field="cylinders">
+                        <div class="spec-row">
+                            <span class="spec-label">Engine</span>
+                            <span class="spec-value">{{ verified_specs.get('master_engine_string') or '—' }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Transmission</span>
+                            <span class="spec-value">{{ verified_specs.get('transmission_display') or car.transmission or '—' }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Drivetrain</span>
+                            <span class="spec-value">{{ verified_specs.get('drivetrain_display') or car.drivetrain or '—' }}</span>
+                        </div>
+                        <div class="spec-row">
                             <span class="spec-label">Cylinders</span>
-                            <span class="spec-value">{% if vd is not none %}{% if vd == 0 %}Electric{% else %}{{ vd }} Cylinders{% endif %}{% if verified_specs.get('cylinders_verified') %} <span class="spec-verified">(Verified)</span>{% endif %}{% else %}—{% endif %}</span>
+                            <span class="spec-value">{% if vd is not none %}{% if vd == 0 %}Electric{% elif vd == 1 %}1 cylinder{% else %}{{ vd }} cylinders{% endif %}{% else %}—{% endif %}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Efficiency</span>
+                            <span class="spec-value">{% if verified_specs.get('fuel_economy_display') %}{{ verified_specs.fuel_economy_display }}{% else %}—{% endif %}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Exterior</span>
-                            <span class="spec-value">{{ car.exterior_color }}</span>
+                            <span class="spec-value">{{ car.exterior_color or '—' }}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Interior</span>
-                            <span class="spec-value">{{ car.interior_color }}</span>
+                            <span class="spec-value">{{ car.interior_color or '—' }}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">VIN</span>
@@ -149,30 +132,6 @@
                         </div>
                         {% endif %}
                     </div>
-
-                    {% if verified_specs.get('sources') or verified_specs.get('fuel_type_hint') or verified_specs.get('cylinders_verified') or verified_specs.get('drivetrain_verified') %}
-                    <div class="verified-specs-panel">
-                        <h3 class="verified-specs-title">Verified tech specs</h3>
-                        <p class="verified-specs-note">When dealer data is missing, we infer specs using trim naming and the EPA fuel-economy database.</p>
-                        <ul class="verified-specs-list">
-                            {% if verified_specs.get('cylinders_display') is not none %}
-                            <li><span class="vs-label">Cylinders</span> <span class="vs-val">{% if verified_specs.cylinders_display == 0 %}Electric (0){% else %}{{ verified_specs.cylinders_display }}{% endif %}</span></li>
-                            {% endif %}
-                            {% if verified_specs.get('fuel_type_hint') %}
-                            <li><span class="vs-label">Fuel</span> <span class="vs-val">{{ verified_specs.fuel_type_hint }}</span></li>
-                            {% endif %}
-                            {% if verified_specs.get('gears') %}
-                            <li><span class="vs-label">Gears</span> <span class="vs-val">{{ verified_specs.gears }}-Speed</span></li>
-                            {% endif %}
-                            {% if verified_specs.get('drivetrain_display') %}
-                            <li><span class="vs-label">Drivetrain</span> <span class="vs-val">{{ verified_specs.drivetrain_display }}</span></li>
-                            {% endif %}
-                        </ul>
-                        {% if verified_specs.get('sources') %}
-                        <p class="verified-specs-sources">Sources: {{ verified_specs.sources | join(', ') }}</p>
-                        {% endif %}
-                    </div>
-                    {% endif %}
 
                     <div class="car-detail-actions">
                         <a href="{{ car.dealer_url }}" target="_blank" class="primary-button">View at Dealership</a>

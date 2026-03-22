@@ -1260,62 +1260,6 @@ h1 {
     color: rgba(255, 255, 255, 0.92);
 }
 
-.verified-specs-panel {
-    margin-top: 24px;
-    padding: 16px 18px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(0, 0, 0, 0.25);
-}
-
-.verified-specs-title {
-    margin: 0 0 8px 0;
-    font-size: 1rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
-}
-
-.verified-specs-note {
-    margin: 0 0 12px 0;
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.55);
-    line-height: 1.45;
-}
-
-.verified-specs-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.verified-specs-list li {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    font-size: 14px;
-}
-
-.verified-specs-list li:last-child {
-    border-bottom: none;
-}
-
-.vs-label {
-    color: rgba(255, 255, 255, 0.55);
-}
-
-.vs-val {
-    color: rgba(255, 255, 255, 0.95);
-    font-weight: 500;
-}
-
-.verified-specs-sources {
-    margin: 12px 0 0 0;
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.45);
-}
-
 .car-detail-info h1 {
     font-size: 36px;
     margin-bottom: 12px;
@@ -1324,7 +1268,7 @@ h1 {
 .car-detail-price {
     font-size: 32px;
     font-weight: 700;
-    margin-bottom: 32px;
+    margin-bottom: 0;
 }
 
 /* Price $0 but MSRP present — hero MSRP (large) */
@@ -1344,111 +1288,45 @@ h1 {
     color: rgba(255, 255, 255, 0.75);
 }
 
-.spec-verified {
-    font-size: 0.85em;
-    font-weight: 600;
-    color: rgba(120, 200, 255, 0.95);
-    white-space: nowrap;
+/* Single spec sheet — engine/EPA data merged into rows (see car.html) */
+.car-specs.car-spec-sheet {
+    margin-top: 28px;
+    margin-bottom: 32px;
+    padding: 8px 16px;
+    border-radius: var(--main-radius);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
 }
 
-/* Monroney-style Engine & Performance */
-.engine-performance {
-    margin-bottom: 28px;
-    padding: 20px 20px 8px;
-    border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: linear-gradient(165deg, rgba(28, 28, 28, 0.95) 0%, rgba(14, 14, 14, 0.98) 100%);
-}
-
-.engine-performance-title {
-    margin: 0 0 6px 0;
-    font-size: 1.15rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    color: rgba(255, 255, 255, 0.96);
-}
-
-.engine-performance-sub {
-    margin: 0 0 18px 0;
-    font-size: 12px;
-    line-height: 1.45;
-    color: rgba(255, 255, 255, 0.45);
-}
-
-.ep-row {
+.car-specs .spec-row {
     display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    padding: 14px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    font-family: var(--font-ui);
 }
 
-.ep-row:last-of-type {
+.car-specs .spec-row:last-child {
     border-bottom: none;
 }
 
-.ep-ico {
-    flex: 0 0 40px;
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    line-height: 1;
-}
-
-.ep-ico-engine::before { content: "⚙"; }
-.ep-ico-trans::before { content: "A"; font-size: 15px; font-weight: 700; letter-spacing: 0; }
-.ep-ico-drive::before { content: "◇"; font-size: 16px; }
-.ep-ico-mpg::before { content: "⛽"; }
-
-.ep-body {
-    flex: 1;
-    min-width: 0;
-}
-
-.ep-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.45);
-    margin-bottom: 6px;
-}
-
-.ep-value {
-    font-size: 14px;
-    line-height: 1.5;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.92);
-    word-wrap: break-word;
-}
-
-.car-specs {
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
-    margin-bottom: 32px;
-}
-
-.spec-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 14px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-}
-
 .spec-label {
-    font-size: 13px;
-    color: #888;
+    flex: 0 0 auto;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.07em;
 }
 
 .spec-value {
+    flex: 1;
+    text-align: right;
     font-size: 14px;
     font-weight: 500;
+    color: rgba(255, 255, 255, 0.92);
+    word-break: break-word;
 }
 
 .car-detail-actions {
