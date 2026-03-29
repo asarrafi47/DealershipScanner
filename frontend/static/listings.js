@@ -83,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch("/api/search/smart", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
             body: JSON.stringify({ query: q }),
         })
             .then((r) => {

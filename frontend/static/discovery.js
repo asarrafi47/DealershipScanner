@@ -92,6 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const res = await fetch("/api/discovery/nearby", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
             body: JSON.stringify(body),
         });
         const data = await res.json().catch(() => ({}));
@@ -185,6 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const res = await fetch("/api/discovery/scan", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: "same-origin",
                 body: JSON.stringify({ dealers: selected }),
             });
             const data = await res.json().catch(() => ({}));

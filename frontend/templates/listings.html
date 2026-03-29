@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <title>Listings</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -19,7 +20,10 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
         <div class="nav-links">
             <a href="/dashboard">Dashboard</a>
             <a href="/listings">Listings</a>
-            <a href="/login">Logout</a>
+            <form method="post" action="{{ url_for('logout') }}" class="logout-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
         </div>
     </nav>
 

@@ -1,4 +1,7 @@
 flask
+flask-login
+flask-wtf
+flask-limiter
 requests
 geopy
 pgeocode
