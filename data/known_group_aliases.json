@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "description": "Expandable exact-alias map (normalized keys match normalize_lookup_key in canonical_groups). Add rows here without code changes.",
+  "aliases": {
+    "tuttle-click": "Tuttle-Click Automotive Group",
+    "tuttle click": "Tuttle-Click Automotive Group",
+    "tuttle-click automotive group": "Tuttle-Click Automotive Group",
+    "tuttle click automotive group": "Tuttle-Click Automotive Group",
+    "tuttle-click automotive": "Tuttle-Click Automotive Group",
+    "tuttle click automotive": "Tuttle-Click Automotive Group",
+    "tuttle-click auto group": "Tuttle-Click Automotive Group",
+    "tuttle click auto group": "Tuttle-Click Automotive Group",
+    "sonic automotive": "Sonic Automotive",
+    "sonic automotive group": "Sonic Automotive",
+    "sonic": "Sonic Automotive"
+  },
+  "canonical_groups": [
+    "Tuttle-Click Automotive Group",
+    "Sonic Automotive"
+  ]
+}

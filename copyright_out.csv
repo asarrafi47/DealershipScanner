@@ -1,0 +1,16 @@
+root_url,copyright_extract
+https://www.charlotteram.com,"Failed to load site: HTTPSConnectionPool(host='www.charlotteram.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(""<urllib3.connection.HTTPSConnection object at 0x104d54ad0>: Failed to resolve 'www.charlotteram.com' ([Errno 8] nodename nor servname provided, or not known)""))"
+https://www.fletcherjonesmercedes.com,"Failed to load site: HTTPSConnectionPool(host='www.fletcherjonesmercedes.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(""<urllib3.connection.HTTPSConnection object at 0x104c73750>: Failed to resolve 'www.fletcherjonesmercedes.com' ([Errno 8] nodename nor servname provided, or not known)""))"
+https://www.fordofcharlotte.com,"Failed to load site: HTTPSConnectionPool(host='www.fordofcharlotte.com', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))"
+https://www.hendrickaudi.com,"Failed to load site: HTTPSConnectionPool(host='www.hendrickaudi.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(""<urllib3.connection.HTTPSConnection object at 0x104d6c410>: Failed to resolve 'www.hendrickaudi.com' ([Errno 8] nodename nor servname provided, or not known)""))"
+https://www.hendrickbmwcharlotte.com,Failed to load site: 403 Client Error: Forbidden for url: https://www.hendrickbmwcharlotte.com/
+https://www.hendrickchevrolet.com,Failed to load site: 403 Client Error: Forbidden for url: https://www.hendrickchevrolet.com/
+https://www.hondaofcharlotte.com,Dealer Group not found in text.
+https://www.irvinebmw.com,Failed to load site: 403 Client Error: Forbidden for url: https://www.irvinebmw.com/
+https://www.lexusofcharlotte.com,"Failed to load site: HTTPSConnectionPool(host='www.lexusofcharlotte.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(""<urllib3.connection.HTTPSConnection object at 0x104d6c910>: Failed to resolve 'www.lexusofcharlotte.com' ([Errno 8] nodename nor servname provided, or not known)""))"
+https://www.longbeachbmw.com,Failed to load site: 403 Client Error: Forbidden for url: https://www.longbeachbmw.com/
+https://www.porschecharlotte.com,Dealer Group not found in text.
+https://www.tesla.com,Failed to load site: 403 Client Error: Forbidden for url: https://www.tesla.com/
+https://www.toyotaofcharlotte.com,Dealer Group not found in text.
+https://www.tuttleclickford.com,Failed to load site: 403 Client Error: Forbidden for url: https://www.tuttleclickford.com/
+https://www.tuttleclickmazda.com,Failed to load site: 403 Client Error: Forbidden for url: https://www.tuttleclickmazda.com/

@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, jsonify
+from flask import Flask, request, render_template, redirect, jsonify, send_from_directory
 from backend.db.users_db import init_users_db, check_user, save_user
 from backend.db.inventory_db import init_inventory_db, search_cars, get_car_by_id, get_car_by_vin, get_filter_options
 from backend.knowledge_engine import prepare_car_detail_context
@@ -13,6 +13,11 @@ app = Flask(
 
 init_users_db()
 init_inventory_db()
+
+
+@app.route("/favicon.ico")
+def favicon():
+    return send_from_directory(app.static_folder, "favicon.svg", mimetype="image/svg+xml")
 
 
 @app.route("/")

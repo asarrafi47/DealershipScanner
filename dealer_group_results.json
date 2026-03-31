@@ -1,0 +1,160 @@
+[
+  {
+    "url": "https://www.longbeachbmw.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": true,
+    "final_url": "https://www.longbeachbmw.com/",
+    "original_url": "https://www.longbeachbmw.com",
+    "final_domain": "www.longbeachbmw.com",
+    "redirected": false,
+    "redirect_mismatch": false,
+    "flags": [],
+    "redirect_chain": [],
+    "fetch_error": null,
+    "candidate_group_names": [],
+    "rejected_candidates": [],
+    "rejection_reasons": [],
+    "best_candidate_raw": null,
+    "best_candidate_normalized": null,
+    "best_candidate": null,
+    "confidence_score": 0.0,
+    "evidence_snippets": [],
+    "pages_checked": [
+      "https://www.longbeachbmw.com/",
+      "https://www.longbeachbmw.com/dealership/about.htm",
+      "https://www.longbeachbmw.com/dealership/meet-our-team.htm",
+      "https://www.sonicautomotive.com/privacy.htm#End"
+    ],
+    "final_status": "unknown"
+  },
+  {
+    "url": "https://www.irvinebmw.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": true,
+    "final_url": "https://www.irvinebmw.com/",
+    "original_url": "https://www.irvinebmw.com",
+    "final_domain": "www.irvinebmw.com",
+    "redirected": false,
+    "redirect_mismatch": false,
+    "flags": [],
+    "redirect_chain": [],
+    "fetch_error": null,
+    "candidate_group_names": [],
+    "rejected_candidates": [],
+    "rejection_reasons": [],
+    "best_candidate_raw": null,
+    "best_candidate_normalized": null,
+    "best_candidate": null,
+    "confidence_score": 0.0,
+    "evidence_snippets": [],
+    "pages_checked": [
+      "https://www.irvinebmw.com/",
+      "https://www.irvinebmw.com/no1-collision-group-newport-beach.htm",
+      "https://www.irvinebmw.com/dealership/about.htm",
+      "https://www.irvinebmw.com/dealership/staff.htm",
+      "https://www.irvinebmw.com/employment.htm",
+      "https://www.irvinebmw.com/tools/complyauto/privacy-policy.htm"
+    ],
+    "final_status": "unknown"
+  },
+  {
+    "url": "https://www.tuttleclickford.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": true,
+    "final_url": "https://www.tuttleclickford.com/",
+    "original_url": "https://www.tuttleclickford.com",
+    "final_domain": "www.tuttleclickford.com",
+    "redirected": false,
+    "redirect_mismatch": false,
+    "flags": [],
+    "redirect_chain": [],
+    "fetch_error": null,
+    "candidate_group_names": [
+      "Tuttle-Click",
+      "Tuttle-Click Automotive Group"
+    ],
+    "rejected_candidates": [
+      {
+        "text": "the Tuttle-Click automotive group",
+        "reason": "generic_start",
+        "signal": "part_of"
+      }
+    ],
+    "rejection_reasons": [
+      "the Tuttle-Click automotive group :: generic_start"
+    ],
+    "best_candidate_raw": "Tuttle-Click",
+    "best_candidate_normalized": "Tuttle-Click",
+    "best_candidate": "Tuttle-Click",
+    "confidence_score": 0.3696,
+    "evidence_snippets": [
+      {
+        "snippet": "alership Tuttle-Click Ford is part of the Tuttle-Click automotive group. Our new and used auto dealer in Irvine, CA p",
+        "page_url": "https://www.tuttleclickford.com/",
+        "page_kind": "homepage",
+        "signal": "part_of",
+        "score": 0.3696
+      },
+      {
+        "snippet": "or no credit. New & Used Car Dealership Tuttle-Click Ford is part of the Tuttle-Click automotive group. Our new and used auto dealer in Irvine",
+        "page_url": "https://www.tuttleclickford.com/",
+        "page_kind": "homepage",
+        "signal": "known_family_group",
+        "score": 0.357
+      },
+      {
+        "snippet": "you agree to receive text messages from Tuttle-Click Automotive Group and agree to our Terms and Privacy. Con",
+        "page_url": "https://www.tuttleclickford.com/contact-commercial-team/",
+        "page_kind": "homepage",
+        "signal": "automotive_group",
+        "score": 0.336
+      },
+      {
+        "snippet": "you agree to receive text messages from Tuttle-Click Automotive Group and agree to our Terms and Privacy. Con",
+        "page_url": "https://www.tuttleclickford.com/contact-commercial-team/",
+        "page_kind": "homepage",
+        "signal": "known_family_group",
+        "score": 0.357
+      }
+    ],
+    "pages_checked": [
+      "https://www.tuttleclickford.com/",
+      "https://www.tuttleclickford.com/contact-commercial-team/",
+      "https://www.tuttleclickford.com/about-us/",
+      "https://www.tuttleclickford.com/about-us/staff/",
+      "https://www.tuttleclickford.com/careers/",
+      "https://www.tuttleclickford.com/about-us/reviews/"
+    ],
+    "final_status": "unknown"
+  },
+  {
+    "url": "https://www.tuttleclickmazda.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": true,
+    "final_url": "https://www.tuttleclickmazda.com/",
+    "original_url": "https://www.tuttleclickmazda.com",
+    "final_domain": "www.tuttleclickmazda.com",
+    "redirected": false,
+    "redirect_mismatch": false,
+    "flags": [],
+    "redirect_chain": [],
+    "fetch_error": null,
+    "candidate_group_names": [],
+    "rejected_candidates": [],
+    "rejection_reasons": [],
+    "best_candidate_raw": null,
+    "best_candidate_normalized": null,
+    "best_candidate": null,
+    "confidence_score": 0.0,
+    "evidence_snippets": [],
+    "pages_checked": [
+      "https://www.tuttleclickmazda.com/",
+      "https://www.tuttleclickmazda.com/dealership/about.htm",
+      "https://www.tuttleclickmazda.com/dealership/staff.htm",
+      "https://www.tuttleclickmazda.com/tools/complyauto/privacy-policy.htm",
+      "https://www.tuttleclickmazda.com/tools/complyauto/terms-of-use.htm",
+      "https://www.tuttleclickmazda.com/tools/complyauto/privacy-policy.htm"
+    ],
+    "final_status": "unknown"
+  }
+]

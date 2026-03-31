@@ -1,5 +1,7 @@
 flask
+pydantic>=2
 requests
+beautifulsoup4
 pgeocode
 playwright
 playwright-stealth

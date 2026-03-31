@@ -1,0 +1,995 @@
+{
+  "summary": {
+    "run_id": "9ca50e19",
+    "started_at": "2026-03-31T00:42:54.452876Z",
+    "finished_at": "2026-03-31T00:43:25.131728Z",
+    "n_processed": 4,
+    "n_assigned": 3,
+    "n_manual_review": 0,
+    "n_manual_review_low_confidence": 0,
+    "n_unknown": 1,
+    "n_fetch_failed": 0,
+    "top_redirect_issues": [],
+    "top_junk_patterns": [
+      {
+        "pattern": "Service BMW Tire Center No.1 Collision Group :: generic_business_unit",
+        "count": 1
+      },
+      {
+        "pattern": "Collision Group :: generic_business_unit",
+        "count": 1
+      },
+      {
+        "pattern": "No.1 Collision Group :: generic_business_unit",
+        "count": 1
+      }
+    ],
+    "domain_failures": {},
+    "brand_breakdown": {},
+    "adjudication_invoked": 1,
+    "adjudication_errors": 0,
+    "top_assigned_groups": [
+      {
+        "group": "Tuttle-Click Automotive Group",
+        "count": 2
+      },
+      {
+        "group": "Sonic Automotive",
+        "count": 1
+      }
+    ],
+    "top_unknown_domains": [
+      {
+        "domain": "www.irvinebmw.com",
+        "count": 1
+      }
+    ],
+    "top_fetch_failure_domains": [],
+    "notes": ""
+  },
+  "assigned_evidence_patterns": [
+    {
+      "site_url": "https://www.longbeachbmw.com",
+      "ownership_signal": "sonic_corporate",
+      "source_page_types": [
+        "company",
+        "cross_domain_group",
+        "cross_domain_legal",
+        "privacy"
+      ],
+      "cross_domain_evidence": true,
+      "canonical_group": "Sonic Automotive"
+    },
+    {
+      "site_url": "https://www.tuttleclickford.com",
+      "ownership_signal": "part_of_the",
+      "source_page_types": [
+        "cross_domain_group",
+        "homepage"
+      ],
+      "cross_domain_evidence": true,
+      "canonical_group": "Tuttle-Click Automotive Group"
+    },
+    {
+      "site_url": "https://www.tuttleclickmazda.com",
+      "ownership_signal": "known_family_group",
+      "source_page_types": [
+        "about",
+        "cross_domain_group"
+      ],
+      "cross_domain_evidence": true,
+      "canonical_group": "Tuttle-Click Automotive Group"
+    }
+  ],
+  "sites": [
+    {
+      "site": {
+        "url": "https://www.longbeachbmw.com",
+        "fetch_mode": "playwright",
+        "homepage_loaded": true,
+        "final_url": "https://www.longbeachbmw.com/",
+        "original_url": "https://www.longbeachbmw.com",
+        "final_domain": "www.longbeachbmw.com",
+        "redirected": false,
+        "redirect_mismatch": false,
+        "flags": [
+          "adjudication_source:rules_only"
+        ],
+        "redirect_chain": [],
+        "fetch_error": null,
+        "candidate_group_names": [
+          "Sonic Automotive"
+        ],
+        "rejected_candidates": [],
+        "rejection_reasons": [],
+        "best_candidate_raw": "Sonic Automotive",
+        "best_candidate_normalized": "Sonic Automotive",
+        "best_candidate_canonical": "Sonic Automotive",
+        "best_candidate": "Sonic Automotive",
+        "confidence_score": 0.8534,
+        "evidence_snippets": [
+          {
+            "snippet": "s not affiliated with Long Beach BMW or Sonic Automotive. Select a Series 2 3 4 5 7 8 M X1 X2 X3",
+            "page_url": "https://www.longbeachbmw.com/collision-center.htm",
+            "page_kind": "company",
+            "signal": "sonic_corporate",
+            "score": 0.6192,
+            "cross_domain_evidence": false,
+            "related_domain": null,
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "st Experience Privacy Statement Contact Sonic Automotive 4401 Colwick Road Charlotte, NC 28211 P",
+            "page_url": "https://www.sonicautomotive.com/privacy.htm#End",
+            "page_kind": "privacy",
+            "signal": "sonic_corporate",
+            "score": 0.473,
+            "cross_domain_evidence": true,
+            "related_domain": "www.sonicautomotive.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "its & PerksCulture and BelongingLife at Sonic Automotive Hi There. Welcome to Your New Career FI",
+            "page_url": "https://jobs.sonicautomotive.com/",
+            "page_kind": "cross_domain_group",
+            "signal": "sonic_corporate",
+            "score": 0.6708,
+            "cross_domain_evidence": true,
+            "related_domain": "jobs.sonicautomotive.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": ".com Facebook Twitter YouTube Instagram © 2026 Sonic Automotive. All Rights Reserved Privacy Policy Terms",
+            "page_url": "https://jobs.sonicautomotive.com/",
+            "page_kind": "cross_domain_group",
+            "signal": "copyright",
+            "score": 0.2696,
+            "cross_domain_evidence": true,
+            "related_domain": "jobs.sonicautomotive.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "st Experience Privacy Statement Contact Sonic Automotive 4401 Colwick Road Charlotte, NC 28211 P",
+            "page_url": "https://www.sonicautomotive.com/privacy.htm",
+            "page_kind": "cross_domain_legal",
+            "signal": "sonic_corporate",
+            "score": 0.7052,
+            "cross_domain_evidence": true,
+            "related_domain": "www.sonicautomotive.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "c Guest Experience Terms of Use Contact Sonic Automotive 4401 Colwick Road Charlotte, NC 28211 S",
+            "page_url": "https://www.sonicautomotive.com/terms-of-use.htm",
+            "page_kind": "cross_domain_legal",
+            "signal": "sonic_corporate",
+            "score": 0.7052,
+            "cross_domain_evidence": true,
+            "related_domain": "www.sonicautomotive.com",
+            "evidence_tier": "strong"
+          }
+        ],
+        "pages_checked": [
+          "https://www.longbeachbmw.com/",
+          "https://www.longbeachbmw.com/collision-center.htm",
+          "https://www.longbeachbmw.com/dealership/about.htm",
+          "https://www.longbeachbmw.com/dealership/meet-our-team.htm",
+          "https://www.sonicautomotive.com/privacy.htm#End",
+          "https://jobs.sonicautomotive.com/",
+          "https://www.sonicautomotive.com/privacy.htm",
+          "https://www.sonicautomotive.com/terms-of-use.htm"
+        ],
+        "final_status": "assigned",
+        "raw_candidates_pre_filter": [
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive.",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive"
+        ],
+        "normalized_candidates": [
+          "Sonic Automotive"
+        ],
+        "skipped_cross_domain": [
+          {
+            "url": "https://www.bmwtirecenters.com/?uid=A19E448C-9462-4223-9E87108B1E529C76",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.shop.bmwusa.com?outletid=31643",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.google.com/maps/search/?api=1&query=1660+E+Spring+St+Long+Beach%2C+CA+90755&hl=en",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.dealer.com",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.facebook.com/LongBeachBMW/",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://twitter.com/BMWofLongBeach",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.instagram.com/long.beach.bmw/",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.yelp.com/biz/long-beach-bmw-signal-hill-3",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.onetrust.com/products/cookie-consent/",
+            "reason": "path_not_evidence"
+          }
+        ],
+        "second_pass_candidates": [],
+        "adjudication_skip_reason": "strong_rule_reject",
+        "entity_specificity_score": 0.95,
+        "best_evidence_tier": "strong",
+        "best_supporting_signal": "sonic_corporate",
+        "manual_review_reason": null
+      },
+      "merged_status": "assigned",
+      "merged_confidence": 0.8534,
+      "adjudication": null,
+      "source": "rules_only",
+      "adjudication_skip_reason": "strong_rule_reject",
+      "manual_review_reason": null,
+      "merged_best_canonical": "Sonic Automotive",
+      "best_candidate_raw": "Sonic Automotive",
+      "best_candidate_normalized": "Sonic Automotive",
+      "best_candidate_canonical": "Sonic Automotive"
+    },
+    {
+      "site": {
+        "url": "https://www.irvinebmw.com",
+        "fetch_mode": "playwright",
+        "homepage_loaded": true,
+        "final_url": "https://www.irvinebmw.com/",
+        "original_url": "https://www.irvinebmw.com",
+        "final_domain": "www.irvinebmw.com",
+        "redirected": false,
+        "redirect_mismatch": false,
+        "flags": [
+          "adjudication_source:ai"
+        ],
+        "redirect_chain": [],
+        "fetch_error": null,
+        "candidate_group_names": [],
+        "rejected_candidates": [
+          {
+            "text": "Service BMW Tire Center No.1 Collision Group",
+            "reason": "generic_business_unit",
+            "signal": "second_pass_collision"
+          },
+          {
+            "text": "Collision Group",
+            "reason": "generic_business_unit",
+            "signal": "second_pass_collision"
+          },
+          {
+            "text": "No.1 Collision Group",
+            "reason": "generic_business_unit",
+            "signal": "second_pass_collision"
+          }
+        ],
+        "rejection_reasons": [
+          "Service BMW Tire Center No.1 Collision Group :: generic_business_unit",
+          "Collision Group :: generic_business_unit",
+          "No.1 Collision Group :: generic_business_unit"
+        ],
+        "best_candidate_raw": null,
+        "best_candidate_normalized": null,
+        "best_candidate_canonical": null,
+        "best_candidate": null,
+        "confidence_score": 0.0,
+        "evidence_snippets": [],
+        "pages_checked": [
+          "https://www.irvinebmw.com/",
+          "https://www.irvinebmw.com/no1-collision-group-newport-beach.htm",
+          "https://www.irvinebmw.com/dealership/about.htm",
+          "https://www.irvinebmw.com/dealership/staff.htm",
+          "https://www.irvinebmw.com/employment.htm",
+          "https://www.irvinebmw.com/tools/complyauto/privacy-policy.htm"
+        ],
+        "final_status": "unknown",
+        "raw_candidates_pre_filter": [
+          "Service BMW Tire Center No.1 Collision Group",
+          "Collision Group",
+          "No.1 Collision Group"
+        ],
+        "normalized_candidates": [],
+        "skipped_cross_domain": [
+          {
+            "url": "https://express.irvinebmw.com/inventory",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://express.irvinebmw.com/inventory",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://express.irvinebmw.com/how_it_works",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.bmwtirecenters.com/?uid=4462EE89-0FD7-5E5F-126C31CD5262E0EB",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.bmwtirecenters.com/?uid=4462EE89-0FD7-5E5F-126C31CD5262E0EB",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.shop.bmwusa.com/mperformanceparts/browse-all?outletid=21188",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.shop.bmwusa.com/vehicle-and-accessories/general/browse-all?outletid=21188",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.shop.bmwusa.com/lifestyle-and-apparel/browse-all?outletid=21188",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://qmerit.com/ev/irvine-bmw/",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.google.com/maps/search/?api=1&query=9881+Research+Dr+Irvine%2C+CA+92618&hl=en",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.dealer.com",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.bmwusa.com/",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://twitter.com/irvinebmw",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.youtube.com/channel/UCNaGgMIjjxtJ-rTCE4AnA3Q?view_as=subscriber",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.instagram.com/irvinebmw/",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.facebook.com/irvinebmw",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://complyauto.com",
+            "reason": "path_not_evidence"
+          }
+        ],
+        "second_pass_candidates": [],
+        "adjudication_skip_reason": null,
+        "entity_specificity_score": 0.0,
+        "best_evidence_tier": "",
+        "best_supporting_signal": "",
+        "manual_review_reason": null
+      },
+      "merged_status": "unknown",
+      "merged_confidence": 0.0,
+      "adjudication": {
+        "dealer_id": "irvine-bmw",
+        "best_candidate_raw": null,
+        "best_candidate_normalized": null,
+        "confidence_score": 0.0,
+        "final_status": "unknown",
+        "evidence_used": [],
+        "rejected_candidates": [
+          "Service BMW Tire Center No.1 Collision Group",
+          "Collision Group",
+          "No.1 Collision Group"
+        ],
+        "reasoning_summary": "No clear evidence of a dealer group name; generic business unit phrases and privacy policy snippet rejected as junk.",
+        "model_name": "llama3.2:latest",
+        "prompt_version": "adjudicator_v1",
+        "created_at": "2026-03-31T00:43:12.126140Z"
+      },
+      "source": "ai",
+      "adjudication_skip_reason": null,
+      "manual_review_reason": null,
+      "merged_best_canonical": null,
+      "best_candidate_raw": null,
+      "best_candidate_normalized": null,
+      "best_candidate_canonical": null
+    },
+    {
+      "site": {
+        "url": "https://www.tuttleclickford.com",
+        "fetch_mode": "playwright",
+        "homepage_loaded": true,
+        "final_url": "https://www.tuttleclickford.com/",
+        "original_url": "https://www.tuttleclickford.com",
+        "final_domain": "www.tuttleclickford.com",
+        "redirected": false,
+        "redirect_mismatch": false,
+        "flags": [
+          "adjudication_source:rules_only"
+        ],
+        "redirect_chain": [],
+        "fetch_error": null,
+        "candidate_group_names": [
+          "Tuttle-Click Automotive Group",
+          "family",
+          "uttle-Click automotive group"
+        ],
+        "rejected_candidates": [],
+        "rejection_reasons": [],
+        "best_candidate_raw": "Tuttle-Click automotive group",
+        "best_candidate_normalized": "Tuttle-Click",
+        "best_candidate_canonical": "Tuttle-Click Automotive Group",
+        "best_candidate": "Tuttle-Click Automotive Group",
+        "confidence_score": 0.8282,
+        "evidence_snippets": [
+          {
+            "snippet": " Dealership Tuttle-Click Ford is part of the Tuttle-Click automotive group. Our new and used auto dealer in Irvine, CA proud",
+            "page_url": "https://www.tuttleclickford.com/",
+            "page_kind": "homepage",
+            "signal": "explicit_is_part_of_the",
+            "score": 0.4032,
+            "cross_domain_evidence": false,
+            "related_domain": null,
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": " Dealership Tuttle-Click Ford is part of the Tuttle-Click automotive group. Our new and used auto dealer in Irvine, CA proud",
+            "page_url": "https://www.tuttleclickford.com/",
+            "page_kind": "homepage",
+            "signal": "explicit_is_part_of_the",
+            "score": 0.4032,
+            "cross_domain_evidence": false,
+            "related_domain": null,
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "alership Tuttle-Click Ford is part of the Tuttle-Click automotive group. Our new and used auto dealer in Irvine, CA proudly",
+            "page_url": "https://www.tuttleclickford.com/",
+            "page_kind": "homepage",
+            "signal": "part_of_the",
+            "score": 0.3906,
+            "cross_domain_evidence": false,
+            "related_domain": null,
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "alership Tuttle-Click Ford is part of the Tuttle-Click automotive group. Our new and used auto dealer in Irvine, CA p",
+            "page_url": "https://www.tuttleclickford.com/",
+            "page_kind": "homepage",
+            "signal": "part_of",
+            "score": 0.3696,
+            "cross_domain_evidence": false,
+            "related_domain": null,
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "alership Tuttle-Click Ford is part of the Tuttle-Click automotive group. Our new and used auto dealer in Irvine, CA p",
+            "page_url": "https://www.tuttleclickford.com/",
+            "page_kind": "homepage",
+            "signal": "part_of",
+            "score": 0.3696,
+            "cross_domain_evidence": false,
+            "related_domain": null,
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "or no credit. New & Used Car Dealership Tuttle-Click Ford is part of the Tuttle-Click automotive group. Our new and used auto dealer in Irvine",
+            "page_url": "https://www.tuttleclickford.com/",
+            "page_kind": "homepage",
+            "signal": "known_family_group",
+            "score": 0.357,
+            "cross_domain_evidence": false,
+            "related_domain": null,
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "you agree to receive text messages from Tuttle-Click Automotive Group and agree to our Terms and Privacy. Con",
+            "page_url": "https://www.tuttleclickford.com/contact-commercial-team/",
+            "page_kind": "homepage",
+            "signal": "automotive_group",
+            "score": 0.336,
+            "cross_domain_evidence": false,
+            "related_domain": null,
+            "evidence_tier": "medium"
+          },
+          {
+            "snippet": "you agree to receive text messages from Tuttle-Click Automotive Group and agree to our Terms and Privacy. Con",
+            "page_url": "https://www.tuttleclickford.com/contact-commercial-team/",
+            "page_kind": "homepage",
+            "signal": "known_family_group",
+            "score": 0.357,
+            "cross_domain_evidence": false,
+            "related_domain": null,
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "om start to finish. Come be a part of the family today, at Tuttle-Click Collision Center in Irvine, California. Schedule Re",
+            "page_url": "https://www.tuttleclick.com/collsion-center-near-irvine-ca.htm",
+            "page_kind": "cross_domain_group",
+            "signal": "part_of_the",
+            "score": 0.7254,
+            "cross_domain_evidence": true,
+            "related_domain": "www.tuttleclick.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "om start to finish. Come be a part of the family today, at Tuttle-Click Collision Center in Irvine, California. Sched",
+            "page_url": "https://www.tuttleclick.com/collsion-center-near-irvine-ca.htm",
+            "page_kind": "cross_domain_group",
+            "signal": "part_of",
+            "score": 0.6864,
+            "cross_domain_evidence": true,
+            "related_domain": "www.tuttleclick.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "om start to finish. Come be a part of the family today, at Tuttle-Click Collision Center in Irvine, California. Sched",
+            "page_url": "https://www.tuttleclick.com/collsion-center-near-irvine-ca.htm",
+            "page_kind": "cross_domain_group",
+            "signal": "part_of",
+            "score": 0.6864,
+            "cross_domain_evidence": true,
+            "related_domain": "www.tuttleclick.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "in content Collsion Center near Irvine, CA Tuttle-Click Automotive Group Home New Pre-Owned Careers Service And ",
+            "page_url": "https://www.tuttleclick.com/collsion-center-near-irvine-ca.htm",
+            "page_kind": "cross_domain_group",
+            "signal": "automotive_group",
+            "score": 0.624,
+            "cross_domain_evidence": true,
+            "related_domain": "www.tuttleclick.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "content Collsion Center near Irvine, CA Tuttle-Click Automotive Group Home New Pre-Owned Careers Service And ",
+            "page_url": "https://www.tuttleclick.com/collsion-center-near-irvine-ca.htm",
+            "page_kind": "cross_domain_group",
+            "signal": "known_family_group",
+            "score": 0.663,
+            "cross_domain_evidence": true,
+            "related_domain": "www.tuttleclick.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "Skip to main content Tuttle-Click Automotive Group Tuttle-Click Automotive Group Home New Pre-Owned Careers Service And ",
+            "page_url": "https://www.tuttleclick.com/tools/complyauto/request-portal.htm",
+            "page_kind": "cross_domain_group",
+            "signal": "automotive_group",
+            "score": 0.624,
+            "cross_domain_evidence": true,
+            "related_domain": "www.tuttleclick.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "Skip to main content Tuttle-Click Automotive Group Tuttle-Click Automotive Group Home New ",
+            "page_url": "https://www.tuttleclick.com/tools/complyauto/request-portal.htm",
+            "page_kind": "cross_domain_group",
+            "signal": "known_family_group",
+            "score": 0.663,
+            "cross_domain_evidence": true,
+            "related_domain": "www.tuttleclick.com",
+            "evidence_tier": "strong"
+          }
+        ],
+        "pages_checked": [
+          "https://www.tuttleclickford.com/",
+          "https://www.tuttleclickford.com/contact-commercial-team/",
+          "https://www.tuttleclickford.com/about-us/",
+          "https://www.tuttleclickford.com/about-us/staff/",
+          "https://www.tuttleclickford.com/careers/",
+          "https://www.tuttleclickford.com/about-us/reviews/",
+          "https://www.tuttleclick.com/collsion-center-near-irvine-ca.htm",
+          "https://www.tuttleclick.com/tools/complyauto/request-portal.htm"
+        ],
+        "final_status": "assigned",
+        "raw_candidates_pre_filter": [
+          "Tuttle-Click automotive group",
+          "Tuttle-Click",
+          "uttle-Click automotive group",
+          "the Tuttle-Click automotive group",
+          "Tuttle-Click",
+          "Tuttle-Click Ford is part of the Tuttle-Click automotive group",
+          "Tuttle-Click Automotive Group",
+          "Tuttle-Click Automotive Group",
+          "Tuttle-Click",
+          "the family",
+          "Tuttle-Click",
+          "CA Tuttle-Click Automotive Group",
+          "Tuttle-Click Automotive Group",
+          "Tuttle-Click Automotive Group Tuttle-Click Automotive Group",
+          "Tuttle-Click Automotive Group",
+          "Tuttle-Click Automotive Group"
+        ],
+        "normalized_candidates": [
+          "Tuttle-Click Automotive Group",
+          "family",
+          "uttle-Click automotive group"
+        ],
+        "skipped_cross_domain": [
+          {
+            "url": "https://maps.google.com/?q=43+Auto+Center+Dr%2C+Irvine%2C+CA%2C+92618",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://parts.ford.com/?catalogId=251&dealerId=25330&storeId=1405",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.ford.com/finance/apply/1?SourceOfData=DCF&dealerId=05556",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://commercial-application.ford.com/dealer/40557",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.ford.com/finance/apply/1?SourceOfData=DCF&dealerId=05556",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://commercial-application.ford.com/dealer/40557",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://express.tuttleclickford.com/inventory#video",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://express.tuttleclickford.com/inventory",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.ford.com/io-frame-t3/?dealerPACode=05556&app_context=DC&postalCode=92618&leadsource=DC%20New%20Quote&altleadsource=Elite%20Website&env=tier3&year=2026&make=Ford&model=F-150&intcmp=DC1-05556&TertiarySource=",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.ford.com/io-frame-t3/?dealerPACode=05556&app_context=DC&postalCode=92618&leadsource=DC%2BNew%2BQuote&altleadsource=Elite%2BWebsite&env=tier3&year=2021&make=Ford&model=F-150&intcmp=dc1-05556&tertiarysource=SH-5520379b-6e1c-51ba-c043-c957f054deee",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.facebook.com/TuttleClickFord/",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://twitter.com/TC_Ford",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.youtube.com/channel/UCh2k2jp96L7PvNNkgtNH4Cw",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.instagram.com/tuttleclickfordlincoln/",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.linkedin.com/company/tuttleclick/",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://us-west-2.protection.sophos.com/?d=complyauto.com&u=aHR0cHM6Ly9jb21wbHljcnlwdC5jb21wbHlhdXRvLmNvbS9wL3Blcm1hbGluay9iMmQ0YTkwOC1lNmI5LTRhMzMtOTcwNi05OTQzMzMxZDkzZDk=&p=m&i=NjVjYmM5OTdmYmJlNjgyNTA3N2JjZjQ0&t=YXFENzU1Z3dsUkZMTFRENngrdjNXYlNZNmNpSkZYTmpzWmhrVkR1Z28xRT0=&h=95e83dc8cb0f4066810218c76eae004a&s=AVNPUEhUT0NFTkNSWVBUSVYa_agZHMK1Hj6OXHl9EmS8wnqc5lGduV7N6BZ_C2PO2aAY3muO5At2CC9UUDrgOO4",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.ticmrf.com/33-0882199",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://customer-portal.audioeye.com/accessibility-statement.html",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://customer-portal.audioeye.com/accessibility-statement.html",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.forddirect.com/adchoices",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.facebook.com/TuttleClickFord/",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.instagram.com/tuttleclickfordlincoln/",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.linkedin.com/company/tuttleclick/",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://us-west-2.protection.sophos.com/?d=complyauto.com&u=aHR0cHM6Ly9jb21wbHljcnlwdC5jb21wbHlhdXRvLmNvbS9wL3Blcm1hbGluay9iMmQ0YTkwOC1lNmI5LTRhMzMtOTcwNi05OTQzMzMxZDkzZDk=&p=m&i=NjVjYmM5OTdmYmJlNjgyNTA3N2JjZjQ0&t=YXFENzU1Z3dsUkZMTFRENngrdjNXYlNZNmNpSkZYTmpzWmhrVkR1Z28xRT0=&h=95e83dc8cb0f4066810218c76eae004a&s=AVNPUEhUT0NFTkNSWVBUSVYa_agZHMK1Hj6OXHl9EmS8wnqc5lGduV7N6BZ_C2PO2aAY3muO5At2CC9UUDrgOO4",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.ticmrf.com/33-0882199",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://customer-portal.audioeye.com/accessibility-statement.html",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://customer-portal.audioeye.com/accessibility-statement.html",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.forddirect.com/adchoices",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://parts.ford.com/?catalogId=251&dealerId=25330&storeId=1405",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.ford.com/finance/apply/1?SourceOfData=DCF&dealerId=05556",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://commercial-application.ford.com/dealer/40557",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://maps.google.com/?q=43+Auto+Center+Dr%2C+Irvine%2C+CA%2C+92618",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://complyauto.com",
+            "reason": "path_not_evidence"
+          }
+        ],
+        "second_pass_candidates": [],
+        "adjudication_skip_reason": "strong_rule_reject",
+        "entity_specificity_score": 0.95,
+        "best_evidence_tier": "strong",
+        "best_supporting_signal": "part_of_the",
+        "manual_review_reason": null
+      },
+      "merged_status": "assigned",
+      "merged_confidence": 0.8282,
+      "adjudication": null,
+      "source": "rules_only",
+      "adjudication_skip_reason": "strong_rule_reject",
+      "manual_review_reason": null,
+      "merged_best_canonical": "Tuttle-Click Automotive Group",
+      "best_candidate_raw": "Tuttle-Click automotive group",
+      "best_candidate_normalized": "Tuttle-Click",
+      "best_candidate_canonical": "Tuttle-Click Automotive Group"
+    },
+    {
+      "site": {
+        "url": "https://www.tuttleclickmazda.com",
+        "fetch_mode": "playwright",
+        "homepage_loaded": true,
+        "final_url": "https://www.tuttleclickmazda.com/",
+        "original_url": "https://www.tuttleclickmazda.com",
+        "final_domain": "www.tuttleclickmazda.com",
+        "redirected": false,
+        "redirect_mismatch": false,
+        "flags": [
+          "adjudication_source:rules_only"
+        ],
+        "redirect_chain": [],
+        "fetch_error": null,
+        "candidate_group_names": [
+          "Tuttle-Click Automotive Group",
+          "family"
+        ],
+        "rejected_candidates": [],
+        "rejection_reasons": [],
+        "best_candidate_raw": "Tuttle-Click Automotive Group",
+        "best_candidate_normalized": "Tuttle-Click Automotive Group",
+        "best_candidate_canonical": "Tuttle-Click Automotive Group",
+        "best_candidate": "Tuttle-Click Automotive Group",
+        "confidence_score": 0.9133,
+        "evidence_snippets": [
+          {
+            "snippet": "ls ABOUT Mazda of Irvine Introduction | Tuttle-Click Automotive Group Tuttle-Click Mazda | Robert Khoury: Ser",
+            "page_url": "https://www.tuttleclickmazda.com/dealership/about.htm",
+            "page_kind": "about",
+            "signal": "automotive_group",
+            "score": 0.8,
+            "cross_domain_evidence": false,
+            "related_domain": null,
+            "evidence_tier": "medium"
+          },
+          {
+            "snippet": "ls ABOUT Mazda of Irvine Introduction | Tuttle-Click Automotive Group Tuttle-Click Mazda | Robert Khoury: Ser",
+            "page_url": "https://www.tuttleclickmazda.com/dealership/about.htm",
+            "page_kind": "about",
+            "signal": "known_family_group",
+            "score": 0.8,
+            "cross_domain_evidence": false,
+            "related_domain": null,
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "om start to finish. Come be a part of the family today, at Tuttle-Click Collision Center in Irvine, California. Schedule Re",
+            "page_url": "https://www.tuttleclick.com/collsion-center-near-irvine-ca.htm",
+            "page_kind": "cross_domain_group",
+            "signal": "part_of_the",
+            "score": 0.7254,
+            "cross_domain_evidence": true,
+            "related_domain": "www.tuttleclick.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "om start to finish. Come be a part of the family today, at Tuttle-Click Collision Center in Irvine, California. Sched",
+            "page_url": "https://www.tuttleclick.com/collsion-center-near-irvine-ca.htm",
+            "page_kind": "cross_domain_group",
+            "signal": "part_of",
+            "score": 0.6864,
+            "cross_domain_evidence": true,
+            "related_domain": "www.tuttleclick.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "om start to finish. Come be a part of the family today, at Tuttle-Click Collision Center in Irvine, California. Sched",
+            "page_url": "https://www.tuttleclick.com/collsion-center-near-irvine-ca.htm",
+            "page_kind": "cross_domain_group",
+            "signal": "part_of",
+            "score": 0.6864,
+            "cross_domain_evidence": true,
+            "related_domain": "www.tuttleclick.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "in content Collsion Center near Irvine, CA Tuttle-Click Automotive Group Home New Pre-Owned Careers Service And ",
+            "page_url": "https://www.tuttleclick.com/collsion-center-near-irvine-ca.htm",
+            "page_kind": "cross_domain_group",
+            "signal": "automotive_group",
+            "score": 0.624,
+            "cross_domain_evidence": true,
+            "related_domain": "www.tuttleclick.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "content Collsion Center near Irvine, CA Tuttle-Click Automotive Group Home New Pre-Owned Careers Service And ",
+            "page_url": "https://www.tuttleclick.com/collsion-center-near-irvine-ca.htm",
+            "page_kind": "cross_domain_group",
+            "signal": "known_family_group",
+            "score": 0.663,
+            "cross_domain_evidence": true,
+            "related_domain": "www.tuttleclick.com",
+            "evidence_tier": "strong"
+          }
+        ],
+        "pages_checked": [
+          "https://www.tuttleclickmazda.com/",
+          "https://www.tuttleclickmazda.com/dealership/about.htm",
+          "https://www.tuttleclickmazda.com/dealership/staff.htm",
+          "https://www.tuttleclickmazda.com/tools/complyauto/privacy-policy.htm",
+          "https://www.tuttleclickmazda.com/tools/complyauto/terms-of-use.htm",
+          "https://www.tuttleclickmazda.com/tools/complyauto/privacy-policy.htm",
+          "https://www.tuttleclick.com/collsion-center-near-irvine-ca.htm"
+        ],
+        "final_status": "assigned",
+        "raw_candidates_pre_filter": [
+          "Tuttle-Click Automotive Group",
+          "Tuttle-Click Automotive Group",
+          "Tuttle-Click",
+          "the family",
+          "Tuttle-Click",
+          "CA Tuttle-Click Automotive Group",
+          "Tuttle-Click Automotive Group"
+        ],
+        "normalized_candidates": [
+          "Tuttle-Click Automotive Group",
+          "family"
+        ],
+        "skipped_cross_domain": [
+          {
+            "url": "https://www.mazdarecallinfo.com/42128",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.themazdatirecenter.com/?uid=243C0205-20EB-4F25-89EEC2CEEE0F8910",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.tuttleclick.com/community-involvement.htm",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.google.com/maps/search/?api=1&query=41+Auto+Center+Drive+Irvine%2C+CA+92618&hl=en",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://tuttleclickmazda.website.apps.dealer.com/used-inventory/index.htm",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://tuttleclickmazda.website.apps.dealer.com/hour-or-free-oil-change.htm",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.mazdarecallinfo.com/42128",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.ticmrf.com/33-0882199",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://complycrypt.complyauto.com/p/permalink/a7362399-5a04-4e40-a272-c89485776bd8",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.facebook.com/TuttleClickMazda/",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.youtube.com/user/TuttleClickMazdaCA",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.instagram.com/tuttleclickmazda",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.dealer.com/",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://complyauto.com",
+            "reason": "path_not_evidence"
+          }
+        ],
+        "second_pass_candidates": [],
+        "adjudication_skip_reason": "strong_rule_reject",
+        "entity_specificity_score": 0.95,
+        "best_evidence_tier": "strong",
+        "best_supporting_signal": "known_family_group",
+        "manual_review_reason": null
+      },
+      "merged_status": "assigned",
+      "merged_confidence": 0.9133,
+      "adjudication": null,
+      "source": "rules_only",
+      "adjudication_skip_reason": "strong_rule_reject",
+      "manual_review_reason": null,
+      "merged_best_canonical": "Tuttle-Click Automotive Group",
+      "best_candidate_raw": "Tuttle-Click Automotive Group",
+      "best_candidate_normalized": "Tuttle-Click Automotive Group",
+      "best_candidate_canonical": "Tuttle-Click Automotive Group"
+    }
+  ]
+}

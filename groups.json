@@ -1,0 +1,474 @@
+[
+  {
+    "url": "https://www.charlotteram.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": false,
+    "final_url": "https://www.charlotteram.com",
+    "domain_flags": [
+      "dns_failure"
+    ],
+    "redirect_chain": [],
+    "fetch_error": "dns_failed:[Errno 8] nodename nor servname provided, or not known",
+    "candidate_group_names": [],
+    "best_candidate": null,
+    "confidence_score": 0.0,
+    "evidence_snippets": [],
+    "pages_checked": [],
+    "final_status": "fetch_failed"
+  },
+  {
+    "url": "https://www.fletcherjonesmercedes.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": false,
+    "final_url": "https://www.fletcherjonesmercedes.com",
+    "domain_flags": [
+      "dns_failure"
+    ],
+    "redirect_chain": [],
+    "fetch_error": "dns_failed:[Errno 8] nodename nor servname provided, or not known",
+    "candidate_group_names": [],
+    "best_candidate": null,
+    "confidence_score": 0.0,
+    "evidence_snippets": [],
+    "pages_checked": [],
+    "final_status": "fetch_failed"
+  },
+  {
+    "url": "https://www.fordofcharlotte.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": true,
+    "final_url": "https://www.fordlincolncharlotte.com/",
+    "domain_flags": [
+      "redirect"
+    ],
+    "redirect_chain": [
+      "https://www.fordofcharlotte.com"
+    ],
+    "fetch_error": null,
+    "candidate_group_names": [
+      "the Charlotte community",
+      "the visible URL in marketing programs to understand the specific instance of a link",
+      "such a relationship",
+      "the transaction",
+      "the acquisition"
+    ],
+    "best_candidate": "the Charlotte community",
+    "confidence_score": 0.88,
+    "evidence_snippets": [
+      {
+        "snippet": " is not only a car dealership, but also a member of the Charlotte community. We value our local community and are mo",
+        "page_url": "https://www.fordlincolncharlotte.com/about-us-mark-ficken-ford-lincoln.html",
+        "page_kind": "about",
+        "signal": "part_of",
+        "score": 0.88
+      },
+      {
+        "snippet": "gle Analytics. UTM tags are appended as part of the visible URL in marketing programs to understand the specific instance of a link. UTM tag reports are observed in Google ",
+        "page_url": "https://www.fordlincolncharlotte.com/privacy.html",
+        "page_kind": "privacy",
+        "signal": "part_of",
+        "score": 0.836
+      },
+      {
+        "snippet": "anded services to our site visitors. As part of such a relationship, we may share with these companies the u",
+        "page_url": "https://www.fordlincolncharlotte.com/privacy.html",
+        "page_kind": "privacy",
+        "signal": "part_of",
+        "score": 0.836
+      },
+      {
+        "snippet": "e of the business assets transferred as part of the transaction. If substantially all of the assets of o",
+        "page_url": "https://www.fordlincolncharlotte.com/privacy.html",
+        "page_kind": "privacy",
+        "signal": "part_of",
+        "score": 0.836
+      },
+      {
+        "snippet": "sumer information may be transferred as part of the acquisition. Compliance with Law/Safety: Our dealers",
+        "page_url": "https://www.fordlincolncharlotte.com/privacy.html",
+        "page_kind": "privacy",
+        "signal": "part_of",
+        "score": 0.836
+      }
+    ],
+    "pages_checked": [
+      "https://www.fordlincolncharlotte.com/",
+      "https://www.fordlincolncharlotte.com/about-us-mark-ficken-ford-lincoln.html",
+      "https://www.fordlincolncharlotte.com/careers.aspx",
+      "https://www.fordlincolncharlotte.com/privacy.html"
+    ],
+    "final_status": "assigned"
+  },
+  {
+    "url": "https://www.hendrickaudi.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": false,
+    "final_url": "https://www.hendrickaudi.com",
+    "domain_flags": [
+      "dns_failure"
+    ],
+    "redirect_chain": [],
+    "fetch_error": "dns_failed:[Errno 8] nodename nor servname provided, or not known",
+    "candidate_group_names": [],
+    "best_candidate": null,
+    "confidence_score": 0.0,
+    "evidence_snippets": [],
+    "pages_checked": [],
+    "final_status": "fetch_failed"
+  },
+  {
+    "url": "https://www.hendrickbmwcharlotte.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": false,
+    "final_url": "https://www.hendrickbmwcharlotte.com/",
+    "domain_flags": [
+      "http_403"
+    ],
+    "redirect_chain": [],
+    "fetch_error": "http_403",
+    "candidate_group_names": [],
+    "best_candidate": null,
+    "confidence_score": 0.0,
+    "evidence_snippets": [],
+    "pages_checked": [],
+    "final_status": "fetch_failed"
+  },
+  {
+    "url": "https://www.hendrickchevrolet.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": true,
+    "final_url": "https://www.hendrickchevrolet.com/",
+    "domain_flags": [],
+    "redirect_chain": [],
+    "fetch_error": null,
+    "candidate_group_names": [
+      "and model. View Inventory Reviews Schedule Service Parts Center About Hendrick Automotive Group",
+      "and 26 manufacturer nameplates from the Carolinas to California, Hendrick Automotive Group"
+    ],
+    "best_candidate": "and model. View Inventory Reviews Schedule Service Parts Center About Hendrick Automotive Group",
+    "confidence_score": 0.72,
+    "evidence_snippets": [
+      {
+        "snippet": "to fit for your vehicle’s specific make and model. View Inventory Reviews Schedule Service Parts Center About Hendrick Automotive Group Representing 134 franchises and 26 manu",
+        "page_url": "https://www.hendrickchevrolet.com/about-us-2/",
+        "page_kind": "about",
+        "signal": "automotive_group",
+        "score": 0.72
+      },
+      {
+        "snippet": "otive Group Representing 134 franchises and 26 manufacturer nameplates from the Carolinas to California, Hendrick Automotive Group is the largest privately held automotiv",
+        "page_url": "https://www.hendrickchevrolet.com/about-us-2/",
+        "page_kind": "about",
+        "signal": "automotive_group",
+        "score": 0.72
+      }
+    ],
+    "pages_checked": [
+      "https://www.hendrickchevrolet.com/",
+      "https://www.hendrickchevrolet.com/about-us-2/",
+      "https://www.hendrickchevrolet.com/careers/",
+      "https://www.hendrickchevrolet.com/about-us/staff/",
+      "https://www.hendrickchevrolet.com/about-us/reviews/"
+    ],
+    "final_status": "assigned"
+  },
+  {
+    "url": "https://www.hondaofcharlotte.com",
+    "fetch_mode": "error",
+    "homepage_loaded": false,
+    "final_url": "https://www.hondaofcharlotte.com",
+    "domain_flags": [],
+    "redirect_chain": [],
+    "fetch_error": "Page.content: Unable to retrieve content because the page is navigating and changing the content.",
+    "candidate_group_names": [],
+    "best_candidate": null,
+    "confidence_score": 0.0,
+    "evidence_snippets": [],
+    "pages_checked": [],
+    "final_status": "fetch_failed"
+  },
+  {
+    "url": "https://www.irvinebmw.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": true,
+    "final_url": "https://www.irvinebmw.com/",
+    "domain_flags": [],
+    "redirect_chain": [],
+    "fetch_error": null,
+    "candidate_group_names": [
+      "our job to highlight the best aspects of our new model lineup"
+    ],
+    "best_candidate": "our job to highlight the best aspects of our new model lineup",
+    "confidence_score": 0.88,
+    "evidence_snippets": [
+      {
+        "snippet": "ion Viejo, and Lake Forest CA It's only part of our job to highlight the best aspects of our new model lineup. The other part is ensuring that you enj",
+        "page_url": "https://www.irvinebmw.com/dealership/about.htm",
+        "page_kind": "about",
+        "signal": "part_of",
+        "score": 0.88
+      }
+    ],
+    "pages_checked": [
+      "https://www.irvinebmw.com/",
+      "https://www.irvinebmw.com/dealership/about.htm",
+      "https://www.irvinebmw.com/employment.htm",
+      "https://www.irvinebmw.com/tools/complyauto/privacy-policy.htm"
+    ],
+    "final_status": "assigned"
+  },
+  {
+    "url": "https://www.lexusofcharlotte.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": false,
+    "final_url": "https://www.lexusofcharlotte.com",
+    "domain_flags": [
+      "dns_failure"
+    ],
+    "redirect_chain": [],
+    "fetch_error": "dns_failed:[Errno 8] nodename nor servname provided, or not known",
+    "candidate_group_names": [],
+    "best_candidate": null,
+    "confidence_score": 0.0,
+    "evidence_snippets": [],
+    "pages_checked": [],
+    "final_status": "fetch_failed"
+  },
+  {
+    "url": "https://www.longbeachbmw.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": true,
+    "final_url": "https://www.longbeachbmw.com/",
+    "domain_flags": [],
+    "redirect_chain": [],
+    "fetch_error": null,
+    "candidate_group_names": [
+      "this Privacy Policy or the Terms of Use",
+      "us that link to this Privacy Policy"
+    ],
+    "best_candidate": "this Privacy Policy or the Terms of Use",
+    "confidence_score": 0.836,
+    "evidence_snippets": [
+      {
+        "snippet": "erms of Use\"). If you disagree with any part of this Privacy Policy or the Terms of Use, please do not use this Website or any o",
+        "page_url": "https://www.sonicautomotive.com/privacy.htm#End",
+        "page_kind": "privacy",
+        "signal": "part_of",
+        "score": 0.836
+      },
+      {
+        "snippet": "websites, all related websites owned or operated by us that link to this Privacy Policy, any mobile app, and any physical locati",
+        "page_url": "https://www.sonicautomotive.com/privacy.htm#End",
+        "page_kind": "privacy",
+        "signal": "operated_by",
+        "score": 0.8075
+      }
+    ],
+    "pages_checked": [
+      "https://www.longbeachbmw.com/",
+      "https://www.longbeachbmw.com/dealership/about.htm",
+      "https://www.sonicautomotive.com/privacy.htm#End"
+    ],
+    "final_status": "assigned"
+  },
+  {
+    "url": "https://www.porschecharlotte.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": true,
+    "final_url": "https://hendrick.porsche.com/en",
+    "domain_flags": [
+      "redirect"
+    ],
+    "redirect_chain": [
+      "https://www.porschecharlotte.com"
+    ],
+    "fetch_error": null,
+    "candidate_group_names": [
+      "to Charlotte area businesses and attractions. Hendrick Porsche is Hendrick Automotive Group",
+      "said Rick Hendrick, Chairman and CEO, Hendrick Automotive Group",
+      "s specific make and model. Parts Center About Hendrick Automotive Group",
+      "and 26 manufacturer nameplates from the Carolinas to California, Hendrick Automotive Group",
+      "make this facility a true destination for Charlotte-area enthusiasts. Hendrick Automotive Group",
+      "said Rick Hendrick, chairman of Hendrick Automotive Group",
+      "said David Porter, Hendrick Automotive Group"
+    ],
+    "best_candidate": "to Charlotte area businesses and attractions. Hendrick Porsche is Hendrick Automotive Group",
+    "confidence_score": 0.72,
+    "evidence_snippets": [
+      {
+        "snippet": "es, and a complimentary shuttle service to Charlotte area businesses and attractions. Hendrick Porsche is Hendrick Automotive Group’s exclusive Porsche Center in Charlotte",
+        "page_url": "https://hendrick.porsche.com/en/about-us",
+        "page_kind": "about",
+        "signal": "automotive_group",
+        "score": 0.72
+      },
+      {
+        "snippet": " a tremendous foundation in Charlotte,” said Rick Hendrick, Chairman and CEO, Hendrick Automotive Group. “By our team members being accountable",
+        "page_url": "https://hendrick.porsche.com/en/about-us",
+        "page_kind": "about",
+        "signal": "automotive_group",
+        "score": 0.72
+      },
+      {
+        "snippet": " parts designed to fit for your vehicle’s specific make and model. Parts Center About Hendrick Automotive Group Representing 134 franchises and 26 manu",
+        "page_url": "https://hendrick.porsche.com/en/about-us",
+        "page_kind": "about",
+        "signal": "automotive_group",
+        "score": 0.72
+      },
+      {
+        "snippet": "otive Group Representing 134 franchises and 26 manufacturer nameplates from the Carolinas to California, Hendrick Automotive Group is the largest privately held automotiv",
+        "page_url": "https://hendrick.porsche.com/en/about-us",
+        "page_kind": "about",
+        "signal": "automotive_group",
+        "score": 0.72
+      },
+      {
+        "snippet": "ice center and an extended parking area make this facility a true destination for Charlotte-area enthusiasts. Hendrick Automotive Group operates 28 franchises in the Charlotte",
+        "page_url": "https://hendrick.porsche.com/en/about-us",
+        "page_kind": "about",
+        "signal": "automotive_group",
+        "score": 0.72
+      },
+      {
+        "snippet": " a tremendous foundation in Charlotte,” said Rick Hendrick, chairman of Hendrick Automotive Group. “By our team members being accountable",
+        "page_url": "https://hendrick.porsche.com/en/about-us",
+        "page_kind": "about",
+        "signal": "automotive_group",
+        "score": 0.72
+      },
+      {
+        "snippet": "orsche first opened its doors in 1989,” said David Porter, Hendrick Automotive Group market area vice president. “Ever since",
+        "page_url": "https://hendrick.porsche.com/en/about-us",
+        "page_kind": "about",
+        "signal": "automotive_group",
+        "score": 0.72
+      }
+    ],
+    "pages_checked": [
+      "https://hendrick.porsche.com/en",
+      "https://hendrick.porsche.com/en/about-us",
+      "https://hendrick.porsche.com/en/about-us/staff",
+      "https://hendrick.porsche.com/en/about-us/reviews",
+      "https://hendrick.porsche.com/en/about-us/porsche-classic-restoration"
+    ],
+    "final_status": "assigned"
+  },
+  {
+    "url": "https://www.tesla.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": false,
+    "final_url": "https://www.tesla.com/",
+    "domain_flags": [
+      "http_403"
+    ],
+    "redirect_chain": [],
+    "fetch_error": "http_403",
+    "candidate_group_names": [],
+    "best_candidate": null,
+    "confidence_score": 0.0,
+    "evidence_snippets": [],
+    "pages_checked": [],
+    "final_status": "fetch_failed"
+  },
+  {
+    "url": "https://www.toyotaofcharlotte.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": true,
+    "final_url": "https://yourhealthvivarives.com/nerve/?utm_source=popactive&utm_medium=133608.430332639-toyotaofcharlotte.com",
+    "domain_flags": [
+      "redirect"
+    ],
+    "redirect_chain": [
+      "https://www.toyotaofcharlotte.com"
+    ],
+    "fetch_error": null,
+    "candidate_group_names": [
+      "these Terms of Service by posting updates and changes to our website",
+      "All Rights Reserved"
+    ],
+    "best_candidate": "these Terms of Service by posting updates and changes to our website",
+    "confidence_score": 0.836,
+    "evidence_snippets": [
+      {
+        "snippet": "cial website of NeuroFlow Neuro Device. © All Rights Reserved | 2023 HEALTH DISCLAIMER: This advertori",
+        "page_url": "https://yourhealthvivarives.com/nerve/?utm_source=popactive&utm_medium=133608.430332639-toyotaofcharlotte.com",
+        "page_kind": "homepage",
+        "signal": "copyright",
+        "score": 0.1688
+      },
+      {
+        "snippet": "etion, to update, change or replace any part of these Terms of Service by posting updates and changes to our website. It is your responsibility to check our ",
+        "page_url": "https://yourhealthvivarives.com/nerve/terms.html",
+        "page_kind": "terms",
+        "signal": "part_of",
+        "score": 0.836
+      }
+    ],
+    "pages_checked": [
+      "https://yourhealthvivarives.com/nerve/?utm_source=popactive&utm_medium=133608.430332639-toyotaofcharlotte.com",
+      "https://yourhealthvivarives.com/nerve/terms.html",
+      "https://yourhealthvivarives.com/nerve/privacy.html"
+    ],
+    "final_status": "assigned"
+  },
+  {
+    "url": "https://www.tuttleclickford.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": true,
+    "final_url": "https://www.tuttleclickford.com/",
+    "domain_flags": [],
+    "redirect_chain": [],
+    "fetch_error": null,
+    "candidate_group_names": [
+      "the Tuttle-Click automotive group",
+      "credit. New & Used Car Dealership Tuttle-Click Ford is part of the Tuttle-Click automotive group"
+    ],
+    "best_candidate": "the Tuttle-Click automotive group",
+    "confidence_score": 0.396,
+    "evidence_snippets": [
+      {
+        "snippet": "sed Car Dealership Tuttle-Click Ford is part of the Tuttle-Click automotive group. Our new and used auto dealer in Irvine,",
+        "page_url": "https://www.tuttleclickford.com/",
+        "page_kind": "homepage",
+        "signal": "part_of",
+        "score": 0.396
+      },
+      {
+        "snippet": "u buy a car, even with bad credit or no credit. New & Used Car Dealership Tuttle-Click Ford is part of the Tuttle-Click automotive group. Our new and used auto dealer in Irvine",
+        "page_url": "https://www.tuttleclickford.com/",
+        "page_kind": "homepage",
+        "signal": "automotive_group",
+        "score": 0.324
+      }
+    ],
+    "pages_checked": [
+      "https://www.tuttleclickford.com/",
+      "https://www.tuttleclickford.com/f150-lightning/",
+      "https://www.tuttleclickford.com/ev-mach-e/",
+      "https://www.tuttleclickford.com/about-us/",
+      "https://www.tuttleclickford.com/about-us/staff/",
+      "https://www.tuttleclickford.com/careers/"
+    ],
+    "final_status": "assigned"
+  },
+  {
+    "url": "https://www.tuttleclickmazda.com",
+    "fetch_mode": "playwright",
+    "homepage_loaded": true,
+    "final_url": "https://www.tuttleclickmazda.com/",
+    "domain_flags": [],
+    "redirect_chain": [],
+    "fetch_error": null,
+    "candidate_group_names": [],
+    "best_candidate": null,
+    "confidence_score": 0.0,
+    "evidence_snippets": [],
+    "pages_checked": [
+      "https://www.tuttleclickmazda.com/",
+      "https://www.tuttleclickmazda.com/dealership/about.htm",
+      "https://www.tuttleclickmazda.com/tools/complyauto/privacy-policy.htm"
+    ],
+    "final_status": "unknown"
+  }
+]
