@@ -1,0 +1,125 @@
+{
+  "generated_at": "2026-04-08T19:00:45.513Z",
+  "samples": [
+    {
+      "vin": "unknown-12861468",
+      "raw_json_sample": {
+        "model": null,
+        "seoUrl": null,
+        "value": "",
+        "text": "All",
+        "selected": true,
+        "count": 78,
+        "url": "https://www.kefferjeep.com/inventory/used?paymenttype=cash&intransit=true&instock=true&inproduction=true"
+      },
+      "parsed_snapshot": {
+        "vin": "unknown-12861468",
+        "year": 0,
+        "make": "",
+        "model": "",
+        "trim": "",
+        "price": 0,
+        "image_url": "/static/placeholder.svg",
+        "gallery_preview": [
+          "/static/placeholder.svg"
+        ]
+      }
+    },
+    {
+      "vin": "unknown-31533934",
+      "raw_json_sample": {
+        "model": "Tiguan",
+        "seoUrl": null,
+        "value": "2.0T SE",
+        "text": "2.0T SE",
+        "selected": false,
+        "count": 2,
+        "url": "https://www.kefferjeep.com/inventory/used?trim=2-d-0t-se&paymenttype=cash&intransit=true&instock=true&inproduction=true"
+      },
+      "parsed_snapshot": {
+        "vin": "unknown-31533934",
+        "year": 0,
+        "make": "Tiguan",
+        "model": "Tiguan",
+        "trim": "",
+        "price": 0,
+        "image_url": "/static/placeholder.svg",
+        "gallery_preview": [
+          "/static/placeholder.svg"
+        ]
+      }
+    },
+    {
+      "vin": "unknown-86244676",
+      "raw_json_sample": {
+        "model": "Santa Fe Sport",
+        "seoUrl": null,
+        "value": "2.4 Base",
+        "text": "2.4 Base",
+        "selected": false,
+        "count": 1,
+        "url": "https://www.kefferjeep.com/inventory/used?trim=2-d-4-base&paymenttype=cash&intransit=true&instock=true&inproduction=true"
+      },
+      "parsed_snapshot": {
+        "vin": "unknown-86244676",
+        "year": 0,
+        "make": "Santa",
+        "model": "Santa Fe Sport",
+        "trim": "",
+        "price": 0,
+        "image_url": "/static/placeholder.svg",
+        "gallery_preview": [
+          "/static/placeholder.svg"
+        ]
+      }
+    },
+    {
+      "vin": "unknown-61512571",
+      "raw_json_sample": {
+        "model": "4 Series",
+        "seoUrl": null,
+        "value": "430i Gran Coupe",
+        "text": "430i Gran Coupe",
+        "selected": false,
+        "count": 1,
+        "url": "https://www.kefferjeep.com/inventory/used?trim=430i-gran-coupe&paymenttype=cash&intransit=true&instock=true&inproduction=true"
+      },
+      "parsed_snapshot": {
+        "vin": "unknown-61512571",
+        "year": 0,
+        "make": "4",
+        "model": "4 Series",
+        "trim": "",
+        "price": 0,
+        "image_url": "/static/placeholder.svg",
+        "gallery_preview": [
+          "/static/placeholder.svg"
+        ]
+      }
+    },
+    {
+      "vin": "unknown-66883550",
+      "raw_json_sample": {
+        "model": "RDX",
+        "seoUrl": null,
+        "value": "A-Spec Package",
+        "text": "A-Spec Package",
+        "selected": false,
+        "count": 1,
+        "url": "https://www.kefferjeep.com/inventory/used?trim=a-spec-package&paymenttype=cash&intransit=true&instock=true&inproduction=true"
+      },
+      "parsed_snapshot": {
+        "vin": "unknown-66883550",
+        "year": 0,
+        "make": "Rdx",
+        "model": "RDX",
+        "trim": "",
+        "price": 0,
+        "image_url": "/static/placeholder.svg",
+        "gallery_preview": [
+          "/static/placeholder.svg"
+        ]
+      }
+    }
+  ]
+}

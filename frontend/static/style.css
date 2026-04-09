@@ -1640,3 +1640,376 @@ h1 {
     border: 1px solid rgba(255, 255, 255, 0.12);
     max-width: 720px;
 }
+
+/* ── Developer dashboard ── */
+.dev-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 48px 80px;
+}
+
+.dev-hero {
+    margin-bottom: 40px;
+}
+
+.dev-title {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.dev-sub {
+    font-size: 14px;
+    color: #888;
+    line-height: 1.6;
+    max-width: 640px;
+}
+
+.dev-section {
+    margin-bottom: 28px;
+}
+
+.dev-status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.dev-status-card {
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--main-radius);
+    padding: 18px 20px;
+}
+
+.dev-status-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.dev-status-value {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.dev-status-value.dev-ok {
+    color: #7dffb2;
+}
+
+.dev-status-value.dev-bad {
+    color: #ff8a8a;
+}
+
+.dev-status-meta {
+    font-size: 12px;
+    color: #666;
+    margin-top: 8px;
+    word-break: break-all;
+}
+
+.dev-refresh-status {
+    margin-top: 4px;
+}
+
+.dev-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .dev-two-col {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dev-form .field-group input {
+    width: 100%;
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #333;
+    border-radius: var(--main-radius);
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.dev-form .field-group input:focus {
+    border-color: rgba(255, 255, 255, 0.35);
+    outline: none;
+}
+
+.dev-form-row {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    gap: 16px;
+}
+
+.dev-state-input {
+    text-transform: uppercase;
+}
+
+.dev-form-msg {
+    font-size: 13px;
+    color: #aaa;
+    margin-top: 12px;
+    min-height: 1.2em;
+}
+
+.dev-hint {
+    font-size: 13px;
+    color: #777;
+    line-height: 1.5;
+    margin-bottom: 14px;
+}
+
+.dev-hint code {
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.dev-playground-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.dev-scan-input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.dev-log-pre {
+    margin: 0;
+    padding: 16px 18px;
+    min-height: 200px;
+    max-height: 420px;
+    overflow: auto;
+    background: #050505;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--main-radius);
+    font-size: 12px;
+    line-height: 1.5;
+    color: #c8e6c9;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.dev-log-pre--compact {
+    min-height: 80px;
+    max-height: 220px;
+}
+
+.dev-tools-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.dev-tool-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.dev-table-wrap {
+    overflow-x: auto;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--main-radius);
+}
+
+.dev-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.dev-table th,
+.dev-table td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dev-table th {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #888;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.dev-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.dev-table-link {
+    color: #9ecbff;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.dev-table-link:hover {
+    text-decoration: underline;
+}
+
+.dev-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    color: #aaa;
+}
+
+.dev-delete-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 120, 120, 0.45);
+    color: #ff9b9b;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.dev-delete-btn:hover {
+    background: rgba(255, 80, 80, 0.12);
+}
+
+.dev-empty-row td {
+    color: #666;
+    text-align: center;
+    padding: 28px;
+}
+
+.dev-discovery-panel {
+    margin: 20px 0 16px;
+    padding: 16px 18px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--main-radius);
+}
+
+.dev-discovery-title {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 12px;
+}
+
+.dev-discovery-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dev-discovery-item {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #c5e8ff;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dev-discovery-item:last-child {
+    border-bottom: none;
+}
+
+.dev-discovery-placeholder {
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+}
+
+.dev-textarea-label {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.dev-url-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 14px 16px;
+    background: #000;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: var(--main-radius);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.45;
+    resize: vertical;
+}
+
+.dev-url-textarea:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.dev-playground-row--mt {
+    margin-top: 14px;
+}
+
+.dev-queue-panel {
+    margin: 20px 0 16px;
+}
+
+.dev-queue-table-wrap {
+    max-height: 220px;
+    overflow: auto;
+}
+
+.dev-queue-table td:last-child {
+    white-space: nowrap;
+}
+
+.dev-view-site-btn {
+    display: inline-block;
+    font-size: 12px;
+    color: #9ecbff;
+    text-decoration: none;
+    padding: 4px 10px;
+    border: 1px solid rgba(158, 203, 255, 0.35);
+    border-radius: 8px;
+}
+
+.dev-view-site-btn:hover {
+    background: rgba(158, 203, 255, 0.1);
+}
+
+.dev-log-line {
+    display: block;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.dev-log-turbo {
+    color: #7dd3fc;
+}
+
+.dev-log-slow {
+    color: #fde047;
+}
+
+.dev-log-discovery {
+    color: #86efac;
+}
+
+.dev-log-err {
+    background: rgba(127, 29, 29, 0.45);
+    color: #fecaca;
+}

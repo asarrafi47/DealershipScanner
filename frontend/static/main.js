@@ -52,6 +52,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ── Helpers ────────────────────────────────────────────────────────
 
+    function normFilterStr(v) {
+        return (v == null || v === "") ? "" : String(v).trim().toLowerCase();
+    }
+
+    function valueInListCI(list, val) {
+        if (!list || !list.length) return true;
+        const v = normFilterStr(val);
+        return list.some(x => normFilterStr(x) === v);
+    }
+
     // Collect unique checked values (pill + accordion share names, deduplicate)
     function checked(name) {
         const seen = new Set();
@@ -69,9 +79,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const cyls   = excluding === "cylinders"  ? [] : checked("cylinders");
 
         return CAR_ROWS.filter(r => {
-            if (makes.length  && !makes.includes(r.make))        return false;
-            if (models.length && !models.includes(r.model))      return false;
-            if (trims.length  && !trims.includes(r.trim))        return false;
+            if (makes.length  && !valueInListCI(makes, r.make))        return false;
+            if (models.length && !valueInListCI(models, r.model))      return false;
+            if (trims.length  && !valueInListCI(trims, r.trim))        return false;
             if (fuels.length  && !fuels.includes(r.fuel))        return false;
             if (drives.length && !drives.includes(r.drive))      return false;
             if (cyls.length   && !cyls.includes(String(r.cyl))) return false;
@@ -348,14 +358,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (countries.length && typeof COUNTRY_TO_MAKES === "object") {
             const fromCountries = countries.flatMap(c => COUNTRY_TO_MAKES[c] || []);
             makesFilter = makesFilter.length
-                ? makesFilter.filter(m => fromCountries.includes(m))
+                ? makesFilter.filter(m => valueInListCI(fromCountries, m))
                 : fromCountries;
         }
 
         let cars = ALL_CARS.filter(c => {
-            if (makesFilter.length && !makesFilter.includes(c.make))     return false;
-            if (models.length     && !models.includes(c.model))          return false;
-            if (trims.length      && !trims.includes(c.trim))            return false;
+            if (makesFilter.length && !valueInListCI(makesFilter, c.make))     return false;
+            if (models.length     && !valueInListCI(models, c.model))          return false;
+            if (trims.length      && !valueInListCI(trims, c.trim))            return false;
             if (fuels.length      && !fuels.includes(c.fuel_type))       return false;
             if (cyls.length       && !cyls.includes(String(c.cylinders)))return false;
             if (trans.length      && !trans.includes(c.transmission))    return false;

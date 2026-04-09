@@ -1,7 +1,9 @@
 import json
+import os
 import sqlite3
+from urllib.parse import urlparse
 
-DB_PATH = "inventory.db"
+DB_PATH = os.environ.get("INVENTORY_DB_PATH", "inventory.db")
 
 
 def _parse_car_gallery(car_dict):
@@ -54,7 +56,13 @@ MAKE_TO_COUNTRY = {
 
 
 def get_conn():
-    return sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA synchronous=NORMAL")
+    except sqlite3.Error:
+        pass
+    return conn
 
 
 def init_inventory_db():
@@ -122,6 +130,8 @@ def init_inventory_db():
     car_cols = [row[1] for row in cursor.fetchall()]
     if "msrp" not in car_cols:
         cursor.execute("ALTER TABLE cars ADD COLUMN msrp REAL")
+    if "dealership_registry_id" not in car_cols:
+        cursor.execute("ALTER TABLE cars ADD COLUMN dealership_registry_id INTEGER")
     conn.commit()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS saved_cars (
@@ -132,6 +142,9 @@ def init_inventory_db():
             UNIQUE(user_id, car_id)
         )
     """)
+    from backend.db.dealerships_db import ensure_dealerships_table
+
+    ensure_dealerships_table(cursor)
     conn.commit()
     conn.close()
     seed_cars()
@@ -266,13 +279,95 @@ def _makes_for_countries(countries):
     return {make for make, country in MAKE_TO_COUNTRY.items() if country in countries_set}
 
 
+def _lookup_make_country(make: str):
+    """Resolve country for a DB make string; case-insensitive vs MAKE_TO_COUNTRY keys."""
+    if make is None:
+        return None
+    m = str(make).strip()
+    if not m:
+        return None
+    if m in MAKE_TO_COUNTRY:
+        return MAKE_TO_COUNTRY[m]
+    ml = m.lower()
+    for k, v in MAKE_TO_COUNTRY.items():
+        if k.lower() == ml:
+            return v
+    return None
+
+
+def _sort_cars_by_price(cars: list) -> list:
+    """Stable sort: priced vehicles first, unknown/NULL last (avoids TypeError vs None)."""
+    def key(c):
+        p = c.get("price")
+        if p is None:
+            return (1, 0.0)
+        try:
+            return (0, float(p))
+        except (TypeError, ValueError):
+            return (1, 0.0)
+
+    return sorted(cars, key=key)
+
+
+def link_cars_to_dealership_registry(registry_id: int, website_url: str) -> int:
+    """Attach scraped cars to a Smart Import dealership row (match on dealer_url)."""
+    if not website_url or not registry_id:
+        return 0
+    w = (website_url or "").strip()
+    base = w.rstrip("/")
+    w_lower = w.lower()
+    base_lower = base.lower()
+    base_slash_lower = (base_lower + "/") if not base_lower.endswith("/") else base_lower
+    host = ""
+    try:
+        host = (urlparse(w).netloc or "").lower().replace("www.", "")
+    except ValueError:
+        pass
+    conn = get_conn()
+    cursor = conn.cursor()
+    if host:
+        cursor.execute(
+            """
+            UPDATE cars
+            SET dealership_registry_id = ?
+            WHERE dealership_registry_id IS NULL
+              AND (
+                LOWER(TRIM(dealer_url)) IN (?, ?, ?)
+                OR LOWER(dealer_url) LIKE ?
+              )
+            """,
+            (
+                registry_id,
+                w_lower,
+                base_lower,
+                base_slash_lower,
+                f"%{host}%",
+            ),
+        )
+    else:
+        cursor.execute(
+            """
+            UPDATE cars
+            SET dealership_registry_id = ?
+            WHERE dealership_registry_id IS NULL
+              AND LOWER(TRIM(dealer_url)) IN (?, ?)
+            """,
+            (registry_id, w_lower, base_lower),
+        )
+    n = cursor.rowcount
+    conn.commit()
+    conn.close()
+    return n
+
+
 def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 cylinders=None, transmissions=None, drivetrains=None,
                 exterior_colors=None, interior_colors=None,
                 countries=None,
                 min_year=None, max_year=None,
                 max_price=None, max_mileage=None,
-                zip_code=None, radius_miles=None):
+                zip_code=None, radius_miles=None,
+                dealership_registry_id=None):
 
     from backend.db.geo import zip_to_coords, haversine
 
@@ -283,22 +378,42 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     query = "SELECT * FROM cars WHERE 1=1"
     params = []
 
+    if dealership_registry_id is not None:
+        query += " AND dealership_registry_id = ?"
+        params.append(int(dealership_registry_id))
+
     def add_multi(col, values):
         nonlocal query
         if values:
             query += f" AND {col} IN ({_placeholders(values)})"
             params.extend(values)
 
+    def add_multi_ci(col, values):
+        """Case-insensitive match for scraped text fields (e.g. DODGE vs Dodge)."""
+        nonlocal query
+        if values:
+            lowered = [str(v).lower().strip() for v in values]
+            query += (
+                f" AND LOWER(TRIM(IFNULL({col}, ''))) IN ({_placeholders(lowered)})"
+            )
+            params.extend(lowered)
+
     # Country of origin filter: resolve countries to makes, combine with explicit makes
     makes_for_countries = _makes_for_countries(countries)
     if makes_for_countries is not None:
         if makes:
-            makes = list(set(makes) & makes_for_countries)
+            allow_lower = {k.lower(): k for k in makes_for_countries}
+            normalized = []
+            for m in makes:
+                hit = allow_lower.get(str(m).lower().strip())
+                if hit is not None:
+                    normalized.append(hit)
+            makes = list(dict.fromkeys(normalized))
         else:
             makes = list(makes_for_countries)
-    add_multi("make", makes)
-    add_multi("model", models)
-    add_multi("trim", trims)
+    add_multi_ci("make", makes)
+    add_multi_ci("model", models)
+    add_multi_ci("trim", trims)
     add_multi("fuel_type", fuel_types)
     add_multi("cylinders", [int(c) for c in cylinders] if cylinders else None)
     add_multi("transmission", transmissions)
@@ -313,11 +428,11 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
         query += " AND year <= ?"
         params.append(int(max_year))
 
-    if max_price:
-        query += " AND price <= ?"
+    if max_price is not None and max_price:
+        query += " AND (price IS NULL OR price <= ? OR price = 0)"
         params.append(max_price)
-    if max_mileage:
-        query += " AND mileage <= ?"
+    if max_mileage is not None and max_mileage:
+        query += " AND (mileage IS NULL OR mileage <= ? OR mileage = 0)"
         params.append(max_mileage)
 
     cursor.execute(query, params)
@@ -343,7 +458,7 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     for c in results:
         _parse_car_gallery(c)
         _parse_car_history_highlights(c)
-    return sorted(results, key=lambda c: c["price"])
+    return _sort_cars_by_price(results)
 
 
 def get_car_by_id(car_id):
@@ -401,7 +516,7 @@ def get_filter_options():
     cursor.execute("""
         SELECT DISTINCT make, model, trim, fuel_type, cylinders, drivetrain
         FROM cars
-        WHERE make IS NOT NULL
+        WHERE make IS NOT NULL AND TRIM(make) != ''
         ORDER BY make, model, trim
     """)
     car_rows = cursor.fetchall()  # (make, model, trim, fuel_type, cylinders, drivetrain)
@@ -438,7 +553,7 @@ def get_filter_options():
     country_set = set()
     country_to_makes = {}
     for make in seen_makes:
-        c = MAKE_TO_COUNTRY.get(make)
+        c = _lookup_make_country(make)
         if c:
             country_set.add(c)
             country_to_makes.setdefault(c, []).append(make)

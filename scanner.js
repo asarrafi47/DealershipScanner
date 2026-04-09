@@ -15,6 +15,10 @@ const ROOT = path.resolve(__dirname);
 const DB_PATH = process.env.INVENTORY_DB_PATH || path.join(ROOT, "inventory.db");
 const MANIFEST_PATH = path.join(ROOT, "dealers.json");
 const DEBUG_DIR = path.join(ROOT, "debug");
+const SCRAPE_SAMPLES_PATH = path.join(DEBUG_DIR, "last_scrape_samples.json");
+const MAX_SCRAPE_SAMPLES = 5;
+/** Last N raw Dealer.com objects + parsed snapshots for dev audit (flushed in upsertAll). */
+const scrapeSamplesBuffer = [];
 
 const FALLBACK_IMAGE_URL = "/static/placeholder.svg";
 const DEFAULT_STR = "N/A";
@@ -98,29 +102,73 @@ function cleanImageUrl(url, baseUrl) {
   return url;
 }
 
-function findVehicleList(obj, minVinCount = 3) {
-  if (obj == null) return null;
-  if (Array.isArray(obj)) {
-    const vinCount = obj.filter((i) => i && typeof i === "object" && ("vin" in i || "VIN" in i)).length;
-    if (vinCount >= minVinCount) return obj;
-    for (const item of obj) {
-      const found = findVehicleList(item, minVinCount);
-      if (found) return found;
-    }
-    return null;
+/**
+ * Longest array of objects that look like rows (fallback when strict inventory list is empty).
+ */
+function findLargestWeakVehicleArray(obj) {
+  let best = null;
+  let bestLen = 0;
+  function weakHint(item) {
+    if (!item || typeof item !== "object") return false;
+    return !!(
+      item.vin ||
+      item.VIN ||
+      item.stockNumber ||
+      item.stock_number ||
+      item.year != null ||
+      item.make ||
+      item.model
+    );
   }
-  if (typeof obj === "object") {
-    for (const v of Object.values(obj)) {
-      const found = findVehicleList(v, minVinCount);
-      if (found) return found;
+  function walk(o) {
+    if (o == null) return;
+    if (Array.isArray(o) && o.length > 0) {
+      const hints = o.filter(weakHint).length;
+      if (hints >= 1 && o.length > bestLen) {
+        best = o;
+        bestLen = o.length;
+      }
+      for (const item of o) walk(item);
+      return;
+    }
+    if (typeof o === "object") {
+      for (const v of Object.values(o)) walk(v);
     }
   }
-  return null;
+  walk(obj);
+  return best;
+}
+
+/**
+ * Prefer the largest array of vehicle-like objects; fall back to weak/largest slice (e.g. Special VINs).
+ */
+function findVehicleList(obj, minVinCount = 1) {
+  let best = null;
+  let bestScore = 0;
+  function walk(o) {
+    if (o == null) return;
+    if (Array.isArray(o) && o.length > 0) {
+      const score = o.filter((i) => i && typeof i === "object" && hasVehicleIdent(i)).length;
+      if (score >= minVinCount && score > bestScore) {
+        best = o;
+        bestScore = score;
+      }
+      for (const item of o) walk(item);
+      return;
+    }
+    if (typeof o === "object") {
+      for (const v of Object.values(o)) walk(v);
+    }
+  }
+  walk(obj);
+  if (best && bestScore > 0) return best;
+  return findLargestWeakVehicleArray(obj);
 }
 
 function hasVehicleIdent(o) {
   if (!o || typeof o !== "object") return false;
-  if (o.vin || o.VIN || o.stockNumber) return true;
+  const attrs = o.attributes && typeof o.attributes === "object" ? o.attributes : null;
+  if (o.vin || o.VIN || o.vinNumber || o.stockNumber || (attrs && (attrs.vin || attrs.VIN))) return true;
   const tp = o.trackingPricing;
   if (tp && typeof tp === "object" && (tp.internetPrice || tp.retailPrice)) return true;
   const p = o.pricing;
@@ -140,6 +188,228 @@ function extractTitle(obj, year, make, model) {
   return s || fallback;
 }
 
+/** Normalize OEM name for DB + filter keys (e.g. DODGE → Dodge, matches Python MAKE_TO_COUNTRY). */
+function properAutomakerLabel(s) {
+  const t = normStr(s);
+  if (!t) return "";
+  const upper = t.toUpperCase().replace(/\s+/g, " ");
+  const asIs = { BMW: "BMW", GMC: "GMC", RAM: "Ram", MINI: "MINI", VW: "Volkswagen" };
+  if (asIs[upper]) return asIs[upper];
+  const lower = t.toLowerCase();
+  return lower.replace(/(^|[\s'-])([a-z])/g, (_, a, b) => a + b.toUpperCase());
+}
+
+function getAttrs(obj) {
+  const a = obj.attributes;
+  return a && typeof a === "object" ? a : null;
+}
+
+/** Leading 4-digit model year from title (e.g. "2022 Ram 1500 …"). */
+function parseYearFromTitle(title) {
+  const m = normStr(title).match(/^(\d{4})\b/);
+  return m ? normInt(m[1]) : 0;
+}
+
+function extractVinFromPayload(obj) {
+  let v = normStr(obj.vin || obj.VIN || obj.vinNumber || obj.vin_number || obj.VINNumber || "");
+  const attrs = getAttrs(obj);
+  if (!v && attrs) v = normStr(attrs.vin || attrs.VIN || attrs.vinNumber || "");
+  const veh = obj.vehicle || obj.Vehicle;
+  if (!v && veh && typeof veh === "object") v = normStr(veh.vin || veh.VIN || "");
+  return v;
+}
+
+/** Ram 1500 / F-150 style tokens mistaken for a make. */
+function isSuspiciousMakeToken(s) {
+  const t = normStr(s);
+  if (!t) return false;
+  if (/^\d+$/.test(t)) return true;
+  const low = t.toLowerCase();
+  if (["1500", "2500", "3500", "4500", "5500", "6500"].includes(low)) return true;
+  if (/^f-\d{2,3}$/i.test(low)) return true;
+  return false;
+}
+
+function getBrandOrManufacturer(obj) {
+  return normStr(
+    obj.brand ||
+      obj.Brand ||
+      obj.manufacturer ||
+      obj.manufacturerName ||
+      obj.oemMake ||
+      obj.oem_make ||
+      ""
+  );
+}
+
+/**
+ * If make is a model code (1500) or duplicate of model, prefer brand/manufacturer.
+ */
+function sanitizeMakeModelPair(make, model, obj) {
+  let m = normStr(make);
+  let mo = normStr(model);
+  const brand = getBrandOrManufacturer(obj);
+
+  if (m && mo && m === mo && isSuspiciousMakeToken(m)) {
+    m = "";
+    mo = "";
+  }
+
+  if (isSuspiciousMakeToken(m)) {
+    if (brand) {
+      if (!mo) mo = m;
+      m = properAutomakerLabel(brand);
+    } else {
+      m = "";
+    }
+  }
+
+  return { make: m ? properAutomakerLabel(m) : "", model: mo };
+}
+
+function parseYmmSegments(obj) {
+  const raw = obj.ymm ?? obj.yMMT ?? obj.ymmString ?? obj.ymm_display ?? obj.ymmDisplayName;
+  if (raw == null) return null;
+  const s = String(raw).trim();
+  if (!s) return null;
+  if (s.includes("|")) {
+    const p = s.split("|").map((x) => x.trim()).filter(Boolean);
+    if (p.length >= 3) {
+      return { year: normInt(p[0]), make: p[1], model: p.slice(2).join(" ") };
+    }
+    if (p.length === 2) return { year: 0, make: p[0], model: p[1] };
+  }
+  return null;
+}
+
+function extractMakeModelFields(obj) {
+  const attrs = getAttrs(obj);
+
+  // Priority 1: explicit make / model / trim (Dealer.com + attributes bag)
+  let make = normStr(
+    obj.make ||
+      obj.Make ||
+      (attrs && (attrs.make || attrs.Make)) ||
+      ""
+  );
+  let model = normStr(
+    obj.model ||
+      obj.Model ||
+      (attrs && (attrs.model || attrs.Model)) ||
+      ""
+  );
+  let trim = normStr(
+    obj.trim ||
+      obj.Trim ||
+      obj.trimName ||
+      (attrs && (attrs.trim || attrs.trimName)) ||
+      ""
+  );
+
+  // Priority 2: marketing names (often correct when technical fields are wrong)
+  if (!make) make = normStr(obj.marketingMake || obj.marketing_make || "");
+  if (!model) model = normStr(obj.marketingModel || obj.marketing_model || "");
+
+  if (!make) {
+    make = normStr(
+      obj.manufacturer ||
+        obj.makeName ||
+        obj.make_name ||
+        obj.vehicleMake ||
+        obj.vehicle_make ||
+        ""
+    );
+  }
+  if (!model) {
+    model = normStr(
+      obj.modelName ||
+        obj.model_name ||
+        obj.series ||
+        obj.vehicleModel ||
+        obj.vehicle_model ||
+        ""
+    );
+  }
+
+  const veh = obj.vehicle || obj.Vehicle || obj.vehicleInfo || obj.vehicle_info;
+  if (veh && typeof veh === "object") {
+    if (!make) {
+      make = normStr(
+        veh.make || veh.Make || veh.manufacturer || veh.makeName || veh.make_name || veh.brand || ""
+      );
+    }
+    if (!model) {
+      model = normStr(
+        veh.model || veh.Model || veh.modelName || veh.model_name || veh.series || ""
+      );
+    }
+    if (!trim) trim = normStr(veh.trim || veh.Trim || veh.trimName || "");
+  }
+
+  const ymm = parseYmmSegments(obj);
+  if (ymm) {
+    if (!make && ymm.make) make = ymm.make;
+    if (!model && ymm.model) model = ymm.model;
+  }
+
+  const arr = obj.trackingAttributes || obj.tracking_attributes;
+  if (!make) {
+    const x = findTrackingAttr(arr, "make") ?? findTrackingAttr(arr, "Make");
+    if (x != null) make = normStr(x);
+  }
+  if (!model) {
+    const x =
+      findTrackingAttr(arr, "model") ??
+      findTrackingAttr(arr, "Model") ??
+      findTrackingAttr(arr, "modelName") ??
+      findTrackingAttr(arr, "model_name");
+    if (x != null) model = normStr(x);
+  }
+
+  return { make: make ? properAutomakerLabel(make) : "", model, trim };
+}
+
+function fillMakeModelFromTitle(title, year, make, model) {
+  let y = year;
+  let m = normStr(make);
+  let mo = normStr(model);
+  const t = normStr(title);
+  if (m && mo) return { make: properAutomakerLabel(m), model: mo, year: y };
+
+  if (t && t !== DEFAULT_STR) {
+    const leadYear = t.match(/^(\d{4})\s+/);
+    if (leadYear && !y) y = normInt(leadYear[1]);
+  }
+
+  if (!t || t === DEFAULT_STR) {
+    return { make: m ? properAutomakerLabel(m) : "", model: mo, year: y };
+  }
+
+  let rest = t
+    .replace(/^pre[-\s]?owned\s+/i, "")
+    .replace(/^certified\s+/i, "")
+    .replace(/^used\s+/i, "")
+    .replace(/^new\s+/i, "")
+    .trim();
+
+  const yrStr = y ? String(y) : "";
+  if (yrStr && rest.startsWith(yrStr)) rest = rest.slice(yrStr.length).trim();
+  const dupYear = rest.match(/^(\d{4})\s+/);
+  if (dupYear) {
+    if (!y) y = normInt(dupYear[1]);
+    rest = rest.slice(5).trim();
+  }
+
+  const parts = rest.split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) {
+    if (!m) m = properAutomakerLabel(parts[0]);
+    if (!mo) mo = parts.slice(1).join(" ");
+  } else if (parts.length === 1 && !m) {
+    m = properAutomakerLabel(parts[0]);
+  }
+  return { make: m, model: mo, year: y };
+}
+
 function firstPositivePrice(...vals) {
   for (const v of vals) {
     if (v == null || v === false) continue;
@@ -151,32 +421,42 @@ function firstPositivePrice(...vals) {
 }
 
 function extractPrice(obj) {
+  const candidates = [];
+  function consider(v) {
+    if (v == null || v === false) return;
+    if (typeof v === "string" && v.toLowerCase().includes("contact")) return;
+    const n = normFloat(v);
+    if (n > 0) candidates.push(n);
+  }
+
   const tracking = obj.trackingPricing || obj.tracking_pricing;
   const pricing = obj.pricing && typeof obj.pricing === "object" ? obj.pricing : null;
-  let raw = firstPositivePrice(
-    tracking && tracking.internetPrice,
-    tracking && tracking.internetPriceUnformatted,
-    tracking && tracking.internet_price,
-    pricing && pricing.internetPrice,
-    pricing && pricing.internet_price,
-    pricing && pricing.finalPrice,
-    pricing && pricing.final_price,
-    pricing && pricing.salePrice,
-    pricing && pricing.sale_price,
-    pricing && pricing.msrp,
-    obj.price,
-    obj.internetPrice,
-    pricing && pricing.retailPrice,
-    pricing && pricing.retail_price
-  );
-  if (raw === 0) {
-    const arr = obj.trackingAttributes || obj.tracking_attributes || obj.attributes;
-    if (Array.isArray(arr)) {
-      const v2 = findTrackingAttr(arr, "price") ?? findTrackingAttr(arr, "msrp");
-      if (v2 != null && String(v2).trim()) raw = normFloat(v2);
-    }
+  consider(tracking && tracking.internetPrice);
+  consider(tracking && tracking.internetPriceUnformatted);
+  consider(tracking && tracking.internet_price);
+  consider(pricing && pricing.internetPrice);
+  consider(pricing && pricing.internet_price);
+  consider(pricing && pricing.finalPrice);
+  consider(pricing && pricing.final_price);
+  consider(pricing && pricing.salePrice);
+  consider(pricing && pricing.sale_price);
+  consider(pricing && pricing.msrp);
+  consider(pricing && pricing.retailPrice);
+  consider(pricing && pricing.retail_price);
+  consider(obj.price);
+  consider(obj.internetPrice);
+  consider(obj.msrp);
+
+  const arr = obj.trackingAttributes || obj.tracking_attributes;
+  if (Array.isArray(arr)) {
+    const v2 = findTrackingAttr(arr, "price") ?? findTrackingAttr(arr, "internetPrice");
+    consider(v2);
+    const ms = findTrackingAttr(arr, "msrp");
+    consider(ms);
   }
-  return Math.round(raw);
+
+  if (!candidates.length) return 0;
+  return Math.round(Math.min(...candidates));
 }
 
 function extractMsrp(obj) {
@@ -222,6 +502,7 @@ function bestImageUrlFromItem(item, baseUrl) {
     "url",
     "URL",
     "imageUrl",
+    "photoUrl",
     "thumbnailUri",
     "thumbUrl",
   ];
@@ -232,29 +513,96 @@ function bestImageUrlFromItem(item, baseUrl) {
   return "";
 }
 
+function imageResolutionScore(url) {
+  const u = (url || "").toLowerCase();
+  let s = 0;
+  if (u.includes("xxlarge") || u.includes("xlarge")) s += 120;
+  else if (u.includes("large") || u.includes("full") || u.includes("hires")) s += 60;
+  if (u.includes("thumb") || u.includes("thumbnail") || u.includes("small")) s -= 40;
+  return s + Math.min((url || "").length, 400) / 400;
+}
+
 function extractGallery(obj, baseUrl) {
-  const images = obj.images || obj.Images;
-  if (Array.isArray(images) && images.length > 0) {
-    const out = [];
-    const seen = new Set();
-    for (const item of images) {
-      const u = bestImageUrlFromItem(item, baseUrl);
-      if (u && !seen.has(u)) {
-        seen.add(u);
-        out.push(u);
+  const out = [];
+  const seen = new Set();
+
+  function pushOne(raw) {
+    if (!raw || typeof raw !== "string") return;
+    const c = cleanImageUrl(raw.trim(), baseUrl);
+    if (c && !seen.has(c)) {
+      seen.add(c);
+      out.push(c);
+    }
+  }
+
+  function pushDelimited(s) {
+    if (!s || typeof s !== "string") return;
+    for (const part of s.split(/[,;]/)) pushOne(part.trim());
+  }
+
+  const media = obj.media;
+  if (media && typeof media === "object") {
+    const photos = media.photos || media.Photos || media.images || media.imageList;
+    if (Array.isArray(photos)) {
+      for (const item of photos) {
+        if (typeof item === "string") pushOne(item);
+        else if (item && typeof item === "object") {
+          const u = bestImageUrlFromItem(item, baseUrl);
+          if (u) pushOne(u);
+        }
       }
     }
-    if (out.length) return out;
+    if (typeof media.photoUrl === "string") pushOne(media.photoUrl);
+    if (typeof media.primaryPhotoUrl === "string") pushOne(media.primaryPhotoUrl);
   }
-  for (const key of ["featuredImage", "featured_image", "thumbnail", "Thumbnail", "primaryImage", "primary_image"]) {
-    const val = obj[key];
-    if (typeof val === "string" && val.trim()) return [cleanImageUrl(val.trim(), baseUrl)];
-    if (val && typeof val === "object") {
-      const u = val.uri || val.url || val.URL;
-      if (u && typeof u === "string" && u.trim()) return [cleanImageUrl(u.trim(), baseUrl)];
+
+  if (typeof obj.photoUrl === "string") pushOne(obj.photoUrl);
+  if (typeof obj.primaryPhotoUrl === "string") pushOne(obj.primaryPhotoUrl);
+
+  const iu = obj.imageUrls ?? obj.image_urls ?? obj.imageURLList ?? obj.imageUrlList;
+  if (typeof iu === "string") pushDelimited(iu);
+  else if (Array.isArray(iu)) {
+    for (const x of iu) {
+      if (typeof x === "string") pushOne(x);
+      else if (x && typeof x === "object") {
+        const u = bestImageUrlFromItem(x, baseUrl) || normStr(x.url || x.URL || x.uri);
+        if (u) pushOne(u);
+      }
     }
   }
-  return [];
+
+  const images = obj.images || obj.Images;
+  if (Array.isArray(images) && images.length > 0) {
+    for (const item of images) {
+      if (typeof item === "string") pushOne(item);
+      else if (item && typeof item === "object") {
+        const u = bestImageUrlFromItem(item, baseUrl);
+        if (u) pushOne(u);
+      }
+    }
+  }
+
+  if (!out.length) {
+    for (const key of ["featuredImage", "featured_image", "thumbnail", "Thumbnail", "primaryImage", "primary_image"]) {
+      const val = obj[key];
+      if (typeof val === "string" && val.trim()) {
+        pushOne(val);
+        break;
+      }
+      if (val && typeof val === "object") {
+        const u = val.uri || val.url || val.URL;
+        if (u && typeof u === "string" && u.trim()) {
+          pushOne(u);
+          break;
+        }
+      }
+    }
+  }
+
+  if (!out.length) return [];
+
+  out.sort((a, b) => imageResolutionScore(b) - imageResolutionScore(a));
+  return out;
 }
 
 function extractHistoryHighlights(obj) {
@@ -302,18 +650,48 @@ function safeStr(v, def = DEFAULT_STR) {
 function mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl) {
   if (!obj || typeof obj !== "object") return null;
 
-  let vin = normStr(obj.vin || obj.VIN || "");
-  if (!vin) vin = normStr(obj.stockNumber || "");
+  let vin = extractVinFromPayload(obj);
   if (!vin) vin = `unknown-${Math.abs(hashCode(JSON.stringify(obj))) % 1e8}`;
 
   let stockNumber = safeStr(obj.stockNumber, "");
   if (stockNumber === DEFAULT_STR) stockNumber = "";
 
-  const year = normInt(obj.year ?? obj.modelYear ?? obj.model_year);
-  const make = normStr(obj.make || obj.Make || "");
-  const model = normStr(obj.model || obj.Model || obj.modelName || "");
+  const attrs = getAttrs(obj);
+  let year = normInt(obj.year ?? obj.modelYear ?? obj.model_year);
+  if (!year && attrs) year = normInt(attrs.year ?? attrs.modelYear ?? attrs.model_year);
 
-  const title = extractTitle(obj, year, make, model);
+  const ymmEarly = parseYmmSegments(obj);
+  if (ymmEarly && ymmEarly.year && !year) year = ymmEarly.year;
+
+  const titleProbe = extractTitle(obj, year || 0, "", "");
+  if (!year) {
+    const yt = parseYearFromTitle(titleProbe);
+    if (yt) year = yt;
+  }
+
+  let { make, model, trim: trimFromFields } = extractMakeModelFields(obj);
+  const mkM = normStr(obj.marketingMake || obj.marketing_make || "");
+  const mdM = normStr(obj.marketingModel || obj.marketing_model || "");
+  if (isSuspiciousMakeToken(make) && mkM) {
+    if (!normStr(model)) model = make;
+    make = properAutomakerLabel(mkM);
+    if (!normStr(model) && mdM) model = mdM;
+  }
+  const sanitized = sanitizeMakeModelPair(make, model, obj);
+  make = sanitized.make;
+  model = sanitized.model;
+
+  let title = extractTitle(obj, year, make, model);
+  const filled = fillMakeModelFromTitle(title, year, make, model);
+  make = filled.make || make;
+  model = filled.model || model;
+  if (filled.year) year = filled.year;
+  title = extractTitle(obj, year, make, model);
+
+  let trim = normStr(trimFromFields);
+  if (!trim) trim = normStr(obj.trim || obj.Trim || obj.trimName || "");
+  trim = trim || "";
+
   const price = extractPrice(obj);
   const msrp = extractMsrp(obj);
 
@@ -364,7 +742,7 @@ function mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl) {
     year,
     make,
     model,
-    trim: safeStr(obj.trim || obj.Trim || obj.trimName),
+    trim: normStr(trim) || normStr(obj.trim || obj.Trim || obj.trimName || ""),
     title,
     price,
     mileage,
@@ -392,6 +770,38 @@ function hashCode(str) {
   return h;
 }
 
+function recordScrapeSample(rawObj, parsed) {
+  if (scrapeSamplesBuffer.length >= MAX_SCRAPE_SAMPLES) return;
+  try {
+    scrapeSamplesBuffer.push({
+      vin: parsed.vin,
+      raw_json_sample: JSON.parse(JSON.stringify(rawObj)),
+      parsed_snapshot: {
+        vin: parsed.vin,
+        year: parsed.year,
+        make: parsed.make,
+        model: parsed.model,
+        trim: parsed.trim,
+        price: parsed.price,
+        image_url: parsed.image_url,
+        gallery_preview: Array.isArray(parsed.gallery) ? parsed.gallery.slice(0, 3) : [],
+      },
+    });
+  } catch {
+    /* ignore circular / non-JSON data */
+  }
+}
+
+async function flushScrapeSamplesFile() {
+  if (!scrapeSamplesBuffer.length) return;
+  await fs.mkdir(DEBUG_DIR, { recursive: true });
+  await fs.writeJson(
+    SCRAPE_SAMPLES_PATH,
+    { generated_at: new Date().toISOString(), samples: scrapeSamplesBuffer },
+    { spaces: 2 }
+  );
+}
+
 function parseJsonList(data, baseUrl, dealerId, dealerName, dealerUrl) {
   const items = findVehicleList(data);
   if (!items) return [];
@@ -400,13 +810,26 @@ function parseJsonList(data, baseUrl, dealerId, dealerName, dealerUrl) {
     if (!obj || typeof obj !== "object") continue;
     if (!hasVehicleIdent(obj)) continue;
     const m = mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl);
-    if (m) out.push(m);
+    if (m) {
+      recordScrapeSample(obj, m);
+      out.push(m);
+    }
+  }
+  if (out.length > 0) return out;
+  for (const obj of items) {
+    if (!obj || typeof obj !== "object") continue;
+    const m = mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl);
+    if (m) {
+      recordScrapeSample(obj, m);
+      out.push(m);
+    }
   }
   return out;
 }
 
 function isValidVehicleList(body) {
-  return findVehicleList(body) != null;
+  const list = findVehicleList(body);
+  return list != null && list.length > 0;
 }
 
 function getTotalCountFromBody(body) {
@@ -428,11 +851,22 @@ function countVehicles(body) {
   return list ? list.length : 0;
 }
 
-/** Rewrite getInventory GET URL to use large pageSize */
+function isDealerComSearchOrVehiclesUrl(href) {
+  try {
+    const u = new URL(href);
+    return /\/api\/inventory\/v1\/(search|vehicles)/i.test(u.pathname);
+  } catch {
+    return false;
+  }
+}
+
+/** Rewrite getInventory / Dealer.com v1 search GET URLs to use large pageSize */
 function rewriteInventoryUrl(urlString) {
   try {
     const u = new URL(urlString);
-    if (!/getInventory/i.test(u.href)) {
+    const isGetInv = /getInventory/i.test(u.href);
+    const isSearch = isDealerComSearchOrVehiclesUrl(u.href);
+    if (!isGetInv && !isSearch) {
       return urlString;
     }
     ["pageSize", "size", "perPage", "limit"].forEach((k) => {
@@ -455,7 +889,7 @@ async function setupRequestBlocking(page) {
       return req.abort();
     }
     const url = req.url();
-    if (req.method() === "GET" && /getInventory/i.test(url)) {
+    if (req.method() === "GET" && (/getInventory/i.test(url) || isDealerComSearchOrVehiclesUrl(url))) {
       const next = rewriteInventoryUrl(url);
       if (next !== url) return req.continue({ url: next });
     }
@@ -463,17 +897,56 @@ async function setupRequestBlocking(page) {
   });
 }
 
+/** Turbo: primary inventory JSON (full search API preferred over small getInventory slices). */
 function isInventoryJsonResponse(response) {
+  return isPrimaryInventoryJsonResponse(response);
+}
+
+function isPrimaryInventoryJsonResponse(response) {
   const u = response.url();
   const ct = (response.headers()["content-type"] || "").toLowerCase();
-  return ct.includes("application/json") && /getInventory/i.test(u);
+  if (!ct.includes("application/json")) return false;
+  if (isDealerComSearchOrVehiclesUrl(u)) return true;
+  if (/getInventory/i.test(u)) return true;
+  return false;
 }
 
 /** Broader match for slow fallback (some endpoints omit "getInventory" in the path). */
 function isSlowInventoryJsonResponse(response) {
   const u = response.url();
   const ct = (response.headers()["content-type"] || "").toLowerCase();
-  return ct.includes("application/json") && /getInventory|inventory/i.test(u);
+  if (!ct.includes("application/json")) return false;
+  if (isDealerComSearchOrVehiclesUrl(u)) return true;
+  return /getInventory|\/api\/inventory\/v\d+\//i.test(u);
+}
+
+async function scrollLazyLoadInventory(page) {
+  await page.evaluate(() => {
+    const want = /view all|search/i;
+    const candidates = [
+      ...document.querySelectorAll("button, a, [role='button'], input[type='submit'], input[type='button']"),
+    ];
+    for (const el of candidates) {
+      const t = (el.textContent || el.value || el.getAttribute("aria-label") || "").trim();
+      if (!t || !want.test(t)) continue;
+      if (el.offsetParent === null) continue;
+      try {
+        el.click();
+        return;
+      } catch {
+        /* ignore */
+      }
+    }
+  });
+  await sleep(800);
+  await page.evaluate(() => {
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+  await sleep(3000);
+}
+
+function getPageGotoWaitUntil(profile) {
+  return profile === "resilient" ? "networkidle0" : "domcontentloaded";
 }
 
 /**
@@ -587,10 +1060,12 @@ async function collectVehiclesFromBodies(bodies, baseUrl, dealerId, name, url) {
 const MAX_PAGINATION_CLICKS = 15;
 
 /** Slower human-like path: scroll + click pagination + longer waits */
-async function runDealerSlow(browser, dealer) {
+async function runDealerSlow(browser, dealer, opts = {}) {
   const name = dealer.name || "";
   const url = String(dealer.url || "").replace(/\/$/, "");
   const dealerId = dealer.dealer_id || "";
+  const profile = opts.profile || "default";
+  const scrollLazy = opts.scrollLazyLoad !== false && profile !== "bare";
   const intercepted = [];
   const page = await browser.newPage();
   await page.setUserAgent(randomUserAgent());
@@ -599,10 +1074,12 @@ async function runDealerSlow(browser, dealer) {
   page.on("response", async (response) => {
     try {
       if (!isSlowInventoryJsonResponse(response)) return;
+      const u = response.url();
+      console.log("[dev] Intercepted URL:", u);
       const body = await response.json();
       if (isValidVehicleList(body)) {
         intercepted.push(body);
-        console.info(`[slow] Intercepted: ${name} — ${response.url().slice(0, 80)}`);
+        console.info(`[slow] Intercepted: ${name} — ${u.slice(0, 80)}`);
       }
     } catch {
       /* ignore */
@@ -610,15 +1087,23 @@ async function runDealerSlow(browser, dealer) {
   });
 
   try {
-    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
+    const slowWait = getPageGotoWaitUntil(profile);
+    const slowNavTimeout = profile === "resilient" ? 120000 : 30000;
+    await page.goto(url, { waitUntil: slowWait, timeout: slowNavTimeout });
     await sleep(4000);
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
-    await sleep(1000);
+    if (scrollLazy) {
+      await scrollLazyLoadInventory(page);
+    } else {
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
+      await sleep(1000);
+    }
 
+    const invWait = getPageGotoWaitUntil(profile);
+    const invNavTimeout = profile === "resilient" ? 120000 : 20000;
     for (const invPath of INVENTORY_PATHS) {
       const fullUrl = url + invPath;
       try {
-        await page.goto(fullUrl, { waitUntil: "domcontentloaded", timeout: 20000 });
+        await page.goto(fullUrl, { waitUntil: invWait, timeout: invNavTimeout });
         await page
           .waitForResponse((r) => isSlowInventoryJsonResponse(r) && r.status() === 200, { timeout: 25000 })
           .catch(() => null);
@@ -660,51 +1145,93 @@ async function runDealerSlow(browser, dealer) {
     }
 
     await page.close();
-    return collectVehiclesFromBodies(intercepted, url, dealerId, name, url);
+    const byVin = new Map();
+    for (const b of intercepted) {
+      for (const v of parseJsonList(b, url, dealerId, name, url)) {
+        v.dealer_name = name;
+        v.dealer_url = url;
+        if (v.vin && !byVin.has(v.vin)) byVin.set(v.vin, v);
+      }
+    }
+    return [...byVin.values()];
   } catch (e) {
     await page.close().catch(() => {});
     throw e;
   }
 }
 
-/** Turbo: block assets, rewrite pageSize, waitForResponse, optional fetch pagination */
-async function runDealerTurbo(browser, dealer) {
+function pickBestInventoryCapture(captures) {
+  if (!captures || !captures.length) return null;
+  const searchHits = captures.filter((c) => isDealerComSearchOrVehiclesUrl(c.url));
+  const pool = searchHits.length ? searchHits : captures;
+  let best = pool[0];
+  let n = countVehicles(best.body);
+  for (const c of pool) {
+    const cv = countVehicles(c.body);
+    if (cv > n) {
+      best = c;
+      n = cv;
+    }
+  }
+  return best;
+}
+
+/** Turbo: block assets, rewrite pageSize, intercept full search API + getInventory, optional pagination */
+async function runDealerTurbo(browser, dealer, opts = {}) {
   const name = dealer.name || "";
   const url = String(dealer.url || "").replace(/\/$/, "");
   const dealerId = dealer.dealer_id || "";
+  const profile = opts.profile || "default";
+  const scrollLazy = opts.scrollLazyLoad !== false && profile !== "bare";
 
   const page = await browser.newPage();
   await page.setUserAgent(randomUserAgent());
   await page.setViewport({ width: 1920, height: 1080 });
   await setupRequestBlocking(page);
 
-  try {
-    let firstInvUrl = null;
-    let firstBody = null;
+  const captured = [];
+  const seenRespUrls = new Set();
+  page.on("response", async (response) => {
+    try {
+      if (!isPrimaryInventoryJsonResponse(response) || response.status() !== 200) return;
+      const u = response.url();
+      console.log("[dev] Intercepted URL:", u);
+      if (seenRespUrls.has(u)) return;
+      const body = await response.json();
+      if (!isValidVehicleList(body)) return;
+      seenRespUrls.add(u);
+      captured.push({ url: u, body });
+      console.info(`[turbo] Intercepted: ${name} — ${u.slice(0, 120)}`);
+    } catch {
+      /* ignore */
+    }
+  });
 
+  try {
+    const waitUntil = getPageGotoWaitUntil(profile);
+    const navTimeout = profile === "resilient" ? 120000 : 45000;
     for (const invPath of INVENTORY_PATHS) {
       const fullUrl = url + invPath;
-      const invPromise = page.waitForResponse(
-        (r) => isInventoryJsonResponse(r) && r.status() === 200,
-        { timeout: 35000 }
-      );
-      await page.goto(fullUrl, { waitUntil: "domcontentloaded", timeout: 45000 });
-      const invResponse = await invPromise.catch(() => null);
-      if (invResponse) {
-        try {
-          firstBody = await invResponse.json();
-          firstInvUrl = invResponse.url();
-          if (isValidVehicleList(firstBody)) {
-            console.info(`[turbo] getInventory: ${name} — ${(firstInvUrl || "").slice(0, 100)}`);
-            break;
-          }
-          firstBody = null;
-          firstInvUrl = null;
-        } catch {
-          firstBody = null;
-          firstInvUrl = null;
-        }
+      await page.goto(fullUrl, { waitUntil, timeout: navTimeout });
+      if (scrollLazy) {
+        await scrollLazyLoadInventory(page);
+      } else {
+        await sleep(1000);
       }
+      await sleep(2000);
+    }
+    await sleep(4000);
+
+    const bestCap = pickBestInventoryCapture(captured);
+    let firstInvUrl = bestCap ? bestCap.url : null;
+    let firstBody = bestCap ? bestCap.body : null;
+
+    if (!firstBody && captured.length) {
+      const fb = captured.reduce((a, c) =>
+        countVehicles(c.body) > countVehicles(a.body) ? c : a
+      );
+      firstBody = fb.body;
+      firstInvUrl = fb.url;
     }
 
     let bodiesToParse = [];
@@ -714,29 +1241,25 @@ async function runDealerTurbo(browser, dealer) {
 
     await page.close();
 
-    if (!bodiesToParse.length) return [];
-
-    const merged = [];
-    const seen = new Set();
-    for (const b of bodiesToParse) {
-      const vehicles = parseJsonList(b, url, dealerId, name, url);
-      for (const v of vehicles) {
+    const byVin = new Map();
+    const pushBody = (b) => {
+      for (const v of parseJsonList(b, url, dealerId, name, url)) {
         v.dealer_name = name;
         v.dealer_url = url;
-        if (!seen.has(v.vin)) {
-          seen.add(v.vin);
-          merged.push(v);
-        }
+        if (v.vin && !byVin.has(v.vin)) byVin.set(v.vin, v);
       }
-    }
-    return merged;
+    };
+    for (const b of bodiesToParse) pushBody(b);
+    for (const { body } of captured) pushBody(body);
+
+    return [...byVin.values()];
   } catch (e) {
     await page.close().catch(() => {});
     throw e;
   }
 }
 
-async function runDealer(browser, dealer) {
+async function runDealer(browser, dealer, opts = {}) {
   const name = dealer.name || "";
   const url = String(dealer.url || "").replace(/\/$/, "");
   const provider = dealer.provider || "dealer_dot_com";
@@ -751,9 +1274,11 @@ async function runDealer(browser, dealer) {
     return [];
   }
 
+  scrapeSamplesBuffer.length = 0;
+
   try {
     console.info(`[turbo] Starting: ${name}`);
-    const vehicles = await runDealerTurbo(browser, dealer);
+    const vehicles = await runDealerTurbo(browser, dealer, opts);
     if (vehicles.length) {
       console.info(`[turbo] ${name}: ${vehicles.length} vehicles`);
       return vehicles;
@@ -762,7 +1287,7 @@ async function runDealer(browser, dealer) {
   } catch (e) {
     console.warn(`[turbo] ${name} failed (${e.message}), falling back to slow path`);
     try {
-      const vehicles = await runDealerSlow(browser, dealer);
+      const vehicles = await runDealerSlow(browser, dealer, opts);
       console.info(`[slow] ${name}: ${vehicles.length} vehicles`);
       return vehicles;
     } catch (e2) {
@@ -834,6 +1359,7 @@ async function ensureSchema(db) {
     ["carfax_url", "TEXT"],
     ["history_highlights", "TEXT"],
     ["msrp", "REAL"],
+    ["dealership_registry_id", "INTEGER"],
   ]) {
     if (!cols.includes(col)) {
       await run(db, `ALTER TABLE cars ADD COLUMN ${col} ${ctype}`);
@@ -903,8 +1429,9 @@ async function upsertVehicle(db, v) {
       vin, title, year, make, model, trim, price, mileage,
       image_url, dealer_name, dealer_url, dealer_id, scraped_at,
       zip_code, fuel_type, cylinders, transmission, drivetrain,
-      exterior_color, interior_color, stock_number, gallery, carfax_url, history_highlights, msrp
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      exterior_color, interior_color, stock_number, gallery, carfax_url, history_highlights, msrp,
+      dealership_registry_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(vin) DO UPDATE SET
       title=excluded.title, year=excluded.year, make=excluded.make,
       model=excluded.model, trim=excluded.trim, price=excluded.price,
@@ -916,7 +1443,8 @@ async function upsertVehicle(db, v) {
       drivetrain=excluded.drivetrain, exterior_color=excluded.exterior_color,
       interior_color=excluded.interior_color, stock_number=excluded.stock_number,
       gallery=excluded.gallery, carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights,
-      msrp=excluded.msrp
+      msrp=excluded.msrp,
+      dealership_registry_id=COALESCE(excluded.dealership_registry_id, dealership_registry_id)
   `;
 
   const params = [
@@ -945,6 +1473,7 @@ async function upsertVehicle(db, v) {
     v.carfax_url || "",
     highlightsJson,
     v.msrp != null && v.msrp > 0 ? v.msrp : null,
+    v.dealership_registry_id != null ? v.dealership_registry_id : null,
   ];
 
   await run(db, sql, params);
@@ -962,10 +1491,355 @@ async function upsertAll(db, vehicles) {
     await upsertVehicle(db, v);
     count++;
   }
+  await flushScrapeSamplesFile();
   return count;
 }
 
+/** Machine-readable discovery line for the Flask dev dashboard (stdout). */
+function emitDiscovery(payload) {
+  console.log(`DISCOVERY:${JSON.stringify(payload)}`);
+}
+
+function getLaunchOptions(profile, headed = false) {
+  const p = profile || "default";
+  const common = {
+    headless: headed ? false : "new",
+    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
+  };
+  if (p === "resilient") {
+    common.args.push(
+      "--disable-blink-features=AutomationControlled",
+      "--disable-features=IsolateOrigins,site-per-process",
+      "--window-size=1920,1080"
+    );
+    common.ignoreDefaultArgs = ["--enable-automation"];
+  } else if (p === "bare") {
+    common.args = ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"];
+  }
+  return common;
+}
+
+function extractCityStateFromText(text) {
+  if (!text || typeof text !== "string") return { city: "", state: "" };
+  const patterns = [
+    /\b([A-Za-z][A-Za-z\s'.-]{2,40}),\s*([A-Z]{2})\s+\d{5}(?:-\d{4})?\b/g,
+    /\b([A-Za-z][A-Za-z\s'.-]{2,40}),\s*([A-Z]{2})\b(?!\s*\d)/g,
+  ];
+  for (const re of patterns) {
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      const city = normStr(m[1]);
+      const st = normStr(m[2]).toUpperCase().slice(0, 2);
+      if (city.length >= 2 && st.length === 2) return { city, state: st };
+    }
+  }
+  return { city: "", state: "" };
+}
+
+/**
+ * Load dealer homepage and infer name, city, state from JSON-LD, Open Graph, title, footer.
+ */
+async function discoverDealerMetadata(page, url, profile = "default") {
+  emitDiscovery({ step: "scan", message: "Loading page for structured data and meta tags…" });
+  await page.setUserAgent(randomUserAgent());
+  await page.setViewport({ width: 1920, height: 1080 });
+
+  try {
+    const discWait = getPageGotoWaitUntil(profile);
+    const discTimeout = profile === "resilient" ? 120000 : 90000;
+    await page.goto(url, { waitUntil: discWait, timeout: discTimeout });
+    await sleep(800);
+  } catch (e) {
+    emitDiscovery({ step: "error", message: `Navigation failed: ${e.message || e}` });
+    return {
+      name: "",
+      city: "",
+      state: "",
+      error: "navigation",
+      retryable: true,
+      detail: String(e.message || e),
+    };
+  }
+
+  emitDiscovery({ step: "parse", message: "Parsing JSON-LD (AutomotiveBusiness), Open Graph, title, and footer…" });
+
+  const extracted = await page.evaluate(() => {
+    function walkJsonLd(obj, out) {
+      if (obj == null) return;
+      if (Array.isArray(obj)) {
+        for (const x of obj) walkJsonLd(x, out);
+        return;
+      }
+      if (typeof obj === "object") {
+        out.push(obj);
+        if (obj["@graph"]) walkJsonLd(obj["@graph"], out);
+        for (const v of Object.values(obj)) {
+          if (v && typeof v === "object") walkJsonLd(v, out);
+        }
+      }
+    }
+
+    let name = "";
+    let city = "";
+    let state = "";
+    const sources = [];
+
+    const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+    for (const s of scripts) {
+      let parsed;
+      try {
+        parsed = JSON.parse(s.textContent || "{}");
+      } catch {
+        continue;
+      }
+      const nodes = [];
+      walkJsonLd(parsed, nodes);
+      for (const node of nodes) {
+        if (!node || typeof node !== "object") continue;
+        const types = [].concat(node["@type"] || []);
+        const auto = types.some((t) =>
+          /AutomotiveBusiness|AutoDealer|CarDealer|MotorcycleDealer/i.test(String(t))
+        );
+        const org = /Organization|LocalBusiness|Store|AutomotiveBusiness/i.test(
+          types.join(" ")
+        );
+        if (auto || (org && node.name)) {
+          if (node.name && !name) {
+            name = String(node.name).trim();
+            sources.push("jsonld-name");
+          }
+          const addr = node.address;
+          if (addr) {
+            const list = Array.isArray(addr) ? addr : [addr];
+            for (const a of list) {
+              if (typeof a === "object" && a) {
+                const c = (a.addressLocality || "").trim();
+                const r = (a.addressRegion || "").trim();
+                if (c && !city) city = c;
+                if (r && !state) state = r.replace(/\s/g, "").slice(0, 2).toUpperCase();
+              }
+            }
+            if (city || state) sources.push("jsonld-address");
+          }
+        }
+      }
+    }
+
+    const ogSite =
+      document.querySelector('meta[property="og:site_name"]') ||
+      document.querySelector('meta[name="og:site_name"]');
+    if (!name && ogSite && ogSite.getAttribute("content")) {
+      name = ogSite.getAttribute("content").trim();
+      sources.push("og:site_name");
+    }
+
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (!name && ogTitle && ogTitle.getAttribute("content")) {
+      const t = ogTitle.getAttribute("content").trim();
+      if (t) {
+        name = t.split(/[|\-–]/)[0].trim();
+        sources.push("og:title");
+      }
+    }
+
+    if (!name && document.title) {
+      name = document.title.split(/[|\-–]/)[0].trim();
+      sources.push("title");
+    }
+
+    const footer =
+      document.querySelector("footer") ||
+      document.querySelector("[role='contentinfo']") ||
+      document.querySelector(".footer, #footer, .site-footer");
+    const footText = footer ? (footer.innerText || "").slice(0, 6000) : "";
+    const bodyTail = (document.body && document.body.innerText) ? document.body.innerText.slice(-8000) : "";
+    const addrBlob = `${footText}\n${bodyTail}`;
+
+    return { name, city, state, addrBlob, sources };
+  });
+
+  let name = normStr(extracted.name);
+  let city = normStr(extracted.city);
+  let state = normStr(extracted.state).toUpperCase().slice(0, 2);
+
+  if ((!city || !state) && extracted.addrBlob) {
+    const fromFoot = extractCityStateFromText(extracted.addrBlob);
+    if (!city && fromFoot.city) city = fromFoot.city;
+    if (!state && fromFoot.state) state = fromFoot.state;
+    if (fromFoot.city || fromFoot.state) {
+      emitDiscovery({ step: "footer", message: "Extracted location hints from footer / page text." });
+    }
+  }
+
+  if (name) {
+    emitDiscovery({ step: "found_name", message: `Found name: ${name}`, name });
+  } else {
+    emitDiscovery({ step: "found_name", message: "Could not resolve a business name from meta data; using site slug." });
+  }
+  if (city && state) {
+    emitDiscovery({
+      step: "found_location",
+      message: `Extracting location: ${city}, ${state}`,
+      city,
+      state,
+    });
+  } else {
+    emitDiscovery({
+      step: "found_location",
+      message: "Extracting location: still resolving city/state…",
+      city,
+      state,
+    });
+  }
+
+  return { name, city, state, sources: extracted.sources || [] };
+}
+
+function slugFromUrl(urlStr) {
+  try {
+    const u = new URL(urlStr);
+    const s = u.hostname
+      .replace(/^www\./i, "")
+      .replace(/[^a-z0-9]+/gi, "-")
+      .replace(/^-|-$/g, "")
+      .toLowerCase();
+    return s || "dealer";
+  } catch {
+    return "dealer";
+  }
+}
+
+function parseCliArgs(argv) {
+  let singleUrl = null;
+  let singleName = "";
+  let smartImport = false;
+  let profile = "default";
+  let headed = false;
+  const args = argv.slice(2);
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === "--url" && args[i + 1]) {
+      singleUrl = args[i + 1];
+      i++;
+    } else if (args[i] === "--name" && args[i + 1]) {
+      singleName = args[i + 1];
+      i++;
+    } else if (args[i] === "--smart-import") {
+      smartImport = true;
+    } else if (args[i] === "--profile" && args[i + 1]) {
+      profile = args[i + 1];
+      i++;
+    } else if (args[i] === "--headed") {
+      headed = true;
+    }
+  }
+  if (process.env.SCANNER_HEADED === "1" || process.env.SCANNER_HEADED === "true") {
+    headed = true;
+  }
+  return { singleUrl, singleName, smartImport, profile, headed };
+}
+
 async function main() {
+  const { singleUrl, singleName, smartImport, profile, headed } = parseCliArgs(process.argv);
+
+  if (singleUrl) {
+    let raw = String(singleUrl).trim();
+    if (!/^https?:\/\//i.test(raw)) {
+      raw = `https://${raw}`;
+    }
+    const url = raw.replace(/\/$/, "");
+    const dealerId = slugFromUrl(raw);
+
+    const launchOpts = getLaunchOptions(profile, headed);
+    const browser = await puppeteer.launch(launchOpts);
+
+    let name = (singleName && String(singleName).trim()) || "";
+    let city = "";
+    let state = "";
+    let pendingExit = 0;
+
+    try {
+      if (smartImport) {
+        emitDiscovery({ step: "start", message: "Starting smart import: discovering dealership name and location…" });
+        const page = await browser.newPage();
+        const meta = await discoverDealerMetadata(page, url, profile);
+        await page.close().catch(() => {});
+
+        if (meta.retryable && meta.error === "navigation") {
+          console.log(
+            `SMART_IMPORT_ERROR:${JSON.stringify({
+              reason: "navigation",
+              detail: meta.detail || "",
+              retryable: true,
+            })}`
+          );
+          pendingExit = 3;
+        }
+
+        if (!pendingExit) {
+          if (!name) name = normStr(meta.name) || dealerId;
+          city = normStr(meta.city);
+          state = normStr(meta.state).toUpperCase().slice(0, 2);
+
+          emitDiscovery({
+            step: "inventory",
+            message: "Starting inventory scan (Dealer.com JSON intercept)…",
+          });
+        }
+      } else if (!name) {
+        name = dealerId;
+      }
+
+      if (!pendingExit) {
+        const dealer = {
+          name: name || dealerId,
+          url,
+          provider: "dealer_dot_com",
+          dealer_id: dealerId,
+        };
+        console.info(`[dev] Single-URL mode (${profile}): ${dealer.url} (${dealer.dealer_id})`);
+
+        const vehicles = await runDealer(browser, dealer, { profile, scrollLazyLoad: true });
+        console.log(`SCAN_VEHICLE_COUNT:${vehicles.length}`);
+        if (!vehicles.length) {
+          await fs.mkdir(DEBUG_DIR, { recursive: true });
+          console.warn("No vehicles scraped (single-URL mode).");
+        }
+        const db = openDb();
+        await ensureSchema(db);
+        const n = await upsertAll(db, vehicles);
+        db.close();
+        console.info(`Upserted ${n} unique vehicles (parsed rows: ${vehicles.length})`);
+
+        if (smartImport) {
+          const out = {
+            name: dealer.name,
+            website_url: url,
+            city: city || "",
+            state: state || "",
+          };
+          if (!out.city || out.state.length !== 2) {
+            console.log(
+              `SMART_IMPORT_ERROR:${JSON.stringify({
+                reason: "incomplete_location",
+                detail: "Could not resolve a US city and 2-letter state for the registry.",
+                partial: out,
+                retryable: false,
+              })}`
+            );
+            pendingExit = 2;
+          } else {
+            console.log(`SMART_IMPORT_RESULT:${JSON.stringify(out)}`);
+          }
+        }
+      }
+    } finally {
+      await browser.close();
+    }
+    console.info("Scanner finished.");
+    if (pendingExit) process.exit(pendingExit);
+    return;
+  }
+
   const manifest = await fs.readJson(MANIFEST_PATH);
   const dealers = manifest.filter((d) => (d.provider || "dealer_dot_com") === "dealer_dot_com" && d.url && d.dealer_id);
 
@@ -975,7 +1849,9 @@ async function main() {
   });
 
   try {
-    const results = await Promise.all(dealers.map((d) => runDealer(browser, d)));
+    const results = await Promise.all(
+      dealers.map((d) => runDealer(browser, d, { profile: "default", scrollLazyLoad: true }))
+    );
     const flat = results.flat();
 
     if (!flat.length) {

@@ -8,13 +8,19 @@ import sqlite3
 from datetime import datetime
 from pathlib import Path
 
-# Use same DB path as inventory_db when running from project root
+# Use same DB path as inventory_db / dealerships_db when running from project root
 DB_PATH = os.environ.get("INVENTORY_DB_PATH", "inventory.db")
 logger = logging.getLogger(__name__)
 
 
 def get_conn():
-    return sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA synchronous=NORMAL")
+    except sqlite3.Error:
+        pass
+    return conn
 
 
 def _ensure_schema(conn):
@@ -54,6 +60,7 @@ def _ensure_schema(conn):
         ("carfax_url", "TEXT"),
         ("history_highlights", "TEXT"),
         ("msrp", "REAL"),
+        ("dealership_registry_id", "INTEGER"),
     ]:
         if col not in cols:
             logger.info("Adding %s column to cars table", col)
@@ -165,8 +172,9 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 vin, title, year, make, model, trim, price, mileage,
                 image_url, dealer_name, dealer_url, dealer_id, scraped_at,
                 zip_code, fuel_type, cylinders, transmission, drivetrain,
-                exterior_color, interior_color, stock_number, gallery, carfax_url, history_highlights, msrp
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                exterior_color, interior_color, stock_number, gallery, carfax_url, history_highlights, msrp,
+                dealership_registry_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(vin) DO UPDATE SET
                 title=excluded.title, year=excluded.year, make=excluded.make,
                 model=excluded.model, trim=excluded.trim, price=excluded.price,
@@ -178,7 +186,8 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 drivetrain=excluded.drivetrain, exterior_color=excluded.exterior_color,
                 interior_color=excluded.interior_color, stock_number=excluded.stock_number,
                 gallery=excluded.gallery, carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights,
-                msrp=excluded.msrp
+                msrp=excluded.msrp,
+                dealership_registry_id=COALESCE(excluded.dealership_registry_id, dealership_registry_id)
             """,
             (
                 vin,
@@ -206,6 +215,7 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 v.get("carfax_url") or "",
                 highlights_json,
                 msrp,
+                v.get("dealership_registry_id"),
             ),
         )
         count += 1

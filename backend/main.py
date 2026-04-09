@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, redirect, jsonify, send_from_directory
+from backend.dev_routes import dev_bp
 from backend.db.users_db import init_users_db, check_user, save_user
 from backend.db.inventory_db import init_inventory_db, search_cars, get_car_by_id, get_car_by_vin, get_filter_options
 from backend.knowledge_engine import prepare_car_detail_context
@@ -13,6 +14,7 @@ app = Flask(
 
 init_users_db()
 init_inventory_db()
+app.register_blueprint(dev_bp)
 
 
 @app.route("/favicon.ico")
@@ -61,6 +63,14 @@ def search():
     radius      = scalar("radius")
     max_price   = scalar("max_price")
     max_mileage = scalar("max_mileage")
+    reg_id_raw  = scalar("dealership_registry_id")
+
+    dealership_registry_id = None
+    if reg_id_raw:
+        try:
+            dealership_registry_id = int(reg_id_raw)
+        except ValueError:
+            dealership_registry_id = None
 
     results = search_cars(
         makes=g("make") or None,
@@ -77,6 +87,7 @@ def search():
         max_mileage=int(max_mileage) if max_mileage else None,
         zip_code=zip_code or None,
         radius_miles=float(radius) if radius else None,
+        dealership_registry_id=dealership_registry_id,
     )
 
     active = {
@@ -88,6 +99,7 @@ def search():
         "country": g("country"),
         "max_price": max_price, "max_mileage": max_mileage,
         "zip_code": zip_code, "radius": radius,
+        "dealership_registry_id": reg_id_raw,
     }
 
     return render_template("listings.html",

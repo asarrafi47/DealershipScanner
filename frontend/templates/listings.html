@@ -26,6 +26,8 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
     {# ── Filter bar — starts centered, docks left on scroll ── #}
     <div class="filter-bar" id="filter-bar">
         <form method="GET" action="/search" id="search-form">
+            <input type="hidden" name="dealership_registry_id" id="dealership-registry-id"
+                value="{{ active.dealership_registry_id if active and active.get('dealership_registry_id') else '' }}">
 
             {# TOP MODE: search row + controls row (wraps cleanly) #}
             <div class="filter-top-row" id="filter-top-row">

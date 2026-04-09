@@ -2,20 +2,21 @@
   "name": "dealership-scanner",
   "version": "1.0.0",
   "private": true,
-  "description": "Node.js/Puppeteer inventory scanner (shares inventory.db with Flask)",
+  "description": "Node.js/Puppeteer inventory scanner (shares inventory.db with Flask). Smart Import uses: fs-extra, sqlite3, puppeteer, puppeteer-extra, puppeteer-extra-plugin-stealth.",
   "main": "scanner.js",
   "scripts": {
     "scan": "node scanner.js",
-    "start": "node scanner.js"
+    "start": "node scanner.js",
+    "smart-import": "node scanner.js --smart-import"
   },
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
-    "fs-extra": "^11.2.0",
+    "fs-extra": "^11.3.0",
     "puppeteer": "^24.2.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^6.0.1"
   }
 }

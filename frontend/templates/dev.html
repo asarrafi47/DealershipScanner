@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Developer Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="page">
+
+    <nav class="topbar">
+        <div class="logo">Dealership Scanner</div>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/listings">Listings</a>
+        </div>
+    </nav>
+
+    <div class="dev-page">
+        <header class="dev-hero">
+            <p class="db-eyebrow">Internal tools</p>
+            <h1 class="dev-title">Developer Dashboard</h1>
+            <p class="dev-sub">Paste one dealer URL per line for Smart Import (discovery + full inventory scrape + registry row). Requires <code>?token=…</code> in the URL. Bulk jobs run sequentially; the log shows the active job.</p>
+        </header>
+
+        <section class="db-section dev-section">
+            <div class="db-section-header">
+                <p class="db-eyebrow">Health</p>
+                <h2 class="db-section-title">System status</h2>
+            </div>
+            <div class="dev-status-grid" id="dev-status-panel">
+                <div class="dev-status-card">
+                    <p class="dev-status-label">inventory.db</p>
+                    <p class="dev-status-value {% if status.db_connected %}dev-ok{% else %}dev-bad{% endif %}">
+                        {% if status.db_connected %}Connected{% else %}Unavailable{% endif %}
+                    </p>
+                    <p class="dev-status-meta">{{ status.inventory_db_path }}</p>
+                </div>
+                <div class="dev-status-card">
+                    <p class="dev-status-label">Node.js</p>
+                    <p class="dev-status-value {% if status.node_executable %}dev-ok{% else %}dev-bad{% endif %}">
+                        {% if status.node_executable %}Detected{% else %}Not found{% endif %}
+                    </p>
+                    <p class="dev-status-meta">{{ status.node_executable or "Install Node 18+ and ensure it is on PATH." }}</p>
+                </div>
+            </div>
+            <button type="button" class="secondary-button dev-refresh-status" id="dev-refresh-status">Refresh status</button>
+        </section>
+
+        <section class="db-section dev-section">
+            <div class="db-section-header">
+                <p class="db-eyebrow">Smart import</p>
+                <h2 class="db-section-title">Bulk magic URLs</h2>
+            </div>
+            <p class="dev-hint">Runs <code>node scanner.js --url … --smart-import</code> (Dealer.com search API + getInventory, lazy-load scroll). Saves the dealership and links scraped rows for listings filters.</p>
+            <label class="dev-textarea-label" for="dev-smart-urls">Dealer URLs (one per line)</label>
+            <textarea id="dev-smart-urls" class="dev-url-textarea" rows="5" placeholder="https://www.example-bmw.com&#10;https://www.other-dealer.com"></textarea>
+            <div class="dev-playground-row dev-playground-row--mt">
+                <button type="button" class="primary-button" id="dev-smart-import">Import &amp; scan</button>
+            </div>
+
+            <div class="dev-queue-panel" id="dev-queue-panel" hidden>
+                <p class="dev-discovery-title">Queue</p>
+                <div class="dev-table-wrap dev-queue-table-wrap">
+                    <table class="dev-table dev-queue-table">
+                        <thead>
+                            <tr>
+                                <th>URL</th>
+                                <th>Status</th>
+                                <th>Registry</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="dev-queue-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="dev-discovery-panel" id="dev-discovery-panel" aria-live="polite">
+                <p class="dev-discovery-title">Discovery status</p>
+                <ul class="dev-discovery-list" id="dev-discovery-list">
+                    <li class="dev-discovery-placeholder">Waiting for a run…</li>
+                </ul>
+            </div>
+
+            <div class="dev-log-pre" id="dev-scan-log" aria-label="Scanner output">Ready. Add URLs above and click Import &amp; scan.</div>
+            <div class="dev-headed-retry-wrap" id="dev-headed-retry-wrap" hidden>
+                <button type="button" class="secondary-button" id="dev-headed-retry">Retry with Headless: False</button>
+                <p class="dev-hint">Runs the scanner in a visible browser window (useful on a local machine when inventory stays at zero).</p>
+            </div>
+        </section>
+
+        <section class="db-section dev-section">
+            <div class="db-section-header dev-tools-header">
+                <div>
+                    <p class="db-eyebrow">Data quality</p>
+                    <h2 class="db-section-title">Maintenance</h2>
+                </div>
+                <div class="dev-tool-actions">
+                    <button type="button" class="secondary-button" id="dev-geocode">Geocode missing data</button>
+                    <button type="button" class="secondary-button" id="dev-dedupe">Deduplicate</button>
+                </div>
+            </div>
+            <p class="dev-hint">Geocode uses <code>pgeocode</code> (city + state). Deduplicate uses <code>thefuzz</code> token match to set <code>duplicate_of_id</code> on likely duplicates.</p>
+            <pre class="dev-log-pre dev-log-pre--compact" id="dev-maint-log" aria-live="polite"></pre>
+        </section>
+
+        <section class="db-section dev-section">
+            <div class="db-section-header">
+                <p class="db-eyebrow">SQLite</p>
+                <h2 class="db-section-title">Recent dealerships</h2>
+            </div>
+            <div class="dev-table-wrap">
+                <table class="dev-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>URL</th>
+                            <th>Location</th>
+                            <th>Lat / Lon</th>
+                            <th>Added</th>
+                            <th>Dup?</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="dev-dealers-tbody">
+                        {% for d in dealerships %}
+                        <tr data-id="{{ d.id }}">
+                            <td>{{ d.name }}</td>
+                            <td><a href="{{ d.website_url }}" target="_blank" rel="noopener" class="dev-table-link">{{ d.website_url }}</a></td>
+                            <td>{{ d.city }}, {{ d.state }}</td>
+                            <td class="dev-mono">{% if d.latitude is not none and d.longitude is not none %}{{ "%.4f"|format(d.latitude) }}, {{ "%.4f"|format(d.longitude) }}{% else %}—{% endif %}</td>
+                            <td class="dev-mono">{{ d.created_at }}</td>
+                            <td>{% if d.duplicate_of_id %}#{{ d.duplicate_of_id }}{% else %}—{% endif %}</td>
+                            <td><button type="button" class="dev-delete-btn" data-id="{{ d.id }}">Delete</button></td>
+                        </tr>
+                        {% else %}
+                        <tr class="dev-empty-row">
+                            <td colspan="7">No dealerships yet. Run a smart import above.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='dev.js') }}"></script>
+</body>
+</html>
