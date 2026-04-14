@@ -3,6 +3,51 @@
 <head>
     <title>{{ car.title }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* ── Gallery thumbnail strip ─────────────────────────────────────── */
+        .car-gallery-thumbs-wrap {
+            overflow: hidden;
+        }
+        .car-gallery-thumbs {
+            display: flex;
+            flex-direction: row;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 8px 0 4px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+        .car-gallery-thumbs::-webkit-scrollbar { height: 4px; }
+        .car-gallery-thumbs::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+        .car-gallery-thumb {
+            flex: 0 0 80px;
+            height: 58px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #eee;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            cursor: pointer;
+            scroll-snap-align: start;
+            opacity: 0.65;
+            transition: opacity .18s, border-color .18s;
+            padding: 0;
+        }
+        .car-gallery-thumb:hover  { opacity: .9; }
+        .car-gallery-thumb.active { border-color: #1a73e8; opacity: 1; }
+
+        /* ── History highlights label/value pairs ────────────────────────── */
+        .history-highlight-item .hh-label {
+            font-weight: 600;
+            color: #555;
+            margin-right: .3em;
+        }
+        .history-highlight-item .hh-value {
+            color: #222;
+        }
+    </style>
 </head>
 <body>
 
@@ -141,15 +186,14 @@
                 {# Col 3: History + CARFAX #}
                 <div class="car-detail-history">
                     <h3 class="history-panel-title">Vehicle History Highlights</h3>
-                    {% if car.history_highlights and car.history_highlights|length > 0 %}
-                    <ul class="history-highlights-list">
-                        {% for item in car.history_highlights %}
-                        <li class="history-highlight-item">{{ item }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <p class="history-no-highlights">Detailed history report available. Click below to view.</p>
-                    {% endif %}
+
+                    {# Raw data passed to JS for cleaning — never rendered directly #}
+                    <script type="application/json" id="car-history-json">{{ car.history_highlights | tojson }}</script>
+
+                    {# JS fills this list; shown only when items exist #}
+                    <ul class="history-highlights-list" id="history-highlights-list" style="display:none"></ul>
+                    {# Shown by default; hidden by JS if there are clean items #}
+                    <p class="history-no-highlights" id="history-no-highlights">Detailed history report available. Click below to view.</p>
                     {% if car.carfax_url %}
                     <a href="{{ car.carfax_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View Full CARFAX Report</a>
                     {% elif car.vin and not car.vin.startswith('unknown-') %}
@@ -165,7 +209,7 @@
         </section>
 
         <section class="car-chat-section" id="car-chat-section" data-car-id="{{ car.id }}">
-            <h2 class="car-chat-heading">Ask about this vehicle</h2>
+            <h2 class="car-chat-heading">Ask about this car</h2>
             <p class="car-chat-hint">Answers use your local Ollama server (<code>LLM_BASE_URL</code> / <code>LLM_MODEL</code>).</p>
             <div id="car-chat-messages" class="car-chat-messages" aria-live="polite"></div>
             <div class="car-chat-input-row">
@@ -256,6 +300,138 @@
         });
 
         show();
+    })();
+    </script>
+
+    <script>
+    /* ── Vehicle History Highlights cleaner ──────────────────────────────── */
+    (function () {
+        var jsonEl   = document.getElementById('car-history-json');
+        var listEl   = document.getElementById('history-highlights-list');
+        var noHl     = document.getElementById('history-no-highlights');
+        if (!jsonEl || !listEl) return;
+
+        /* Human-readable labels for camelCase keys from DMS APIs */
+        var KEY_LABELS = {
+            normalFuelType:   'Fuel Type',
+            fuelType:         'Fuel Type',
+            type:             'Condition',
+            condition:        'Condition',
+            ownerCount:       'Owners',
+            numberOfOwners:   'Owners',
+            accidentCount:    'Accidents',
+            accidents:        'Accidents',
+            frameRepairs:     'Frame Damage',
+            titleIssues:      'Title Issues',
+            ownerHistory:     'Owner History',
+            usageType:        'Usage',
+            personalUse:      'Personal Use',
+            odometer:         'Mileage',
+            mileage:          'Mileage',
+            make:             'Make',
+            model:            'Model',
+            year:             'Year',
+            trim:             'Trim',
+            vin:              'VIN',
+            stockNumber:      'Stock #',
+            cylinders:        'Cylinders',
+            transmission:     'Transmission',
+            drivetrain:       'Drivetrain',
+            exteriorColor:    'Exterior Color',
+            interiorColor:    'Interior Color',
+            serviceRecords:   'Service Records',
+            lemonHistory:     'Lemon History',
+            salvageHistory:   'Salvage History',
+        };
+
+        /* Values to silently drop */
+        var BAD = new Set(['n/a', 'na', '', 'null', 'none', 'unknown', 'undefined', '-', '--']);
+
+        function isBad(v) {
+            if (v === null || v === undefined) return true;
+            return BAD.has(String(v).trim().toLowerCase());
+        }
+
+        /* Detect if a string looks like a camelCase identifier rather than a display value.
+           Rule: no whitespace AND contains a lowercase letter immediately followed by uppercase.
+           Short ALL-CAPS abbreviations (AWD, FWD, CVT…) are excluded via the [a-z] anchor. */
+        function isCamelKey(s) {
+            return typeof s === 'string' && !/\s/.test(s) && /[a-z][A-Z]/.test(s);
+        }
+
+        /* Convert an unknown camelCase key to "Title Case With Spaces" as a fallback label */
+        function camelToLabel(key) {
+            if (KEY_LABELS[key]) return KEY_LABELS[key];
+            return key
+                .replace(/([A-Z])/g, ' $1')
+                .replace(/^./, function (c) { return c.toUpperCase(); })
+                .trim();
+        }
+
+        function esc(s) {
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        /* Parse raw data */
+        var raw = [];
+        try { raw = JSON.parse(jsonEl.textContent || '[]'); } catch (e) {}
+        if (!Array.isArray(raw)) raw = [];
+
+        var rows = [];   /* [{label: string|null, value: string}] */
+
+        raw.forEach(function (item) {
+            if (item === null || item === undefined) return;
+
+            if (typeof item === 'string') {
+                var s = item.trim();
+                if (isBad(s) || isCamelKey(s) || s.length < 2) return;
+                rows.push({ label: null, value: s });
+
+            } else if (typeof item === 'object' && !Array.isArray(item)) {
+                /* Handle {"label":"…","value":"…"} objects as a first-class case */
+                if ('label' in item && 'value' in item) {
+                    var lbl = String(item.label || '').trim();
+                    var val = String(item.value === null ? '' : item.value).trim();
+                    if (!isBad(val) && !isCamelKey(val) && val.length >= 1)
+                        rows.push({ label: lbl || null, value: val });
+                    return;
+                }
+                /* Generic key→value object */
+                Object.keys(item).forEach(function (k) {
+                    var v = item[k];
+                    if (isBad(v)) return;
+                    var vs = String(v).trim();
+                    if (vs.length < 1 || isCamelKey(vs)) return;
+                    rows.push({ label: camelToLabel(k), value: vs });
+                });
+            }
+        });
+
+        if (rows.length === 0) {
+            /* Leave the no-highlights paragraph visible */
+            return;
+        }
+
+        /* Render clean list */
+        var html = '';
+        rows.forEach(function (row) {
+            if (row.label) {
+                html += '<li class="history-highlight-item">'
+                      + '<span class="hh-label">' + esc(row.label) + ':</span> '
+                      + '<span class="hh-value">'  + esc(row.value) + '</span>'
+                      + '</li>';
+            } else {
+                html += '<li class="history-highlight-item">' + esc(row.value) + '</li>';
+            }
+        });
+
+        listEl.innerHTML = html;
+        listEl.style.display = '';
+        if (noHl) noHl.style.display = 'none';
     })();
     </script>
 </body>

@@ -237,6 +237,61 @@ def extract_dealer_from_html(html: str) -> dict[str, Any]:
     return {"name": name.strip(), "city": city.strip(), "state": state.strip().upper()[:2], "sources": sources}
 
 
+def _search_location_fallback(name: str, url: str) -> tuple[str, str]:
+    """
+    DuckDuckGo HTML search fallback: query the dealer name to resolve city/state
+    when all HTML extraction methods fail.  Uses only stdlib + requests (no browser).
+    """
+    if not name or not name.strip():
+        return "", ""
+    try:
+        import requests as _req
+    except ImportError:
+        return "", ""
+
+    query = f"{name} dealership address"
+    try:
+        resp = _req.get(
+            "https://html.duckduckgo.com/html/",
+            params={"q": query},
+            headers={"User-Agent": "Mozilla/5.0 (compatible; DealerBot/1.0)"},
+            timeout=12,
+        )
+        if resp.ok:
+            city, state = _extract_city_state_from_text(resp.text[:40000])
+            if city and state:
+                return city, state
+    except Exception:
+        pass
+
+    # DuckDuckGo Instant Answer API as secondary attempt
+    try:
+        api_resp = _req.get(
+            "https://api.duckduckgo.com/",
+            params={"q": query, "format": "json", "no_html": "1", "skip_disambig": "1"},
+            headers={"User-Agent": "Mozilla/5.0 (compatible; DealerBot/1.0)"},
+            timeout=10,
+        )
+        if api_resp.ok:
+            data = api_resp.json()
+            blob = " ".join(
+                str(v)
+                for v in (data.get("AbstractText", ""), data.get("Answer", ""))
+            )
+            infobox = data.get("Infobox") or {}
+            if isinstance(infobox, dict):
+                for item in infobox.get("content", []):
+                    if isinstance(item, dict) and item.get("label", "").lower() in ("address", "location"):
+                        blob += " " + str(item.get("value", ""))
+            city, state = _extract_city_state_from_text(blob)
+            if city and state:
+                return city, state
+    except Exception:
+        pass
+
+    return "", ""
+
+
 def _hostname_slug(url: str) -> str:
     try:
         h = urlparse(url).hostname or ""
@@ -321,6 +376,22 @@ async def discover_with_crawl4ai(url: str) -> dict[str, Any]:
                     sources.append("h1-fallback")
         except Exception:
             pass
+
+    # If city/state are still missing after all HTML extraction, try a DuckDuckGo search.
+    # This is the last resort — uses the dealer name (resolved above) as the search query.
+    if (not city or not state) and name and not _name_looks_like_domain(name, url):
+        import sys as _sys
+        print(
+            f"[crawl4ai_discovery] HTML extraction missing location; trying DuckDuckGo fallback for '{name}'",
+            file=_sys.stderr,
+        )
+        sc, ss = _search_location_fallback(name, url)
+        if sc and not city:
+            city = sc
+        if ss and not state:
+            state = ss
+        if sc or ss:
+            sources.append("ddg-search")
 
     got_content = bool(html.strip() or md.strip())
     out = {

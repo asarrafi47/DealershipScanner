@@ -1709,6 +1709,71 @@ function enrichMetadataWithCrawl4ai(pageUrl, meta) {
   return { name, city, state, sources };
 }
 
+/**
+ * Run the Python Crawl4AI inventory sniffer for non-Dealer.com sites.
+ * Returns the parsed CRAWL4AI_INVENTORY payload, or null on failure.
+ */
+function runCrawl4aiInventorySubprocess(pageUrl) {
+  if (process.env.DISABLE_CRAWL4AI === "1" || process.env.DISABLE_CRAWL4AI === "true") return null;
+  const py = process.env.PYTHON || process.env.PYTHON3 || "python3";
+  const r = spawnSync(py, ["-m", "scrapers.crawl4ai_inventory", pageUrl], {
+    cwd: ROOT,
+    encoding: "utf8",
+    timeout: 180000,
+    maxBuffer: 50 * 1024 * 1024,
+  });
+  if (r.error) {
+    console.warn(`[crawl4ai_inventory] ${r.error.message}`);
+    return null;
+  }
+  const lines = (r.stdout || "").split("\n");
+  for (let i = lines.length - 1; i >= 0; i--) {
+    const ln = lines[i].trim();
+    if (ln.startsWith("CRAWL4AI_INVENTORY:")) {
+      try {
+        return JSON.parse(ln.slice("CRAWL4AI_INVENTORY:".length));
+      } catch {
+        return null;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Map a vehicle object returned by crawl4ai_inventory.py to the internal
+ * schema expected by upsertVehicle.
+ */
+function mapCrawl4aiVehicle(v, dealer, dealerId) {
+  const year = normInt(v.year) || null;
+  return {
+    vin: normStr(v.vin).toUpperCase(),
+    year,
+    make: normStr(v.make),
+    model: normStr(v.model),
+    trim: normStr(v.trim),
+    price: normFloat(String(v.price || "0")),
+    mileage: normInt(v.mileage),
+    image_url: normStr(v.image_url) || FALLBACK_IMAGE_URL,
+    dealer_name: dealer.name || dealerId,
+    dealer_url: dealer.url || "",
+    dealer_id: dealerId,
+    zip_code: normStr(v.zip_code) || DEFAULT_STR,
+    fuel_type: normStr(v.fuel_type) || DEFAULT_STR,
+    cylinders: normInt(v.cylinders) || null,
+    transmission: normStr(v.transmission) || DEFAULT_STR,
+    drivetrain: normStr(v.drivetrain) || DEFAULT_STR,
+    exterior_color: normStr(v.exterior_color) || DEFAULT_STR,
+    interior_color: normStr(v.interior_color) || DEFAULT_STR,
+    stock_number: normStr(v.stock_number) || "",
+    gallery: [],
+    carfax_url: "",
+    history_highlights: [],
+    msrp: null,
+    dealership_registry_id: null,
+  };
+}
+
 function extractCityStateFromText(text) {
   if (!text || typeof text !== "string") return { city: "", state: "" };
   const patterns = [
@@ -1990,7 +2055,37 @@ async function main() {
         };
         console.info(`[dev] Single-URL mode (${profile}): ${dealer.url} (${dealer.dealer_id})`);
 
-        const vehicles = await runDealer(browser, dealer, { profile, scrollLazyLoad: true });
+        const dcVehicles = await runDealer(browser, dealer, { profile, scrollLazyLoad: true });
+
+        // ── Crawl4AI inventory sniffer fallback ────────────────────────────
+        // When the Dealer.com JSON interceptor finds nothing (non-Dealer.com site
+        // or heavily obfuscated DMS), try the Python sniffer that detects
+        // Algolia, VinSolutions, CDK, and generic inline-JSON inventory formats.
+        let vehicles = dcVehicles;
+        if (smartImport && !dcVehicles.length) {
+          emitDiscovery({
+            step: "crawl4ai_inventory",
+            message: "Dealer.com intercept found 0 vehicles; trying Crawl4AI inventory sniffer (Algolia / VinSolutions / CDK / inline-JSON)…",
+          });
+          const sniffer = runCrawl4aiInventorySubprocess(url);
+          if (sniffer && sniffer.ok && Array.isArray(sniffer.vehicles) && sniffer.vehicles.length) {
+            emitDiscovery({
+              step: "crawl4ai_inventory",
+              message: `Crawl4AI found ${sniffer.vehicles.length} vehicle(s) via strategy: ${sniffer.strategy}.`,
+              count: sniffer.vehicles.length,
+              strategy: sniffer.strategy,
+            });
+            vehicles = sniffer.vehicles.map((v) => mapCrawl4aiVehicle(v, dealer, dealerId));
+          } else {
+            const detail = (sniffer && sniffer.error) ? ` (${sniffer.error})` : "";
+            emitDiscovery({
+              step: "crawl4ai_inventory",
+              message: `Crawl4AI inventory sniffer found no vehicles${detail}.`,
+            });
+          }
+        }
+        // ──────────────────────────────────────────────────────────────────
+
         console.log(`SCAN_VEHICLE_COUNT:${vehicles.length}`);
         if (!vehicles.length) {
           await fs.mkdir(DEBUG_DIR, { recursive: true });
