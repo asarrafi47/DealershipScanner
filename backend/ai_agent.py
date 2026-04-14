@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from typing import Any
 
 from backend.db.inventory_db import get_car_by_vin
@@ -239,39 +240,372 @@ def run_ai_chat(
     }
 
 
+# ── Web-research trigger detection ────────────────────────────────────────
+# Substrings that signal the user wants external model/market knowledge.
+# Checked against lowercased message; kept as substrings so "reliability",
+# "reliable", "unreliable" all match "reliab", etc.
+_WEB_RESEARCH_TRIGGERS: tuple[str, ...] = (
+    "reliab",          # reliability / reliable / unreliable
+    "problem",         # problem / problems
+    "issue",           # issue / issues
+    "recall",          # recall / recalls
+    "defect",          # defect / defects
+    "fault",
+    "review",          # review / reviews / reviewed
+    "worth it",
+    "good deal",
+    "bad deal",
+    "fair price",
+    "market value",
+    "market price",
+    "going rate",
+    "compared to",
+    "compare to",
+    " vs ",
+    "versus",
+    "better than",
+    "worse than",
+    "common problem",
+    "known issue",
+    "typical problem",
+    "maintain",        # maintain / maintenance
+    "repair cost",
+    "ownership cost",
+    "cost to own",
+    "long.term",       # long-term
+    "depreciat",       # depreciation / depreciate
+    "resale",
+    "buy or lease",
+    "should i buy",
+    "is this a good",
+    # ── Spec / powertrain queries ──────────────────────────────────────────
+    "engine",          # "what engine does this have?"
+    " hp",             # horsepower shorthand (leading space avoids "chip" etc.)
+    "horsepower",
+    "torque",
+    "powertrain",
+    "transmission",    # "what transmission?"
+    "drivetrain",
+    " awd",            # drivetrain questions
+    " fwd",
+    " rwd",
+    "0-60",            # performance
+    "quarter mile",
+    "towing",
+    "payload",
+    "tow capacity",
+    "fuel economy",
+    "mpg",
+    "range",           # EV range
+    "trim level",
+    "trim levels",
+    "trim option",
+    "spec",            # specs / specifications
+    "feature",         # features this model has
+    "option",          # optional packages
+    "package",
+    "safety rating",
+    "crash test",
+    "warranty",
+)
+
+# ── Critical inventory fields — if any are blank/N/A, force web research ──
+_CRITICAL_FIELDS = ("engine", "transmission", "drivetrain")
+
+
+def _field_is_blank(v: Any) -> bool:
+    """Return True if an inventory field carries no real data."""
+    if v is None:
+        return True
+    s = str(v).strip().lower()
+    return s in ("", "n/a", "na", "unknown", "-", "—", "none", "null")
+
+
+def _has_missing_critical_fields(car: dict[str, Any]) -> bool:
+    """
+    Return True if any critical spec field (engine, transmission, drivetrain)
+    is absent or a placeholder, which means the LLM would have nothing useful
+    to say and should use web data instead.
+    """
+    checks = {
+        "engine": car.get("fuel_type") or car.get("cylinders"),
+        "transmission": car.get("transmission"),
+        "drivetrain": car.get("drivetrain"),
+    }
+    return any(_field_is_blank(v) for v in checks.values())
+
+
+def _needs_web_research(message: str) -> bool:
+    """Return True if *message* contains any web-research trigger substring."""
+    low = message.lower()
+    return any(t in low for t in _WEB_RESEARCH_TRIGGERS)
+
+
+# Regex that matches placeholder / garbage values that must NOT appear in search queries.
+_QUERY_JUNK_RE = re.compile(r"^(n\/?a|none|null|unknown|[-—]+)$", re.IGNORECASE)
+
+
+def _clean_spec(v: Any) -> str:
+    """
+    Return the string value of *v* ready for use inside a search query.
+    Returns an empty string for None, empty, or placeholder values like
+    'N/A', 'None', 'unknown', '-', '—'.
+    """
+    s = str(v or "").strip()
+    return "" if _QUERY_JUNK_RE.match(s) else s
+
+
+def _build_search_query(car: dict[str, Any], message: str) -> str:
+    """
+    Build a focused DuckDuckGo query from car fields + message context.
+
+    Examples
+    ────────
+    "Is this reliable?"  →  "2021 BMW M3 Competition reliability common problems review"
+    "Compare to C63 AMG" →  "2021 BMW M3 Competition vs C63 AMG comparison review"
+    "Maintenance costs?" →  "2021 BMW M3 Competition maintenance cost ownership"
+    "engine?"            →  "2023 BMW 530e engine specs powertrain"  (N/A trim stripped)
+    """
+    year  = _clean_spec(car.get("year"))
+    make  = _clean_spec(car.get("make"))
+    model = _clean_spec(car.get("model"))
+    trim  = _clean_spec(car.get("trim"))
+    base  = " ".join(filter(None, [year, make, model, trim]))
+
+    low = message.lower()
+
+    if any(t in low for t in ("reliab", "problem", "issue", "defect", "fault", "recall")):
+        suffix = "reliability common problems issues"
+    elif any(t in low for t in ("review", "is this a good", "should i buy")):
+        suffix = "review expert opinion"
+    elif any(t in low for t in ("maintain", "repair cost", "ownership cost", "cost to own")):
+        suffix = "maintenance cost cost of ownership"
+    elif any(t in low for t in ("depreciat", "resale", "worth it", "market value",
+                                "fair price", "going rate", "good deal")):
+        suffix = "resale value depreciation market price"
+    elif any(t in low for t in ("vs ", "versus", "compared to", "compare to",
+                                "better than", "worse than")):
+        suffix = "comparison review vs alternatives"
+    elif any(t in low for t in ("engine", "powertrain", "horsepower", " hp",
+                                "torque", "0-60", "quarter mile", "acceleration")):
+        suffix = "engine specs powertrain horsepower"
+    elif any(t in low for t in ("transmission", "drivetrain", " awd", " fwd", " rwd")):
+        suffix = "transmission drivetrain specs"
+    elif any(t in low for t in ("mpg", "fuel economy", "range")):
+        suffix = "fuel economy mpg efficiency"
+    elif any(t in low for t in ("towing", "payload", "tow capacity")):
+        suffix = "towing capacity payload specs"
+    elif any(t in low for t in ("spec", "trim level", "trim option", "feature", "option", "package")):
+        suffix = "specs features trim levels options"
+    elif any(t in low for t in ("safety rating", "crash test")):
+        suffix = "safety ratings crash test NHTSA IIHS"
+    elif any(t in low for t in ("warranty",)):
+        suffix = "warranty coverage terms"
+    else:
+        # Generic fallback: take meaningful words from the user message
+        words = re.sub(r"[^\w\s]", "", low).split()
+        suffix = " ".join(words[:6]) if words else "specs review"
+
+    return f"{base} {suffix}".strip()
+
+
 def run_car_page_chat(car: dict[str, Any], user_message: str) -> dict[str, Any]:
     """
     Car detail chatbot: Ollama (OpenAI-compatible) via llm.providers.ollama_client.
+
+    When the question touches reliability, reviews, market value, comparisons,
+    or other topics that aren't in inventory.db, we transparently run a
+    Playwright web-research pass (WebResearcher) and inject the snippet into
+    the system prompt as [Internet Research Data] before calling the LLM.
+
     ``car`` should be the full SQLite row dict from get_car_by_id.
     """
     msg = (user_message or "").strip()
     if not msg:
         return {"reply": "", "error": "empty_message", "discrepancy_flags": []}
+
     try:
         from llm.client import LLMResponseError
         from llm.providers.ollama_client import OpenAICompatibleClient
     except ImportError as e:
-        return {
-            "reply": "",
-            "error": f"llm_import:{e}",
-            "discrepancy_flags": [],
-        }
+        return {"reply": "", "error": f"llm_import:{e}", "discrepancy_flags": []}
 
+    # ── Build concise local context from inventory.db row ─────────────────
+    year  = car.get("year")  or "Unknown year"
+    make  = car.get("make")  or ""
+    model = car.get("model") or ""
+    trim  = car.get("trim")  or ""
+    price = car.get("price")
+    mileage = car.get("mileage")
+    vin   = car.get("vin")   or ""
+    dealer_name = car.get("dealer_name") or ""
+    dealer_url  = car.get("dealer_url")  or ""
+    ext_color   = car.get("exterior_color") or ""
+    int_color   = car.get("interior_color") or ""
+    fuel        = car.get("fuel_type")    or ""
+    transmission = car.get("transmission") or ""
+    drivetrain  = car.get("drivetrain")   or ""
+    cylinders   = car.get("cylinders")
+    stock       = car.get("stock_number") or ""
+
+    price_str   = f"${price:,.0f}" if price and price > 0 else "price not listed"
+    mileage_str = f"{mileage:,} mi" if mileage else "mileage not listed"
+    cyl_str     = f"{cylinders}-cylinder" if cylinders else ""
+
+    local_context = (
+        f"Vehicle: {year} {make} {model} {trim}\n"
+        f"Price: {price_str}  |  Mileage: {mileage_str}\n"
+        f"VIN: {vin}  |  Stock #: {stock}\n"
+        f"Drivetrain: {drivetrain}  |  Engine: {cyl_str} {fuel}  |  Trans: {transmission}\n"
+        f"Exterior: {ext_color}  |  Interior: {int_color}\n"
+        f"Dealer: {dealer_name}  ({dealer_url})"
+    ).strip()
+
+    # ── Verbose diagnostic trace (visible in Flask terminal) ──────────────
+    print(f"\n[CHAT] ── New chat request ─────────────────────────────────────")
+    print(f"[CHAT] message     = {msg!r}")
+    print(f"[CHAT] car         = {year} {make} {model} {trim!r}")
+    print(f"[CHAT] transmission= {transmission!r}  drivetrain={drivetrain!r}")
+    print(f"[CHAT] fuel        = {fuel!r}  cylinders={cylinders!r}")
+    kw_hit = _needs_web_research(msg)
+    miss   = _has_missing_critical_fields(car)
+    print(f"[CHAT] keyword_trigger={kw_hit}  missing_critical_fields={miss}")
+
+    # ── Cache-first research: ChromaDB → WebResearcher → write-back ──────
+    research_text: str  = ""
+    research_url:  str  = ""
+    research_used: bool = False
+    cache_hit:     bool = False
+
+    if kw_hit or miss:
+
+        # ── Step 1: ChromaDB cache lookup ─────────────────────────────────
+        print("[CHAT] Checking ChromaDB car_knowledge cache …")
+        try:
+            from backend.vector.chroma_service import (
+                get_model_knowledge,
+                add_model_knowledge,
+            )
+            cached_text, cached_url = get_model_knowledge(
+                year=year, make=make, model=model
+            )
+            if cached_text:
+                research_text = cached_text
+                research_url  = cached_url or ""
+                research_used = True
+                cache_hit     = True
+                print(
+                    f"[CHAT] ChromaDB CACHE HIT — {len(research_text)} chars "
+                    f"from {research_url!r}"
+                )
+        except Exception as exc:
+            print(f"[CHAT] ChromaDB lookup failed (non-fatal): {exc}")
+            # define add_model_knowledge as None so the write-back is skipped
+            add_model_knowledge = None  # type: ignore[assignment]
+
+        # ── Step 2: Live web research (cache miss only) ───────────────────
+        if not cache_hit:
+            print("[CHAT] Cache miss — triggering WebResearcher …")
+            try:
+                from backend.utils.web_researcher import WebResearcher
+                query = _build_search_query(car, msg)
+                print(f"[CHAT] ACTION: Starting Web Research …")
+                print(f"[CHAT] search_query = {query!r}")
+                researcher = WebResearcher(timeout_ms=25_000, max_text_chars=2_000)
+                result = researcher.search_and_summarize(query)
+
+                if result and result.text:
+                    research_text = result.text
+                    research_url  = result.url
+                    research_used = True
+                    print(
+                        f"[CHAT] Research SUCCESS: {len(result.text)} chars "
+                        f"from {result.url}"
+                    )
+
+                    # ── Step 3: Write scraped data back to ChromaDB ───────
+                    print("[CHAT] Writing research to ChromaDB car_knowledge …")
+                    try:
+                        if add_model_knowledge is not None:
+                            stored = add_model_knowledge(
+                                year=year, make=make, model=model,
+                                text=result.text,
+                                source_url=result.url,
+                                trim=trim,
+                            )
+                            print(
+                                f"[CHAT] ChromaDB write: {'OK ✓' if stored else 'FAILED'}"
+                            )
+                    except Exception as exc_store:
+                        print(f"[CHAT] ChromaDB write EXCEPTION: {exc_store}")
+
+                else:
+                    print("[CHAT] Research returned None (no suitable page found).")
+
+            except Exception as exc:
+                print(f"[CHAT] Research EXCEPTION: {exc}")
+                import logging as _logging
+                _logging.getLogger(__name__).warning(
+                    "[ai_agent] WebResearcher failed: %s", exc
+                )
+
+    print(f"[CHAT] research_used={research_used}  cache_hit={cache_hit}")
+
+    # ── Assemble the "Context Sandwich" system prompt ─────────────────────
+    system_parts: list[str] = [
+        "You are a Dealership Expert Assistant with access to both local inventory "
+        "data and live web research.\n\n"
+        "RULES:\n"
+        "1. Always prioritise the [Local Inventory Data] for specifics "
+        "(price, VIN, mileage, stock status, dealer details). "
+        "Never contradict the local data.\n"
+        "2. Use [Internet Research Data] for general model knowledge, "
+        "reliability trends, expert opinions, and market comparisons "
+        "that are not available in the inventory record.\n"
+        "3. If you use web research data, you MUST cite the source URL at the "
+        "end of your answer on its own line, formatted as:\n"
+        "   Source: <url>\n"
+        "4. If the inventory data and web data conflict, trust the local data "
+        "for this specific car and note the discrepancy.\n"
+        "5. Keep answers focused and concise (3-5 sentences) unless the user "
+        "asks for detail. Never invent specifications.\n\n",
+
+        "── [Local Inventory Data] ──────────────────────────────────────────\n",
+        local_context,
+        "\n────────────────────────────────────────────────────────────────────\n",
+    ]
+
+    if research_used:
+        system_parts += [
+            "\n── [Internet Research Data] ────────────────────────────────────────\n",
+            f"Source URL: {research_url}\n\n",
+            research_text,
+            "\n────────────────────────────────────────────────────────────────────\n",
+            "\nRemember: cite the Source URL above at the end of your response "
+            "if you draw on the Internet Research Data.\n",
+        ]
+    else:
+        system_parts.append(
+            "\nNo external web data was fetched for this question. "
+            "Answer only from the Local Inventory Data and your general knowledge. "
+            "If you lack information, say so clearly.\n"
+        )
+
+    system = "".join(system_parts)
+
+    # ── Call the LLM ──────────────────────────────────────────────────────
     client = OpenAICompatibleClient()
-    car_blob = json.dumps(car, indent=2, default=str)
-    if len(car_blob) > 14000:
-        car_blob = car_blob[:14000] + "\n…(truncated)"
-    system = (
-        "You are a helpful assistant on a dealership vehicle detail page.\n"
-        "Use the vehicle JSON as the source of truth. If information is missing, say you do not see it.\n"
-        "Keep answers concise (a few sentences unless the user asks for detail).\n\n"
-        "Vehicle data (JSON):\n"
-        + car_blob
-    )
     try:
         reply = client.complete_text(system=system, user=msg, temperature=0.45)
     except LLMResponseError as e:
         return {"reply": "", "error": str(e), "discrepancy_flags": []}
     except Exception as e:
         return {"reply": "", "error": str(e)[:500], "discrepancy_flags": []}
-    return {"reply": reply, "error": None, "discrepancy_flags": []}
+
+    return {
+        "reply": reply,
+        "error": None,
+        "discrepancy_flags": [],
+        "web_research_used": research_used,
+        "web_research_url": research_url if research_used else None,
+    }

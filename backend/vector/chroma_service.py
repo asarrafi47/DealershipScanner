@@ -14,6 +14,7 @@ Run: python -m backend.vector reindex
 from __future__ import annotations
 
 import hashlib
+import re
 import sqlite3
 from pathlib import Path
 from typing import Any
@@ -271,3 +272,143 @@ def reindex_all() -> dict[str, int]:
         "bmw_partial": reindex_bmw_partial(client),
     }
     return out
+
+
+# ── car_knowledge — self-learning research cache ──────────────────────────
+#
+# Each document stores a scraped web-research snippet keyed by
+# year / make / model / trim.  The collection uses cosine distance so
+# the threshold below maps linearly to semantic similarity:
+#   distance 0.0 → identical   distance 1.0 → orthogonal
+#
+# Anything at or below _KNOWLEDGE_THRESHOLD is considered a confident hit
+# and served from cache instead of triggering a live Playwright scrape.
+
+_KNOWLEDGE_THRESHOLD = 0.40   # ≤ 0.40 cosine distance  ≈ ≥ 60 % similarity
+_KNOWLEDGE_COLLECTION = "car_knowledge"
+
+
+def _knowledge_col(client: Any):
+    """Get-or-create the car_knowledge collection (cosine distance)."""
+    return client.get_or_create_collection(
+        _KNOWLEDGE_COLLECTION,
+        metadata={
+            "hnsw:space": "cosine",
+            "description": "Cached web-research snippets keyed by year/make/model",
+        },
+    )
+
+
+def _knowledge_doc_id(year: Any, make: str, model: str, trim: str = "") -> str:
+    """
+    Stable, collision-free document ID for a year/make/model(/trim) tuple.
+
+    Example: "know-2023_bmw_530e_m-sport"
+    Slugified so it's safe as a ChromaDB document id.
+    """
+    parts = [str(year or ""), make or "", model or "", trim or ""]
+    slug = "_".join(
+        re.sub(r"[^\w]", "-", p.strip().lower()).strip("-")
+        for p in parts
+        if p.strip()
+    )
+    return f"know-{slug}"[:200]
+
+
+def get_model_knowledge(
+    year: Any, make: str, model: str
+) -> tuple[str, str] | tuple[None, None]:
+    """
+    Query the car_knowledge cache for a year / make / model.
+
+    Uses a metadata ``$and`` filter so results are strictly scoped to this
+    specific vehicle family, then checks the cosine distance of the top hit.
+
+    Returns
+    -------
+    (text, source_url)  — if a confident match is found (distance ≤ threshold)
+    (None, None)        — cache miss or any error
+    """
+    try:
+        client = _client()
+        col = _knowledge_col(client)
+
+        # Semantic query sentence that captures the spirit of "what is this car?"
+        q = f"{year} {make} {model} engine specs reliability powertrain review"
+
+        results = col.query(
+            query_texts=[q],
+            n_results=3,
+            where={
+                "$and": [
+                    {"year":  {"$eq": str(year)}},
+                    {"make":  {"$eq": (make  or "").strip().lower()}},
+                    {"model": {"$eq": (model or "").strip().lower()}},
+                ]
+            },
+        )
+        distances = (results.get("distances") or [[]])[0]
+        documents = (results.get("documents") or [[]])[0]
+        metadatas = (results.get("metadatas") or [[]])[0]
+
+        if not distances or not documents:
+            return None, None
+
+        best_dist = distances[0]
+        best_doc  = documents[0]
+        best_meta = metadatas[0] if metadatas else {}
+        source_url = best_meta.get("source_url", "")
+
+        if best_dist <= _KNOWLEDGE_THRESHOLD and len(best_doc) >= 80:
+            return best_doc, source_url
+
+        return None, None
+
+    except Exception as exc:
+        import logging as _log
+        _log.getLogger(__name__).warning("[chroma] get_model_knowledge failed: %s", exc)
+        return None, None
+
+
+def add_model_knowledge(
+    year: Any,
+    make: str,
+    model: str,
+    text: str,
+    source_url: str,
+    trim: str = "",
+) -> bool:
+    """
+    Embed *text* and upsert it into the car_knowledge collection.
+
+    The document id is derived from year/make/model/trim, so calling this
+    function again for the same vehicle family overwrites the previous entry
+    rather than creating a duplicate.
+
+    Returns True on success, False on any error.
+    """
+    try:
+        if not (text or "").strip():
+            return False
+
+        client = _client()
+        col    = _knowledge_col(client)
+        doc_id = _knowledge_doc_id(year, make, model, trim)
+
+        col.upsert(
+            ids=[doc_id],
+            documents=[text[:8_000]],
+            metadatas=[{
+                "year":       str(year),
+                "make":       (make  or "").strip().lower(),
+                "model":      (model or "").strip().lower(),
+                "trim":       (trim  or "").strip().lower(),
+                "source_url": source_url or "",
+            }],
+        )
+        return True
+
+    except Exception as exc:
+        import logging as _log
+        _log.getLogger(__name__).warning("[chroma] add_model_knowledge failed: %s", exc)
+        return False

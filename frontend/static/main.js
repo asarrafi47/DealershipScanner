@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const UNDOCK_AT  = 20;
     let isDocked     = false;
 
-    import("https://cdn.jsdelivr.net/npm/motion@latest/+esm").then(({ animate }) => {
+    import("https://esm.sh/motion@latest").then(({ animate }) => {
         const dockedInner = document.getElementById("filter-docked-inner");
         const DOCK_MARGIN = 248;
         const DURATION    = 0.35;
