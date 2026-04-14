@@ -1,8 +1,8 @@
 {
   "summary": {
-    "run_id": "9ca50e19",
-    "started_at": "2026-03-31T00:42:54.452876Z",
-    "finished_at": "2026-03-31T00:43:25.131728Z",
+    "run_id": "4074c660",
+    "started_at": "2026-03-31T01:05:47.624288Z",
+    "finished_at": "2026-03-31T01:06:25.926187Z",
     "n_processed": 4,
     "n_assigned": 3,
     "n_manual_review": 0,
@@ -419,7 +419,7 @@
         "reasoning_summary": "No clear evidence of a dealer group name; generic business unit phrases and privacy policy snippet rejected as junk.",
         "model_name": "llama3.2:latest",
         "prompt_version": "adjudicator_v1",
-        "created_at": "2026-03-31T00:43:12.126140Z"
+        "created_at": "2026-03-31T01:06:05.850520Z"
       },
       "source": "ai",
       "adjudication_skip_reason": null,

@@ -1,0 +1,8 @@
+{
+  "source_debug_artifact_mode": "playwright_deep_discovery",
+  "input_selector": "",
+  "result_selector": "",
+  "locator_mode_detected": "unknown",
+  "result_state": "unknown",
+  "ai_selector_plan": {}
+}

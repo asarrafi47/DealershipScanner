@@ -6,3 +6,16 @@ pgeocode
 playwright
 playwright-stealth
 thefuzz
+chromadb>=0.5
+bcrypt>=4.1
+crawl4ai>=0.8,<0.9
+
+# Browser binaries (not installed by pip). After pip install, run ONE of:
+#   ./scripts/install_scraper_browsers.sh
+# Or two lines, with nothing after the browser name on each line:
+#   python3 -m playwright install chromium
+#   python3 -m patchright install chromium
+# Do not append comments on the same line as "playwright install" unless your shell treats # as a comment; otherwise Playwright treats extra words as invalid browser names.
+
+# Optional: encrypted users.db (set USERS_DB_ENCRYPTION_KEY). May require SQLCipher libs on some platforms.
+# sqlcipher3>=0.5.4

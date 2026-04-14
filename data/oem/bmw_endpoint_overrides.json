@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "description": "Optional extra JSON URLs to try after HTML/JS discovery. Add official BMW endpoints you find via DevTools Network tab.",
+  "extra_urls_to_try": []
+}

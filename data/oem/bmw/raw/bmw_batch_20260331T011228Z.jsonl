@@ -1,0 +1,1 @@
+{"scraped_at": "2026-03-31T01:11:48.912337+00:00", "source_locator_url": "https://www.bmwusa.com/dealer-locator.html", "intake_method": "playwright", "notes": ["playwright_captured_no_dealer_rows; site layout may have changed"], "raw_payloads_count": 1, "raw_payloads_kinds": ["playwright_captured_responses"], "record_count": 0}

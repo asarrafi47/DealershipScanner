@@ -12,6 +12,7 @@ import urllib3
 from dataclasses import asdict
 from pathlib import Path
 
+from SCRAPING.adjudicate_crawl import build_adjudicate_crawl_one
 from SCRAPING.crawler import process_site_playwright, process_site_requests
 from SCRAPING.fetch_requests import fetch_requests_session
 from SCRAPING.interrupt import install_sigint_handler, stop_requested
@@ -112,23 +113,6 @@ def _run_adjudicate_mode(args: argparse.Namespace) -> int:
     browser = None
     playwright = None
 
-    def crawl_one(url: str) -> SiteResult:
-        if browser:
-            r = process_site_playwright(
-                browser,
-                url,
-                timeout_ms=args.timeout * 1000,
-                max_extra_pages=args.max_extra_pages,
-                ignore_https_errors=args.insecure_ssl,
-            )
-            if not r.homepage_loaded and not args.use_requests:
-                r2 = process_site_requests(session, url, args.timeout, args.max_extra_pages)
-                if r2.homepage_loaded:
-                    r2.fetch_mode = "playwright_then_requests"
-                    return r2
-            return r
-        return process_site_requests(session, url, args.timeout, args.max_extra_pages)
-
     try:
         if not args.use_requests:
             try:
@@ -140,6 +124,15 @@ def _run_adjudicate_mode(args: argparse.Namespace) -> int:
             except Exception as e:
                 logger.warning("Playwright unavailable (%s); using requests", e)
                 browser = None
+
+        crawl_one = build_adjudicate_crawl_one(
+            session=session,
+            browser=browser,
+            timeout_sec=args.timeout,
+            max_extra_pages=args.max_extra_pages,
+            use_requests_only=args.use_requests,
+            insecure_ssl=args.insecure_ssl,
+        )
 
         orch = run_hybrid_batch(
             crawl_one,

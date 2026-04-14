@@ -1,0 +1,693 @@
+{
+  "mode": "playwright",
+  "locator_url": "https://www.bmwusa.com/dealer-locator.html",
+  "timeout_ms": 180000,
+  "verify_ssl": true,
+  "navigation": {
+    "final_url": "https://www.bmwusa.com/dealer-locator.html",
+    "status": 200,
+    "page_title": "Find a BMW Dealership - Dealer Locator - BMW USA",
+    "page_title_after_wait": "Find a BMW Dealership - Dealer Locator - BMW USA",
+    "final_url_after_wait": "https://www.bmwusa.com/dealer-locator.html"
+  },
+  "dealer_heuristic_captured_count": 0,
+  "playwright_network_json": [
+    {
+      "url": "https://dpm.demdex.net/id?d_visid_ver=5.5.0&d_fieldgroup=MC&d_rtbd=json&d_ver=2&d_orgid=29C8F0CC540D9E5E0A4C98A1%40AdobeOrg&d_nsid=0&ts=1774919877671",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8",
+      "bytes": 1343,
+      "top_level_keys": [
+        "d_mid",
+        "id_sync_ttl",
+        "d_blob",
+        "dcs_region",
+        "d_ottl",
+        "ibs",
+        "subdomain",
+        "tid"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://dpm.demdex.net/id?d_visid_ver=5.5.0&d_fieldgroup=MC&d_rtbd=json&d_ver=2&d_orgid=29C8F0CC540D9E5E0A4C98A1%40AdobeOrg&d_nsid=0&ts=1774919877671",
+        "top_level_keys": [
+          "d_mid",
+          "id_sync_ttl",
+          "d_blob",
+          "dcs_region",
+          "d_ottl",
+          "ibs",
+          "subdomain",
+          "tid"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://api.autointel.ai/whiz/whiz-enabled/bmw",
+      "status": 200,
+      "content_type": "application/json",
+      "bytes": 67,
+      "top_level_keys": [
+        "purchaseIntent",
+        "firstTimeUser",
+        "whizEnabled"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://api.autointel.ai/whiz/whiz-enabled/bmw",
+        "top_level_keys": [
+          "purchaseIntent",
+          "firstTimeUser",
+          "whizEnabled"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCahsmc9ueMU-kn1Yp4E7sa0b7CLjIi6Xg&v=weekly&callback=google.maps.__ib__",
+      "status": 200,
+      "content_type": "text/javascript; charset=utf-8",
+      "bytes": 12821,
+      "outcome": "not_json",
+      "decode_error": "Expecting value: line 3 column 1 (char 2)"
+    },
+    {
+      "url": "https://c.go-mpulse.net/api/config.json?key=S32VT-ZNQRB-YD47H-HDZK4-LA8FS&d=www.bmwusa.com&t=5916400&v=1.766.0&if=&sl=0&si=f7b2c3c6-f0f5-4a26-8a4a-e3c3fe2472ed-tcqoxx&plugins=AK,ConfigOverride,Continuity,PageParams,IFrameDelay,AutoXHR,SPA,History,Angular,Backbone,Ember,RT,CrossDomain,BW,PaintTiming,NavigationTiming,ResourceTiming,Memory,CACHE_RELOAD,Errors,TPAnalytics,UserTiming,Akamai,Early,EventTiming,LOGN&acao=&ak.ai=937609",
+      "status": 200,
+      "content_type": "application/json",
+      "bytes": 756,
+      "top_level_keys": [
+        "h.key",
+        "h.d",
+        "h.t",
+        "h.cr",
+        "session_id",
+        "site_domain",
+        "beacon_url",
+        "autorun",
+        "BW",
+        "RT",
+        "ResourceTiming",
+        "PageParams",
+        "Akamai",
+        "user_ip"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://c.go-mpulse.net/api/config.json?key=S32VT-ZNQRB-YD47H-HDZK4-LA8FS&d=www.bmwusa.com&t=5916400&v=1.766.0&if=&sl=0&si=f7b2c3c6-f0f5-4a26-8a4a-e3c3fe2472ed-tcqoxx&plugins=AK,ConfigOverride,Continuity,PageParams,IFrameDelay,AutoXHR,SPA,History,Angular,Backbone,Ember,RT,CrossDomain,BW,PaintTiming,NavigationTiming,ResourceTiming,Memory,CACHE_RELOAD,Errors,TPAnalytics,UserTiming,Akamai,Early,EventTiming,LOGN&acao=&ak.ai=937609",
+        "top_level_keys": [
+          "h.key",
+          "h.d",
+          "h.t",
+          "h.cr",
+          "session_id",
+          "site_domain",
+          "beacon_url",
+          "autorun",
+          "BW",
+          "RT",
+          "ResourceTiming",
+          "PageParams",
+          "Akamai",
+          "user_ip"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://maps.googleapis.com/maps-api-v3/api/js/64/6d/places.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 350913,
+      "outcome": "not_json",
+      "decode_error": "Expecting value: line 1 column 1 (char 0)"
+    },
+    {
+      "url": "https://maps.googleapis.com/maps-api-v3/api/js/64/6d/main.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 299495,
+      "outcome": "not_json",
+      "decode_error": "Expecting value: line 1 column 1 (char 0)"
+    },
+    {
+      "url": "https://cdn.cookielaw.org/consent/19cf36ce-b231-42cc-a805-c8b160fee415/19cf36ce-b231-42cc-a805-c8b160fee415.json",
+      "status": 200,
+      "content_type": "application/json",
+      "bytes": 4465,
+      "top_level_keys": [
+        "CookieSPAEnabled",
+        "CookieSameSiteNoneEnabled",
+        "CookieV2CSPEnabled",
+        "MultiVariantTestingEnabled",
+        "UseV2",
+        "MobileSDK",
+        "SkipGeolocation",
+        "ScriptType",
+        "Version",
+        "OptanonDataJSON",
+        "GeolocationUrl",
+        "BulkDomainCheckUrl",
+        "RuleSet",
+        "IabData",
+        "IabV2Data",
+        "Iab2V2Data",
+        "GoogleData",
+        "ScriptDynamicLoadEnabled",
+        "TenantFeatures",
+        "IsSuppressBanner",
+        "IsSuppressPC",
+        "PublisherCC",
+        "Domain",
+        "TenantGuid",
+        "EnvId",
+        "RemoteActionsEnabled",
+        "GeoRuleGroupName",
+        "GATrackToggle",
+        "GATrackAssignedCategory",
+        "WebFormIntegrationEnabled",
+        "WebFormSrcUrl",
+        "WebFormWorkerUrl",
+        "GppData",
+        "AuthenticatedConsent",
+        "AuthenticatedLoggedOutConsent",
+        "CDNLocation",
+        "RootDomainConsentEnabled",
+        "RootDomainUrl",
+        "LanguageDetectionEnabled",
+        "LanguageDetectionByHtml",
+        "DataLanguage",
+        "DisclosureCDNUrl",
+        "SEOOptimization",
+        "PartitionedCookieEnabled",
+        "BannerRefreshAfterCallToActionEnabled",
+        "SubDomainEnabled",
+        "DomainHashValue"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://cdn.cookielaw.org/consent/19cf36ce-b231-42cc-a805-c8b160fee415/19cf36ce-b231-42cc-a805-c8b160fee415.json",
+        "top_level_keys": [
+          "CookieSPAEnabled",
+          "CookieSameSiteNoneEnabled",
+          "CookieV2CSPEnabled",
+          "MultiVariantTestingEnabled",
+          "UseV2",
+          "MobileSDK",
+          "SkipGeolocation",
+          "ScriptType",
+          "Version",
+          "OptanonDataJSON",
+          "GeolocationUrl",
+          "BulkDomainCheckUrl",
+          "RuleSet",
+          "IabData",
+          "IabV2Data",
+          "Iab2V2Data",
+          "GoogleData",
+          "ScriptDynamicLoadEnabled",
+          "TenantFeatures",
+          "IsSuppressBanner",
+          "IsSuppressPC",
+          "PublisherCC",
+          "Domain",
+          "TenantGuid",
+          "EnvId",
+          "RemoteActionsEnabled",
+          "GeoRuleGroupName",
+          "GATrackToggle",
+          "GATrackAssignedCategory",
+          "WebFormIntegrationEnabled",
+          "WebFormSrcUrl",
+          "WebFormWorkerUrl",
+          "GppData",
+          "AuthenticatedConsent",
+          "AuthenticatedLoggedOutConsent",
+          "CDNLocation",
+          "RootDomainConsentEnabled",
+          "RootDomainUrl",
+          "LanguageDetectionEnabled",
+          "LanguageDetectionByHtml",
+          "DataLanguage",
+          "DisclosureCDNUrl",
+          "SEOOptimization",
+          "PartitionedCookieEnabled",
+          "BannerRefreshAfterCallToActionEnabled",
+          "SubDomainEnabled",
+          "DomainHashValue"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://maps.googleapis.com/maps-api-v3/api/js/64/6d/common.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 126936,
+      "outcome": "not_json",
+      "decode_error": "Expecting value: line 1 column 1 (char 0)"
+    },
+    {
+      "url": "https://maps.googleapis.com/maps-api-v3/api/js/64/6d/places_impl.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 53274,
+      "outcome": "not_json",
+      "decode_error": "Expecting value: line 1 column 1 (char 0)"
+    },
+    {
+      "url": "https://maps.googleapis.com/maps-api-v3/api/js/64/6d/controls.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 103030,
+      "outcome": "not_json",
+      "decode_error": "Expecting value: line 1 column 1 (char 0)"
+    },
+    {
+      "url": "https://maps.googleapis.com/maps-api-v3/api/js/64/6d/map.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 81658,
+      "outcome": "not_json",
+      "decode_error": "Expecting value: line 1 column 1 (char 0)"
+    },
+    {
+      "url": "https://api.autointel.ai/chalk/feature/nudge/12af627b2b9e4beabf1a390d6590fe87",
+      "status": 200,
+      "content_type": "application/json",
+      "bytes": 59,
+      "top_level_keys": [
+        "message",
+        "nudgeAllowed"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://api.autointel.ai/chalk/feature/nudge/12af627b2b9e4beabf1a390d6590fe87",
+        "top_level_keys": [
+          "message",
+          "nudgeAllowed"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://maps.googleapis.com/maps-api-v3/api/js/64/6d/util.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 310651,
+      "outcome": "not_json",
+      "decode_error": "Expecting value: line 1 column 1 (char 0)"
+    },
+    {
+      "url": "https://maps.googleapis.com/maps-api-v3/api/js/64/6d/log.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 28464,
+      "outcome": "not_json",
+      "decode_error": "Expecting value: line 1 column 1 (char 0)"
+    },
+    {
+      "url": "https://maps.googleapis.com/maps-api-v3/api/js/64/6d/onion.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 31035,
+      "outcome": "not_json",
+      "decode_error": "Expecting value: line 1 column 1 (char 0)"
+    },
+    {
+      "url": "https://geolocation.onetrust.com/cookieconsentpub/v1/geo/location",
+      "status": 200,
+      "content_type": "application/json",
+      "bytes": 75,
+      "top_level_keys": [
+        "country",
+        "state",
+        "stateName",
+        "continent"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://geolocation.onetrust.com/cookieconsentpub/v1/geo/location",
+        "top_level_keys": [
+          "country",
+          "state",
+          "stateName",
+          "continent"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://maps.googleapis.com/$rpc/google.internal.maps.mapsjs.v1.MapsJsInternalService/GetViewportInfo",
+      "status": 200,
+      "content_type": "application/json+protobuf; charset=utf-8",
+      "bytes": 41728,
+      "top_level_keys": "array[10]",
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://maps.googleapis.com/$rpc/google.internal.maps.mapsjs.v1.MapsJsInternalService/GetViewportInfo",
+        "top_level_keys": "array[10]",
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "array_items_not_recognized_as_dealers"
+      }
+    },
+    {
+      "url": "https://cdn.cookielaw.org/consent/19cf36ce-b231-42cc-a805-c8b160fee415/018fbf9c-982f-794d-b52e-6d3feac0a670/en.json",
+      "status": 200,
+      "content_type": "application/json",
+      "bytes": 177587,
+      "top_level_keys": [
+        "DomainData",
+        "CommonData",
+        "NtfyConfig",
+        "OTTData",
+        "MobileData"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://cdn.cookielaw.org/consent/19cf36ce-b231-42cc-a805-c8b160fee415/018fbf9c-982f-794d-b52e-6d3feac0a670/en.json",
+        "top_level_keys": [
+          "DomainData",
+          "CommonData",
+          "NtfyConfig",
+          "OTTData",
+          "MobileData"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://maps.googleapis.com/$rpc/google.internal.maps.mapsjs.v1.MapsJsInternalService/GetViewportInfo",
+      "status": 200,
+      "content_type": "application/json+protobuf; charset=utf-8",
+      "bytes": 41728,
+      "top_level_keys": "array[10]",
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://maps.googleapis.com/$rpc/google.internal.maps.mapsjs.v1.MapsJsInternalService/GetViewportInfo",
+        "top_level_keys": "array[10]",
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "array_items_not_recognized_as_dealers"
+      }
+    },
+    {
+      "url": "https://cdn.cookielaw.org/scripttemplates/202601.2.0/assets/otFloatingRounded.json",
+      "status": 200,
+      "content_type": "application/json",
+      "bytes": 11074,
+      "top_level_keys": [
+        "name",
+        "html",
+        "css"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://cdn.cookielaw.org/scripttemplates/202601.2.0/assets/otFloatingRounded.json",
+        "top_level_keys": [
+          "name",
+          "html",
+          "css"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://cdn.cookielaw.org/scripttemplates/202601.2.0/assets/v2/otPcPanel.json",
+      "status": 200,
+      "content_type": "application/json",
+      "bytes": 70700,
+      "top_level_keys": [
+        "name",
+        "html",
+        "css"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://cdn.cookielaw.org/scripttemplates/202601.2.0/assets/v2/otPcPanel.json",
+        "top_level_keys": [
+          "name",
+          "html",
+          "css"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://bmwofnorthamericallc.tt.omtrdc.net/rest/v1/delivery?client=bmwofnorthamericallc&sessionId=d6e536ba9d0746ab939dd460ac163841&version=2.11.4",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8",
+      "bytes": 2685,
+      "top_level_keys": [
+        "status",
+        "requestId",
+        "client",
+        "id",
+        "edgeHost",
+        "prefetch",
+        "telemetryServerToken",
+        "execute"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://bmwofnorthamericallc.tt.omtrdc.net/rest/v1/delivery?client=bmwofnorthamericallc&sessionId=d6e536ba9d0746ab939dd460ac163841&version=2.11.4",
+        "top_level_keys": [
+          "status",
+          "requestId",
+          "client",
+          "id",
+          "edgeHost",
+          "prefetch",
+          "telemetryServerToken",
+          "execute"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://ct.pinterest.com/user/?tid=2612436788287&cb=1774919878835&dep=2%2CPAGE_LOAD",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "bytes": 321,
+      "top_level_keys": [
+        "aemEnabled",
+        "aemFnLnEnabled",
+        "aemPhEnabled",
+        "aemGeEnabled",
+        "aemDbEnabled",
+        "aemLocEnabled",
+        "aemExternalIdEnabled",
+        "ctEpikIframeEnabled",
+        "chromeNewUserAgentEnabled",
+        "isEu",
+        "isUtilizingAdvertiser1pEnabled",
+        "mdFrequency",
+        "piaaEndPoint",
+        "noCodeCapiDomains"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://ct.pinterest.com/user/?tid=2612436788287&cb=1774919878835&dep=2%2CPAGE_LOAD",
+        "top_level_keys": [
+          "aemEnabled",
+          "aemFnLnEnabled",
+          "aemPhEnabled",
+          "aemGeEnabled",
+          "aemDbEnabled",
+          "aemLocEnabled",
+          "aemExternalIdEnabled",
+          "ctEpikIframeEnabled",
+          "chromeNewUserAgentEnabled",
+          "isEu",
+          "isUtilizingAdvertiser1pEnabled",
+          "mdFrequency",
+          "piaaEndPoint",
+          "noCodeCapiDomains"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://ct.pinterest.com/user/?event=Pagevisit&tid=2612436788287&cb=1774919878836&dep=5%2CEVENT_TAGS_ABSENT",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "bytes": 321,
+      "top_level_keys": [
+        "aemEnabled",
+        "aemFnLnEnabled",
+        "aemPhEnabled",
+        "aemGeEnabled",
+        "aemDbEnabled",
+        "aemLocEnabled",
+        "aemExternalIdEnabled",
+        "ctEpikIframeEnabled",
+        "chromeNewUserAgentEnabled",
+        "isEu",
+        "isUtilizingAdvertiser1pEnabled",
+        "mdFrequency",
+        "piaaEndPoint",
+        "noCodeCapiDomains"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://ct.pinterest.com/user/?event=Pagevisit&tid=2612436788287&cb=1774919878836&dep=5%2CEVENT_TAGS_ABSENT",
+        "top_level_keys": [
+          "aemEnabled",
+          "aemFnLnEnabled",
+          "aemPhEnabled",
+          "aemGeEnabled",
+          "aemDbEnabled",
+          "aemLocEnabled",
+          "aemExternalIdEnabled",
+          "ctEpikIframeEnabled",
+          "chromeNewUserAgentEnabled",
+          "isEu",
+          "isUtilizingAdvertiser1pEnabled",
+          "mdFrequency",
+          "piaaEndPoint",
+          "noCodeCapiDomains"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://people.api.boomtrain.com/identify/resolve?data=eyJjb29raWUiOnsiYnNpbiI6IiJ9LCJxdWVyeXN0cmluZyI6e30sImV4dGVybmFsX2lkcyI6eyJ6eW5jIjoiMTI3OWJkNjktNjAyNy00MWVkLThhYWYtNzdjMWM4Y2U2YzE4OjE3NzQ5MTk4NzguNjcyNDY0NCJ9fQ%3D%3D&site_id=bmw-usa",
+      "status": 200,
+      "content_type": "application/json",
+      "bytes": 245,
+      "top_level_keys": [
+        "app_id",
+        "bsin",
+        "external_ids",
+        "is_identified",
+        "known_to_zeta"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://people.api.boomtrain.com/identify/resolve?data=eyJjb29raWUiOnsiYnNpbiI6IiJ9LCJxdWVyeXN0cmluZyI6e30sImV4dGVybmFsX2lkcyI6eyJ6eW5jIjoiMTI3OWJkNjktNjAyNy00MWVkLThhYWYtNzdjMWM4Y2U2YzE4OjE3NzQ5MTk4NzguNjcyNDY0NCJ9fQ%3D%3D&site_id=bmw-usa",
+        "top_level_keys": [
+          "app_id",
+          "bsin",
+          "external_ids",
+          "is_identified",
+          "known_to_zeta"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://di.rlcdn.com/api/segment?pid=712658&pdata=k1%3Dbmwusa%3Adealerlocator%2Ck2%3DPage%20Load%2Ck3%3D_%2Ck4%3D_",
+      "status": 200,
+      "content_type": "image/gif",
+      "bytes": 42,
+      "outcome": "not_json",
+      "decode_error": "Expecting value: line 1 column 1 (char 0)"
+    },
+    {
+      "url": "https://ara.paa-reporting-advertising.amazon/aat?pid=d3526439-bb80-4d58-964c-2c896b303540&event=PageView&ts=1774919878781&eventSource=amzn.js&uuid=8b6186d2-d7e3-410c-88ab-974dcfe28c34",
+      "status": 200,
+      "content_type": "application/json",
+      "bytes": 1269,
+      "top_level_keys": [
+        "campaigns",
+        "cdId",
+        "cdValue",
+        "debugKey",
+        "dedupeEnd",
+        "dedupeStart",
+        "timestamp",
+        "uuid"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://ara.paa-reporting-advertising.amazon/aat?pid=d3526439-bb80-4d58-964c-2c896b303540&event=PageView&ts=1774919878781&eventSource=amzn.js&uuid=8b6186d2-d7e3-410c-88ab-974dcfe28c34",
+        "top_level_keys": [
+          "campaigns",
+          "cdId",
+          "cdValue",
+          "debugKey",
+          "dedupeEnd",
+          "dedupeStart",
+          "timestamp",
+          "uuid"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://ara.paa-reporting-advertising.amazon/aat?pid=d3526439-bb80-4d58-964c-2c896b303540&event=PageView&ts=1774919878804&eventSource=amzn.js&uuid=b7330e85-01e8-4ecb-8d22-3b21ee432d7d",
+      "status": 200,
+      "content_type": "application/json",
+      "bytes": 1270,
+      "top_level_keys": [
+        "campaigns",
+        "cdId",
+        "cdValue",
+        "debugKey",
+        "dedupeEnd",
+        "dedupeStart",
+        "timestamp",
+        "uuid"
+      ],
+      "parsed_row_count": 0,
+      "parse_trace": {
+        "source_hint": "playwright:https://ara.paa-reporting-advertising.amazon/aat?pid=d3526439-bb80-4d58-964c-2c896b303540&event=PageView&ts=1774919878804&eventSource=amzn.js&uuid=b7330e85-01e8-4ecb-8d22-3b21ee432d7d",
+        "top_level_keys": [
+          "campaigns",
+          "cdId",
+          "cdValue",
+          "debugKey",
+          "dedupeEnd",
+          "dedupeStart",
+          "timestamp",
+          "uuid"
+        ],
+        "parsed_row_count": 0,
+        "outcome": "rejected",
+        "rejection_reason": "object_has_no_recognized_dealer_arrays_or_geojson"
+      }
+    },
+    {
+      "url": "https://pippio.com/api/sync?it=1&pid=500040&_=1774919879.0079443&iv=1279bd69-6027-41ed-8aaf-77c1c8ce6c18:1774919878.6724644",
+      "status": 200,
+      "content_type": "image/gif",
+      "bytes": 42,
+      "outcome": "not_json",
+      "decode_error": "Expecting value: line 1 column 1 (char 0)"
+    }
+  ],
+  "rows_extracted": 0,
+  "notes": [
+    "playwright_captured_no_dealer_rows; site layout may have changed"
+  ]
+}

@@ -1,0 +1,132 @@
+[
+  {
+    "raw_row_id": 1,
+    "dealer_name": "Long Beach BMW",
+    "website": "https://www.longbeachbmw.com",
+    "row_quality": "usable",
+    "dedupe_key": "d:longbeachbmw.com|z:90755|BMW",
+    "normalized_id": 78,
+    "action": "inserted_new",
+    "was_merged": false
+  },
+  {
+    "raw_row_id": 2,
+    "dealer_name": "Irvine BMW",
+    "website": "https://www.irvinebmw.com",
+    "row_quality": "usable",
+    "dedupe_key": "d:irvinebmw.com|z:92618|BMW",
+    "normalized_id": 79,
+    "action": "inserted_new",
+    "was_merged": false
+  },
+  {
+    "raw_row_id": 3,
+    "dealer_name": "Keyboard shortcuts",
+    "website": "https://maps.google.com/maps?ll=38.550456,-97.988908&z=4&t=m&hl=en-US&gl=US&mapclient=apiv3",
+    "row_quality": "partial",
+    "dedupe_key": "p:b489af995f1027289de20411",
+    "normalized_id": null,
+    "action": "staged_partial",
+    "was_merged": false
+  },
+  {
+    "raw_row_id": 4,
+    "dealer_name": "CHOOSE YOUR LOCAL BMW CENTER",
+    "website": "",
+    "row_quality": "partial",
+    "dedupe_key": "p:25972661449b88aac8998c24",
+    "normalized_id": null,
+    "action": "staged_partial",
+    "was_merged": false
+  },
+  {
+    "raw_row_id": 5,
+    "dealer_name": "No local results found",
+    "website": "",
+    "row_quality": "partial",
+    "dedupe_key": "p:81a19075181562953122de83",
+    "normalized_id": null,
+    "action": "staged_partial",
+    "was_merged": false
+  },
+  {
+    "raw_row_id": 6,
+    "dealer_name": "Cancel",
+    "website": "",
+    "row_quality": "partial",
+    "dedupe_key": "p:92d08a36574ad7d080cd411e",
+    "normalized_id": null,
+    "action": "staged_partial",
+    "was_merged": false
+  },
+  {
+    "raw_row_id": 7,
+    "dealer_name": "Popular searches:",
+    "website": "",
+    "row_quality": "partial",
+    "dedupe_key": "p:21c037744073cd1243620862",
+    "normalized_id": null,
+    "action": "staged_partial",
+    "was_merged": false
+  },
+  {
+    "raw_row_id": 8,
+    "dealer_name": "MyBMW",
+    "website": "",
+    "row_quality": "partial",
+    "dedupe_key": "p:e6576b2a91a2f524324b2c1a",
+    "normalized_id": null,
+    "action": "staged_partial",
+    "was_merged": false
+  },
+  {
+    "raw_row_id": 9,
+    "dealer_name": "Offer valid to customers – and their family members residing within the same household – attending The BMW Unplug to Unleash Sales Event– at participating BMW Centers, on September 17th- September 27t",
+    "website": "",
+    "row_quality": "partial",
+    "dedupe_key": "p:b27e4115b7a9201f54472cd6",
+    "normalized_id": null,
+    "action": "staged_partial",
+    "was_merged": false
+  },
+  {
+    "raw_row_id": 10,
+    "dealer_name": "Keyboard shortcuts",
+    "website": "https://www.google.com/intl/en-US_US/help/terms_maps.html",
+    "row_quality": "partial",
+    "dedupe_key": "p:865315ce1c3a45e48d584873",
+    "normalized_id": null,
+    "action": "staged_partial",
+    "was_merged": false
+  },
+  {
+    "raw_row_id": 11,
+    "dealer_name": "Do Not Sell or Share and Analytics and Advertising Cookie PreferencesBMW uses analytics and targeted advertising cookies on its website. The use of third-party analytics or targeted advertising cookie",
+    "website": "https://www.google.com/intl/en-US_US/help/terms_maps.html",
+    "row_quality": "partial",
+    "dedupe_key": "p:89b1167f7034da4cb7fa4563",
+    "normalized_id": null,
+    "action": "staged_partial",
+    "was_merged": false
+  },
+  {
+    "raw_row_id": 12,
+    "dealer_name": "Do Not Sell or Share and Analytics and Advertising Cookie PreferencesBMW uses analytics and targeted advertising cookies on its website. The use of third-party analytics or targeted advertising cookie",
+    "website": "https://login.bmwusa.com/pm2/pm-document-service/api/v1link/documents/policyName/MY_BMW_APP_DPP/US/PDF?language=en&KeyId=dbf0a542-ebd1-4ff0-a9a7-55172fbfce35",
+    "row_quality": "partial",
+    "dedupe_key": "p:89b1167f7034da4cb7fa4563",
+    "normalized_id": null,
+    "action": "staged_partial",
+    "was_merged": false
+  },
+  {
+    "raw_row_id": 13,
+    "dealer_name": "Search “30301”",
+    "website": "",
+    "row_quality": "partial",
+    "dedupe_key": "p:1743f8c585dc122885720590",
+    "normalized_id": null,
+    "action": "staged_partial",
+    "was_merged": false
+  }
+]

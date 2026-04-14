@@ -1,14 +1,11 @@
 """
-Developer dashboard: token-gated routes, smart URL import, scanner jobs.
-Requires DEV_DASHBOARD_TOKEN in the environment; requests must pass the same value
-as ?token=... (query), JSON body \"token\", or X-Dev-Token header.
+Developer dashboard at /dev: session-based admin login (separate from public users).
+Smart URL import, scanner jobs, dealership registry tools.
 """
 
 from __future__ import annotations
 
 import json
-import os
-import secrets
 import shutil
 import sqlite3
 import subprocess
@@ -17,9 +14,10 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-from flask import Blueprint, abort, jsonify, render_template, request
+from flask import Blueprint, jsonify, redirect, render_template, request, session, url_for
 from pydantic import ValidationError
 
+from backend.db.admin_users_db import authenticate_admin
 from backend.db.dealerships_db import (
     DB_PATH,
     deduplicate_dealerships,
@@ -45,32 +43,39 @@ SCANNER_PROFILES = ("default", "resilient", "bare")
 LAST_SCRAPE_SAMPLES_PATH = PROJECT_ROOT / "debug" / "last_scrape_samples.json"
 
 
-def _dev_token_expected() -> str:
-    return (os.environ.get("DEV_DASHBOARD_TOKEN") or "").strip()
+def _chroma_reindex_background() -> None:
+    try:
+        from backend.vector.chroma_service import reindex_all
+
+        reindex_all()
+    except Exception:
+        pass
 
 
-def _dev_token_from_request() -> str:
-    q = (request.args.get("token") or "").strip()
-    if q:
-        return q
-    body = request.get_json(silent=True)
-    if isinstance(body, dict):
-        t = (body.get("token") or "").strip()
-        if t:
-            return t
-    return (request.headers.get("X-Dev-Token") or "").strip()
+def _spawn_chroma_reindex_background() -> None:
+    """Refresh Chroma from SQLite after a successful scanner run (non-blocking)."""
+    threading.Thread(target=_chroma_reindex_background, daemon=True).start()
+
+
+def _admin_session_ok() -> bool:
+    return bool(session.get("admin_user_id"))
 
 
 @dev_bp.before_request
-def _dev_require_token() -> None:
-    expected = _dev_token_expected()
-    if not expected:
-        abort(404)
-    got = _dev_token_from_request()
-    if len(got) != len(expected):
-        abort(404)
-    if not secrets.compare_digest(got.encode("utf-8"), expected.encode("utf-8")):
-        abort(404)
+def _dev_require_admin() -> Any:
+    if request.endpoint in ("dev.admin_login", "dev.admin_logout"):
+        return None
+    if _admin_session_ok():
+        return None
+    if request.path.startswith("/dev/api"):
+        return jsonify({"ok": False, "error": "unauthorized", "login_url": "/dev/login"}), 401
+    return redirect(url_for("dev.admin_login", next=request.full_path))
+
+
+def _json_body_no_token(data: dict[str, Any] | None) -> dict[str, Any]:
+    if not isinstance(data, dict):
+        return {}
+    return {k: v for k, v in data.items() if k != "token"}
 
 
 def _dev_status() -> dict[str, Any]:
@@ -126,6 +131,9 @@ def _run_scanner_job(job_id: str, url: str, headed: bool = False) -> None:
         if job_id in scanner_jobs:
             scanner_jobs[job_id]["done"] = True
             scanner_jobs[job_id]["exit_code"] = code
+
+    if code == 0:
+        _spawn_chroma_reindex_background()
 
 
 def _parse_prefixed_json(line: str, prefix: str) -> dict[str, Any] | None:
@@ -251,27 +259,61 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
         scanner_jobs[job_id]["smart_error"] = last_error if not resolved_result else None
         scanner_jobs[job_id]["cars_linked"] = cars_linked
 
+    if final_code == 0:
+        _spawn_chroma_reindex_background()
 
-@dev_bp.route("/dev")
+
+@dev_bp.route("/login", methods=["GET", "POST"])
+def admin_login():
+    if _admin_session_ok():
+        return redirect(url_for("dev.dev_dashboard"))
+    if request.method == "POST":
+        login_input = (request.form.get("login") or "").strip()
+        password = (request.form.get("password") or "").strip()
+        auth = authenticate_admin(login_input, password)
+        if auth:
+            uid, uname = auth
+            session["admin_user_id"] = uid
+            session["admin_username"] = uname
+            next_url = (request.form.get("next") or request.args.get("next") or "").strip()
+            if not next_url.startswith("/dev"):
+                next_url = url_for("dev.dev_dashboard")
+            return redirect(next_url)
+        return render_template(
+            "admin_login.html",
+            error="Invalid username/email or password.",
+        )
+    return render_template("admin_login.html")
+
+
+@dev_bp.route("/logout")
+def admin_logout():
+    session.pop("admin_user_id", None)
+    session.pop("admin_username", None)
+    return redirect(url_for("dev.admin_login"))
+
+
+@dev_bp.route("/")
 def dev_dashboard():
     return render_template(
         "dev.html",
         dealerships=list_recent_dealerships(10),
         status=_dev_status(),
+        admin_username=session.get("admin_username") or "",
     )
 
 
-@dev_bp.route("/api/dev/status")
+@dev_bp.route("/api/status")
 def api_dev_status():
     return jsonify({"ok": True, **_dev_status()})
 
 
-@dev_bp.route("/api/dev/dealers")
+@dev_bp.route("/api/dealers")
 def api_dev_dealers():
     return jsonify({"ok": True, "dealerships": list_recent_dealerships(10)})
 
 
-@dev_bp.route("/api/dev/audit-last-scrape")
+@dev_bp.route("/api/audit-last-scrape")
 def api_audit_last_scrape():
     """Latest DB rows plus optional raw JSON samples from the last scanner run (token-gated)."""
     conn = get_conn()
@@ -326,26 +368,26 @@ def api_audit_last_scrape():
     )
 
 
-@dev_bp.route("/api/dev/insert-dealer", methods=["POST"])
+@dev_bp.route("/api/insert-dealer", methods=["POST"])
 def api_insert_dealer():
     try:
-        body = DealerCreate.model_validate(request.get_json() or {})
+        body = DealerCreate.model_validate(_json_body_no_token(request.get_json()))
     except ValidationError as e:
         return jsonify({"ok": False, "errors": e.errors()}), 422
     new_id = insert_dealership(body.row_dict())
     return jsonify({"ok": True, "id": new_id})
 
 
-@dev_bp.route("/api/dev/dealer/<int:dealer_id>", methods=["DELETE"])
+@dev_bp.route("/api/dealer/<int:dealer_id>", methods=["DELETE"])
 def api_delete_dealer(dealer_id: int):
     if delete_dealership(dealer_id):
         return jsonify({"ok": True})
     return jsonify({"ok": False, "error": "not found"}), 404
 
 
-@dev_bp.route("/api/dev/test-scanner", methods=["POST"])
+@dev_bp.route("/api/test-scanner", methods=["POST"])
 def api_test_scanner():
-    data = request.get_json() or {}
+    data = _json_body_no_token(request.get_json())
     url = (data.get("url") or "").strip()
     headed = bool(data.get("headed"))
     if not url:
@@ -372,9 +414,9 @@ def api_test_scanner():
     return jsonify({"ok": True, "job_id": job_id})
 
 
-@dev_bp.route("/api/dev/smart-import", methods=["POST"])
+@dev_bp.route("/api/smart-import", methods=["POST"])
 def api_smart_import():
-    data = request.get_json() or {}
+    data = _json_body_no_token(request.get_json())
     url = (data.get("url") or "").strip()
     headed = bool(data.get("headed"))
     if not url:
@@ -401,7 +443,7 @@ def api_smart_import():
     return jsonify({"ok": True, "job_id": job_id})
 
 
-@dev_bp.route("/api/dev/scanner-job/<job_id>")
+@dev_bp.route("/api/scanner-job/<job_id>")
 def api_scanner_job(job_id: str):
     with scanner_lock:
         job = scanner_jobs.get(job_id)
@@ -436,9 +478,9 @@ def _run_bulk_import_queue(queue_id: str) -> None:
         q["done"] = True
 
 
-@dev_bp.route("/api/dev/smart-import-bulk", methods=["POST"])
+@dev_bp.route("/api/smart-import-bulk", methods=["POST"])
 def api_smart_import_bulk():
-    data = request.get_json() or {}
+    data = _json_body_no_token(request.get_json())
     urls = data.get("urls")
     if isinstance(urls, str):
         urls = [u.strip() for u in urls.splitlines() if u.strip()]
@@ -474,7 +516,7 @@ def api_smart_import_bulk():
     return jsonify({"ok": True, "queue_id": queue_id, "items": items})
 
 
-@dev_bp.route("/api/dev/import-queue/<queue_id>")
+@dev_bp.route("/api/import-queue/<queue_id>")
 def api_import_queue(queue_id: str):
     q = import_queues.get(queue_id)
     if not q:
@@ -500,13 +542,13 @@ def api_import_queue(queue_id: str):
     return jsonify({"ok": True, "queue_done": q.get("done"), "items": out})
 
 
-@dev_bp.route("/api/dev/geocode-missing", methods=["POST"])
+@dev_bp.route("/api/geocode-missing", methods=["POST"])
 def api_geocode_missing():
     result = geocode_missing_dealerships()
     return jsonify({"ok": True, **result})
 
 
-@dev_bp.route("/api/dev/deduplicate", methods=["POST"])
+@dev_bp.route("/api/deduplicate", methods=["POST"])
 def api_deduplicate():
     result = deduplicate_dealerships()
     return jsonify({"ok": True, **result})

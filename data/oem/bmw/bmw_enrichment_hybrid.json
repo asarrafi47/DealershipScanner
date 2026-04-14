@@ -1,0 +1,411 @@
+{
+  "summary": {
+    "run_id": "9e5a41c9",
+    "started_at": "2026-03-31T19:43:48.399087Z",
+    "finished_at": "2026-03-31T19:44:09.106873Z",
+    "n_processed": 2,
+    "n_assigned": 1,
+    "n_manual_review": 0,
+    "n_manual_review_low_confidence": 0,
+    "n_unknown": 1,
+    "n_fetch_failed": 0,
+    "top_redirect_issues": [],
+    "top_junk_patterns": [
+      {
+        "pattern": "Service BMW Tire Center No.1 Collision Group :: generic_business_unit",
+        "count": 1
+      },
+      {
+        "pattern": "Collision Group :: generic_business_unit",
+        "count": 1
+      },
+      {
+        "pattern": "No.1 Collision Group :: generic_business_unit",
+        "count": 1
+      }
+    ],
+    "domain_failures": {},
+    "brand_breakdown": {
+      "BMW": 2
+    },
+    "adjudication_invoked": 1,
+    "adjudication_errors": 0,
+    "top_assigned_groups": [
+      {
+        "group": "Sonic Automotive",
+        "count": 1
+      }
+    ],
+    "top_unknown_domains": [
+      {
+        "domain": "www.irvinebmw.com",
+        "count": 1
+      }
+    ],
+    "top_fetch_failure_domains": [],
+    "notes": ""
+  },
+  "assigned_evidence_patterns": [
+    {
+      "site_url": "https://www.longbeachbmw.com",
+      "ownership_signal": "sonic_corporate",
+      "source_page_types": [
+        "company",
+        "cross_domain_group",
+        "cross_domain_legal",
+        "privacy"
+      ],
+      "cross_domain_evidence": true,
+      "canonical_group": "Sonic Automotive"
+    }
+  ],
+  "sites": [
+    {
+      "site": {
+        "url": "https://www.longbeachbmw.com",
+        "fetch_mode": "playwright",
+        "homepage_loaded": true,
+        "final_url": "https://www.longbeachbmw.com/",
+        "original_url": "https://www.longbeachbmw.com",
+        "final_domain": "www.longbeachbmw.com",
+        "redirected": false,
+        "redirect_mismatch": false,
+        "flags": [
+          "adjudication_source:rules_only"
+        ],
+        "redirect_chain": [],
+        "fetch_error": null,
+        "candidate_group_names": [
+          "Sonic Automotive"
+        ],
+        "rejected_candidates": [],
+        "rejection_reasons": [],
+        "best_candidate_raw": "Sonic Automotive",
+        "best_candidate_normalized": "Sonic Automotive",
+        "best_candidate_canonical": "Sonic Automotive",
+        "best_candidate": "Sonic Automotive",
+        "confidence_score": 0.8534,
+        "evidence_snippets": [
+          {
+            "snippet": "s not affiliated with Long Beach BMW or Sonic Automotive. Select a Series 2 3 4 5 7 8 M X1 X2 X3",
+            "page_url": "https://www.longbeachbmw.com/collision-center.htm",
+            "page_kind": "company",
+            "signal": "sonic_corporate",
+            "score": 0.6192,
+            "cross_domain_evidence": false,
+            "related_domain": null,
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "st Experience Privacy Statement Contact Sonic Automotive 4401 Colwick Road Charlotte, NC 28211 P",
+            "page_url": "https://www.sonicautomotive.com/privacy.htm#End",
+            "page_kind": "privacy",
+            "signal": "sonic_corporate",
+            "score": 0.473,
+            "cross_domain_evidence": true,
+            "related_domain": "www.sonicautomotive.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "its & PerksCulture and BelongingLife at Sonic Automotive Hi There. Welcome to Your New Career FI",
+            "page_url": "https://jobs.sonicautomotive.com/",
+            "page_kind": "cross_domain_group",
+            "signal": "sonic_corporate",
+            "score": 0.6708,
+            "cross_domain_evidence": true,
+            "related_domain": "jobs.sonicautomotive.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": ".com Facebook Twitter YouTube Instagram © 2026 Sonic Automotive. All Rights Reserved Privacy Policy Terms",
+            "page_url": "https://jobs.sonicautomotive.com/",
+            "page_kind": "cross_domain_group",
+            "signal": "copyright",
+            "score": 0.2696,
+            "cross_domain_evidence": true,
+            "related_domain": "jobs.sonicautomotive.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "st Experience Privacy Statement Contact Sonic Automotive 4401 Colwick Road Charlotte, NC 28211 P",
+            "page_url": "https://www.sonicautomotive.com/privacy.htm",
+            "page_kind": "cross_domain_legal",
+            "signal": "sonic_corporate",
+            "score": 0.7052,
+            "cross_domain_evidence": true,
+            "related_domain": "www.sonicautomotive.com",
+            "evidence_tier": "strong"
+          },
+          {
+            "snippet": "c Guest Experience Terms of Use Contact Sonic Automotive 4401 Colwick Road Charlotte, NC 28211 S",
+            "page_url": "https://www.sonicautomotive.com/terms-of-use.htm",
+            "page_kind": "cross_domain_legal",
+            "signal": "sonic_corporate",
+            "score": 0.7052,
+            "cross_domain_evidence": true,
+            "related_domain": "www.sonicautomotive.com",
+            "evidence_tier": "strong"
+          }
+        ],
+        "pages_checked": [
+          "https://www.longbeachbmw.com/",
+          "https://www.longbeachbmw.com/collision-center.htm",
+          "https://www.longbeachbmw.com/dealership/about.htm",
+          "https://www.longbeachbmw.com/dealership/meet-our-team.htm",
+          "https://www.sonicautomotive.com/privacy.htm#End",
+          "https://jobs.sonicautomotive.com/",
+          "https://www.sonicautomotive.com/privacy.htm",
+          "https://www.sonicautomotive.com/terms-of-use.htm"
+        ],
+        "final_status": "assigned",
+        "raw_candidates_pre_filter": [
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive.",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive",
+          "Sonic Automotive"
+        ],
+        "normalized_candidates": [
+          "Sonic Automotive"
+        ],
+        "skipped_cross_domain": [
+          {
+            "url": "https://www.bmwtirecenters.com/?uid=A19E448C-9462-4223-9E87108B1E529C76",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.shop.bmwusa.com?outletid=31643",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.google.com/maps/search/?api=1&query=1660+E+Spring+St+Long+Beach%2C+CA+90755&hl=en",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.dealer.com",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.facebook.com/LongBeachBMW/",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://twitter.com/BMWofLongBeach",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.instagram.com/long.beach.bmw/",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.yelp.com/biz/long-beach-bmw-signal-hill-3",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.onetrust.com/products/cookie-consent/",
+            "reason": "path_not_evidence"
+          }
+        ],
+        "second_pass_candidates": [],
+        "adjudication_skip_reason": "strong_rule_reject",
+        "entity_specificity_score": 0.95,
+        "best_evidence_tier": "strong",
+        "best_supporting_signal": "sonic_corporate",
+        "manual_review_reason": null
+      },
+      "merged_status": "assigned",
+      "merged_confidence": 0.8534,
+      "adjudication": null,
+      "source": "rules_only",
+      "adjudication_skip_reason": "strong_rule_reject",
+      "manual_review_reason": null,
+      "merged_best_canonical": "Sonic Automotive",
+      "best_candidate_raw": "Sonic Automotive",
+      "best_candidate_normalized": "Sonic Automotive",
+      "best_candidate_canonical": "Sonic Automotive"
+    },
+    {
+      "site": {
+        "url": "https://www.irvinebmw.com",
+        "fetch_mode": "playwright",
+        "homepage_loaded": true,
+        "final_url": "https://www.irvinebmw.com/",
+        "original_url": "https://www.irvinebmw.com",
+        "final_domain": "www.irvinebmw.com",
+        "redirected": false,
+        "redirect_mismatch": false,
+        "flags": [
+          "adjudication_source:ai"
+        ],
+        "redirect_chain": [],
+        "fetch_error": null,
+        "candidate_group_names": [],
+        "rejected_candidates": [
+          {
+            "text": "Service BMW Tire Center No.1 Collision Group",
+            "reason": "generic_business_unit",
+            "signal": "second_pass_collision"
+          },
+          {
+            "text": "Collision Group",
+            "reason": "generic_business_unit",
+            "signal": "second_pass_collision"
+          },
+          {
+            "text": "No.1 Collision Group",
+            "reason": "generic_business_unit",
+            "signal": "second_pass_collision"
+          }
+        ],
+        "rejection_reasons": [
+          "Service BMW Tire Center No.1 Collision Group :: generic_business_unit",
+          "Collision Group :: generic_business_unit",
+          "No.1 Collision Group :: generic_business_unit"
+        ],
+        "best_candidate_raw": null,
+        "best_candidate_normalized": null,
+        "best_candidate_canonical": null,
+        "best_candidate": null,
+        "confidence_score": 0.0,
+        "evidence_snippets": [],
+        "pages_checked": [
+          "https://www.irvinebmw.com/",
+          "https://www.irvinebmw.com/no1-collision-group-newport-beach.htm",
+          "https://www.irvinebmw.com/dealership/about.htm",
+          "https://www.irvinebmw.com/dealership/staff.htm",
+          "https://www.irvinebmw.com/employment.htm",
+          "https://www.irvinebmw.com/tools/complyauto/privacy-policy.htm"
+        ],
+        "final_status": "unknown",
+        "raw_candidates_pre_filter": [
+          "Service BMW Tire Center No.1 Collision Group",
+          "Collision Group",
+          "No.1 Collision Group"
+        ],
+        "normalized_candidates": [],
+        "skipped_cross_domain": [
+          {
+            "url": "https://express.irvinebmw.com/inventory",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://express.irvinebmw.com/inventory",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://express.irvinebmw.com/how_it_works",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.bmwtirecenters.com/?uid=4462EE89-0FD7-5E5F-126C31CD5262E0EB",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.bmwtirecenters.com/?uid=4462EE89-0FD7-5E5F-126C31CD5262E0EB",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.shop.bmwusa.com/mperformanceparts/browse-all?outletid=21188",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.shop.bmwusa.com/vehicle-and-accessories/general/browse-all?outletid=21188",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.shop.bmwusa.com/lifestyle-and-apparel/browse-all?outletid=21188",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://qmerit.com/ev/irvine-bmw/",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.google.com/maps/search/?api=1&query=9881+Research+Dr+Irvine%2C+CA+92618&hl=en",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.dealer.com",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://www.bmwusa.com/",
+            "reason": "path_not_evidence"
+          },
+          {
+            "url": "https://twitter.com/irvinebmw",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.youtube.com/channel/UCNaGgMIjjxtJ-rTCE4AnA3Q?view_as=subscriber",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.instagram.com/irvinebmw/",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://www.facebook.com/irvinebmw",
+            "reason": "blocklisted_host"
+          },
+          {
+            "url": "https://complyauto.com",
+            "reason": "path_not_evidence"
+          }
+        ],
+        "second_pass_candidates": [],
+        "adjudication_skip_reason": null,
+        "entity_specificity_score": 0.0,
+        "best_evidence_tier": "",
+        "best_supporting_signal": "",
+        "manual_review_reason": null
+      },
+      "merged_status": "unknown",
+      "merged_confidence": 0.0,
+      "adjudication": {
+        "dealer_id": "bmw-23",
+        "best_candidate_raw": null,
+        "best_candidate_normalized": null,
+        "confidence_score": 0.0,
+        "final_status": "unknown",
+        "evidence_used": [],
+        "rejected_candidates": [
+          "Service BMW Tire Center No.1 Collision Group",
+          "Collision Group",
+          "No.1 Collision Group"
+        ],
+        "reasoning_summary": "No clear evidence of a dealer group name; generic business unit phrases and privacy policy snippet rejected as junk.",
+        "model_name": "llama3.2",
+        "prompt_version": "adjudicator_v1",
+        "created_at": "2026-03-31T19:44:09.106681Z"
+      },
+      "source": "ai",
+      "adjudication_skip_reason": null,
+      "manual_review_reason": null,
+      "merged_best_canonical": null,
+      "best_candidate_raw": null,
+      "best_candidate_normalized": null,
+      "best_candidate_canonical": null
+    }
+  ]
+}

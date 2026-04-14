@@ -164,9 +164,20 @@
 
         </section>
 
+        <section class="car-chat-section" id="car-chat-section" data-car-id="{{ car.id }}">
+            <h2 class="car-chat-heading">Ask about this vehicle</h2>
+            <p class="car-chat-hint">Answers use your local Ollama server (<code>LLM_BASE_URL</code> / <code>LLM_MODEL</code>).</p>
+            <div id="car-chat-messages" class="car-chat-messages" aria-live="polite"></div>
+            <div class="car-chat-input-row">
+                <input type="text" id="car-chat-input" class="car-chat-input" placeholder="e.g. Is this AWD? What engine?" autocomplete="off" />
+                <button type="button" id="car-chat-send" class="car-chat-send primary-button">Send</button>
+            </div>
+        </section>
+
     </div>
 
     <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <script src="{{ url_for('static', filename='car_chat.js') }}"></script>
     <script>
     (function() {
         var jsonEl = document.getElementById('car-gallery-json');

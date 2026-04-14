@@ -64,3 +64,41 @@ class OpenAICompatibleClient(LLMClient):
             raise LLMResponseError(f"Unexpected response shape: {data!r}") from e
 
         return self.parse_json_loose(content)
+
+    def complete_text(
+        self,
+        *,
+        system: str,
+        user: str,
+        model: str | None = None,
+        temperature: float = 0.5,
+    ) -> str:
+        """Plain chat completion (no JSON mode) for conversational UIs."""
+        model = model or os.environ.get("LLM_MODEL") or "llama3.2"
+        url = f"{self.base_url}/chat/completions"
+        headers = {"Content-Type": "application/json"}
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
+
+        payload: dict[str, Any] = {
+            "model": model,
+            "temperature": temperature,
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+        }
+
+        try:
+            r = requests.post(url, json=payload, headers=headers, timeout=self.timeout)
+            r.raise_for_status()
+            data = r.json()
+        except requests.RequestException as e:
+            raise LLMResponseError(f"HTTP error: {e}") from e
+
+        try:
+            content = data["choices"][0]["message"]["content"]
+        except (KeyError, IndexError) as e:
+            raise LLMResponseError(f"Unexpected response shape: {data!r}") from e
+
+        return (content or "").strip()

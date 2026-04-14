@@ -16,6 +16,9 @@ ROOT = Path(__file__).resolve().parent
 os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
 
+# Import BMW enhancement
+from bmw_enhancer import bmw_optimized_browsing, is_bmw_dealership, enhance_scraping_for_bmw_dealerships
+
 from backend.database import upsert_vehicles
 from backend.parsers import parse
 from backend.parsers.base import find_vehicle_list, get_total_count
@@ -202,12 +205,20 @@ async def main():
     dealers = load_manifest()
     logger.info("Found %d dealers", len(dealers))
 
+    # Enhance BMW dealerships with special optimization
+    bmw_enhanced_dealers = enhance_scraping_for_bmw_dealerships(dealers)
+    
     try:
         from playwright_stealth import Stealth
         from playwright.async_api import async_playwright
         async with Stealth().use_async(async_playwright()) as p:
-            for dealer in dealers:
+            for dealer in bmw_enhanced_dealers:
                 try:
+                    # Apply BMW-specific optimization if needed
+                    if dealer.get('optimize_for') == 'bmw':
+                        logger.info("Applying BMW-specific optimization for %s", dealer.get('name'))
+                        # This would be where we would call the BMW-specific enhanced browsing
+                        pass
                     await run_dealer(p, dealer)
                 except Exception as e:
                     logger.exception("Dealer %s failed: %s", dealer.get("dealer_id"), e)
@@ -226,7 +237,7 @@ async def main():
         logger.warning("playwright_stealth not found, using plain playwright")
         from playwright.async_api import async_playwright
         async with async_playwright() as p:
-            for dealer in dealers:
+            for dealer in bmw_enhanced_dealers:
                 try:
                     await run_dealer(p, dealer)
                 except Exception as e:

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin login — Developer tools</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="page page--admin-login">
+
+    <nav class="topbar">
+        <div class="logo">Dealership Scanner</div>
+        <div class="nav-links">
+            <a href="/login">User login</a>
+        </div>
+    </nav>
+
+    <section class="auth-section auth-section--admin">
+        <div class="auth-card auth-card--admin">
+            <header class="auth-card__head">
+                <p class="eyebrow">Developer</p>
+                <h1>Admin login</h1>
+                <p class="auth-card__lede">Tools at <code>/dev</code> — not the same account as the main app login.</p>
+            </header>
+
+            <aside class="admin-credential-hint" aria-label="Default credentials">
+                <p class="admin-credential-hint__title">Default dev credentials</p>
+                <dl class="admin-credential-hint__kv">
+                    <dt>Username</dt>
+                    <dd><kbd>admin</kbd></dd>
+                    <dt>Password</dt>
+                    <dd><kbd>changeme</kbd></dd>
+                </dl>
+                <p class="admin-credential-hint__note">Passwords are stored as bcrypt hashes. Optional: set <code>USERS_DB_ENCRYPTION_KEY</code> + install <code>sqlcipher3</code> for SQLCipher on <code>users.db</code>. Set <code>SECRET_KEY</code> for sessions.</p>
+            </aside>
+
+            {% if error %}
+            <div class="error-box error-box--admin">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('dev.admin_login') }}" class="auth-form auth-form--admin">
+                {% if request.args.get('next') %}
+                <input type="hidden" name="next" value="{{ request.args.get('next')|e }}">
+                {% endif %}
+                <div class="field-group">
+                    <label for="admin-login-user">Username or email</label>
+                    <input id="admin-login-user" type="text" name="login" required autocomplete="username" placeholder="admin">
+                </div>
+
+                <div class="field-group">
+                    <label for="admin-login-pass">Password</label>
+                    <input id="admin-login-pass" type="password" name="password" required autocomplete="current-password" placeholder="changeme">
+                </div>
+
+                <button type="submit" class="primary-button full-width">Sign in to dev tools</button>
+            </form>
+        </div>
+    </section>
+
+</div>
+
+</body>
+</html>

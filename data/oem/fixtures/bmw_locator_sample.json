@@ -1,0 +1,29 @@
+{
+  "source_locator_url": "https://www.bmwusa.com/dealer-locator.html",
+  "records": [
+    {
+      "dealer_name": "Long Beach BMW",
+      "brand": "BMW",
+      "street": "1000 Example Ave",
+      "city": "Signal Hill",
+      "state": "CA",
+      "zip": "90755",
+      "phone": "(562) 555-0100",
+      "website": "https://www.longbeachbmw.com",
+      "latitude": 33.79,
+      "longitude": -118.17
+    },
+    {
+      "dealer_name": "Irvine BMW",
+      "brand": "BMW",
+      "street": "2000 Sample Dr",
+      "city": "Irvine",
+      "state": "CA",
+      "zip": "92618",
+      "phone": "(949) 555-0200",
+      "website": "https://www.irvinebmw.com",
+      "latitude": 33.68,
+      "longitude": -117.75
+    }
+  ]
+}

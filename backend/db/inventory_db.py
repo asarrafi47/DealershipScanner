@@ -475,6 +475,41 @@ def get_car_by_id(car_id):
     return car
 
 
+def get_cars_by_ids(car_ids: list[int]) -> list[dict]:
+    """Fetch full car rows by primary key; order matches ``car_ids`` (skips missing)."""
+    if not car_ids:
+        return []
+    ordered_unique: list[int] = []
+    seen: set[int] = set()
+    for raw in car_ids:
+        try:
+            i = int(raw)
+        except (TypeError, ValueError):
+            continue
+        if i <= 0 or i in seen:
+            continue
+        seen.add(i)
+        ordered_unique.append(i)
+    if not ordered_unique:
+        return []
+    conn = get_conn()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    ph = _placeholders(ordered_unique)
+    cursor.execute(f"SELECT * FROM cars WHERE id IN ({ph})", ordered_unique)
+    by_id = {dict(row)["id"]: dict(row) for row in cursor.fetchall()}
+    conn.close()
+    out: list[dict] = []
+    for cid in ordered_unique:
+        row = by_id.get(cid)
+        if not row:
+            continue
+        _parse_car_gallery(row)
+        _parse_car_history_highlights(row)
+        out.append(row)
+    return out
+
+
 def get_car_by_vin(vin):
     conn = get_conn()
     conn.row_factory = sqlite3.Row

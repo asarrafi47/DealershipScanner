@@ -1,8 +1,18 @@
+import os
+
 from flask import Flask, request, render_template, redirect, jsonify, send_from_directory
 from backend.dev_routes import dev_bp
+from backend.db.admin_users_db import init_admin_db
 from backend.db.users_db import init_users_db, check_user, save_user
-from backend.db.inventory_db import init_inventory_db, search_cars, get_car_by_id, get_car_by_vin, get_filter_options
+from backend.db.inventory_db import (
+    init_inventory_db,
+    search_cars,
+    get_car_by_id,
+    get_cars_by_ids,
+    get_filter_options,
+)
 from backend.knowledge_engine import prepare_car_detail_context
+from backend.ai_agent import run_car_page_chat
 from backend.listings import listings_page
 from backend.utils.query_parser import parse_natural_query
 
@@ -12,9 +22,12 @@ app = Flask(
     static_folder="../frontend/static"
 )
 
+app.secret_key = os.environ.get("SECRET_KEY") or "dev-secret-key-change-in-production"
+
 init_users_db()
+init_admin_db()
 init_inventory_db()
-app.register_blueprint(dev_bp)
+app.register_blueprint(dev_bp, url_prefix="/dev")
 
 
 @app.route("/favicon.ico")
@@ -152,22 +165,50 @@ def api_search_smart():
     data = request.get_json() or {}
     q = (data.get("query") or data.get("q") or "").strip()
     filters = parse_natural_query(q)
-    results = []
-    if filters:
-        results = search_cars(
-            makes=[filters["make"]] if filters.get("make") else None,
-            models=[filters["model"]] if filters.get("model") else None,
-            drivetrains=filters.get("drivetrain"),
-            exterior_colors=filters.get("exterior_color"),
-            min_year=filters.get("min_year"),
-            max_year=filters.get("max_year"),
-            max_price=filters.get("max_price"),
-            max_mileage=filters.get("max_mileage"),
-        )
-    else:
-        results = search_cars()
+    results: list = []
+    if q:
+        try:
+            from backend.vector.chroma_service import query_cars
+
+            chroma_ids = query_cars(q, n_results=20)
+            if chroma_ids:
+                results = get_cars_by_ids(chroma_ids)
+        except Exception:
+            results = []
+    if not results:
+        if filters:
+            results = search_cars(
+                makes=[filters["make"]] if filters.get("make") else None,
+                models=[filters["model"]] if filters.get("model") else None,
+                drivetrains=filters.get("drivetrain"),
+                exterior_colors=filters.get("exterior_color"),
+                min_year=filters.get("min_year"),
+                max_year=filters.get("max_year"),
+                max_price=filters.get("max_price"),
+                max_mileage=filters.get("max_mileage"),
+            )
+        else:
+            results = search_cars()
     return jsonify({
         "filters": filters,
         "results": results,
         "highlight": _highlight_params_from_filters(filters),
+    })
+
+
+@app.route("/api/car/<int:car_id>/chat", methods=["POST"])
+def api_car_chat(car_id: int):
+    car = get_car_by_id(car_id)
+    if not car:
+        return jsonify({"ok": False, "error": "not_found"}), 404
+    body = request.get_json() or {}
+    message = (body.get("message") or body.get("q") or "").strip()
+    if not message:
+        return jsonify({"ok": False, "error": "message_required"}), 400
+    out = run_car_page_chat(car, message)
+    err = out.get("error")
+    return jsonify({
+        "ok": err is None,
+        "reply": out.get("reply") or "",
+        "error": err,
     })

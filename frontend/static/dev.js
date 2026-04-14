@@ -1,5 +1,5 @@
 /**
- * Developer dashboard: token query, bulk smart-import queue, highlighted logs.
+ * Developer dashboard at /dev: session cookie auth, bulk smart-import queue, highlighted logs.
  */
 document.addEventListener("DOMContentLoaded", () => {
     const urlsTa = document.getElementById("dev-smart-urls");
@@ -32,16 +32,21 @@ document.addEventListener("DOMContentLoaded", () => {
         return false;
     }
 
-    function getToken() {
-        return new URLSearchParams(window.location.search).get("token") || "";
+    /** e.g. "dealers" or "/status" -> "/dev/api/dealers" */
+    function devApi(endpoint) {
+        const e = String(endpoint).replace(/^\//, "");
+        return `/dev/api/${e}`;
     }
 
-    function apiUrl(path) {
-        const t = getToken();
-        if (!t) return path;
-        const u = new URL(path, window.location.origin);
-        u.searchParams.set("token", t);
-        return u.pathname + u.search;
+    const fetchOpts = { credentials: "same-origin" };
+
+    async function devFetch(url, options = {}) {
+        const res = await fetch(url, { ...fetchOpts, ...options });
+        if (res.status === 401) {
+            window.location.href = "/dev/login?next=" + encodeURIComponent(window.location.pathname);
+            throw new Error("unauthorized");
+        }
+        return res;
     }
 
     function escHtml(s) {
@@ -96,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function refreshDealersTable() {
-        const res = await fetch(apiUrl("/api/dev/dealers"));
+        const res = await devFetch(devApi("dealers"));
         const data = await res.json();
         if (!data.ok || !tbody) return;
         const rows = data.dealerships || [];
@@ -158,14 +163,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function onDelete(ev) {
-        if (!getToken()) {
-            alert("Missing token in URL.");
-            return;
-        }
         const id = ev.target && ev.target.dataset ? ev.target.dataset.id : null;
         if (!id) return;
         if (!window.confirm(`Delete dealership #${id}?`)) return;
-        const res = await fetch(apiUrl(`/api/dev/dealer/${id}`), { method: "DELETE" });
+        const res = await devFetch(devApi(`dealer/${id}`), { method: "DELETE" });
         const data = await res.json();
         if (data.ok) refreshDealersTable();
         else showMaint({ error: data.error || "delete failed" });
@@ -208,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function pollScannerJob(jobId) {
-        const res = await fetch(apiUrl(`/api/dev/scanner-job/${jobId}`));
+        const res = await devFetch(devApi(`scanner-job/${jobId}`));
         const data = await res.json();
         if (!data.ok) {
             renderLog(scanLog, data.error || "Job not found.");
@@ -273,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function pollImportQueue() {
         if (!currentQueueId) return;
-        const res = await fetch(apiUrl(`/api/dev/import-queue/${currentQueueId}`));
+        const res = await devFetch(devApi(`import-queue/${currentQueueId}`));
         const data = await res.json();
         if (!data.ok) return;
         renderQueueTable(data.items || []);
@@ -281,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const processing = (data.items || []).find((x) => x.queue_status === "processing");
         if (processing && processing.job_id) {
             activeJobId = processing.job_id;
-            const jr = await fetch(apiUrl(`/api/dev/scanner-job/${activeJobId}`));
+            const jr = await devFetch(devApi(`scanner-job/${activeJobId}`));
             const jd = await jr.json();
             if (jd.ok) {
                 renderLog(scanLog, jd.log || "");
@@ -294,7 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
             smartBtn.disabled = false;
             const last = (data.items || []).filter((x) => x.job_id).pop();
             if (last && last.job_id) {
-                const jr = await fetch(apiUrl(`/api/dev/scanner-job/${last.job_id}`));
+                const jr = await devFetch(devApi(`scanner-job/${last.job_id}`));
                 const jd = await jr.json();
                 if (jd.ok) renderLog(scanLog, jd.log || "");
             }
@@ -304,19 +305,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (headedRetryBtn) {
         headedRetryBtn.addEventListener("click", async () => {
-            if (!getToken()) {
-                renderLog(scanLog, "Missing access token. Open this page with ?token=… in the URL.");
-                return;
-            }
             if (!lastSingleSmartUrl) return;
             if (headedRetryWrap) headedRetryWrap.hidden = true;
             smartBtn.disabled = true;
             renderDiscovery([{ message: "Starting headed retry…" }]);
             renderLog(scanLog, "Retrying with visible browser (headed)…\n");
-            const res = await fetch(apiUrl("/api/dev/smart-import"), {
+            const res = await devFetch(devApi("smart-import"), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ url: lastSingleSmartUrl, token: getToken(), headed: true }),
+                body: JSON.stringify({ url: lastSingleSmartUrl, headed: true }),
             });
             const data = await res.json();
             if (!res.ok || !data.job_id) {
@@ -335,10 +332,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (smartBtn && urlsTa && scanLog) {
         smartBtn.addEventListener("click", async () => {
-            if (!getToken()) {
-                renderLog(scanLog, "Missing access token. Open this page with ?token=… in the URL.");
-                return;
-            }
             const urls = parseUrlLines();
             if (!urls.length) {
                 renderLog(scanLog, "Enter at least one URL (one per line).");
@@ -351,10 +344,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (urls.length === 1) {
                 lastSingleSmartUrl = urls[0];
-                const res = await fetch(apiUrl("/api/dev/smart-import"), {
+                const res = await devFetch(devApi("smart-import"), {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ url: urls[0], token: getToken() }),
+                    body: JSON.stringify({ url: urls[0] }),
                 });
                 const data = await res.json();
                 if (!res.ok || !data.job_id) {
@@ -372,10 +365,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             lastSingleSmartUrl = null;
-            const res = await fetch(apiUrl("/api/dev/smart-import-bulk"), {
+            const res = await devFetch(devApi("smart-import-bulk"), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ urls, token: getToken() }),
+                body: JSON.stringify({ urls }),
             });
             const data = await res.json();
             if (!res.ok || !data.queue_id) {
@@ -394,14 +387,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (geocodeBtn) {
         geocodeBtn.addEventListener("click", async () => {
-            if (!getToken()) {
-                showMaint("Missing token in URL.");
-                return;
-            }
             geocodeBtn.disabled = true;
             showMaint("Running geocoding…");
             try {
-                const res = await fetch(apiUrl("/api/dev/geocode-missing"), { method: "POST" });
+                const res = await devFetch(devApi("geocode-missing"), { method: "POST" });
                 const data = await res.json();
                 showMaint(data);
                 refreshDealersTable();
@@ -414,14 +403,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (dedupeBtn) {
         dedupeBtn.addEventListener("click", async () => {
-            if (!getToken()) {
-                showMaint("Missing token in URL.");
-                return;
-            }
             dedupeBtn.disabled = true;
             showMaint("Running deduplication…");
             try {
-                const res = await fetch(apiUrl("/api/dev/deduplicate"), { method: "POST" });
+                const res = await devFetch(devApi("deduplicate"), { method: "POST" });
                 const data = await res.json();
                 showMaint(data);
                 refreshDealersTable();
@@ -434,7 +419,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function refreshStatusPanel() {
         if (!statusPanel) return;
-        const res = await fetch(apiUrl("/api/dev/status"));
+        const res = await devFetch(devApi("status"));
         const data = await res.json();
         if (!data.ok) return;
         const dbCls = data.db_connected ? "dev-ok" : "dev-bad";

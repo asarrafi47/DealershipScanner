@@ -237,3 +237,41 @@ def run_ai_chat(
         "verification": verification,
         "error": None,
     }
+
+
+def run_car_page_chat(car: dict[str, Any], user_message: str) -> dict[str, Any]:
+    """
+    Car detail chatbot: Ollama (OpenAI-compatible) via llm.providers.ollama_client.
+    ``car`` should be the full SQLite row dict from get_car_by_id.
+    """
+    msg = (user_message or "").strip()
+    if not msg:
+        return {"reply": "", "error": "empty_message", "discrepancy_flags": []}
+    try:
+        from llm.client import LLMResponseError
+        from llm.providers.ollama_client import OpenAICompatibleClient
+    except ImportError as e:
+        return {
+            "reply": "",
+            "error": f"llm_import:{e}",
+            "discrepancy_flags": [],
+        }
+
+    client = OpenAICompatibleClient()
+    car_blob = json.dumps(car, indent=2, default=str)
+    if len(car_blob) > 14000:
+        car_blob = car_blob[:14000] + "\n…(truncated)"
+    system = (
+        "You are a helpful assistant on a dealership vehicle detail page.\n"
+        "Use the vehicle JSON as the source of truth. If information is missing, say you do not see it.\n"
+        "Keep answers concise (a few sentences unless the user asks for detail).\n\n"
+        "Vehicle data (JSON):\n"
+        + car_blob
+    )
+    try:
+        reply = client.complete_text(system=system, user=msg, temperature=0.45)
+    except LLMResponseError as e:
+        return {"reply": "", "error": str(e), "discrepancy_flags": []}
+    except Exception as e:
+        return {"reply": "", "error": str(e)[:500], "discrepancy_flags": []}
+    return {"reply": reply, "error": None, "discrepancy_flags": []}

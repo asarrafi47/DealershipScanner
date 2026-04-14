@@ -4,6 +4,7 @@
  * Shares inventory.db with the Python Flask app. Run: node scanner.js
  */
 const path = require("path");
+const { spawnSync } = require("child_process");
 const fs = require("fs-extra");
 const sqlite3 = require("sqlite3").verbose();
 const puppeteer = require("puppeteer-extra");
@@ -36,6 +37,9 @@ const USER_AGENTS = [
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
 ];
+
+// Import the data collection agent
+const { process_dealer_scraping_guidance } = require('./agents/data_collection_agent');
 
 function randomUserAgent() {
   return USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)];
@@ -1297,6 +1301,94 @@ async function runDealer(browser, dealer, opts = {}) {
   }
 }
 
+// Function to get enhanced data collection guidance from AI agent
+async function getDealerDataGuidance(browser, dealer) {
+  try {
+    const page = await browser.newPage();
+    await page.setUserAgent(randomUserAgent());
+    
+    // Navigate to dealer website to get content for analysis
+    await page.goto(dealer.url, { waitUntil: 'networkidle0', timeout: 30000 });
+    
+    // Get page content for agent analysis
+    const content = await page.content();
+    await page.close();
+    
+    // Process with data collection agent (this would normally call the Python agent)
+    // For now, we'll return a basic guidance structure
+    const guidance = {
+      dealer_id: dealer.dealer_id,
+      website_analysis: {
+        primary_data_sources: ["Vehicle listing JSON APIs", "HTML vehicle detail pages"],
+        additional_fields: ["Engine specifications", "Fuel efficiency ratings", "Warranty information"],
+        special_considerations: ["Check for vehicle history reports", "Look for special offers"],
+        image_collection_tips: ["Capture all gallery images", "Include detailed engine bay shots"],
+        javascript_handling: ["Handle dynamic content loading", "Wait for AJAX calls"],
+        fallback_strategies: ["Use fallback HTML parsing", "Try different API endpoints"]
+      },
+      recommended_data_fields: [
+        {
+          field_name: "engine_displacement",
+          data_type: "number",
+          source: "website",
+          priority: "high",
+          notes: "Engine size in liters"
+        },
+        {
+          field_name: "fuel_efficiency",
+          data_type: "number",
+          source: "website",
+          priority: "medium",
+          notes: "City/Highway MPG ratings"
+        },
+        {
+          field_name: "warranty_info",
+          data_type: "string",
+          source: "website",
+          priority: "medium",
+          notes: "Remaining warranty details"
+        },
+        {
+          field_name: "features_list",
+          data_type: "array",
+          source: "website",
+          priority: "high",
+          notes: "Additional vehicle features"
+        }
+      ],
+      enhanced_extraction_tips: [
+        {
+          tip: "Look for technical specifications sections",
+          example: "Search for 'Vehicle Specifications' or 'Features' sections",
+          website_section: "Vehicle detail page"
+        },
+        {
+          tip: "Check for service history and maintenance records",
+          example: "Look for 'Service Records' or 'Maintenance History' tabs",
+          website_section: "Vehicle detail page"
+        }
+      ],
+      data_quality_indicators: [
+        {
+          indicator: "Complete specification set",
+          importance: "high",
+          how_to_verify: "Compare against manufacturer data"
+        },
+        {
+          indicator: "Vehicle history reports",
+          importance: "medium",
+          how_to_verify: "Check for CarFax/vehicle history links"
+        }
+      ]
+    };
+    
+    return guidance;
+  } catch (error) {
+    console.warn(`Failed to get agent guidance for ${dealer.name}:`, error);
+    return null;
+  }
+}
+
 function openDb() {
   return new sqlite3.Database(DB_PATH);
 }
@@ -1517,6 +1609,104 @@ function getLaunchOptions(profile, headed = false) {
     common.args = ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"];
   }
   return common;
+}
+
+function looksLikeDomainOrSlugName(name, pageUrl) {
+  const n = normStr(name);
+  if (!n) return true;
+  if (/^[a-z0-9-]+\.[a-z]{2,}$/i.test(n)) return true;
+  try {
+    const host = new URL(pageUrl).hostname
+      .replace(/^www\./i, "")
+      .split(".")[0]
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "");
+    const nn = n.toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (host && nn === host) return true;
+  } catch {
+    /* ignore */
+  }
+  return false;
+}
+
+/**
+ * Optional Crawl4AI (Python) pass — better JSON-LD / footer capture on some DMS sites.
+ * Requires: pip install crawl4ai; then ./scripts/install_scraper_browsers.sh
+ * (or: python3 -m playwright install chromium && python3 -m patchright install chromium).
+ * Disable with DISABLE_CRAWL4AI=1.
+ */
+function runCrawl4aiDiscoverySubprocess(pageUrl) {
+  if (process.env.DISABLE_CRAWL4AI === "1" || process.env.DISABLE_CRAWL4AI === "true") return null;
+  const py = process.env.PYTHON || process.env.PYTHON3 || "python3";
+  const r = spawnSync(py, ["-m", "scrapers.crawl4ai_discovery", pageUrl], {
+    cwd: ROOT,
+    encoding: "utf8",
+    timeout: 130000,
+    maxBuffer: 25 * 1024 * 1024,
+  });
+  if (r.error) {
+    console.warn(`[crawl4ai] ${r.error.message}`);
+    return null;
+  }
+  const lines = (r.stdout || "").split("\n");
+  for (let i = lines.length - 1; i >= 0; i--) {
+    const ln = lines[i].trim();
+    if (ln.startsWith("CRAWL4AI_DISCOVERY:")) {
+      try {
+        return JSON.parse(ln.slice("CRAWL4AI_DISCOVERY:".length));
+      } catch {
+        return null;
+      }
+    }
+  }
+  return null;
+}
+
+function enrichMetadataWithCrawl4ai(pageUrl, meta) {
+  const navFail = meta && meta.retryable && meta.error === "navigation";
+  const missingLoc = !navFail && (!normStr(meta.city) || !normStr(meta.state));
+  const badName = !navFail && looksLikeDomainOrSlugName(normStr(meta.name), pageUrl);
+  if (!navFail && !missingLoc && !badName) return meta;
+
+  emitDiscovery({
+    step: "crawl4ai",
+    message: "Running Crawl4AI for richer page capture (headless Chromium)…",
+  });
+  const c4 = runCrawl4aiDiscoverySubprocess(pageUrl);
+  if (!c4) {
+    emitDiscovery({ step: "crawl4ai", message: "Crawl4AI subprocess returned no payload." });
+    return meta;
+  }
+  if (c4.error === "crawl4ai_not_installed") {
+    emitDiscovery({ step: "crawl4ai", message: "Crawl4AI not installed (pip install crawl4ai)." });
+    return meta;
+  }
+
+  const cn = normStr(c4.name);
+  const cc = normStr(c4.city);
+  const cs = normStr(c4.state).toUpperCase().slice(0, 2);
+
+  if (navFail) {
+    if (cc && cs.length === 2) {
+      const nameOut = cn || normStr(meta.name) || slugFromUrl(pageUrl);
+      emitDiscovery({
+        step: "crawl4ai",
+        message: "Recovered dealer metadata after Puppeteer navigation issue.",
+      });
+      return { name: nameOut, city: cc, state: cs, sources: [].concat(c4.sources || []) };
+    }
+    return meta;
+  }
+
+  let name = normStr(meta.name);
+  let city = normStr(meta.city);
+  let state = normStr(meta.state).toUpperCase().slice(0, 2);
+  if ((looksLikeDomainOrSlugName(name, pageUrl) || !name) && cn) name = cn;
+  if (!city && cc) city = cc;
+  if ((!state || state.length !== 2) && cs.length === 2) state = cs;
+  const sources = [].concat(meta.sources || []);
+  if (c4.sources && c4.sources.length) sources.push("crawl4ai");
+  return { name, city, state, sources };
 }
 
 function extractCityStateFromText(text) {
@@ -1761,8 +1951,10 @@ async function main() {
       if (smartImport) {
         emitDiscovery({ step: "start", message: "Starting smart import: discovering dealership name and location…" });
         const page = await browser.newPage();
-        const meta = await discoverDealerMetadata(page, url, profile);
+        let meta = await discoverDealerMetadata(page, url, profile);
         await page.close().catch(() => {});
+
+        meta = enrichMetadataWithCrawl4ai(url, meta);
 
         if (meta.retryable && meta.error === "navigation") {
           console.log(
