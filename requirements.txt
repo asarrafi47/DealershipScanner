@@ -1,6 +1,7 @@
 flask
 pydantic>=2
 requests
+pillow>=10
 beautifulsoup4
 pgeocode
 playwright
