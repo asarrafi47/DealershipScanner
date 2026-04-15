@@ -554,12 +554,20 @@ def api_deduplicate():
     return jsonify({"ok": True, **result})
 
 
-def _spawn_inventory_enrich(*, limit: int | None, vision_only: bool) -> None:
+def _spawn_inventory_enrich(
+    *,
+    limit: int | None,
+    vision_only: bool,
+    max_workers: int | None = None,
+) -> None:
     from backend.enrichment_service import InventoryEnricher
 
     try:
         enricher = InventoryEnricher()
-        enricher.run_all(limit=limit, vision_only=vision_only)
+        kwargs: dict[str, Any] = {"limit": limit, "vision_only": vision_only}
+        if max_workers is not None:
+            kwargs["max_workers"] = max_workers
+        enricher.run_all(**kwargs)
     except Exception:
         import logging
 
@@ -572,7 +580,7 @@ def api_dev_enrich_all():
     Kick off inventory enrichment (EPA Master Catalog + optional Ollama vision) in a
     background thread. Full URL: ``POST /dev/api/dev/enrich_all``.
 
-    JSON body (optional): ``{"limit": 10, "vision_only": false}``
+    JSON body (optional): ``{"limit": 10, "vision_only": false, "workers": 4}``
     """
     data = request.get_json(silent=True) or {}
     limit = data.get("limit")
@@ -584,9 +592,17 @@ def api_dev_enrich_all():
         except (TypeError, ValueError):
             limit = None
     vision_only = bool(data.get("vision_only"))
+    max_workers = data.get("workers")
+    if max_workers is not None:
+        try:
+            max_workers = int(max_workers)
+            if max_workers < 1:
+                max_workers = None
+        except (TypeError, ValueError):
+            max_workers = None
     threading.Thread(
         target=_spawn_inventory_enrich,
-        kwargs={"limit": limit, "vision_only": vision_only},
+        kwargs={"limit": limit, "vision_only": vision_only, "max_workers": max_workers},
         name="inventory-enrich",
         daemon=True,
     ).start()
@@ -596,6 +612,7 @@ def api_dev_enrich_all():
             "started": True,
             "limit": limit,
             "vision_only": vision_only,
+            "workers": max_workers,
             "message": "Enrichment started in background; check server logs for progress.",
         }
     ), 202

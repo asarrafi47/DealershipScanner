@@ -1,12 +1,13 @@
 """
 Inventory enrichment: EPA Master Catalog (Chroma) + optional Ollama vision (llama3.2-vision).
 
-Memory diet (low RAM / unified memory): single downscaled JPEG per car, small Ollama context,
-``gc.collect()`` after each vehicle, and a short delay after vision so GPU buffers can drain.
-Vision failures are logged and never block catalog (EPA) saves.
+Power mode (high-RAM / M4 Max): parallel ``ThreadPoolExecutor`` workers, larger vision payloads
+(1920px, JPEG 95, up to 2 images), larger Ollama ``num_ctx``. Each worker uses its own SQLite
+connection via ``get_conn()`` per operation. Catalog embedding uses a process-wide lock because
+sentence-transformers is not reliably thread-safe.
 
 CLI:
-  python -m backend.enrichment_service --all --limit 10
+  python -m backend.enrichment_service --all --limit 10 --workers 4
   python -m backend.enrichment_service --all
   python -m backend.enrichment_service --vision-only --limit 5
 """
@@ -15,14 +16,15 @@ from __future__ import annotations
 
 import argparse
 import base64
-import gc
 import json
 import logging
 import os
 import re
 import sqlite3
 import sys
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from io import BytesIO
 from typing import Any
 
@@ -35,6 +37,7 @@ logger = logging.getLogger(__name__)
 
 OLLAMA_VISION_MODEL = os.environ.get("OLLAMA_VISION_MODEL", "llama3.2-vision")
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
+DEFAULT_MAX_WORKERS = int(os.environ.get("ENRICHMENT_MAX_WORKERS", "4"))
 
 _ENRICHMENT_COLUMNS: tuple[tuple[str, str], ...] = (
     ("engine_l", "REAL"),
@@ -75,7 +78,7 @@ def _row_has_any_image(row: dict[str, Any]) -> bool:
 
 
 def _all_gallery_urls_ordered(row: dict[str, Any]) -> list[str]:
-    """All HTTP(S) image URLs in stable order (hero first, then gallery). No cap."""
+    """All HTTP(S) image URLs in stable order (hero first, then gallery)."""
     urls: list[str] = []
     main = row.get("image_url")
     if isinstance(main, str) and main.strip().startswith("http"):
@@ -97,29 +100,34 @@ def _all_gallery_urls_ordered(row: dict[str, Any]) -> list[str]:
     return urls
 
 
-def _pick_single_vision_url(row: dict[str, Any]) -> str | None:
+def _is_sticker_url(url: str) -> bool:
+    ul = url.lower()
+    return any(n in ul for n in ("sticker", "monroney", "label"))
+
+
+def _pick_vision_urls_up_to_two(row: dict[str, Any]) -> list[str]:
     """
-    One image only for Ollama vision (multi-image blows VRAM / causes 500s).
-    Prefer a Monroney/sticker/label URL; else first gallery image.
+    Up to two images for one Ollama call: prefer one exterior + one sticker/Monroney.
     """
     urls = _all_gallery_urls_ordered(row)
     if not urls:
-        return None
-    needles = ("sticker", "monroney", "label")
-    for u in urls:
-        ul = u.lower()
-        if any(n in ul for n in needles):
-            return u
-    return urls[0]
+        return []
+    sticker = next((u for u in urls if _is_sticker_url(u)), None)
+    exterior = next((u for u in urls if not _is_sticker_url(u)), None)
+    if exterior is None:
+        exterior = urls[0]
+    out: list[str] = [exterior]
+    if sticker and sticker != exterior:
+        out.append(sticker)
+    return out[:2]
 
 
-VISION_MAX_PX = 800
-VISION_JPEG_QUALITY = 70
-OLLAMA_VISION_OPTIONS: dict[str, Any] = {"num_ctx": 1024, "num_thread": 4}
+VISION_MAX_PX = 1920
+VISION_JPEG_QUALITY = 95
+OLLAMA_VISION_OPTIONS: dict[str, Any] = {"num_ctx": 4096, "num_thread": 8}
 
 
 def _downscale_to_jpeg_b64(raw: bytes, *, max_dim: int = VISION_MAX_PX, quality: int = VISION_JPEG_QUALITY) -> str | None:
-    """RGB, max side ``max_dim``, JPEG — keeps payloads small for unified memory / GPU."""
     try:
         from PIL import Image
 
@@ -136,6 +144,69 @@ def _downscale_to_jpeg_b64(raw: bytes, *, max_dim: int = VISION_MAX_PX, quality:
     except Exception as e:
         logger.debug("Image downscale failed: %s", e)
         return None
+
+
+def _extract_json_object(text: str) -> str | None:
+    """
+    Extract a JSON object from model output (handles leading/trailing prose).
+    Uses brace matching with basic double-quoted string awareness.
+    """
+    if not text or not text.strip():
+        return None
+    start = text.find("{")
+    if start < 0:
+        return None
+    depth = 0
+    in_string = False
+    escape = False
+    quote = ""
+    for i in range(start, len(text)):
+        ch = text[i]
+        if in_string:
+            if escape:
+                escape = False
+            elif ch == "\\":
+                escape = True
+            elif ch == quote:
+                in_string = False
+            continue
+        if ch == '"':
+            in_string = True
+            quote = '"'
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start : i + 1]
+    return None
+
+
+def _parse_vision_json_response(content: str) -> dict[str, Any] | None:
+    """Parse vision model text into a dict; tolerant of markdown fences and chatter."""
+    raw = (content or "").strip()
+    if not raw:
+        return None
+    raw = re.sub(r"^```(?:json)?\s*", "", raw, flags=re.IGNORECASE).strip()
+    raw = re.sub(r"\s*```\s*$", "", raw).strip()
+
+    blob = _extract_json_object(raw)
+    if blob:
+        try:
+            out = json.loads(blob)
+            return out if isinstance(out, dict) else None
+        except json.JSONDecodeError:
+            pass
+
+    m = re.search(r"\{[\s\S]*\}", raw)
+    if m:
+        try:
+            out = json.loads(m.group(0))
+            return out if isinstance(out, dict) else None
+        except json.JSONDecodeError:
+            pass
+    return None
 
 
 def _needs_catalog(row: dict[str, Any]) -> bool:
@@ -228,13 +299,11 @@ def fetch_enrichment_candidate_ids(
 
 
 def _log_vision_skipped(exc: BaseException, *, context: str = "") -> None:
-    """Unified log line for OOM, HTTP 500, Metal OOM, or bad vision output."""
     suffix = f" ({context})" if context else ""
     logger.warning("Vision Skipped - Memory/Format error%s: %s", suffix, exc)
 
 
 def _fetch_image_b64_optimized(url: str, timeout: int = 25) -> str | None:
-    """Download one image and return base64 JPEG (downscaled) for vision."""
     try:
         r = requests.get(url, timeout=timeout, headers={"User-Agent": "DealershipScanner/1.0"})
         r.raise_for_status()
@@ -245,12 +314,16 @@ def _fetch_image_b64_optimized(url: str, timeout: int = 25) -> str | None:
 
 
 def _vision_analyze_car(row: dict[str, Any]) -> dict[str, Any] | None:
-    """Single-image Ollama vision; return parsed JSON dict or None."""
-    url = _pick_single_vision_url(row)
-    if not url:
+    """Up to two images (exterior + sticker) for Ollama vision."""
+    urls = _pick_vision_urls_up_to_two(row)
+    if not urls:
         return None
-    b64 = _fetch_image_b64_optimized(url)
-    if not b64:
+    images_b64: list[str] = []
+    for u in urls:
+        b64 = _fetch_image_b64_optimized(u)
+        if b64:
+            images_b64.append(b64)
+    if not images_b64:
         return None
 
     prompt = (
@@ -270,7 +343,7 @@ def _vision_analyze_car(row: dict[str, Any]) -> dict[str, Any] | None:
                 {
                     "role": "user",
                     "content": prompt,
-                    "images": [b64],
+                    "images": images_b64,
                 }
             ],
             options=OLLAMA_VISION_OPTIONS,
@@ -280,19 +353,13 @@ def _vision_analyze_car(row: dict[str, Any]) -> dict[str, Any] | None:
         return None
 
     content = (resp.get("message") or {}).get("content") or ""
-    content = content.strip()
-    # Strip ```json fences
-    m = re.search(r"\{[\s\S]*\}", content)
-    if not m:
+    parsed = _parse_vision_json_response(content)
+    if not parsed:
         _log_vision_skipped(
-            ValueError("model returned non-JSON"), context=content[:200] if content else "empty"
+            ValueError("model returned non-JSON"),
+            context=(content[:200] if content else "empty"),
         )
-        return None
-    try:
-        return json.loads(m.group(0))
-    except json.JSONDecodeError as e:
-        _log_vision_skipped(e, context=m.group(0)[:120])
-        return None
+    return parsed
 
 
 def _merge_packages(existing: str | None, vision: dict[str, Any]) -> str:
@@ -320,9 +387,14 @@ def _merge_packages(existing: str | None, vision: dict[str, Any]) -> str:
     return json.dumps(base, ensure_ascii=False)
 
 
+def _worker_tag() -> str:
+    return threading.current_thread().name
+
+
 class InventoryEnricher:
     def __init__(self, catalog: MasterCatalog | None = None) -> None:
         self.catalog = catalog or MasterCatalog()
+        self._catalog_lock = threading.Lock()
         conn = get_conn()
         try:
             ensure_enrichment_columns(conn)
@@ -330,10 +402,6 @@ class InventoryEnricher:
             conn.close()
 
     def save_enriched_data(self, vehicle_id: int, data: dict[str, Any]) -> list[str]:
-        """
-        UPDATE only keys present in ``data`` (non-None values). Returns list of
-        human-readable field names that were written (for logging).
-        """
         allowed = {
             "cylinders",
             "transmission",
@@ -360,22 +428,22 @@ class InventoryEnricher:
         return list(updates.keys())
 
     def apply_catalog_best(self, row: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
-        """Build update dict from MasterCatalog.lookup_car. Returns (updates, heal_parts)."""
         out: dict[str, Any] = {}
         heal: list[str] = []
         if not _needs_catalog(row):
             return out, heal
 
         year = row.get("year")
-        lk = self.catalog.lookup_car(
-            {
-                "year": year,
-                "make": row.get("make"),
-                "model": row.get("model"),
-                "trim": row.get("trim"),
-            },
-            n_results=5,
-        )
+        with self._catalog_lock:
+            lk = self.catalog.lookup_car(
+                {
+                    "year": year,
+                    "make": row.get("make"),
+                    "model": row.get("model"),
+                    "trim": row.get("trim"),
+                },
+                n_results=5,
+            )
         if not lk.get("ok"):
             return out, heal
         best = lk.get("best") or {}
@@ -427,59 +495,71 @@ class InventoryEnricher:
         return out, heal
 
     def enrich_one(self, car_id: int, *, vision_only: bool = False) -> dict[str, Any]:
-        try:
-            row = get_car_by_id(car_id)
-            if not row:
-                return {"ok": False, "error": "not_found", "id": car_id}
+        wt = _worker_tag()
+        row = get_car_by_id(car_id)
+        if not row:
+            return {"ok": False, "error": "not_found", "id": car_id}
 
-            all_heals: list[str] = []
-            if vision_only and not _mechanical_complete(row):
-                return {
-                    "ok": False,
-                    "error": "mechanical_incomplete",
-                    "id": car_id,
-                    "message": "Use full enrichment first; vision-only requires MPG/engine/trans/drive filled.",
-                }
+        all_heals: list[str] = []
+        if vision_only and not _mechanical_complete(row):
+            return {
+                "ok": False,
+                "error": "mechanical_incomplete",
+                "id": car_id,
+                "message": "Use full enrichment first; vision-only requires MPG/engine/trans/drive filled.",
+            }
 
-            if not vision_only:
-                cat_updates, cat_heal = self.apply_catalog_best(row)
-                if cat_updates:
-                    self.save_enriched_data(car_id, cat_updates)
-                    all_heals.extend(cat_heal)
+        if not vision_only:
+            cat_updates, cat_heal = self.apply_catalog_best(row)
+            if cat_updates:
+                self.save_enriched_data(car_id, cat_updates)
+                all_heals.extend(cat_heal)
+                y = row.get("year")
+                title = f"{y} {row.get('make')} {row.get('model')}".strip()
+                logger.info(
+                    "[%s] Healed %s (id=%s): %s via Master Catalog",
+                    wt,
+                    title,
+                    car_id,
+                    ", ".join(cat_heal) if cat_heal else "catalog",
+                )
+            row = get_car_by_id(car_id) or row
+
+        if vision_only or _needs_vision(row):
+            try:
+                vis_updates, vis_heal = self.apply_vision(row)
+                if vis_updates:
+                    self.save_enriched_data(car_id, vis_updates)
                     y = row.get("year")
                     title = f"{y} {row.get('make')} {row.get('model')}".strip()
                     logger.info(
-                        "Healed %s (id=%s): %s via Master Catalog",
+                        "[%s] Healed %s (id=%s): %s via Vision",
+                        wt,
                         title,
                         car_id,
-                        ", ".join(cat_heal) if cat_heal else "catalog",
+                        ", ".join(vis_heal) if vis_heal else "vision",
                     )
-                row = get_car_by_id(car_id) or row
+                    all_heals.extend(vis_heal)
+            except Exception as e:
+                _log_vision_skipped(e, context="enrich_one")
 
-            if vision_only or _needs_vision(row):
-                try:
-                    vis_updates, vis_heal = self.apply_vision(row)
-                    if vis_updates:
-                        self.save_enriched_data(car_id, vis_updates)
-                        y = row.get("year")
-                        title = f"{y} {row.get('make')} {row.get('model')}".strip()
-                        logger.info(
-                            "Healed %s (id=%s): %s via Vision",
-                            title,
-                            car_id,
-                            ", ".join(vis_heal) if vis_heal else "vision",
-                        )
-                        all_heals.extend(vis_heal)
-                except Exception as e:
-                    _log_vision_skipped(e, context="enrich_one")
-                finally:
-                    time.sleep(2.0)
+        return {"ok": True, "id": car_id, "healed": all_heals}
 
-            return {"ok": True, "id": car_id, "healed": all_heals}
-        finally:
-            gc.collect()
+    def _enrich_one_job(self, car_id: int, vision_only: bool) -> dict[str, Any]:
+        """Worker entry: one SQLite connection stack per thread (via get_conn in helpers)."""
+        try:
+            return self.enrich_one(car_id, vision_only=vision_only)
+        except Exception:
+            logger.exception("[%s] Enrichment failed for car id=%s", _worker_tag(), car_id)
+            return {"ok": False, "error": "exception", "id": car_id}
 
-    def run_all(self, *, limit: int | None = None, vision_only: bool = False) -> dict[str, Any]:
+    def run_all(
+        self,
+        *,
+        limit: int | None = None,
+        vision_only: bool = False,
+        max_workers: int = DEFAULT_MAX_WORKERS,
+    ) -> dict[str, Any]:
         conn = get_conn()
         try:
             ensure_enrichment_columns(conn)
@@ -487,19 +567,40 @@ class InventoryEnricher:
         finally:
             conn.close()
 
-        stats = {"processed": 0, "ok": 0, "errors": 0, "ids": ids}
-        for cid in ids:
-            stats["processed"] += 1
-            try:
-                r = self.enrich_one(cid, vision_only=vision_only)
-                if r.get("ok"):
-                    stats["ok"] += 1
-                else:
+        workers = max(1, min(int(max_workers), max(1, len(ids))))
+        stats: dict[str, Any] = {
+            "processed": 0,
+            "ok": 0,
+            "errors": 0,
+            "ids": ids,
+            "max_workers": workers,
+            "elapsed_seconds": 0.0,
+        }
+        t0 = time.perf_counter()
+        if not ids:
+            stats["elapsed_seconds"] = round(time.perf_counter() - t0, 3)
+            logger.info("Enrichment run finished (no candidates): %s", stats)
+            return stats
+
+        with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="EnrichWorker") as pool:
+            future_map = {
+                pool.submit(self._enrich_one_job, cid, vision_only): cid for cid in ids
+            }
+            for fut in as_completed(future_map):
+                cid = future_map[fut]
+                stats["processed"] += 1
+                try:
+                    r = fut.result()
+                    if r.get("ok"):
+                        stats["ok"] += 1
+                    else:
+                        stats["errors"] += 1
+                except Exception:
+                    logger.exception("Enrichment future failed for car id=%s", cid)
                     stats["errors"] += 1
-            except Exception:
-                logger.exception("Enrichment failed for car id=%s", cid)
-                stats["errors"] += 1
-        logger.info("Enrichment run finished: %s", stats)
+
+        stats["elapsed_seconds"] = round(time.perf_counter() - t0, 3)
+        logger.info("Enrichment run finished in %.3fs: %s", stats["elapsed_seconds"], stats)
         return stats
 
 
@@ -517,6 +618,12 @@ def main(argv: list[str] | None = None) -> int:
         help="Only run Llama 3.2-Vision on cars that already have mechanical + MPG filled.",
     )
     p.add_argument("--limit", type=int, default=None, help="Max cars to process (e.g. 5 or 10).")
+    p.add_argument(
+        "--workers",
+        type=int,
+        default=DEFAULT_MAX_WORKERS,
+        help=f"Parallel worker threads (default {DEFAULT_MAX_WORKERS}, env ENRICHMENT_MAX_WORKERS).",
+    )
     args = p.parse_args(argv)
 
     if not args.all:
@@ -532,7 +639,11 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
 
-    stats = enricher.run_all(limit=args.limit, vision_only=args.vision_only)
+    stats = enricher.run_all(
+        limit=args.limit,
+        vision_only=args.vision_only,
+        max_workers=max(1, args.workers),
+    )
     print(json.dumps(stats, indent=2))
     return 0 if stats["errors"] == 0 else 1
 
