@@ -59,3 +59,14 @@ class SiteResult:
     best_evidence_tier: str = ""
     best_supporting_signal: str = ""
     manual_review_reason: str | None = None
+
+    # Wappalyzer-style site profile (supporting signals; not sole truth)
+    site_profile: dict[str, Any] = field(default_factory=dict)
+    site_stack_family: str = ""
+    crawl_strategy: str = ""
+    likely_vendor: str = ""
+    heavy_js: bool = False
+    ownership_hint_company_name: str = ""
+    ownership_hint_about_text: str = ""
+    ownership_hint_copyright: str = ""
+    canonical_site_warning: str = ""

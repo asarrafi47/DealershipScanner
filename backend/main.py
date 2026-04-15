@@ -11,6 +11,7 @@ from backend.db.inventory_db import (
     get_cars_by_ids,
     get_filter_options,
 )
+from backend.dev_console import register_dev_console
 from backend.knowledge_engine import prepare_car_detail_context
 from backend.ai_agent import run_car_page_chat
 from backend.listings import listings_page
@@ -22,12 +23,17 @@ app = Flask(
     static_folder="../frontend/static"
 )
 
-app.secret_key = os.environ.get("SECRET_KEY") or "dev-secret-key-change-in-production"
+app.secret_key = (
+    os.environ.get("SECRET_KEY")
+    or os.environ.get("FLASK_SECRET_KEY")
+    or "dealership-scanner-dev-insecure"
+)
 
 init_users_db()
 init_admin_db()
 init_inventory_db()
 app.register_blueprint(dev_bp, url_prefix="/dev")
+register_dev_console(app)
 
 
 @app.route("/favicon.ico")

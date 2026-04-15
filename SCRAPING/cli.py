@@ -13,7 +13,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from SCRAPING.adjudicate_crawl import build_adjudicate_crawl_one
-from SCRAPING.crawler import process_site_playwright, process_site_requests
+from SCRAPING.crawler import process_site_hybrid
 from SCRAPING.fetch_requests import fetch_requests_session
 from SCRAPING.interrupt import install_sigint_handler, stop_requested
 from SCRAPING.models import SiteResult
@@ -56,6 +56,15 @@ CSV_FIELDS = [
     "fetch_error",
     "pages_checked",
     "evidence_snippets",
+    "site_stack_family",
+    "crawl_strategy",
+    "likely_vendor",
+    "heavy_js",
+    "ownership_hint_company_name",
+    "ownership_hint_about_text",
+    "ownership_hint_copyright",
+    "canonical_site_warning",
+    "site_profile",
 ]
 
 
@@ -333,32 +342,21 @@ def main() -> int:
                 break
             logger.info("(%d/%d) %s", i + 1, len(urls), site)
             try:
-                if browser:
-                    logger.info("  fetch: Playwright")
-                    r = process_site_playwright(
-                        browser,
-                        site,
-                        timeout_ms=args.timeout * 1000,
-                        max_extra_pages=args.max_extra_pages,
-                        ignore_https_errors=args.insecure_ssl,
-                    )
-                    if not r.homepage_loaded and not args.use_requests:
-                        logger.info("  retry: requests fallback")
-                        r2 = process_site_requests(
-                            session, site, args.timeout, args.max_extra_pages
-                        )
-                        if r2.homepage_loaded:
-                            r2.fetch_mode = "playwright_then_requests"
-                            r = r2
-                else:
-                    logger.info("  fetch: requests")
-                    r = process_site_requests(
-                        session, site, args.timeout, args.max_extra_pages
-                    )
-
+                r = process_site_hybrid(
+                    session,
+                    browser,
+                    site,
+                    args.timeout,
+                    args.max_extra_pages,
+                    use_requests_only=args.use_requests,
+                    ignore_https_errors=args.insecure_ssl,
+                )
                 logger.info(
-                    "  result: loaded=%s status=%s conf=%s best=%s redirect_mismatch=%s flags=%s",
+                    "  result: loaded=%s strategy=%s stack=%s vendor=%s status=%s conf=%s best=%s redirect_mismatch=%s flags=%s",
                     r.homepage_loaded,
+                    r.crawl_strategy,
+                    r.site_stack_family,
+                    r.likely_vendor,
                     r.final_status,
                     r.confidence_score,
                     r.best_candidate_normalized,
@@ -409,6 +407,7 @@ def main() -> int:
                     "redirect_chain",
                     "pages_checked",
                     "evidence_snippets",
+                    "site_profile",
                 ):
                     row[k] = json.dumps(row.get(k) or [])
                 w.writerow(row)

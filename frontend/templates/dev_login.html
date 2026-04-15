@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Developer console</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dev_console.css') }}">
+</head>
+<body>
+<div class="page">
+    <nav class="topbar">
+        <div class="logo">Dealership Scanner</div>
+        <div class="nav-links">
+            <a href="/">App home</a>
+        </div>
+    </nav>
+
+    <section class="auth-section">
+        <div class="auth-card dev-login-card">
+            <p class="eyebrow">Backend</p>
+            <h1>Developer console</h1>
+            <p class="dev-muted dev-login-lead">Enter the shared secret configured in <code>DEV_CONSOLE_SECRET</code>.</p>
+
+            {% if error %}
+            <div class="error-box">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" class="auth-form">
+                <div class="field-group">
+                    <label for="secret">Secret</label>
+                    <input type="password" id="secret" name="secret" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="primary-button full-width">Unlock</button>
+            </form>
+        </div>
+    </section>
+</div>
+</body>
+</html>

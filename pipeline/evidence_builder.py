@@ -96,5 +96,16 @@ def site_result_to_evidence_package(
             "distinct_domains_checked": list(
                 {urlparse(u).netloc.lower() for u in (sr.pages_checked or []) if u}
             ),
+            "site_profile": sr.site_profile or {},
+            "site_stack_family": sr.site_stack_family or "",
+            "crawl_strategy": sr.crawl_strategy or "",
+            "likely_vendor": sr.likely_vendor or "",
+            "heavy_js": bool(sr.heavy_js),
+            "site_ownership_hints": {
+                "company_name": sr.ownership_hint_company_name or "",
+                "about_text": (sr.ownership_hint_about_text or "")[:1200],
+                "copyright": sr.ownership_hint_copyright or "",
+            },
+            "canonical_site_warning": sr.canonical_site_warning or "",
         },
     )

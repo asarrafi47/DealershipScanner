@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Developer console — Dealership Scanner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dev_console.css') }}">
+</head>
+<body>
+<div class="page">
+    <nav class="topbar">
+        <div class="logo">Developer console</div>
+        <div class="nav-links">
+            <a href="/">App home</a>
+            {% if secret_gate %}
+            <form method="post" action="{{ url_for('dev_console.dev_logout') }}" class="dev-inline-form">
+                <button type="submit" class="dev-link-button">Sign out</button>
+            </form>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="dev-main">
+        <header class="dev-header">
+            <p class="db-eyebrow">Backend</p>
+            <h1 class="dev-title">Dealerships &amp; scanner manifest</h1>
+            <p class="dev-muted dev-intro">
+                Edits are written to <code>dealers.json</code> at the project root. Run
+                <code>python scanner.py</code> from that root to ingest inventory for these dealers.
+            </p>
+            {% if not secret_gate %}
+            <div class="dev-banner dev-banner--warn">
+                <strong>DEV_CONSOLE</strong> is on without <strong>DEV_CONSOLE_SECRET</strong>. Do not expose this server to the internet.
+            </div>
+            {% endif %}
+        </header>
+
+        <section class="dev-panel" aria-labelledby="dealers-heading">
+            <div class="dev-panel-head">
+                <h2 id="dealers-heading" class="dev-panel-title">dealers.json</h2>
+                <div class="dev-panel-actions">
+                    <button type="button" class="secondary-button" id="dev-add-row">Add dealership</button>
+                    <button type="button" class="primary-button" id="dev-save">Save changes</button>
+                </div>
+            </div>
+            <p id="dev-status" class="dev-status" role="status" aria-live="polite"></p>
+
+            <div class="dev-infer" aria-label="Infer dealership from URL">
+                <label class="dev-infer-label" for="dev-infer-url">Site URL</label>
+                <div class="dev-infer-row">
+                    <input type="url" id="dev-infer-url" class="dev-infer-input" placeholder="https://www.example-dealer.com" autocomplete="url">
+                    <button type="button" class="primary-button" id="dev-infer-btn">Look up &amp; add row</button>
+                </div>
+                <label class="dev-infer-label dev-infer-label--secondary" for="dev-infer-html">Optional: page HTML</label>
+                <textarea id="dev-infer-html" class="dev-infer-textarea" rows="4" placeholder="If “Look up” fails with 403, open the dealer site in your browser → View Page Source → copy all, paste here, then click the button again."></textarea>
+                <p class="dev-muted dev-infer-hint">Fetches the dealer homepage when possible; otherwise paste HTML so the same heuristics can run without a server-side fetch. Review the new row before saving.</p>
+            </div>
+
+            <div class="dev-table-wrap">
+                <table class="dev-table" id="dev-dealers-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">URL</th>
+                            <th scope="col">Provider</th>
+                            <th scope="col">Dealer ID</th>
+                            <th scope="col">Brand <span class="dev-th-hint">(optional)</span></th>
+                            <th scope="col" class="dev-col-actions"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="dev-dealers-body"></tbody>
+                </table>
+            </div>
+            <p class="dev-muted dev-footnote">
+                Provider <code>dealer_dot_com</code> and <code>dealer_on</code> match the Python parsers under <code>backend/parsers/</code>.
+                Dealer ID is a lowercase slug (used in API paths and stored on vehicle rows).
+                Look-up uses heuristics on the downloaded HTML; wrong platform or ID is possible on unusual sites.
+                Use <strong>Scan</strong> on a row to run <code>python scanner.py --dealer-id …</code> for that dealer (save <code>dealers.json</code> first; watch the Flask terminal for logs).
+            </p>
+        </section>
+
+        <section class="dev-panel dev-panel--ref" aria-labelledby="ref-heading">
+            <h2 id="ref-heading" class="dev-panel-title">Quick reference</h2>
+            <ul class="dev-ref-list">
+                <li><strong>Web app:</strong> <code>python run.py</code> — default <code>http://127.0.0.1:5000</code></li>
+                <li><strong>Scanner:</strong> <code>python scanner.py</code> — reads <code>dealers.json</code>, writes inventory DB</li>
+                <li><strong>Enable this page:</strong> set environment <code>DEV_CONSOLE=1</code>. Optional: <code>DEV_CONSOLE_SECRET</code> plus sign-in at <code>/dev/manifest/login</code></li>
+                <li><strong>Admin dev dashboard</strong> (imports, scanner jobs): <a href="/dev/">/dev/</a> — separate login</li>
+            </ul>
+        </section>
+    </main>
+</div>
+
+<script type="application/json" id="dev-providers-json">{{ providers | tojson }}</script>
+<script src="{{ url_for('static', filename='dev_console.js') }}" defer></script>
+</body>
+</html>

@@ -21,6 +21,12 @@ EVAL_CSV_FIELDS = [
     "final_domain",
     "redirected",
     "flags",
+    "site_stack_family",
+    "crawl_strategy",
+    "likely_vendor",
+    "heavy_js",
+    "stack_fingerprint",
+    "ownership_hint_company_name",
 ]
 
 
@@ -28,6 +34,7 @@ def enrich_run_summary_batch(summary: RunSummary, sites: list[Any]) -> None:
     """Populate top_* counters for dashboards and comparison runs."""
     assigned_groups: Counter[str] = Counter()
     unknown_domains: Counter[str] = Counter()
+    stack_families: Counter[str] = Counter()
 
     for s in sites:
         sd = getattr(s, "site_result_dict", None) or {}
@@ -41,6 +48,9 @@ def enrich_run_summary_batch(summary: RunSummary, sites: list[Any]) -> None:
             assigned_groups[canon] += 1
         elif st == "unknown" and fd:
             unknown_domains[fd] += 1
+        sf = (sd.get("site_stack_family") or "").strip()
+        if sf:
+            stack_families[sf] += 1
 
     summary.top_assigned_groups = [
         {"group": k, "count": v} for k, v in assigned_groups.most_common(50)
@@ -53,6 +63,9 @@ def enrich_run_summary_batch(summary: RunSummary, sites: list[Any]) -> None:
         for k, v in sorted(
             (summary.domain_failures or {}).items(), key=lambda x: -x[1]
         )[:50]
+    ]
+    summary.top_site_stack_families = [
+        {"family": k, "count": v} for k, v in stack_families.most_common(40)
     ]
 
 
@@ -71,6 +84,7 @@ def build_assigned_evidence_patterns(sites: list[Any]) -> list[dict[str, Any]]:
         canon = getattr(s, "merged_best_canonical", None) or sd.get(
             "best_candidate_canonical"
         )
+        prof = sd.get("site_profile") or {}
         out.append(
             {
                 "site_url": sd.get("url"),
@@ -78,6 +92,9 @@ def build_assigned_evidence_patterns(sites: list[Any]) -> list[dict[str, Any]]:
                 "source_page_types": sorted(page_types),
                 "cross_domain_evidence": cross,
                 "canonical_group": canon,
+                "site_stack_family": sd.get("site_stack_family") or "",
+                "stack_fingerprint": prof.get("stack_fingerprint") or "",
+                "likely_vendor": sd.get("likely_vendor") or "",
             }
         )
     return out
@@ -97,6 +114,7 @@ def write_hybrid_eval_csv(path: Path | str, result: Any) -> None:
         w.writeheader()
         for s in result.sites:
             sd = getattr(s, "site_result_dict", None) or {}
+            prof = sd.get("site_profile") or {}
             w.writerow(
                 {
                     "site_url": sd.get("url") or "",
@@ -109,6 +127,13 @@ def write_hybrid_eval_csv(path: Path | str, result: Any) -> None:
                     "final_domain": sd.get("final_domain") or "",
                     "redirected": sd.get("redirected"),
                     "flags": json.dumps(sd.get("flags") or []),
+                    "site_stack_family": sd.get("site_stack_family") or "",
+                    "crawl_strategy": sd.get("crawl_strategy") or "",
+                    "likely_vendor": sd.get("likely_vendor") or "",
+                    "heavy_js": sd.get("heavy_js"),
+                    "stack_fingerprint": prof.get("stack_fingerprint") or "",
+                    "ownership_hint_company_name": sd.get("ownership_hint_company_name")
+                    or "",
                 }
             )
     logger.info("Wrote evaluation CSV: %s", p)

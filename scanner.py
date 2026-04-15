@@ -4,6 +4,7 @@ Manifest-driven dealership inventory scanner. Uses playwright + stealth,
 session warmup to avoid 403, network interception for JSON, and HTML fallback.
 Run from project root: python scanner.py
 """
+import argparse
 import asyncio
 import json
 import logging
@@ -55,9 +56,47 @@ def load_manifest():
         return json.load(f)
 
 
+def filter_manifest_by_dealer_id(dealers: list, dealer_id: str) -> list:
+    """Return rows whose dealer_id matches (exact string after strip)."""
+    want = (dealer_id or "").strip()
+    if not want:
+        return []
+    return [d for d in dealers if (d.get("dealer_id") or "").strip() == want]
+
+
 def _is_valid_vehicle_list(body) -> bool:
     """True if JSON contains a list with at least 3 dicts that have vin/VIN (same as parser logic)."""
     return find_vehicle_list(body) is not None
+
+
+def _is_playwright_shutdown_error(exc: BaseException) -> bool:
+    """True when the browser was closed mid-operation (e.g. Ctrl+C / task cancellation)."""
+    name = type(exc).__name__
+    msg = str(exc).lower()
+    if name == "TargetClosedError":
+        return True
+    if "targetclosed" in name.lower():
+        return True
+    if "target page, context or browser has been closed" in msg:
+        return True
+    if "browser has been closed" in msg:
+        return True
+    if "context or browser has been closed" in msg:
+        return True
+    return False
+
+
+async def _safe_close_playwright(context, browser) -> None:
+    if context is not None:
+        try:
+            await context.close()
+        except BaseException:
+            pass
+    if browser is not None:
+        try:
+            await browser.close()
+        except BaseException:
+            pass
 
 
 async def run_dealer(playwright, dealer: dict, browser_type="chromium"):
@@ -71,12 +110,8 @@ async def run_dealer(playwright, dealer: dict, browser_type="chromium"):
 
     logger.info("Warmup: %s — navigating to base URL", name)
     launch = getattr(playwright, browser_type, playwright.chromium).launch
-    browser = await launch(headless=True)
-    context = await browser.new_context(
-        viewport={"width": 1920, "height": 1080},
-        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    )
-    page = await context.new_page()
+    browser = None
+    context = None
     intercepted_json = []
     found_data = {"value": False}
 
@@ -94,6 +129,12 @@ async def run_dealer(playwright, dealer: dict, browser_type="chromium"):
             pass
 
     try:
+        browser = await launch(headless=True)
+        context = await browser.new_context(
+            viewport={"width": 1920, "height": 1080},
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        )
+        page = await context.new_page()
         await page.goto(url, wait_until="domcontentloaded", timeout=30000)
         await asyncio.sleep(4)
         await page.evaluate("window.scrollTo(0, document.body.scrollHeight / 2)")
@@ -195,15 +236,24 @@ async def run_dealer(playwright, dealer: dict, browser_type="chromium"):
         await page.screenshot(path=str(screenshot_path))
         logger.info("Debug: saved screenshot to %s", screenshot_path)
         return 0
+    except asyncio.CancelledError:
+        raise
+    except Exception as e:
+        if _is_playwright_shutdown_error(e):
+            return 0
+        raise
     finally:
-        await context.close()
-        await browser.close()
+        await _safe_close_playwright(context, browser)
 
 
-async def main():
+async def main(dealers: list | None = None):
+    if dealers is None:
+        dealers = load_manifest()
     logger.info("Loading manifest: %s", MANIFEST_PATH)
-    dealers = load_manifest()
-    logger.info("Found %d dealers", len(dealers))
+    if not dealers:
+        logger.error("No dealers to scan (manifest empty or filter matched nothing).")
+        return
+    logger.info("Found %d dealer(s) to run", len(dealers))
 
     # Enhance BMW dealerships with special optimization
     bmw_enhanced_dealers = enhance_scraping_for_bmw_dealerships(dealers)
@@ -220,6 +270,8 @@ async def main():
                         # This would be where we would call the BMW-specific enhanced browsing
                         pass
                     await run_dealer(p, dealer)
+                except asyncio.CancelledError:
+                    raise
                 except Exception as e:
                     logger.exception("Dealer %s failed: %s", dealer.get("dealer_id"), e)
                     DEBUG_DIR.mkdir(parents=True, exist_ok=True)
@@ -240,6 +292,8 @@ async def main():
             for dealer in bmw_enhanced_dealers:
                 try:
                     await run_dealer(p, dealer)
+                except asyncio.CancelledError:
+                    raise
                 except Exception as e:
                     logger.exception("Dealer %s failed: %s", dealer.get("dealer_id"), e)
                     DEBUG_DIR.mkdir(parents=True, exist_ok=True)
@@ -257,4 +311,32 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    ap = argparse.ArgumentParser(
+        description="Manifest-driven dealership inventory scanner (Playwright + stealth)."
+    )
+    ap.add_argument(
+        "--dealer-id",
+        metavar="ID",
+        default=None,
+        help="Scan only this dealer_id from dealers.json (e.g. from the /dev console).",
+    )
+    args = ap.parse_args()
+    to_run = load_manifest()
+    if args.dealer_id:
+        to_run = filter_manifest_by_dealer_id(to_run, args.dealer_id)
+        if not to_run:
+            logger.error(
+                "No dealer with dealer_id %r in %s — save the dealer in /dev first.",
+                args.dealer_id.strip(),
+                MANIFEST_PATH,
+            )
+            sys.exit(1)
+
+    try:
+        asyncio.run(main(to_run))
+    except KeyboardInterrupt:
+        logger.info("Scanner gracefully stopped by user.")
+        sys.exit(0)
+    except asyncio.CancelledError:
+        logger.info("Scanner gracefully stopped by user.")
+        sys.exit(0)

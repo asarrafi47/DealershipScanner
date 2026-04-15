@@ -552,3 +552,50 @@ def api_geocode_missing():
 def api_deduplicate():
     result = deduplicate_dealerships()
     return jsonify({"ok": True, **result})
+
+
+def _spawn_inventory_enrich(*, limit: int | None, vision_only: bool) -> None:
+    from backend.enrichment_service import InventoryEnricher
+
+    try:
+        enricher = InventoryEnricher()
+        enricher.run_all(limit=limit, vision_only=vision_only)
+    except Exception:
+        import logging
+
+        logging.getLogger("dev_routes").exception("Inventory enrichment background job failed")
+
+
+@dev_bp.route("/api/dev/enrich_all", methods=["POST"])
+def api_dev_enrich_all():
+    """
+    Kick off inventory enrichment (EPA Master Catalog + optional Ollama vision) in a
+    background thread. Full URL: ``POST /dev/api/dev/enrich_all``.
+
+    JSON body (optional): ``{"limit": 10, "vision_only": false}``
+    """
+    data = request.get_json(silent=True) or {}
+    limit = data.get("limit")
+    if limit is not None:
+        try:
+            limit = int(limit)
+            if limit < 1:
+                limit = None
+        except (TypeError, ValueError):
+            limit = None
+    vision_only = bool(data.get("vision_only"))
+    threading.Thread(
+        target=_spawn_inventory_enrich,
+        kwargs={"limit": limit, "vision_only": vision_only},
+        name="inventory-enrich",
+        daemon=True,
+    ).start()
+    return jsonify(
+        {
+            "ok": True,
+            "started": True,
+            "limit": limit,
+            "vision_only": vision_only,
+            "message": "Enrichment started in background; check server logs for progress.",
+        }
+    ), 202

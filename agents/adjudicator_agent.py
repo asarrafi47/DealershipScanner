@@ -20,6 +20,7 @@ Rules:
 - Phrases about Privacy Policy, Terms of Use, Terms of Service, cookies, marketing slogans, "Charlotte community", inventory, service scheduling, or generic website copy are NOT dealer groups. Reject them explicitly in rejected_candidates.
 - A valid answer looks like a company name: e.g. "Hendrick Automotive Group", "Tuttle-Click Automotive Group", "Penske Automotive Group", "AutoNation", "Lithia Motors".
 - If the site shows a redirect_mismatch flag true, you must not trust destination-specific text; prefer unknown unless the evidence clearly names a group independent of that issue.
+- crawl_metadata.site_ownership_hints (company name, about snippet, copyright) and crawl_metadata.site_profile (tech/stack heuristics) are weak, secondary context only — similar to Wappalyzer-style guesses. Do not assign a dealer group from them alone; they may slightly reinforce or contradict page snippets when clearly consistent or inconsistent.
 - Output valid JSON only matching the requested schema. No markdown outside JSON.
 
 JSON schema for your response:

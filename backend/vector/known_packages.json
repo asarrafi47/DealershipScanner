@@ -1,0 +1,23 @@
+{
+  "by_make": {
+    "BMW": [
+      "Executive Package",
+      "Premium Package",
+      "M Sport Package"
+    ],
+    "Mercedes-Benz": [
+      "AMG Line",
+      "Driver Assistance Package"
+    ],
+    "Ford": [
+      "FX4 Off-Road Package",
+      "Towing Package"
+    ]
+  },
+  "by_make_model": {
+    "Ford|Explorer": [
+      "ST-Line Appearance Package"
+    ]
+  },
+  "_comment": "by_make: packages apply to all rows for that make. by_make_model: key is 'MAKE|MODEL' (EPA baseModel or model prefix). These strings are appended to Canonical Descriptions at ingest and exposed in metadata as known_packages."
+}

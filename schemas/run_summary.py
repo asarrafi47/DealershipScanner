@@ -30,5 +30,6 @@ class RunSummary(BaseModel):
     top_assigned_groups: list[dict[str, Any]] = Field(default_factory=list)
     top_unknown_domains: list[dict[str, Any]] = Field(default_factory=list)
     top_fetch_failure_domains: list[dict[str, Any]] = Field(default_factory=list)
+    top_site_stack_families: list[dict[str, Any]] = Field(default_factory=list)
 
     notes: str = ""

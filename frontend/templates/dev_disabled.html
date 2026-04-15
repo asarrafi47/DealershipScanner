@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Developer console — disabled</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dev_console.css') }}">
+</head>
+<body>
+<div class="page">
+    <nav class="topbar">
+        <div class="logo">Dealership Scanner</div>
+        <div class="nav-links"><a href="/">App home</a></div>
+    </nav>
+    <main class="dev-main">
+        <header class="dev-header">
+            <p class="db-eyebrow">Backend</p>
+            <h1 class="dev-title">Developer console is off</h1>
+            <p class="dev-muted dev-intro">
+                The dealers manifest console (<code>/dev/manifest</code>) is disabled until you enable it for this process.
+            </p>
+            <div class="dev-banner dev-banner--warn">
+                In the same terminal where you run the app, run:
+                <br><br>
+                <code>export DEV_CONSOLE=1</code>
+                <br>
+                then start again: <code>python3 run.py</code>
+                <br><br>
+                Optional lock: <code>export DEV_CONSOLE_SECRET='your-secret'</code> — then open <code>/dev/manifest/login</code>.
+            </div>
+            <p class="dev-muted dev-intro" style="margin-top: 20px;">
+                If the page still fails after that, install dependencies: <code>pip install beautifulsoup4 requests</code>
+                (needed for “Look up” from URL).
+            </p>
+        </header>
+    </main>
+</div>
+</body>
+</html>

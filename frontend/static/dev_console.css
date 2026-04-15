@@ -1,0 +1,346 @@
+/* Developer console — dark UI aligned with style.css */
+
+.dev-main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 48px 80px;
+}
+
+.dev-header {
+    margin-bottom: 36px;
+}
+
+.dev-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 8px 0 12px;
+    letter-spacing: -0.02em;
+}
+
+.dev-intro {
+    max-width: 720px;
+    line-height: 1.55;
+    font-size: 14px;
+}
+
+.dev-intro code {
+    font-size: 13px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dev-muted {
+    color: #a8a8a8;
+    font-size: 14px;
+}
+
+.dev-banner {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border-radius: var(--main-radius, 10px);
+    font-size: 13px;
+    line-height: 1.5;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dev-banner--warn {
+    background: rgba(234, 179, 8, 0.12);
+    border-color: rgba(234, 179, 8, 0.35);
+    color: #fde68a;
+}
+
+.dev-panel {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 22px 22px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    margin-bottom: 24px;
+}
+
+.dev-panel--ref {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.dev-panel-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.dev-panel-title {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.dev-panel-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.dev-status {
+    min-height: 1.25em;
+    font-size: 13px;
+    margin-bottom: 14px;
+    color: #c4c4c4;
+}
+
+.dev-status.dev-status--ok {
+    color: #86efac;
+}
+
+.dev-status.dev-status--err {
+    color: #fca5a5;
+}
+
+.dev-infer {
+    margin-bottom: 22px;
+    padding: 16px 18px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.dev-infer-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: #b0b0b0;
+    margin-bottom: 8px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.dev-infer-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.dev-infer-input {
+    flex: 1 1 220px;
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #000;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.dev-infer-input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.dev-infer-label--secondary {
+    margin-top: 16px;
+}
+
+.dev-infer-textarea {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #080808;
+    color: #e8e8e8;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    resize: vertical;
+    min-height: 88px;
+    box-sizing: border-box;
+}
+
+.dev-infer-textarea:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.dev-infer-hint {
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.dev-table-wrap {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dev-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.dev-table th,
+.dev-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    vertical-align: middle;
+}
+
+.dev-table th {
+    color: #b0b0b0;
+    font-weight: 500;
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.dev-th-hint {
+    font-weight: 400;
+    color: #888;
+}
+
+.dev-table input,
+.dev-table select {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #000;
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.dev-table input:focus,
+.dev-table select:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.dev-col-actions {
+    width: 168px;
+}
+
+.dev-row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.dev-row-scan {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.dev-row-remove {
+    background: transparent;
+    border: 1px solid rgba(248, 113, 113, 0.45);
+    color: #fecaca;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.dev-row-remove:hover {
+    background: rgba(248, 113, 113, 0.12);
+}
+
+.dev-footnote {
+    margin-top: 14px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.dev-ref-list {
+    margin: 0;
+    padding-left: 1.2em;
+    color: #c8c8c8;
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.dev-ref-list code {
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dev-inline-form {
+    display: inline;
+    margin: 0;
+}
+
+.dev-link-button {
+    background: none;
+    border: none;
+    color: #d0d0d0;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.dev-link-button:hover {
+    color: #ffffff;
+}
+
+.dev-login-card {
+    max-width: 420px;
+}
+
+.dev-login-lead {
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.dev-login-lead code {
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: var(--main-radius, 10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: #e5e5e5;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.secondary-button:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+@media (max-width: 720px) {
+    .dev-main {
+        padding: 28px 20px 64px;
+    }
+
+    .dev-table th,
+    .dev-table td {
+        padding: 8px 10px;
+    }
+}
