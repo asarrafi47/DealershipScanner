@@ -10,7 +10,9 @@ import re
 from typing import Any
 
 from backend.db.inventory_db import get_car_by_vin
-from backend.knowledge_engine import decode_trim_logic, lookup_epa_aggregate
+from backend.knowledge_engine import decode_trim_logic, lookup_epa_aggregate, prepare_car_detail_context
+from backend.utils.car_serialize import DISPLAY_DASH, build_engine_display, format_display_value
+from backend.utils.field_clean import clean_car_row_dict, is_effectively_empty
 
 OPENAI_MODEL = os.environ.get("OPENAI_CHAT_MODEL", "gpt-4o")
 
@@ -127,7 +129,7 @@ def verify_car_data(vin: str) -> dict[str, Any]:
 
     truth_drive = regex.get("drivetrain") or epa.get("drivetrain")
     dealer_drive = (car.get("drivetrain") or "").strip()
-    if truth_drive and dealer_drive and dealer_drive.upper() not in ("N/A", "NA", "—", "-"):
+    if truth_drive and dealer_drive and not is_effectively_empty(dealer_drive):
         d1 = _norm_drive_compare(dealer_drive)
         d2 = _norm_drive_compare(truth_drive)
         if d1 and d2 and d1 != d2:
@@ -244,14 +246,15 @@ def run_ai_chat(
 # Substrings that signal the user wants external model/market knowledge.
 # Checked against lowercased message; kept as substrings so "reliability",
 # "reliable", "unreliable" all match "reliab", etc.
+# Tight triggers: market / reliability / explicit powertrain-economy questions only.
 _WEB_RESEARCH_TRIGGERS: tuple[str, ...] = (
-    "reliab",          # reliability / reliable / unreliable
-    "problem",         # problem / problems
-    "issue",           # issue / issues
-    "recall",          # recall / recalls
-    "defect",          # defect / defects
+    "reliab",
+    "problem",
+    "issue",
+    "recall",
+    "defect",
     "fault",
-    "review",          # review / reviews / reviewed
+    "review",
     "worth it",
     "good deal",
     "bad deal",
@@ -268,72 +271,34 @@ _WEB_RESEARCH_TRIGGERS: tuple[str, ...] = (
     "common problem",
     "known issue",
     "typical problem",
-    "maintain",        # maintain / maintenance
+    "maintain",
     "repair cost",
     "ownership cost",
     "cost to own",
-    "long.term",       # long-term
-    "depreciat",       # depreciation / depreciate
+    "long.term",
+    "depreciat",
     "resale",
     "buy or lease",
     "should i buy",
     "is this a good",
-    # ── Spec / powertrain queries ──────────────────────────────────────────
-    "engine",          # "what engine does this have?"
-    " hp",             # horsepower shorthand (leading space avoids "chip" etc.)
+    " hp",
     "horsepower",
     "torque",
     "powertrain",
-    "transmission",    # "what transmission?"
-    "drivetrain",
-    " awd",            # drivetrain questions
-    " fwd",
-    " rwd",
-    "0-60",            # performance
+    "fuel economy",
+    "mpg",
+    "range",
+    "0-60",
     "quarter mile",
     "towing",
     "payload",
     "tow capacity",
-    "fuel economy",
-    "mpg",
-    "range",           # EV range
-    "trim level",
-    "trim levels",
-    "trim option",
-    "spec",            # specs / specifications
-    "feature",         # features this model has
-    "option",          # optional packages
-    "package",
     "safety rating",
     "crash test",
     "warranty",
+    "lemon",
+    "title brand",
 )
-
-# ── Critical inventory fields — if any are blank/N/A, force web research ──
-_CRITICAL_FIELDS = ("engine", "transmission", "drivetrain")
-
-
-def _field_is_blank(v: Any) -> bool:
-    """Return True if an inventory field carries no real data."""
-    if v is None:
-        return True
-    s = str(v).strip().lower()
-    return s in ("", "n/a", "na", "unknown", "-", "—", "none", "null")
-
-
-def _has_missing_critical_fields(car: dict[str, Any]) -> bool:
-    """
-    Return True if any critical spec field (engine, transmission, drivetrain)
-    is absent or a placeholder, which means the LLM would have nothing useful
-    to say and should use web data instead.
-    """
-    checks = {
-        "engine": car.get("fuel_type") or car.get("cylinders"),
-        "transmission": car.get("transmission"),
-        "drivetrain": car.get("drivetrain"),
-    }
-    return any(_field_is_blank(v) for v in checks.values())
-
 
 def _needs_web_research(message: str) -> bool:
     """Return True if *message* contains any web-research trigger substring."""
@@ -395,8 +360,6 @@ def _build_search_query(car: dict[str, Any], message: str) -> str:
         suffix = "fuel economy mpg efficiency"
     elif any(t in low for t in ("towing", "payload", "tow capacity")):
         suffix = "towing capacity payload specs"
-    elif any(t in low for t in ("spec", "trim level", "trim option", "feature", "option", "package")):
-        suffix = "specs features trim levels options"
     elif any(t in low for t in ("safety rating", "crash test")):
         suffix = "safety ratings crash test NHTSA IIHS"
     elif any(t in low for t in ("warranty",)):
@@ -407,6 +370,57 @@ def _build_search_query(car: dict[str, Any], message: str) -> str:
         suffix = " ".join(words[:6]) if words else "specs review"
 
     return f"{base} {suffix}".strip()
+
+
+def _evidence_line(label: str, val: Any) -> str:
+    s = format_display_value(val)
+    if s == DISPLAY_DASH:
+        return f"{label}: not shown on this listing"
+    return f"{label}: {s}"
+
+
+def _price_evidence(val: Any) -> str:
+    if val is None:
+        return "Price: not shown on this listing"
+    try:
+        p = float(val)
+    except (TypeError, ValueError):
+        return "Price: not shown on this listing"
+    if p > 0:
+        return f"Price: ${p:,.0f}"
+    return "Price: not shown on this listing"
+
+
+def _mileage_evidence(val: Any) -> str:
+    if val is None:
+        return "Mileage: not shown on this listing"
+    try:
+        mi = int(val)
+    except (TypeError, ValueError):
+        return "Mileage: not shown on this listing"
+    if mi > 0:
+        return f"Mileage: {mi:,} mi"
+    return "Mileage: not shown on this listing"
+
+
+def _history_highlights_snippet(car: dict[str, Any]) -> str:
+    h = car.get("history_highlights")
+    if h is None:
+        return ""
+    if isinstance(h, list):
+        parts: list[str] = []
+        for x in h:
+            sx = format_display_value(x)
+            if sx != DISPLAY_DASH and len(sx) > 1:
+                parts.append(sx)
+        return " | ".join(parts[:24])
+    if isinstance(h, str) and h.strip():
+        t = h.strip()[:2000]
+        tl = t.lower()
+        if "see manufacturer" in tl or "manufacturer specifications" in tl:
+            return ""
+        return t
+    return ""
 
 
 def run_car_page_chat(car: dict[str, Any], user_message: str) -> dict[str, Any]:
@@ -430,173 +444,170 @@ def run_car_page_chat(car: dict[str, Any], user_message: str) -> dict[str, Any]:
     except ImportError as e:
         return {"reply": "", "error": f"llm_import:{e}", "discrepancy_flags": []}
 
-    # ── Build concise local context from inventory.db row ─────────────────
-    year  = car.get("year")  or "Unknown year"
-    make  = car.get("make")  or ""
-    model = car.get("model") or ""
-    trim  = car.get("trim")  or ""
-    price = car.get("price")
-    mileage = car.get("mileage")
-    vin   = car.get("vin")   or ""
-    dealer_name = car.get("dealer_name") or ""
-    dealer_url  = car.get("dealer_url")  or ""
-    ext_color   = car.get("exterior_color") or ""
-    int_color   = car.get("interior_color") or ""
-    fuel        = car.get("fuel_type")    or ""
-    transmission = car.get("transmission") or ""
-    drivetrain  = car.get("drivetrain")   or ""
-    cylinders   = car.get("cylinders")
-    stock       = car.get("stock_number") or ""
+    c = clean_car_row_dict(car)
+    ctx = prepare_car_detail_context(car)
+    verified = ctx.get("verified_specs") or {}
 
-    price_str   = f"${price:,.0f}" if price and price > 0 else "price not listed"
-    mileage_str = f"{mileage:,} mi" if mileage else "mileage not listed"
-    cyl_str     = f"{cylinders}-cylinder" if cylinders else ""
+    year = c.get("year")
+    make_kw = (c.get("make") or "").strip() or "unknown"
+    model_kw = (c.get("model") or "").strip() or "unknown"
+    trim_kw = format_display_value(c.get("trim"))
+    if trim_kw == DISPLAY_DASH:
+        trim_kw = ""
 
-    local_context = (
-        f"Vehicle: {year} {make} {model} {trim}\n"
-        f"Price: {price_str}  |  Mileage: {mileage_str}\n"
-        f"VIN: {vin}  |  Stock #: {stock}\n"
-        f"Drivetrain: {drivetrain}  |  Engine: {cyl_str} {fuel}  |  Trans: {transmission}\n"
-        f"Exterior: {ext_color}  |  Interior: {int_color}\n"
-        f"Dealer: {dealer_name}  ({dealer_url})"
-    ).strip()
+    engine_line = build_engine_display(c, verified)
 
-    # ── Verbose diagnostic trace (visible in Flask terminal) ──────────────
-    print(f"\n[CHAT] ── New chat request ─────────────────────────────────────")
-    print(f"[CHAT] message     = {msg!r}")
-    print(f"[CHAT] car         = {year} {make} {model} {trim!r}")
-    print(f"[CHAT] transmission= {transmission!r}  drivetrain={drivetrain!r}")
-    print(f"[CHAT] fuel        = {fuel!r}  cylinders={cylinders!r}")
+    heading_parts = [
+        x
+        for x in (
+            format_display_value(year),
+            format_display_value(c.get("make")),
+            format_display_value(c.get("model")),
+            format_display_value(c.get("trim")),
+        )
+        if x != DISPLAY_DASH
+    ]
+    listing_head = " ".join(heading_parts) if heading_parts else "Vehicle (listing identifiers incomplete)"
+
+    lines = [
+        f"Listing heading: {listing_head}",
+        _price_evidence(c.get("price")),
+        _mileage_evidence(c.get("mileage")),
+        _evidence_line("VIN", c.get("vin")),
+        _evidence_line("Stock #", c.get("stock_number")),
+        f"Engine (derived for this prompt): {engine_line}",
+        _evidence_line("Fuel type", c.get("fuel_type")),
+        _evidence_line("Cylinders", c.get("cylinders")),
+        _evidence_line("Transmission", verified.get("transmission_display") or c.get("transmission")),
+        _evidence_line("Drivetrain", verified.get("drivetrain_display") or c.get("drivetrain")),
+        _evidence_line("Exterior color", c.get("exterior_color")),
+        _evidence_line("Interior color", c.get("interior_color")),
+        _evidence_line("Body style", c.get("body_style")),
+        _evidence_line("Condition", c.get("condition")),
+        _evidence_line("Dealer name", c.get("dealer_name")),
+        _evidence_line("Dealer URL", c.get("dealer_url")),
+    ]
+    desc = (c.get("description") or "").strip() if isinstance(c.get("description"), str) else ""
+    if desc and not is_effectively_empty(desc):
+        lines.append(_evidence_line("Description excerpt", desc[:900]))
+
+    local_context = "\n".join(lines).strip()
+
+    listing_notes = _history_highlights_snippet(car)
+    if desc and not is_effectively_empty(desc):
+        listing_notes = (listing_notes + "\n\nDescription:\n" + desc[:2500]).strip()
+
+    pkg_raw = c.get("packages")
+    packages_snip = ""
+    if isinstance(pkg_raw, str) and pkg_raw.strip():
+        packages_snip = pkg_raw.strip()[:1800]
+
+    verified_snip = ""
+    if verified:
+        verified_snip = json.dumps(verified, indent=1, default=str)[:2500]
+
+    print(f"\n[CHAT] message={msg!r}  car={listing_head[:80]!r}")
+
+    research_text = ""
+    research_url = ""
+    research_used = False
+    cache_hit = False
     kw_hit = _needs_web_research(msg)
-    miss   = _has_missing_critical_fields(car)
-    print(f"[CHAT] keyword_trigger={kw_hit}  missing_critical_fields={miss}")
+    add_model_knowledge_fn = None
+    get_model_knowledge_fn = None
 
-    # ── Cache-first research: ChromaDB → WebResearcher → write-back ──────
-    research_text: str  = ""
-    research_url:  str  = ""
-    research_used: bool = False
-    cache_hit:     bool = False
-
-    if kw_hit or miss:
-
-        # ── Step 1: ChromaDB cache lookup ─────────────────────────────────
-        print("[CHAT] Checking ChromaDB car_knowledge cache …")
+    if kw_hit:
+        print("[CHAT] keyword_trigger=True — knowledge cache / web research allowed")
         try:
-            from backend.vector.chroma_service import (
-                get_model_knowledge,
-                add_model_knowledge,
+            from backend.vector.pgvector_service import (
+                add_model_knowledge as add_model_knowledge_fn,
+                get_model_knowledge as get_model_knowledge_fn,
             )
-            cached_text, cached_url = get_model_knowledge(
-                year=year, make=make, model=model
-            )
-            if cached_text:
-                research_text = cached_text
-                research_url  = cached_url or ""
-                research_used = True
-                cache_hit     = True
-                print(
-                    f"[CHAT] ChromaDB CACHE HIT — {len(research_text)} chars "
-                    f"from {research_url!r}"
-                )
-        except Exception as exc:
-            print(f"[CHAT] ChromaDB lookup failed (non-fatal): {exc}")
-            # define add_model_knowledge as None so the write-back is skipped
-            add_model_knowledge = None  # type: ignore[assignment]
+        except ImportError as exc:
+            print(f"[CHAT] pgvector knowledge import failed (non-fatal): {exc}")
 
-        # ── Step 2: Live web research (cache miss only) ───────────────────
+        if get_model_knowledge_fn is not None:
+            try:
+                cached_text, cached_url = get_model_knowledge_fn(
+                    year=year, make=make_kw, model=model_kw
+                )
+                if cached_text:
+                    research_text = cached_text
+                    research_url = cached_url or ""
+                    research_used = True
+                    cache_hit = True
+            except Exception as exc:
+                print(f"[CHAT] knowledge cache lookup failed (non-fatal): {exc}")
+
         if not cache_hit:
-            print("[CHAT] Cache miss — triggering WebResearcher …")
             try:
                 from backend.utils.web_researcher import WebResearcher
-                query = _build_search_query(car, msg)
-                print(f"[CHAT] ACTION: Starting Web Research …")
-                print(f"[CHAT] search_query = {query!r}")
+
+                query = _build_search_query(c, msg)
                 researcher = WebResearcher(timeout_ms=25_000, max_text_chars=2_000)
                 result = researcher.search_and_summarize(query)
-
                 if result and result.text:
                     research_text = result.text
-                    research_url  = result.url
+                    research_url = result.url
                     research_used = True
-                    print(
-                        f"[CHAT] Research SUCCESS: {len(result.text)} chars "
-                        f"from {result.url}"
-                    )
-
-                    # ── Step 3: Write scraped data back to ChromaDB ───────
-                    print("[CHAT] Writing research to ChromaDB car_knowledge …")
-                    try:
-                        if add_model_knowledge is not None:
-                            stored = add_model_knowledge(
-                                year=year, make=make, model=model,
+                    if add_model_knowledge_fn is not None:
+                        try:
+                            add_model_knowledge_fn(
+                                year=year,
+                                make=make_kw,
+                                model=model_kw,
                                 text=result.text,
                                 source_url=result.url,
-                                trim=trim,
+                                trim=trim_kw or "",
                             )
-                            print(
-                                f"[CHAT] ChromaDB write: {'OK ✓' if stored else 'FAILED'}"
-                            )
-                    except Exception as exc_store:
-                        print(f"[CHAT] ChromaDB write EXCEPTION: {exc_store}")
-
-                else:
-                    print("[CHAT] Research returned None (no suitable page found).")
-
+                        except Exception as exc_store:
+                            print(f"[CHAT] knowledge cache write EXCEPTION: {exc_store}")
             except Exception as exc:
-                print(f"[CHAT] Research EXCEPTION: {exc}")
                 import logging as _logging
-                _logging.getLogger(__name__).warning(
-                    "[ai_agent] WebResearcher failed: %s", exc
-                )
 
-    print(f"[CHAT] research_used={research_used}  cache_hit={cache_hit}")
+                _logging.getLogger(__name__).warning("[ai_agent] WebResearcher failed: %s", exc)
 
-    # ── Assemble the "Context Sandwich" system prompt ─────────────────────
     system_parts: list[str] = [
-        "You are a Dealership Expert Assistant with access to both local inventory "
-        "data and live web research.\n\n"
-        "RULES:\n"
-        "1. Always prioritise the [Local Inventory Data] for specifics "
-        "(price, VIN, mileage, stock status, dealer details). "
-        "Never contradict the local data.\n"
-        "2. Use [Internet Research Data] for general model knowledge, "
-        "reliability trends, expert opinions, and market comparisons "
-        "that are not available in the inventory record.\n"
-        "3. If you use web research data, you MUST cite the source URL at the "
-        "end of your answer on its own line, formatted as:\n"
-        "   Source: <url>\n"
-        "4. If the inventory data and web data conflict, trust the local data "
-        "for this specific car and note the discrepancy.\n"
-        "5. Keep answers focused and concise (3-5 sentences) unless the user "
-        "asks for detail. Never invent specifications.\n\n",
-
-        "── [Local Inventory Data] ──────────────────────────────────────────\n",
+        "You answer questions about one dealership listing. Follow the evidence blocks in order; "
+        "never treat cached model text or web snippets as facts about this VIN.\n\n"
+        "STYLE: Exactly 2–4 short sentences. Lead with the direct answer. If the listing lines say "
+        "'not shown on this listing', repeat that wording — never substitute guessed specs, packages, "
+        "or options for this VIN. Label block (4) as inferred from trim/EPA, not dealer-confirmed.\n\n"
+        "── (1) Local listing (SQLite) ─────────────────────────────────────\n",
         local_context,
-        "\n────────────────────────────────────────────────────────────────────\n",
+        "\n\n── (2) Listing notes / raw text ───────────────────────────────────\n",
+        listing_notes or "(none)\n",
+        "\n\n── (3) Enrichment packages JSON (may include vision observations) ─\n",
+        packages_snip or "(none)\n",
+        "\n\n── (4) Trim / EPA inferred specs (not dealer-confirmed) ────────────\n",
+        verified_snip or "(none)\n",
     ]
 
     if research_used:
+        label = "[Model knowledge cache]" if cache_hit else "[Internet research]"
         system_parts += [
-            "\n── [Internet Research Data] ────────────────────────────────────────\n",
-            f"Source URL: {research_url}\n\n",
+            f"\n\n── (5) {label} ───────────────────────────────────────────────────\n",
+            f"Source URL: {research_url or 'n/a'}\n\n",
             research_text,
-            "\n────────────────────────────────────────────────────────────────────\n",
-            "\nRemember: cite the Source URL above at the end of your response "
-            "if you draw on the Internet Research Data.\n",
+            "\nIf you use this block, end your reply with a line: Source: <url>\n",
         ]
     else:
         system_parts.append(
-            "\nNo external web data was fetched for this question. "
-            "Answer only from the Local Inventory Data and your general knowledge. "
-            "If you lack information, say so clearly.\n"
+            "\n\n── (5) External research ───────────────────────────────────────────\n"
+            "(not fetched — answer from blocks 1–4 only, plus cautious general knowledge "
+            "where appropriate; do not invent listing-specific facts.)\n"
         )
 
     system = "".join(system_parts)
 
-    # ── Call the LLM ──────────────────────────────────────────────────────
     client = OpenAICompatibleClient()
     try:
-        reply = client.complete_text(system=system, user=msg, temperature=0.45)
+        reply = client.complete_text(
+            system=system,
+            user=msg,
+            temperature=0.28,
+            max_tokens=280,
+        )
     except LLMResponseError as e:
         return {"reply": "", "error": str(e), "discrepancy_flags": []}
     except Exception as e:

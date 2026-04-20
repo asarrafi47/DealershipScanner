@@ -22,40 +22,36 @@
             <header class="auth-card__head">
                 <p class="eyebrow">Developer</p>
                 <h1>Admin login</h1>
-                <p class="auth-card__lede">Tools at <code>/dev</code> — not the same account as the main app login.</p>
+                <p class="auth-card__lede">Tools at <code>/dev</code> use operator accounts in <code>dev_users.db</code> (not <code>users.db</code>). Production bootstrap: <code>ADMIN_USERNAME</code> / <code>ADMIN_PASSWORD</code>. Optional self-register when enabled.</p>
             </header>
-
-            <aside class="admin-credential-hint" aria-label="Default credentials">
-                <p class="admin-credential-hint__title">Default dev credentials</p>
-                <dl class="admin-credential-hint__kv">
-                    <dt>Username</dt>
-                    <dd><kbd>admin</kbd></dd>
-                    <dt>Password</dt>
-                    <dd><kbd>changeme</kbd></dd>
-                </dl>
-                <p class="admin-credential-hint__note">Passwords are stored as bcrypt hashes. Optional: set <code>USERS_DB_ENCRYPTION_KEY</code> + install <code>sqlcipher3</code> for SQLCipher on <code>users.db</code>. Set <code>SECRET_KEY</code> for sessions.</p>
-            </aside>
 
             {% if error %}
             <div class="error-box error-box--admin">{{ error }}</div>
             {% endif %}
+            {% if registered_ok %}
+            <div class="error-box error-box--admin" style="border-color: var(--ok-border, #2d6a4f); background: var(--ok-bg, #d8f3dc); color: var(--ok-fg, #1b4332);">Account created. Sign in below.</div>
+            {% endif %}
 
             <form method="POST" action="{{ url_for('dev.admin_login') }}" class="auth-form auth-form--admin">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 {% if request.args.get('next') %}
                 <input type="hidden" name="next" value="{{ request.args.get('next')|e }}">
                 {% endif %}
                 <div class="field-group">
                     <label for="admin-login-user">Username or email</label>
-                    <input id="admin-login-user" type="text" name="login" required autocomplete="username" placeholder="admin">
+                    <input id="admin-login-user" type="text" name="login" required autocomplete="username">
                 </div>
 
                 <div class="field-group">
                     <label for="admin-login-pass">Password</label>
-                    <input id="admin-login-pass" type="password" name="password" required autocomplete="current-password" placeholder="changeme">
+                    <input id="admin-login-pass" type="password" name="password" required autocomplete="current-password">
                 </div>
 
                 <button type="submit" class="primary-button full-width">Sign in to dev tools</button>
             </form>
+            {% if registration_open|default(true) %}
+            <p class="auth-footer">Need an account? <a href="{{ url_for('dev.admin_register') }}">Register for dev access</a></p>
+            {% endif %}
         </div>
     </section>
 

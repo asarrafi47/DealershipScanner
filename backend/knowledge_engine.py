@@ -17,8 +17,14 @@ def _conn():
 
 
 def _bmw_has_30i_suffix(blob: str) -> bool:
-    """330i / 530i / xDrive30i — digit + 30I at end of motor code."""
-    return bool(re.search(r"\d30I\b", blob))
+    """
+    330i / 530i / xDrive30i / sDrive30i — ``\\d30I`` matches three-series sedans;
+    SAV trims glue ``30I`` after xDrive/sDrive (``E30I`` not ``\\d30I``).
+    """
+    u = (blob or "").upper()
+    if re.search(r"\d30I\b", u):
+        return True
+    return bool(re.search(r"(?:XDRIVE|SDRIVE)30I\b", u))
 
 
 def _bmw_has_40i_suffix(blob: str) -> bool:
@@ -45,6 +51,67 @@ def _bmw_model_is_x5_x7_or_5_7_series(model: str) -> bool:
     return False
 
 
+def _bmw_model_is_sav_x3_x7(model: str) -> bool:
+    """X3–X7 Sports Activity Vehicles (40i mild-hybrid I6 same family as larger SAVs)."""
+    m = (model or "").strip().upper()
+    return bool(re.match(r"^X[3-7]\b", m))
+
+
+def _bmw_body_style_hint(model: str | None, blob_upper: str) -> str | None:
+    """Best-effort body style from BMW model token + title (when inventory omits body_style)."""
+    mu = (model or "").strip().upper()
+    if not mu:
+        return None
+    if mu.startswith("X") and re.match(r"^X\d", mu):
+        return "SUV"
+    if mu.startswith("Z") and re.match(r"^Z\d", mu):
+        return "Roadster"
+    if "GRAN COUPE" in blob_upper or "GRANCOUPE" in blob_upper.replace(" ", ""):
+        return "Gran Coupe"
+    if re.match(r"^M\d{3}I\b", mu):
+        return "Sedan"
+    if re.match(r"^M[234]\b", mu) and "GRAN" not in blob_upper:
+        return "Coupe"
+    if re.match(r"^2\d{2}", mu):
+        return "Coupe"
+    if re.match(r"^4\d{2}", mu):
+        return "Coupe"
+    if re.match(r"^[3567]\d{2}[EI]", mu):
+        return "Sedan"
+    return None
+
+
+def _apply_bmw_gas_fallbacks(out: dict[str, Any], model: str | None, blob_upper: str) -> None:
+    """
+    Non-EV BMW: default RWD for sedan/coupe motor codes without xDrive; typical automatic;
+    body style when missing.
+    """
+    if out.get("cylinders") == 0 or (out.get("fuel_type_hint") or "").lower() == "electric":
+        return
+    mo_u = (model or "").strip().upper()
+    if out.get("drivetrain") is None and not mo_u.startswith("X") and not mo_u.startswith("IX"):
+        if re.search(r"(?:XDRIVE|4MATIC)\d", blob_upper) or re.search(
+            r"\b(XDRIVE|4MATIC)\b", blob_upper
+        ):
+            out["drivetrain"] = "AWD"
+        elif (
+            re.search(
+                r"\b(230I|330I|430I|530I|630I|730I|230E|330E|430E|530E|630E|M240I|M340I|M440I|540I|640I|740I|840I)\b",
+                blob_upper,
+            )
+            or _bmw_has_30i_suffix(blob_upper)
+            or _bmw_has_40i_suffix(blob_upper)
+            or re.match(r"^M\d{3}[EI]\b", mo_u)
+        ):
+            out["drivetrain"] = "RWD"
+    if not out.get("body_style_hint"):
+        bsh = _bmw_body_style_hint(model, blob_upper)
+        if bsh:
+            out["body_style_hint"] = bsh
+    if out.get("cylinders") not in (None, 0) and not out.get("transmission_hint"):
+        out["transmission_hint"] = "8-Speed Automatic"
+
+
 def decode_trim_logic(
     make: str | None,
     model: str | None,
@@ -69,6 +136,8 @@ def decode_trim_logic(
         "gears": None,
         "drivetrain": None,
         "fuel_type_hint": None,
+        "body_style_hint": None,
+        "transmission_hint": None,
     }
 
     # xDrive / 4MATIC in title or trim → AWD (handles "xDrive40i" where \bXDRIVE\b fails: E+4 are both \w)
@@ -89,6 +158,11 @@ def decode_trim_logic(
         blob,
     ):
         out["drivetrain"] = "AWD"
+    elif re.search(r"\bSDRIVE\d", trim_title) or re.search(
+        r"\b(?:SDRIVE)(?:30|40|50)I\b", blob
+    ):
+        # Rear-biased sDrive (common X1/X2/X3 / Z4 markets)
+        out["drivetrain"] = "RWD"
 
     # Gears from "8-Speed", "9-Speed Automatic", etc.
     m_gear = re.search(r"\b(\d{1,2})\s*[-]?\s*(SPEED|SPD)\b", blob, re.I)
@@ -106,6 +180,23 @@ def decode_trim_logic(
         ):
             out["cylinders"] = 0
             out["fuel_type_hint"] = "Electric"
+            # Listing/VDP often omit drive — infer BMW BEV (eDrive = RWD, xDrive / M50 = AWD)
+            if out.get("drivetrain") is None:
+                if re.search(r"\bXDRIVE\b", blob) or re.search(r"\bM50\b", blob) or re.search(
+                    r"\bM60\b", blob
+                ):
+                    out["drivetrain"] = "AWD"
+                elif re.search(r"\bEDRIVE\d", blob) or re.search(r"\bEDRIVE\b", blob):
+                    out["drivetrain"] = "RWD"
+            # Body style when inventory row has no body_style (common on CPO EV)
+            if re.search(r"\bI4\b", blob):
+                out["body_style_hint"] = "Gran Coupe"
+            elif re.search(r"\bI7\b", blob):
+                out["body_style_hint"] = "Sedan"
+            elif re.search(r"\bI5\b", blob):
+                out["body_style_hint"] = "Sedan"
+            elif re.search(r"\bIX\b", blob):
+                out["body_style_hint"] = "SUV"
         # M50i / M60i → V8
         elif re.search(r"\b(M50I|M60I)\b", blob):
             out["cylinders"] = 8
@@ -115,12 +206,17 @@ def decode_trim_logic(
         # 550i, 750i, Alpina B7 (50i) — not M50i/M60i
         elif re.search(r"\d50I\b", blob) and not re.search(r"\b(M50I|M60I)\b", blob):
             out["cylinders"] = 8
-        # X5/X7/5 Series/7 Series + 40i / M40i (mild-hybrid I6)
-        elif _bmw_model_is_x5_x7_or_5_7_series(model) and (
-            _bmw_has_40i_suffix(blob) or re.search(r"\bM40I\b", blob)
+        # X3–X7 SAV + 40i / M40i or 5/7 Series + 40i (mild-hybrid I6)
+        elif (
+            (_bmw_model_is_sav_x3_x7(model) or _bmw_model_is_x5_x7_or_5_7_series(model))
+            and (_bmw_has_40i_suffix(blob) or re.search(r"\bM40I\b", blob))
         ):
             out["cylinders"] = 6
             out["fuel_type_hint"] = "Gas / Mild Hybrid"
+        # PHEV: 330e / 530e / 630e — turbo I-4 + motor (same I4 core as 30i)
+        elif re.search(r"\b(230E|330E|430E|530E|630E)\b", blob):
+            out["cylinders"] = 4
+            out["fuel_type_hint"] = "Plug-In Hybrid"
         # 30i: 330i, 430i, 530i, xDrive30i — 4 cyl
         elif _bmw_has_30i_suffix(blob) or re.search(
             r"\b(230I|330I|430I|530I|630I|730I)\b", blob
@@ -130,6 +226,28 @@ def decode_trim_logic(
         elif _bmw_has_40i_suffix(blob) or re.search(r"\bM40I\b", blob):
             out["cylinders"] = 6
             out["fuel_type_hint"] = "Gas / Mild Hybrid"
+
+        _apply_bmw_gas_fallbacks(out, model, blob)
+
+    # --- Mazda (Skyactiv — transmission/body; drive only when AWD/FWD explicit in blob)
+    if make_u == "MAZDA":
+        mu = (model or "").strip().upper()
+        if re.match(r"^CX-\d", mu):
+            out["body_style_hint"] = "SUV"
+        elif re.match(r"^MAZDA\s*3\b", mu) or mu in ("MAZDA3", "3"):
+            out["body_style_hint"] = (
+                "Hatchback" if re.search(r"HATCH|HATCHBACK", blob) else "Sedan"
+            )
+        elif re.match(r"^MX-\d", mu):
+            out["body_style_hint"] = "Convertible"
+        if re.search(r"\b(AWD|I-ACTIV\s*AWD)\b", blob, re.I):
+            out["drivetrain"] = "AWD"
+        elif re.search(r"\bFWD\b", blob):
+            out["drivetrain"] = "FWD"
+        if re.search(r"\b(MANUAL|6MT|6-SPEED\s*MANUAL)\b", blob):
+            out["transmission_hint"] = "Manual"
+        elif out.get("transmission_hint") is None:
+            out["transmission_hint"] = "Automatic"
 
     # --- Mercedes-Benz ---
     if "MERCEDES" in make_u:
@@ -142,6 +260,30 @@ def decode_trim_logic(
         # C300, GLC 300, E 350 — common 4-cyl turbo trims (rule-based override when dealer omits)
         elif re.search(r"\b300\b", blob) or re.search(r"\b350\b", blob):
             out["cylinders"] = 4
+
+    # --- Ford (body_style_hint when not set by rules above) ---
+    if make_u == "FORD" and not out.get("body_style_hint"):
+        m = (model or "").strip().upper()
+        m_alnum = re.sub(r"[^A-Z0-9]", "", m)
+        truck = bool(
+            re.search(r"\bF[-\s]?(150|250|350|450|550|650)\b", m)
+            or re.match(r"^F(150|250|350|450|550|650)\b", m_alnum)
+            or m_alnum.startswith("F150")
+            or m_alnum.startswith("F250")
+            or m_alnum.startswith("F350")
+            or m_alnum == "RANGER"
+            or re.search(r"\bRANGER\b", m)
+        )
+        suv = bool(
+            re.search(
+                r"\b(EXPLORER|ESCAPE|EDGE|BRONCO|EXPEDITION|EXCURSION)\b",
+                m,
+            )
+        )
+        if truck:
+            out["body_style_hint"] = "Truck"
+        elif suv:
+            out["body_style_hint"] = "SUV"
 
     return out
 
@@ -240,6 +382,9 @@ def _bmw_power_torque(blob: str, epa_displ: float | None) -> tuple[int | None, i
         return 523, 553, f"{_fmt_liter(epa_displ, '4.4')} V8 M TwinPower Turbo"
     if re.search(r"\bM50I\b", u):
         return 523, 553, f"{_fmt_liter(epa_displ, '4.4')} V8 TwinPower Turbo"
+    if re.search(r"\b(230E|330E|430E|530E|630E)\b", u):
+        lit = _fmt_liter(epa_displ, "2.0")
+        return 288, 310, f"{lit} Inline-4 TwinPower Turbo plug-in hybrid"
     if _bmw_has_40i_suffix(u) or re.search(r"\bM40I\b", u):
         return 375, 398, f"{_fmt_liter(epa_displ, '3.0')} Inline-6 TwinPower Turbo"
     if _bmw_has_30i_suffix(u) or re.search(r"\b(230I|330I|430I|530I|630I|730I)\b", u):
@@ -255,7 +400,7 @@ def _detect_phev_hybrid(blob: str, epa: dict[str, Any]) -> bool:
         return True
     if "PLUG" in fuel or "PHEV" in fuel:
         return True
-    if re.search(r"\b(50E|45E|40E)\b", u):
+    if re.search(r"\b(50E|45E|40E|30E)\b", u) or re.search(r"\b(230E|330E|430E|530E|630E)\b", u):
         return True
     return False
 
@@ -286,11 +431,19 @@ def build_master_engine_string(
     if "BMW" in make_u or make_u == "MINI":
         hp, tq, desc = _bmw_power_torque(u, epa_displ)
         if hp is not None and tq is not None and desc:
+            if "plug-in" in desc.lower():
+                return f"{desc}, {hp} HP / {tq} lb-ft"
             return f"{prefix}{desc}, {hp} HP / {tq} lb-ft"
         if regex.get("cylinders") == 0 or re.search(r"\b(I4|I5|I7|IX)\b", u):
             return "Electric motor(s) — output per manufacturer; see MPGe below."
 
-    return "See manufacturer specifications"
+    cyl = epa.get("cylinders")
+    disp = epa_displ
+    if cyl is not None and int(cyl) > 0 and disp is not None and float(disp) > 0:
+        return f"{float(disp):.1f}L {int(cyl)}-cylinder (EPA mode aggregate)"
+    if cyl is not None and int(cyl) > 0:
+        return f"{int(cyl)}-cylinder (EPA mode aggregate)"
+    return None
 
 
 def format_fuel_economy_display(epa: dict[str, Any], is_bev: bool) -> str | None:
@@ -420,10 +573,17 @@ def lookup_epa_aggregate(year: int | None, make: str | None, model: str | None) 
 
 
 def _is_na_spec(v: Any) -> bool:
+    """True when dealer DMS sent a placeholder instead of a real spec (includes ``--``, em dash)."""
     if v is None:
         return True
+    if isinstance(v, (int, float)):
+        return False
+    from backend.utils.field_clean import is_effectively_empty
+
+    if is_effectively_empty(v):
+        return True
     s = str(v).strip().upper()
-    return s in ("", "N/A", "NA", "—", "-", "UNKNOWN", "NULL")
+    return s in ("N/A", "NA", "UNKNOWN", "NULL")
 
 
 def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
@@ -432,6 +592,9 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
     Prefer: regex (brand trim) > EPA aggregate > dealer fields.
     When dealer omits or sends N/A, show inferred values as verified.
     """
+    from backend.utils.field_clean import clean_car_row_dict
+
+    car = clean_car_row_dict(dict(car))
     make = car.get("make") or ""
     model = car.get("model") or ""
     trim = car.get("trim") or ""
@@ -454,7 +617,11 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
     dealer_drive = (car.get("drivetrain") or "").strip()
     dealer_trans = (car.get("transmission") or "").strip()
 
-    regex = decode_trim_logic(make, model, trim, title)
+    title_for_decode = (title or "").strip()
+    dealer_ft = (car.get("fuel_type") or "").strip()
+    if (make or "").strip().upper() == "BMW" and dealer_ft:
+        title_for_decode = f"{title_for_decode} {dealer_ft}".strip()
+    regex = decode_trim_logic(make, model, trim, title_for_decode)
     epa = lookup_epa_aggregate(y, make, model)
 
     cyl_ver = regex.get("cylinders")
@@ -466,12 +633,12 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
             cyl_ver = di
 
     drive_ver = regex.get("drivetrain") or epa.get("drivetrain")
-    if not drive_ver and dealer_drive and dealer_drive.upper() not in ("N/A", "NA"):
+    if not drive_ver and dealer_drive and not _is_na_spec(dealer_drive):
         drive_ver = dealer_drive
 
     gears_ver = regex.get("gears") or epa.get("gears")
     trans_raw = epa.get("transmission") or (
-        dealer_trans if dealer_trans and dealer_trans.upper() != "N/A" else None
+        dealer_trans if dealer_trans and not _is_na_spec(dealer_trans) else None
     )
     trans_ver = format_transmission_display(trans_raw) or trans_raw
 
@@ -490,21 +657,18 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
         and (regex.get("cylinders") is not None or epa.get("cylinders") is not None)
     )
 
-    # Regex/EPA first so xDrive/4MATIC in title wins over dealer "N/A"
-    display_drive = drive_ver or dealer_drive or ""
-    if _is_na_spec(dealer_drive) or (dealer_drive or "").strip().upper() in ("N/A", "NA", ""):
-        if drive_ver:
-            display_drive = drive_ver
-    elif (display_drive or "").strip().upper() in ("N/A", "NA", "") and drive_ver:
+    # Regex/EPA first so xDrive/4MATIC in title wins over dealer placeholders.
+    if drive_ver:
         display_drive = drive_ver
+    elif not _is_na_spec(dealer_drive):
+        display_drive = dealer_drive
+    else:
+        display_drive = ""
 
     drivetrain_verified = bool(
         drive_ver
         and (display_drive or "").strip().upper() == (drive_ver or "").strip().upper()
-        and (
-            _is_na_spec(dealer_drive)
-            or (dealer_drive or "").strip().upper() in ("N/A", "NA", "")
-        )
+        and _is_na_spec(dealer_drive)
     )
 
     blob_full = f"{title} {trim} {model}".strip()
@@ -515,7 +679,25 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
         or (epa.get("atv_type") or "").strip().upper() == "EV"
         or "electric" in (epa.get("fuel_type") or "").lower()
     )
+    if is_bev and not trans_ver and _is_na_spec(dealer_trans):
+        trans_ver = "Single-speed automatic"
+    elif (
+        not is_bev
+        and not trans_ver
+        and _is_na_spec(dealer_trans)
+        and (regex.get("transmission_hint") or "").strip()
+    ):
+        trans_ver = str(regex["transmission_hint"]).strip()
+    body_style_display = None
+    if _is_na_spec(car.get("body_style")) and regex.get("body_style_hint"):
+        body_style_display = regex["body_style_hint"]
     fuel_economy_display = format_fuel_economy_display(epa, is_bev)
+    if not fuel_economy_display:
+        from backend.utils.field_clean import format_mpg_city_highway_display
+
+        fuel_economy_display = format_mpg_city_highway_display(
+            car.get("mpg_city"), car.get("mpg_highway")
+        )
     master_engine_string = build_master_engine_string(make, model, trim, title, regex, epa)
 
     sources = []
@@ -523,6 +705,8 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
         regex.get("cylinders") is not None
         or regex.get("drivetrain")
         or regex.get("fuel_type_hint")
+        or regex.get("body_style_hint")
+        or regex.get("transmission_hint")
     ):
         sources.append("Trim decoder")
     if epa.get("cylinders") is not None or epa.get("drivetrain") or epa.get("gears"):
@@ -543,6 +727,7 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
         "master_engine_string": master_engine_string,
         "fuel_economy_display": fuel_economy_display,
         "epa_displacement": epa.get("displacement"),
+        "body_style_display": body_style_display,
     }
 
 

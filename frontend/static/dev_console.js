@@ -1,4 +1,16 @@
 (function () {
+  function readCsrfToken() {
+    const m = document.querySelector('meta[name="csrf-token"]');
+    return m ? (m.getAttribute("content") || "").trim() : "";
+  }
+
+  function headersWithCsrf(base) {
+    const t = readCsrfToken();
+    const h = { ...base };
+    if (t) h["X-CSRF-Token"] = t;
+    return h;
+  }
+
   const bodyEl = document.getElementById("dev-dealers-body");
   const statusEl = document.getElementById("dev-status");
   const saveBtn = document.getElementById("dev-save");
@@ -101,7 +113,10 @@
           const res = await fetch("/api/dev/scan-dealer", {
             method: "POST",
             credentials: "same-origin",
-            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            headers: headersWithCsrf({
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            }),
             body: body,
           });
           const data = await res.json().catch(() => ({}));
@@ -189,7 +204,10 @@
       const res = await fetch("/api/dev/dealers", {
         method: "PUT",
         credentials: "same-origin",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: headersWithCsrf({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }),
         body: JSON.stringify({ dealers }),
       });
       const data = await res.json().catch(() => ({}));
@@ -224,7 +242,10 @@
         const res = await fetch("/api/dev/infer-dealer", {
           method: "POST",
           credentials: "same-origin",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          headers: headersWithCsrf({
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }),
           body: JSON.stringify(payload),
         });
         const data = await res.json().catch(() => ({}));

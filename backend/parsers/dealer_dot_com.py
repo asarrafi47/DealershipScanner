@@ -6,40 +6,51 @@ Parser for dealer.com getInventory API. Maps exact schema:
 import json
 import logging
 import re
+from urllib.parse import urljoin
+
+from backend.parsers.vdp_urls import dealer_style_vdp_url_candidates, suggest_dealer_style_vdp_url
 from backend.parsers.base import (
     clean_image_url,
+    dedupe_urls_order_prefer_large,
     find_tracking_attr,
     find_vehicle_list,
+    harvest_image_urls_from_json,
+    inventory_gallery_max,
     norm_float,
     norm_int,
     norm_str,
+    normalize_image_url_https,
 )
+from backend.utils.field_clean import normalize_optional_str
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_STR = "N/A"
 # Fallback when no images; frontend resolves /static/ relative to app
 FALLBACK_IMAGE_URL = "/static/placeholder.svg"
 
 
-def _safe_str(v, default: str = DEFAULT_STR) -> str:
-    """Trimmed string; use default when missing or empty."""
+def _opt_str(v) -> str | None:
+    """Missing / placeholder → None (never persist 'N/A' to SQLite)."""
     if v is None:
-        return default
+        return None
     s = norm_str(v)
-    return s if s else default
+    return normalize_optional_str(s)
 
 
-def _extract_title(obj: dict, year: int, make: str, model: str) -> str:
-    """Dealer.com: title is an array. Join with ' ' (e.g. vehicle['title'].join(' ')). Fallback: year make model."""
+def _extract_title(obj: dict, year: int, make: str, model: str) -> str | None:
+    """Dealer.com: title is an array. Join with ' '. Fallback: year make model."""
     raw = obj.get("title") or obj.get("name")
     if raw is None:
-        return f"{year or ''} {make or ''} {model or ''}".strip() or DEFAULT_STR
+        return normalize_optional_str(f"{year or ''} {make or ''} {model or ''}".strip())
     if isinstance(raw, list):
         s = " ".join(str(x).strip() for x in raw if x is not None).strip()
-        return s if s else f"{year or ''} {make or ''} {model or ''}".strip() or DEFAULT_STR
+        return normalize_optional_str(s) or normalize_optional_str(
+            f"{year or ''} {make or ''} {model or ''}".strip()
+        )
     s = norm_str(raw)
-    return s if s else f"{year or ''} {make or ''} {model or ''}".strip() or DEFAULT_STR
+    return normalize_optional_str(s) or normalize_optional_str(
+        f"{year or ''} {make or ''} {model or ''}".strip()
+    )
 
 
 def _first_price(*vals) -> float:
@@ -156,21 +167,30 @@ def _best_image_url(item: dict, base_url: str) -> str:
 
 
 def _extract_gallery(obj: dict, base_url: str) -> list[str]:
-    """Map vehicle.images to list of URLs (prefer full-res keys over thumbnail)."""
+    """Map vehicle.images to list of URLs (prefer full-res keys), then deep-harvest nested JSON."""
+    mx = inventory_gallery_max()
     images = obj.get("images") or obj.get("Images")
+    out: list[str] = []
     if isinstance(images, list) and len(images) > 0:
-        out = []
         seen: set[str] = set()
         for item in images:
             u = _best_image_url(item, base_url) if isinstance(item, dict) else ""
-            if u and u not in seen:
-                seen.add(u)
-                out.append(u)
+            nu = normalize_image_url_https(u) if u else ""
+            if nu.startswith("https://") and nu not in seen:
+                seen.add(nu)
+                out.append(nu)
         if out:
-            return out
-    # Backup: single image from featuredImage or thumbnail
+            base = dedupe_urls_order_prefer_large(out, max_len=mx)
+            extra = harvest_image_urls_from_json(obj, base_url, max_urls=mx)
+            return dedupe_urls_order_prefer_large(base + extra, max_len=mx)
     one = _extract_featured_or_thumbnail(obj, base_url)
-    return [one] if one else []
+    base = []
+    if one:
+        no = normalize_image_url_https(one)
+        if no.startswith("https://"):
+            base = [no]
+    extra = harvest_image_urls_from_json(obj, base_url, max_urls=mx)
+    return dedupe_urls_order_prefer_large(base + extra, max_len=mx)
 
 
 def _extract_history_highlights(obj: dict) -> list[str]:
@@ -214,17 +234,152 @@ def _extract_history_highlights(obj: dict) -> list[str]:
     return out
 
 
-def _extract_exterior_color(obj: dict) -> str:
-    """Find in vehicle.trackingAttributes where name === 'exteriorColor'. Default N/A."""
+def _pick_vehicle_detail_url(obj: dict, base_url: str) -> str | None:
+    """Absolute VDP URL when present in listing payload (used by scanner VDP enrichment)."""
+    candidates = [
+        obj.get("vdpUrl"),
+        obj.get("vdp_url"),
+        obj.get("vehicleUrl"),
+        obj.get("vehicle_url"),
+        obj.get("vehicleLink"),
+        obj.get("vehicle_link"),
+        obj.get("detailUrl"),
+        obj.get("detail_url"),
+        obj.get("detailPageUrl"),
+        obj.get("detail_page_url"),
+        obj.get("vehicleDetailsUrl"),
+        obj.get("vehicle_details_url"),
+        obj.get("inventoryUrl"),
+        obj.get("inventory_url"),
+        obj.get("webUrl"),
+        obj.get("web_url"),
+        obj.get("url"),
+        obj.get("href"),
+        obj.get("link"),
+        obj.get("seoUri"),
+        obj.get("seo_uri"),
+    ]
+    for raw in candidates:
+        if not raw or not isinstance(raw, str):
+            continue
+        u = raw.strip()
+        if u.startswith("//"):
+            u = "https:" + u
+        elif not u.lower().startswith("http"):
+            try:
+                u = urljoin(base_url.rstrip("/") + "/", u.lstrip("/"))
+            except Exception:
+                continue
+        low = u.lower()
+        if (
+            "/vdp/" in low
+            or "vehicle-inventory" in low
+            or "/inventory/" in low
+            or "/used/" in low
+            or "/new/" in low
+            or "certified" in low
+        ):
+            return u
+    return None
+
+
+def _extract_exterior_color(obj: dict) -> str | None:
+    """Find in vehicle.trackingAttributes where name === 'exteriorColor'."""
     arr = obj.get("trackingAttributes") or obj.get("tracking_attributes")
     v = find_tracking_attr(arr, "exteriorColor", "value")
     if v is not None and str(v).strip():
-        return norm_str(v) or DEFAULT_STR
-    return _safe_str(obj.get("exteriorColor") or obj.get("exterior_color"))
+        return _opt_str(norm_str(v))
+    return _opt_str(obj.get("exteriorColor") or obj.get("exterior_color"))
+
+
+def _norm_tracking_key(name: object) -> str:
+    if name is None:
+        return ""
+    return re.sub(r"[^a-z0-9]+", "", str(name).strip().lower())
+
+
+def _tracking_attr_value_by_norm_substr(arr: object, needles: frozenset[str]) -> str | None:
+    """First trackingAttributes entry whose normalized name matches a *needles* substring."""
+    if not isinstance(arr, list):
+        return None
+    for item in arr:
+        if not isinstance(item, dict):
+            continue
+        nk = _norm_tracking_key(item.get("name") or item.get("key") or item.get("id"))
+        if not nk:
+            continue
+        for nd in needles:
+            if len(nd) < 5:
+                continue
+            if nd in nk or nk in nd:
+                v = item.get("value") or item.get("text")
+                if v is not None and str(v).strip():
+                    got = _opt_str(norm_str(v))
+                    if got:
+                        return got
+    return None
+
+
+_INTERIOR_ATTR_SUBSTR = frozenset(
+    {
+        "interiorcolor",
+        "interiortrim",
+        "upholstery",
+        "seatcolor",
+        "seattrim",
+        "cabincolor",
+        "leathercolor",
+        "intcolor",
+        "interiorpackage",
+        "cabintrim",
+    }
+)
+
+_BODY_ATTR_SUBSTR = frozenset(
+    {
+        "bodystyle",
+        "bodytype",
+        "vehiclebody",
+        "vehicletype",
+        "vehbodystyle",
+        "bodyshape",
+    }
+)
+
+
+def _extract_interior_color(obj: dict) -> str | None:
+    """Prefer trackingAttributes (Dealer.com varies label casing) then top-level fields."""
+    v = _tracking_attr_value_by_norm_substr(
+        obj.get("trackingAttributes") or obj.get("tracking_attributes"),
+        _INTERIOR_ATTR_SUBSTR,
+    )
+    if v:
+        return v
+    for nm in ("interiorColor", "interior_color", "interiorTrim", "interior_trim"):
+        got = _opt_str(obj.get(nm))
+        if got:
+            return got
+    return None
+
+
+def _extract_body_style(obj: dict) -> str | None:
+    """bodyStyle / bodyType on object or in trackingAttributes."""
+    direct = _opt_str(
+        obj.get("bodyStyle")
+        or obj.get("body_style")
+        or obj.get("bodyType")
+        or obj.get("body_type")
+    )
+    if direct:
+        return direct
+    return _tracking_attr_value_by_norm_substr(
+        obj.get("trackingAttributes") or obj.get("tracking_attributes"),
+        _BODY_ATTR_SUBSTR,
+    )
 
 
 def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url: str) -> dict | None:
-    """Map one vehicle from Dealer.com getInventory schema. Defensive: missing arrays/keys -> N/A or 0."""
+    """Map one vehicle from Dealer.com getInventory schema. Missing text → None (not 'N/A')."""
     if not isinstance(obj, dict):
         return None
 
@@ -234,9 +389,8 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
     if not vin:
         vin = f"unknown-{hash(str(obj)) % 10**8}"
 
-    stock_number = _safe_str(obj.get("stockNumber"), default="")
-    if stock_number == DEFAULT_STR:
-        stock_number = ""
+    stock_raw = _opt_str(obj.get("stockNumber"))
+    stock_number = stock_raw or ""
 
     year = norm_int(obj.get("year") or obj.get("modelYear") or obj.get("model_year"))
     make = norm_str(obj.get("make") or obj.get("Make") or "")
@@ -253,7 +407,7 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         image_url = image_url or FALLBACK_IMAGE_URL
         gallery = gallery if gallery else [FALLBACK_IMAGE_URL]
     exterior_color = _extract_exterior_color(obj)
-    fuel_type = _safe_str(obj.get("fuelType") or obj.get("fuel_type"))
+    fuel_type = _opt_str(obj.get("fuelType") or obj.get("fuel_type"))
     # Prefer dealer VHR/partner link (vhr.carfax.com) — less likely to trigger iframe verification than consumer link
     vhr_url = obj.get("vhr_url") or obj.get("carfax_token")
     if vhr_url and isinstance(vhr_url, str) and vhr_url.strip().startswith("http"):
@@ -278,13 +432,22 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         if c2 is not None:
             cyl = norm_int(c2)
 
-    return {
+    detail_url = _pick_vehicle_detail_url(obj, base_url)
+    if not detail_url and vin and not str(vin).lower().startswith("unknown"):
+        detail_url = suggest_dealer_style_vdp_url(base_url, vin, obj)
+    detail_alternates: list[str] = []
+    if vin and not str(vin).lower().startswith("unknown"):
+        detail_alternates = [
+            x for x in dealer_style_vdp_url_candidates(base_url, vin, obj) if x != detail_url
+        ]
+
+    out = {
         "vin": vin,
         "stock_number": stock_number,
         "year": year,
         "make": make,
         "model": model,
-        "trim": _safe_str(obj.get("trim") or obj.get("Trim") or obj.get("trimName")),
+        "trim": _opt_str(obj.get("trim") or obj.get("Trim") or obj.get("trimName")),
         "title": title,
         "price": price,
         "msrp": msrp,
@@ -294,16 +457,22 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         "dealer_id": dealer_id,
         "dealer_name": dealer_name,
         "dealer_url": dealer_url,
-        "zip_code": _safe_str(obj.get("zipCode") or obj.get("zip_code")),
+        "zip_code": _opt_str(obj.get("zipCode") or obj.get("zip_code")),
         "fuel_type": fuel_type,
-        "transmission": _safe_str(obj.get("transmission") or obj.get("transmissionType")),
-        "drivetrain": _safe_str(obj.get("drivetrain") or obj.get("driveType")),
+        "transmission": _opt_str(obj.get("transmission") or obj.get("transmissionType")),
+        "drivetrain": _opt_str(obj.get("drivetrain") or obj.get("driveType")),
         "exterior_color": exterior_color,
-        "interior_color": _safe_str(obj.get("interiorColor") or obj.get("interior_color")),
+        "interior_color": _extract_interior_color(obj),
+        "body_style": _extract_body_style(obj),
         "carfax_url": carfax_url if carfax_url else None,
         "history_highlights": _extract_history_highlights(obj),
         "cylinders": cyl or None,
     }
+    if detail_url:
+        out["_detail_url"] = detail_url
+    if detail_alternates:
+        out["_detail_url_alternates"] = detail_alternates[:12]
+    return out
 
 
 def _has_vehicle_ident(obj: dict) -> bool:

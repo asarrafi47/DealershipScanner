@@ -1,0 +1,485 @@
+{
+  "coverage_lines": [
+    {
+      "series_key": "1-series",
+      "display_name": "1 Series",
+      "line_category": "car",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "U.S. availability by generation not asserted in seed data; ingest ordering guides per MY.",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal",
+        "notes": "Series list for pipeline coverage; not a spec source."
+      }
+    },
+    {
+      "series_key": "2-series",
+      "display_name": "2 Series",
+      "line_category": "car",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "Includes Coupe, Convertible, Gran Coupe where applicable; split in vehicle rows later.",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "3-series",
+      "display_name": "3 Series",
+      "line_category": "car",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "partial",
+      "notes": "Demo vehicle rows may exist for recent MYs; historical MYs still pending.",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "4-series",
+      "display_name": "4 Series",
+      "line_category": "car",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "5-series",
+      "display_name": "5 Series",
+      "line_category": "car",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "6-series",
+      "display_name": "6 Series",
+      "line_category": "car",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "Hiatus and return; treat each generation as separate ingestion project.",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "7-series",
+      "display_name": "7 Series",
+      "line_category": "car",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "8-series",
+      "display_name": "8 Series",
+      "line_category": "car",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "z4",
+      "display_name": "Z4",
+      "line_category": "car",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "x1",
+      "display_name": "X1",
+      "line_category": "suv",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "x2",
+      "display_name": "X2",
+      "line_category": "suv",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "partial",
+      "notes": "Demo vehicle row may exist for recent MY.",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "x3",
+      "display_name": "X3",
+      "line_category": "suv",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "x4",
+      "display_name": "X4",
+      "line_category": "suv",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "x5",
+      "display_name": "X5",
+      "line_category": "suv",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "x6",
+      "display_name": "X6",
+      "line_category": "suv",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "x7",
+      "display_name": "X7",
+      "line_category": "suv",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "xm",
+      "display_name": "XM",
+      "line_category": "suv",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "M-badged SUV; keep separate from X5 M for ingestion.",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "i3",
+      "display_name": "i3",
+      "line_category": "ev",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "i4",
+      "display_name": "i4",
+      "line_category": "ev",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "i5",
+      "display_name": "i5",
+      "line_category": "ev",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "i7",
+      "display_name": "i7",
+      "line_category": "ev",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "i8",
+      "display_name": "i8",
+      "line_category": "ev",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "ix",
+      "display_name": "iX",
+      "line_category": "ev",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "CSV Model column uses display name iX; filter key ix.",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "m2",
+      "display_name": "M2",
+      "line_category": "m",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "M models: ingest only when brochure/press data is available per MY.",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "m3",
+      "display_name": "M3",
+      "line_category": "m",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "m4",
+      "display_name": "M4",
+      "line_category": "m",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "m5",
+      "display_name": "M5",
+      "line_category": "m",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "m8",
+      "display_name": "M8",
+      "line_category": "m",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "x3-m",
+      "display_name": "X3 M",
+      "line_category": "m",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "x4-m",
+      "display_name": "X4 M",
+      "line_category": "m",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "x5-m",
+      "display_name": "X5 M",
+      "line_category": "m",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    },
+    {
+      "series_key": "x6-m",
+      "display_name": "X6 M",
+      "line_category": "m",
+      "first_model_year_us": null,
+      "last_model_year_us": null,
+      "year_range_uncertain": true,
+      "coverage_status": "pending",
+      "notes": "",
+      "source": {
+        "label": "BMW USA (brand portal; coverage checklist only)",
+        "url": "https://www.bmwusa.com/",
+        "source_group_key": "bmw_usa_portal"
+      }
+    }
+  ]
+}

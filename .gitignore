@@ -4,5 +4,15 @@ node_modules/
 __pycache__/
 *.pyc
 .DS_Store
-data/chroma/
-backend/vector/chroma_master_catalog/
+data/vectors/
+
+# Local scratch / editor noise
+Untitled
+out.csv
+out.json
+copyright_out.csv
+.tmp_epa/
+
+# Ephemeral exports (keep artifacts/README.md and .gitkeep tracked)
+artifacts/scratch/*
+!artifacts/scratch/.gitkeep

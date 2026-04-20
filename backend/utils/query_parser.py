@@ -84,7 +84,7 @@ def _extract_best_token(tokens: list[str], choices: list[str], threshold: int = 
     return None
 
 
-def _load_inventory_keywords() -> tuple[list[tuple[str, str]], list[str]]:
+def _load_inventory_keywords() -> tuple[list[tuple[str, str]], list[str], list[str], list[str]]:
     conn = get_conn()
     cur = conn.cursor()
     cur.execute(
@@ -98,9 +98,63 @@ def _load_inventory_keywords() -> tuple[list[tuple[str, str]], list[str]]:
     cur.execute(
         "SELECT DISTINCT exterior_color FROM cars WHERE exterior_color IS NOT NULL ORDER BY exterior_color"
     )
-    colors = [r[0] for r in cur.fetchall()]
+    ext_colors = [r[0] for r in cur.fetchall()]
+    cur.execute(
+        "SELECT DISTINCT interior_color FROM cars WHERE interior_color IS NOT NULL ORDER BY interior_color"
+    )
+    int_colors = [r[0] for r in cur.fetchall()]
+    cur.execute(
+        """
+        SELECT DISTINCT body_style FROM cars
+        WHERE body_style IS NOT NULL AND TRIM(body_style) != ''
+        ORDER BY body_style
+        """
+    )
+    body_styles = [r[0] for r in cur.fetchall()]
     conn.close()
-    return pairs, colors
+    return pairs, ext_colors, int_colors, body_styles
+
+
+# Phrases in user text → fuzzy hint against DISTINCT body_style values
+_BODY_STYLE_CUES: list[tuple[re.Pattern[str], str]] = [
+    (re.compile(r"\b(suv|crossovers?|cuv|sport\s+utility)\b", re.I), "SUV sport utility"),
+    (re.compile(r"\b(sedan|saloon)\b", re.I), "Sedan"),
+    (re.compile(r"\b(coupe)\b", re.I), "Coupe"),
+    (re.compile(r"\b(convertible|roadster|spyder|cabrio|cabriolet)\b", re.I), "Convertible"),
+    (re.compile(r"\b(hatchback|hatch)\b", re.I), "Hatchback"),
+    (re.compile(r"\b(wagon|estate|avant)\b", re.I), "Wagon"),
+    (re.compile(r"\b(truck|pickup|pick-up|crew\s+cab)\b", re.I), "Truck"),
+    (re.compile(r"\b(minivan|mini\s*van|mpv)\b", re.I), "Minivan"),
+    (re.compile(r"\bvan\b", re.I), "Van"),
+    (re.compile(r"\b(gran\s+coupe|4[-\s]?door\s+coupe)\b", re.I), "Gran Coupe"),
+]
+
+
+def _match_body_style_filters(text: str, distinct: list[str]) -> list[str] | None:
+    """Map natural-language body cues + exact facet tokens to DB ``body_style`` values (OR list)."""
+    if not distinct or not (text or "").strip():
+        return None
+    hits: list[str] = []
+    seen: set[str] = set()
+    low = text.lower()
+    for d in distinct:
+        if not d or not str(d).strip():
+            continue
+        dlow = str(d).strip().lower()
+        if len(dlow) >= 2 and re.search(rf"(?i)\b{re.escape(dlow)}\b", low):
+            if d not in seen:
+                seen.add(d)
+                hits.append(d)
+    for rx, hint in _BODY_STYLE_CUES:
+        if not rx.search(text):
+            continue
+        pick = _extract_one(hint, distinct, threshold=60)
+        if not pick:
+            pick = _extract_best_token(_tokenize(f"{hint} {text}"), distinct, threshold=68)
+        if pick and pick not in seen:
+            seen.add(pick)
+            hits.append(pick)
+    return hits or None
 
 
 def _apply_make_synonyms(text: str) -> str:
@@ -158,6 +212,32 @@ def _detect_drivetrain(text: str) -> list[str] | None:
         return ["FWD"]
     if re.search(r"\b(?:rwd|rear[\s-]?wheel)\b", t):
         return ["RWD"]
+    return None
+
+
+def _interior_color_cue(text: str) -> bool:
+    low = text.lower()
+    return any(
+        w in low
+        for w in ("interior", "inside", "cabin", "upholstery", "seats", "leather trim")
+    )
+
+
+def _match_interior_color(text: str, distinct_colors: list[str]) -> str | None:
+    if not distinct_colors or not _interior_color_cue(text):
+        return None
+    tokens = _tokenize(text)
+    _, process_mod = _fuzz_module()
+    for tok in tokens:
+        if tok in _COLOR_HINTS or len(tok) >= 4:
+            if process_mod is not None:
+                m = process_mod.extractOne(tok, distinct_colors)
+                if m and m[1] >= 82:
+                    return m[0]
+            else:
+                hit = _extract_one(tok, distinct_colors, threshold=60)
+                if hit:
+                    return hit
     return None
 
 
@@ -276,7 +356,7 @@ def parse_natural_query(query_text: str) -> dict[str, Any]:
     if not raw:
         return {}
 
-    pairs, ext_colors = _load_inventory_keywords()
+    pairs, ext_colors, int_colors, body_styles = _load_inventory_keywords()
     makes = sorted({p[0] for p in pairs}, key=len, reverse=True)
     models_by_make: dict[str, list[str]] = {}
     for mk, md in pairs:
@@ -303,6 +383,14 @@ def parse_natural_query(query_text: str) -> dict[str, Any]:
     if dt:
         out["drivetrain"] = dt
 
+    bs = _match_body_style_filters(raw, body_styles)
+    if bs:
+        out["body_style"] = bs
+
+    ic = _match_interior_color(raw, int_colors)
+    if ic:
+        out["interior_color"] = [ic]
+
     ec = _match_exterior_color(raw, ext_colors)
     if ec:
         out["exterior_color"] = [ec]
@@ -315,6 +403,8 @@ def parse_natural_query(query_text: str) -> dict[str, Any]:
         working,
         flags=re.I,
     )
+    for rx, _hint in _BODY_STYLE_CUES:
+        working = rx.sub(" ", working)
     for tok in _tokenize(working):
         if tok in _COLOR_HINTS:
             working = re.sub(rf"\b{re.escape(tok)}\b", " ", working, flags=re.I)

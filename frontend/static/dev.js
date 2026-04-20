@@ -1,6 +1,11 @@
 /**
  * Developer dashboard at /dev: session cookie auth, bulk smart-import queue, highlighted logs.
  */
+function readCsrfToken() {
+    const m = document.querySelector('meta[name="csrf-token"]');
+    return m ? (m.getAttribute("content") || "").trim() : "";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const urlsTa = document.getElementById("dev-smart-urls");
     const smartBtn = document.getElementById("dev-smart-import");
@@ -19,11 +24,20 @@ document.addEventListener("DOMContentLoaded", () => {
     let queuePollTimer = null;
     let activeJobId = null;
     let currentQueueId = null;
+    /** null | "smart" — which bulk queue API to poll */
+    let currentQueueKind = null;
     /** Last single-URL Smart Import target (for headed retry). */
     let lastSingleSmartUrl = null;
+    /** Avoid re-rendering scanner log every poll tick (preserves text selection while job runs). */
+    let lastScanLogSnapshot = "";
+    let lastDiscoverySnapshot = "";
 
     const headedRetryWrap = document.getElementById("dev-headed-retry-wrap");
     const headedRetryBtn = document.getElementById("dev-headed-retry");
+
+    function setImportButtonsDisabled(disabled) {
+        if (smartBtn) smartBtn.disabled = disabled;
+    }
 
     function logIndicatesZeroVehicles(log) {
         if (!log) return false;
@@ -41,7 +55,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const fetchOpts = { credentials: "same-origin" };
 
     async function devFetch(url, options = {}) {
-        const res = await fetch(url, { ...fetchOpts, ...options });
+        const opts = { ...fetchOpts, ...options };
+        const method = String(opts.method || "GET").toUpperCase();
+        if (!["GET", "HEAD", "OPTIONS"].includes(method)) {
+            const t = readCsrfToken();
+            if (t) {
+                opts.headers = { ...(opts.headers || {}), "X-CSRF-Token": t };
+            }
+        }
+        const res = await fetch(url, opts);
         if (res.status === 401) {
             window.location.href = "/dev/login?next=" + encodeURIComponent(window.location.pathname);
             throw new Error("unauthorized");
@@ -53,6 +75,39 @@ document.addEventListener("DOMContentLoaded", () => {
         const d = document.createElement("div");
         d.textContent = s;
         return d.innerHTML;
+    }
+
+    function isHttpUrl(s) {
+        const t = String(s || "").trim();
+        return /^https?:\/\//i.test(t);
+    }
+
+    function cssSingleQuotedUrl(url) {
+        const raw = String(url || "").trim();
+        if (!isHttpUrl(raw)) return "/static/placeholder.svg";
+        try {
+            const abs = new URL(raw);
+            if (abs.protocol !== "http:" && abs.protocol !== "https:") {
+                return "/static/placeholder.svg";
+            }
+            return abs.href.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+        } catch (_) {
+            return "/static/placeholder.svg";
+        }
+    }
+
+    const QUEUE_STALE_MSG = "Server restarted — refresh /dev and start the job again.";
+
+    function stopBulkQueueOnStale(reasonLine) {
+        stopQueuePoll();
+        stopPoll();
+        currentQueueId = null;
+        currentQueueKind = null;
+        queuePanel.hidden = true;
+        setImportButtonsDisabled(false);
+        const line = reasonLine || QUEUE_STALE_MSG;
+        if (scanLog) renderLog(scanLog, `\n${line}\n`);
+        syncScanPollSnapshots(line, [{ message: line }]);
     }
 
     function colorizeLog(text) {
@@ -80,6 +135,27 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderLog(el, raw) {
         if (!el) return;
         el.innerHTML = colorizeLog(raw);
+    }
+
+    function syncScanPollSnapshots(logText, discoveryArr) {
+        lastScanLogSnapshot = logText || "";
+        lastDiscoverySnapshot = JSON.stringify(Array.isArray(discoveryArr) ? discoveryArr : []);
+    }
+
+    function maybeRenderScanPoll(logText, discoveryArr) {
+        if (!scanLog) return;
+        const disc = Array.isArray(discoveryArr) ? discoveryArr : [];
+        const dStr = JSON.stringify(disc);
+        const lt = logText || "";
+        if (lt === lastScanLogSnapshot && dStr === lastDiscoverySnapshot) {
+            return;
+        }
+        lastScanLogSnapshot = lt;
+        lastDiscoverySnapshot = dStr;
+        requestAnimationFrame(() => {
+            renderLog(scanLog, lt);
+            if (disc.length) renderDiscovery(disc);
+        });
     }
 
     function showMaint(obj) {
@@ -210,34 +286,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function pollScannerJob(jobId) {
         const res = await devFetch(devApi(`scanner-job/${jobId}`));
-        const data = await res.json();
-        if (!data.ok) {
-            renderLog(scanLog, data.error || "Job not found.");
+        let data = {};
+        try {
+            data = await res.json();
+        } catch (_) {
+            data = { ok: false };
+        }
+        if (res.status === 404 || data.error === "unknown job" || data.error === "job_expired") {
+            const msg = data.message || data.error || "Job not found.";
+            renderLog(scanLog, msg);
+            syncScanPollSnapshots(msg, []);
             stopPoll();
-            smartBtn.disabled = false;
+            if (currentQueueId) {
+                stopBulkQueueOnStale(data.message);
+            } else {
+                setImportButtonsDisabled(false);
+            }
             return;
         }
-        renderLog(scanLog, data.log || "");
-        if (Array.isArray(data.discovery) && data.discovery.length) {
-            renderDiscovery(data.discovery);
+        if (!data.ok) {
+            renderLog(scanLog, data.error || "Job not found.");
+            syncScanPollSnapshots(data.error || "Job not found.", []);
+            stopPoll();
+            setImportButtonsDisabled(false);
+            return;
         }
         if (data.done) {
             stopPoll();
-            smartBtn.disabled = false;
+            setImportButtonsDisabled(false);
             let tail = `\n---\nExit code: ${data.exit_code ?? "unknown"}\n`;
             if (data.insert_id != null) tail += `Saved dealership id: ${data.insert_id}\n`;
             if (data.cars_linked != null) tail += `Cars linked to registry: ${data.cars_linked}\n`;
             if (data.insert_error) tail += `Insert validation: ${JSON.stringify(data.insert_error)}\n`;
             if (data.smart_error) tail += `Smart import: ${JSON.stringify(data.smart_error)}\n`;
-            renderLog(scanLog, (data.log || "") + tail);
+            const finalLog = (data.log || "") + tail;
+            renderLog(scanLog, finalLog);
+            if (Array.isArray(data.discovery) && data.discovery.length) {
+                renderDiscovery(data.discovery);
+            }
+            syncScanPollSnapshots(finalLog, data.discovery || []);
             if (headedRetryWrap) {
                 headedRetryWrap.hidden = !(
                     lastSingleSmartUrl &&
-                    logIndicatesZeroVehicles((data.log || "") + tail)
+                    logIndicatesZeroVehicles(finalLog)
                 );
             }
             refreshDealersTable();
+            refreshIncompleteCars();
+            return;
         }
+        maybeRenderScanPoll(data.log || "", data.discovery);
     }
 
     function renderQueueTable(items) {
@@ -274,8 +372,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function pollImportQueue() {
         if (!currentQueueId) return;
-        const res = await devFetch(devApi(`import-queue/${currentQueueId}`));
-        const data = await res.json();
+        const qPath = `import-queue/${currentQueueId}`;
+        const res = await devFetch(devApi(qPath));
+        let data = {};
+        try {
+            data = await res.json();
+        } catch (_) {
+            data = { ok: false };
+        }
+        if (res.status === 404 || data.error === "unknown queue" || data.error === "queue_expired") {
+            stopBulkQueueOnStale(data.message);
+            return;
+        }
         if (!data.ok) return;
         renderQueueTable(data.items || []);
 
@@ -283,23 +391,38 @@ document.addEventListener("DOMContentLoaded", () => {
         if (processing && processing.job_id) {
             activeJobId = processing.job_id;
             const jr = await devFetch(devApi(`scanner-job/${activeJobId}`));
-            const jd = await jr.json();
+            let jd = {};
+            try {
+                jd = await jr.json();
+            } catch (_) {
+                jd = { ok: false };
+            }
+            if (jr.status === 404 || jd.error === "unknown job" || jd.error === "job_expired") {
+                stopBulkQueueOnStale(jd.message);
+                return;
+            }
             if (jd.ok) {
-                renderLog(scanLog, jd.log || "");
-                if (jd.discovery) renderDiscovery(jd.discovery);
+                maybeRenderScanPoll(jd.log || "", jd.discovery);
             }
         }
 
         if (data.queue_done) {
             stopQueuePoll();
-            smartBtn.disabled = false;
+            setImportButtonsDisabled(false);
             const last = (data.items || []).filter((x) => x.job_id).pop();
             if (last && last.job_id) {
                 const jr = await devFetch(devApi(`scanner-job/${last.job_id}`));
                 const jd = await jr.json();
-                if (jd.ok) renderLog(scanLog, jd.log || "");
+                if (jd.ok) {
+                    renderLog(scanLog, jd.log || "");
+                    if (Array.isArray(jd.discovery) && jd.discovery.length) {
+                        renderDiscovery(jd.discovery);
+                    }
+                    syncScanPollSnapshots(jd.log || "", jd.discovery || []);
+                }
             }
             refreshDealersTable();
+            refreshIncompleteCars();
         }
     }
 
@@ -307,9 +430,12 @@ document.addEventListener("DOMContentLoaded", () => {
         headedRetryBtn.addEventListener("click", async () => {
             if (!lastSingleSmartUrl) return;
             if (headedRetryWrap) headedRetryWrap.hidden = true;
-            smartBtn.disabled = true;
+            setImportButtonsDisabled(true);
             renderDiscovery([{ message: "Starting headed retry…" }]);
             renderLog(scanLog, "Retrying with visible browser (headed)…\n");
+            syncScanPollSnapshots("Retrying with visible browser (headed)…\n", [
+                { message: "Starting headed retry…" },
+            ]);
             const res = await devFetch(devApi("smart-import"), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -317,11 +443,14 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             const data = await res.json();
             if (!res.ok || !data.job_id) {
-                renderLog(scanLog, data.error || "Failed to start headed retry.");
-                smartBtn.disabled = false;
+                const err = data.error || "Failed to start headed retry.";
+                renderLog(scanLog, err);
+                syncScanPollSnapshots(err, []);
+                setImportButtonsDisabled(false);
                 return;
             }
             currentQueueId = null;
+            currentQueueKind = null;
             queuePanel.hidden = true;
             stopQueuePoll();
             activeJobId = data.job_id;
@@ -335,12 +464,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const urls = parseUrlLines();
             if (!urls.length) {
                 renderLog(scanLog, "Enter at least one URL (one per line).");
+                syncScanPollSnapshots("Enter at least one URL (one per line).", []);
                 return;
             }
-            smartBtn.disabled = true;
+            setImportButtonsDisabled(true);
             if (headedRetryWrap) headedRetryWrap.hidden = true;
             renderDiscovery([{ message: "Starting…" }]);
             renderLog(scanLog, "Starting import jobs…\n");
+            syncScanPollSnapshots("Starting import jobs…\n", [{ message: "Starting…" }]);
 
             if (urls.length === 1) {
                 lastSingleSmartUrl = urls[0];
@@ -351,11 +482,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 const data = await res.json();
                 if (!res.ok || !data.job_id) {
-                    renderLog(scanLog, data.error || "Failed to start job.");
-                    smartBtn.disabled = false;
+                    const err = data.error || "Failed to start job.";
+                    renderLog(scanLog, err);
+                    syncScanPollSnapshots(err, []);
+                    setImportButtonsDisabled(false);
                     return;
                 }
                 currentQueueId = null;
+                currentQueueKind = null;
                 queuePanel.hidden = true;
                 stopQueuePoll();
                 activeJobId = data.job_id;
@@ -372,10 +506,13 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             const data = await res.json();
             if (!res.ok || !data.queue_id) {
-                renderLog(scanLog, data.error || "Failed to start bulk import.");
-                smartBtn.disabled = false;
+                const err = data.error || "Failed to start bulk import.";
+                renderLog(scanLog, err);
+                syncScanPollSnapshots(err, []);
+                setImportButtonsDisabled(false);
                 return;
             }
+            currentQueueKind = "smart";
             currentQueueId = data.queue_id;
             renderQueueTable(data.items || []);
             queuePanel.hidden = false;
@@ -424,20 +561,157 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!data.ok) return;
         const dbCls = data.db_connected ? "dev-ok" : "dev-bad";
         const nodeCls = data.node_executable ? "dev-ok" : "dev-bad";
+        const adminCls = data.admin_password_configured ? "dev-ok" : "dev-bad";
+        const regCls = data.dev_registration_open ? "dev-ok" : "dev-bad";
+        const dbPath = escHtml(data.inventory_db_path || "");
+        const nodePath = escHtml(data.node_executable || "Install Node 18+ and ensure it is on PATH.");
+        const adminMeta = data.is_production
+            ? "Production requires ADMIN_PASSWORD."
+            : "Non-production may use env defaults.";
+        const regMeta = data.is_production
+            ? "Production: set ALLOW_DEV_PUBLIC_REGISTER=1 to allow /dev/register."
+            : "Non-prod: set DEV_DISABLE_PUBLIC_REGISTER=1 to close.";
+        const dotenvLine = data.dotenv_file_present
+            ? `.env present (${escHtml(data.dotenv_file_path || "")}) — loaded into env on server start.`
+            : "No repo .env file; use shell exports or add .env at project root.";
         statusPanel.innerHTML = `
             <div class="dev-status-card">
                 <p class="dev-status-label">inventory.db</p>
                 <p class="dev-status-value ${dbCls}">${data.db_connected ? "Connected" : "Unavailable"}</p>
-                <p class="dev-status-meta">${data.inventory_db_path || ""}</p>
+                <p class="dev-status-meta">${dbPath}</p>
             </div>
             <div class="dev-status-card">
                 <p class="dev-status-label">Node.js</p>
                 <p class="dev-status-value ${nodeCls}">${data.node_executable ? "Detected" : "Not found"}</p>
-                <p class="dev-status-meta">${data.node_executable || "Install Node 18+ and ensure it is on PATH."}</p>
+                <p class="dev-status-meta">${nodePath}</p>
+            </div>
+            <div class="dev-status-card">
+                <p class="dev-status-label">Dev accounts DB</p>
+                <p class="dev-status-value dev-ok">dev_users.db</p>
+                <p class="dev-status-meta">${escHtml(data.dev_users_db_path || "")}</p>
+            </div>
+            <div class="dev-status-card">
+                <p class="dev-status-label">Admin bootstrap</p>
+                <p class="dev-status-value ${adminCls}">${data.admin_password_configured ? "Ready" : "ADMIN_PASSWORD unset"}</p>
+                <p class="dev-status-meta">${escHtml(adminMeta)}</p>
+            </div>
+            <div class="dev-status-card">
+                <p class="dev-status-label">Dev self-register</p>
+                <p class="dev-status-value ${regCls}">${data.dev_registration_open ? "Open" : "Closed"}</p>
+                <p class="dev-status-meta">${escHtml(regMeta)} ${escHtml(dotenvLine)}</p>
             </div>`;
     }
 
     if (refreshStatus) {
         refreshStatus.addEventListener("click", refreshStatusPanel);
     }
+
+    // ── Incomplete cars section ──
+
+    const incompleteGrid = document.getElementById("dev-incomplete-grid");
+    const incompleteCount = document.getElementById("dev-incomplete-count");
+    const refreshIncomplete = document.getElementById("dev-refresh-incomplete");
+
+    function fmtNumber(n) { return Number(n).toLocaleString(); }
+    function fmtUSD(n) {
+        if (n == null || n === "" || Number(n) === 0) return "No price";
+        return "$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+    }
+
+    function missingTags(c) {
+        const bad = new Set(["", "n/a", "na", "null", "none", "unknown", "undefined", "-", "--", "---"]);
+        const isMissing = (v) => v == null || bad.has(String(v).trim().toLowerCase());
+        const isPlaceholder = (v) => v != null && String(v).trim() !== "" && bad.has(String(v).trim().toLowerCase());
+        const tags = [];
+        if (isMissing(c.title)) tags.push("No title");
+        const gallery = Array.isArray(c.gallery) ? c.gallery : [];
+        const hasImg =
+            (gallery.length && isHttpUrl(gallery[0])) || (c.image_url && isHttpUrl(c.image_url));
+        if (!hasImg) tags.push("No images");
+        if (isMissing(c.make)) tags.push("No make");
+        if (isMissing(c.model)) tags.push("No model");
+        if (!c.price || c.price === 0) tags.push("No price");
+        if (isPlaceholder(c.transmission)) tags.push("Transmission: " + c.transmission);
+        if (isPlaceholder(c.drivetrain)) tags.push("Drivetrain: " + c.drivetrain);
+        if (isPlaceholder(c.fuel_type)) tags.push("Fuel type: " + c.fuel_type);
+        if (isPlaceholder(c.exterior_color)) tags.push("Ext. color: " + c.exterior_color);
+        if (isPlaceholder(c.interior_color)) tags.push("Int. color: " + c.interior_color);
+        return tags;
+    }
+
+    function renderIncompleteGrid(cars) {
+        if (!incompleteGrid) return;
+        if (incompleteCount) incompleteCount.textContent = cars.length;
+
+        if (!cars.length) {
+            incompleteGrid.innerHTML = '<div class="dev-incomplete-empty"><p>All cars have complete data.</p></div>';
+            return;
+        }
+
+        incompleteGrid.innerHTML = cars.map(c => {
+            const gallery = Array.isArray(c.gallery) ? c.gallery : [];
+            const imgCandidate = (gallery.length && gallery[0]) ? gallery[0] : (c.image_url || "");
+            const imgRaw = isHttpUrl(imgCandidate) ? imgCandidate : "";
+            const imgQuoted = cssSingleQuotedUrl(imgRaw);
+            const tags = missingTags(c)
+                .map((t) => `<span class="dev-missing-tag">${escHtml(t)}</span>`)
+                .join("");
+            const idNum = Number(c.id);
+            const idAttr = Number.isFinite(idNum) && idNum > 0 ? String(Math.floor(idNum)) : "0";
+            return `
+            <div class="result-card dev-incomplete-card" data-car-id="${idAttr}">
+                <div class="result-image-wrap">
+                    <div class="result-image" style="background-image:url('${imgQuoted}')"></div>
+                    <span class="dev-incomplete-badge">Incomplete</span>
+                </div>
+                <div class="result-content">
+                    <h2>${escHtml(c.title || "No title")}</h2>
+                    <p class="result-trim">${escHtml(c.trim || "")}</p>
+                    <p class="result-price">${fmtUSD(c.price)}</p>
+                    <p class="result-meta">
+                        ${c.mileage ? fmtNumber(c.mileage) + " mi" : "-- mi"}
+                        &middot; ${escHtml(c.fuel_type || "--")}
+                        &middot; ${escHtml(c.drivetrain || "--")}
+                    </p>
+                    <p class="result-dealer">${escHtml(c.dealer_name || "Unknown dealer")}</p>
+                    <div class="dev-incomplete-missing">${tags}</div>
+                    <div class="dev-incomplete-actions">
+                        <a href="/car/${c.id}" class="dev-view-site-btn" target="_blank">View</a>
+                        <button type="button" class="dev-delete-btn dev-delete-car-btn" data-car-id="${c.id}">Delete</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join("");
+
+        incompleteGrid.querySelectorAll(".dev-delete-car-btn").forEach(btn =>
+            btn.addEventListener("click", onDeleteCar)
+        );
+    }
+
+    async function onDeleteCar(ev) {
+        const id = ev.target.dataset.carId;
+        if (!id) return;
+        if (!window.confirm(`Delete car #${id} from inventory?`)) return;
+        const res = await devFetch(devApi(`incomplete-cars/${id}`), { method: "DELETE" });
+        const data = await res.json();
+        if (data.ok) {
+            refreshIncompleteCars();
+        } else {
+            showMaint({ error: data.error || "delete failed" });
+        }
+    }
+
+    async function refreshIncompleteCars() {
+        const res = await devFetch(devApi("incomplete-cars"));
+        const data = await res.json();
+        if (data.ok) renderIncompleteGrid(data.cars || []);
+    }
+
+    if (refreshIncomplete) {
+        refreshIncomplete.addEventListener("click", refreshIncompleteCars);
+    }
+
+    document.querySelectorAll(".dev-delete-car-btn").forEach(btn =>
+        btn.addEventListener("click", onDeleteCar)
+    );
 });

@@ -8,11 +8,11 @@ import sys
 
 
 def main() -> int:
-    p = argparse.ArgumentParser(description="Chroma vector index for DealershipScanner")
+    p = argparse.ArgumentParser(description="pgvector indexes for DealershipScanner")
     p.add_argument("command", nargs="?", default="reindex", choices=("reindex",))
     args = p.parse_args()
     if args.command == "reindex":
-        from backend.vector.chroma_service import reindex_all
+        from backend.vector.pgvector_service import reindex_all
 
         counts = reindex_all()
         print(json.dumps({"ok": True, "counts": counts}, indent=2))

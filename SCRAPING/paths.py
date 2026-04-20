@@ -11,7 +11,8 @@ MANIFEST_DEFAULT = ROOT / "dealers.json"
 
 
 def default_json_results_path() -> Path:
-    return ROOT / "dealer_group_results.json"
+    """Default path for hybrid / dealer-group JSON output (under ``data/``)."""
+    return ROOT / "data" / "dealer_group_results.json"
 
 
 def default_hybrid_run_path() -> Path:

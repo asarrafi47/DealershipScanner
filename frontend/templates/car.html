@@ -2,52 +2,8 @@
 <html>
 <head>
     <title>{{ car.title }}</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        /* ── Gallery thumbnail strip ─────────────────────────────────────── */
-        .car-gallery-thumbs-wrap {
-            overflow: hidden;
-        }
-        .car-gallery-thumbs {
-            display: flex;
-            flex-direction: row;
-            gap: 6px;
-            overflow-x: auto;
-            padding: 8px 0 4px;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: thin;
-        }
-        .car-gallery-thumbs::-webkit-scrollbar { height: 4px; }
-        .car-gallery-thumbs::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
-        .car-gallery-thumb {
-            flex: 0 0 80px;
-            height: 58px;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-color: #eee;
-            border: 2px solid transparent;
-            border-radius: 5px;
-            cursor: pointer;
-            scroll-snap-align: start;
-            opacity: 0.65;
-            transition: opacity .18s, border-color .18s;
-            padding: 0;
-        }
-        .car-gallery-thumb:hover  { opacity: .9; }
-        .car-gallery-thumb.active { border-color: #1a73e8; opacity: 1; }
-
-        /* ── History highlights label/value pairs ────────────────────────── */
-        .history-highlight-item .hh-label {
-            font-weight: 600;
-            color: #555;
-            margin-right: .3em;
-        }
-        .history-highlight-item .hh-value {
-            color: #222;
-        }
-    </style>
 </head>
 <body>
 
@@ -64,7 +20,7 @@
 
         <section class="car-detail">
 
-            <a href="javascript:history.back()" class="back-link">← Back to results</a>
+            <button type="button" class="back-link" id="car-back-link" aria-label="Back to results">← Back to results</button>
 
             {% if car.carfax_url %}
             <p class="carfax-hint">If Carfax shows a verification step, complete it on their site to view the report.</p>
@@ -120,66 +76,82 @@
                     <div class="car-specs car-spec-sheet">
                         <div class="spec-row">
                             <span class="spec-label">Year</span>
-                            <span class="spec-value">{{ car.year }}</span>
+                            <span class="spec-value">{{ car.year | fmt_spec }}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Make</span>
-                            <span class="spec-value">{{ car.make }}</span>
+                            <span class="spec-value">{{ car.make | fmt_spec }}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Model</span>
-                            <span class="spec-value">{{ car.model }}</span>
+                            <span class="spec-value">{{ car.model | fmt_spec }}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Trim</span>
-                            <span class="spec-value">{{ car.trim }}</span>
+                            <span class="spec-value">{{ car.trim | fmt_spec }}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Mileage</span>
-                            <span class="spec-value">{{ "{:,}".format(car.mileage) }} mi</span>
+                            <span class="spec-value">{% if car.mileage is not none and car.mileage != '' %}{{ "{:,}".format(car.mileage) }} mi{% else %}—{% endif %}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Engine</span>
-                            <span class="spec-value">{{ verified_specs.get('master_engine_string') or '—' }}</span>
+                            <span class="spec-value">{{ car.engine_display }}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Transmission</span>
-                            <span class="spec-value">{{ verified_specs.get('transmission_display') or car.transmission or '—' }}</span>
+                            <span class="spec-value">{{ car.transmission_display }}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Drivetrain</span>
-                            <span class="spec-value">{{ verified_specs.get('drivetrain_display') or car.drivetrain or '—' }}</span>
+                            <span class="spec-value">{{ car.drivetrain_display }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Body style</span>
+                            <span class="spec-value">{{ car.body_style | fmt_spec }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Fuel type</span>
+                            <span class="spec-value">{{ car.fuel_type | fmt_spec }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Condition</span>
+                            <span class="spec-value">{{ car.condition | fmt_spec }}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Cylinders</span>
-                            <span class="spec-value">{% if vd is not none %}{% if vd == 0 %}Electric{% elif vd == 1 %}1 cylinder{% else %}{{ vd }} cylinders{% endif %}{% else %}—{% endif %}</span>
+                            <span class="spec-value">{% if vd is not none %}{% if vd == 0 %}Electric{% elif vd == 1 %}1 cylinder{% else %}{{ vd }} cylinders{% endif %}{% elif car.cylinders is not none and car.cylinders != '' %}{% if car.cylinders == 0 %}Electric{% elif car.cylinders == 1 %}1 cylinder{% else %}{{ car.cylinders }} cylinders{% endif %}{% else %}—{% endif %}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Efficiency</span>
-                            <span class="spec-value">{% if verified_specs.get('fuel_economy_display') %}{{ verified_specs.fuel_economy_display }}{% else %}—{% endif %}</span>
+                            <span class="spec-value">{{ car.fuel_economy_display }}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Exterior</span>
-                            <span class="spec-value">{{ car.exterior_color or '—' }}</span>
+                            <span class="spec-value">{{ car.exterior_color | fmt_spec }}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Interior</span>
-                            <span class="spec-value">{{ car.interior_color or '—' }}</span>
+                            <span class="spec-value">{{ car.interior_color | fmt_spec }}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">VIN</span>
-                            <span class="spec-value">{{ car.vin }}</span>
+                            <span class="spec-value">{{ car.vin | fmt_spec }}</span>
                         </div>
-                        {% if car.stock_number %}
+                        {% if car.stock_number and car.stock_number != '—' %}
                         <div class="spec-row">
                             <span class="spec-label">Stock #</span>
-                            <span class="spec-value">{{ car.stock_number }}</span>
+                            <span class="spec-value">{{ car.stock_number | fmt_spec }}</span>
                         </div>
                         {% endif %}
                     </div>
 
                     <div class="car-detail-actions">
-                        <a href="{{ car.dealer_url }}" target="_blank" class="primary-button">View at Dealership</a>
+                        {% if car.dealer_url and car.dealer_url != '—' %}
+                        <a href="{{ car.dealer_url }}" target="_blank" rel="noopener noreferrer" class="primary-button">View at Dealership</a>
+                        {% else %}
+                        <span class="primary-button car-detail-dealer-link-unavailable">Dealer link not available</span>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -191,7 +163,7 @@
                     <script type="application/json" id="car-history-json">{{ car.history_highlights | tojson }}</script>
 
                     {# JS fills this list; shown only when items exist #}
-                    <ul class="history-highlights-list" id="history-highlights-list" style="display:none"></ul>
+                    <ul class="history-highlights-list" id="history-highlights-list" hidden></ul>
                     {# Shown by default; hidden by JS if there are clean items #}
                     <p class="history-no-highlights" id="history-no-highlights">Detailed history report available. Click below to view.</p>
                     {% if car.carfax_url %}
@@ -200,6 +172,10 @@
                     <a href="https://www.carfax.com/VehicleHistory/p/Report.cfx?vin={{ car.vin }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View Full CARFAX Report</a>
                     {% else %}
                     <a href="{{ car.dealer_url }}" target="_blank" class="carfax-report-btn carfax-report-btn-secondary">Contact Dealer for History Report</a>
+                    {% endif %}
+                    {% if mopar_vin_lookup_url %}
+                    <p class="oem-vin-lookup-hint">Chrysler, Dodge, Jeep, and Ram owners can look up factory specs and features on Mopar’s official site (enter this VIN on the next page).</p>
+                    <a href="{{ mopar_vin_lookup_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn carfax-report-btn-secondary">Mopar VIN lookup (Stellantis)</a>
                     {% endif %}
                 </div>
 
@@ -222,217 +198,6 @@
 
     <script src="{{ url_for('static', filename='main.js') }}"></script>
     <script src="{{ url_for('static', filename='car_chat.js') }}"></script>
-    <script>
-    (function() {
-        var jsonEl = document.getElementById('car-gallery-json');
-        var imgEl = document.getElementById('car-gallery-main-img');
-        var heroEl = document.getElementById('car-gallery-hero');
-        var prevBtn = document.getElementById('car-gallery-prev');
-        var nextBtn = document.getElementById('car-gallery-next');
-        var prevHero = document.getElementById('car-gallery-prev-hero');
-        var nextHero = document.getElementById('car-gallery-next-hero');
-        var counterEl = document.getElementById('car-gallery-counter');
-        var thumbsEl = document.getElementById('car-gallery-thumbs');
-        if (!imgEl) return;
-
-        var gallery = [];
-        try {
-            if (jsonEl && jsonEl.textContent) gallery = JSON.parse(jsonEl.textContent);
-        } catch (e) { gallery = []; }
-        if (!Array.isArray(gallery)) gallery = [];
-        gallery = gallery.filter(function(u) { return u && typeof u === 'string'; });
-        if (gallery.length === 0) return;
-
-        var activeImageIndex = 0;
-        function show() {
-            var url = gallery[activeImageIndex];
-            if (url && imgEl) imgEl.src = url;
-            if (counterEl) counterEl.textContent = (activeImageIndex + 1) + ' of ' + gallery.length;
-            if (prevBtn) prevBtn.disabled = false;
-            if (nextBtn) nextBtn.disabled = false;
-            if (prevHero) prevHero.disabled = false;
-            if (nextHero) nextHero.disabled = false;
-            if (thumbsEl) {
-                var tabs = thumbsEl.querySelectorAll('.car-gallery-thumb');
-                tabs.forEach(function(t, i) { t.classList.toggle('active', i === activeImageIndex); t.setAttribute('aria-selected', i === activeImageIndex); });
-                var activeThumb = thumbsEl.querySelector('.car-gallery-thumb.active');
-                if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-            }
-        }
-
-        function goPrev(e) { if (e) e.preventDefault(); activeImageIndex = (activeImageIndex - 1 + gallery.length) % gallery.length; show(); }
-        function goNext(e) { if (e) e.preventDefault(); activeImageIndex = (activeImageIndex + 1) % gallery.length; show(); }
-
-        if (heroEl) {
-            heroEl.addEventListener('click', function(e) {
-                if (e.target.closest('button')) return;
-                var rect = heroEl.getBoundingClientRect();
-                var x = e.clientX - rect.left;
-                var w = rect.width;
-                if (x < w * 0.33) goPrev(e);
-                else if (x > w * 0.67) goNext(e);
-            });
-        }
-        if (prevBtn) prevBtn.addEventListener('click', goPrev);
-        if (nextBtn) nextBtn.addEventListener('click', goNext);
-        if (prevHero) prevHero.addEventListener('click', goPrev);
-        if (nextHero) nextHero.addEventListener('click', goNext);
-
-        if (thumbsEl && gallery.length > 1) {
-            gallery.forEach(function(url, i) {
-                var t = document.createElement('button');
-                t.type = 'button';
-                t.className = 'car-gallery-thumb' + (i === 0 ? ' active' : '');
-                t.setAttribute('role', 'tab');
-                t.setAttribute('aria-selected', i === 0);
-                t.setAttribute('aria-label', 'Image ' + (i + 1) + ' of ' + gallery.length);
-                t.style.setProperty('background-image', 'url(' + JSON.stringify(url) + ')');
-                t.addEventListener('click', function() { activeImageIndex = i; show(); });
-                thumbsEl.appendChild(t);
-            });
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.target.matches('input, textarea')) return;
-            if (gallery.length <= 1) return;
-            if (e.key === 'ArrowLeft') { goPrev(e); e.preventDefault(); }
-            if (e.key === 'ArrowRight') { goNext(e); e.preventDefault(); }
-        });
-
-        show();
-    })();
-    </script>
-
-    <script>
-    /* ── Vehicle History Highlights cleaner ──────────────────────────────── */
-    (function () {
-        var jsonEl   = document.getElementById('car-history-json');
-        var listEl   = document.getElementById('history-highlights-list');
-        var noHl     = document.getElementById('history-no-highlights');
-        if (!jsonEl || !listEl) return;
-
-        /* Human-readable labels for camelCase keys from DMS APIs */
-        var KEY_LABELS = {
-            normalFuelType:   'Fuel Type',
-            fuelType:         'Fuel Type',
-            type:             'Condition',
-            condition:        'Condition',
-            ownerCount:       'Owners',
-            numberOfOwners:   'Owners',
-            accidentCount:    'Accidents',
-            accidents:        'Accidents',
-            frameRepairs:     'Frame Damage',
-            titleIssues:      'Title Issues',
-            ownerHistory:     'Owner History',
-            usageType:        'Usage',
-            personalUse:      'Personal Use',
-            odometer:         'Mileage',
-            mileage:          'Mileage',
-            make:             'Make',
-            model:            'Model',
-            year:             'Year',
-            trim:             'Trim',
-            vin:              'VIN',
-            stockNumber:      'Stock #',
-            cylinders:        'Cylinders',
-            transmission:     'Transmission',
-            drivetrain:       'Drivetrain',
-            exteriorColor:    'Exterior Color',
-            interiorColor:    'Interior Color',
-            serviceRecords:   'Service Records',
-            lemonHistory:     'Lemon History',
-            salvageHistory:   'Salvage History',
-        };
-
-        /* Values to silently drop */
-        var BAD = new Set(['n/a', 'na', '', 'null', 'none', 'unknown', 'undefined', '-', '--']);
-
-        function isBad(v) {
-            if (v === null || v === undefined) return true;
-            return BAD.has(String(v).trim().toLowerCase());
-        }
-
-        /* Detect if a string looks like a camelCase identifier rather than a display value.
-           Rule: no whitespace AND contains a lowercase letter immediately followed by uppercase.
-           Short ALL-CAPS abbreviations (AWD, FWD, CVT…) are excluded via the [a-z] anchor. */
-        function isCamelKey(s) {
-            return typeof s === 'string' && !/\s/.test(s) && /[a-z][A-Z]/.test(s);
-        }
-
-        /* Convert an unknown camelCase key to "Title Case With Spaces" as a fallback label */
-        function camelToLabel(key) {
-            if (KEY_LABELS[key]) return KEY_LABELS[key];
-            return key
-                .replace(/([A-Z])/g, ' $1')
-                .replace(/^./, function (c) { return c.toUpperCase(); })
-                .trim();
-        }
-
-        function esc(s) {
-            return String(s)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;');
-        }
-
-        /* Parse raw data */
-        var raw = [];
-        try { raw = JSON.parse(jsonEl.textContent || '[]'); } catch (e) {}
-        if (!Array.isArray(raw)) raw = [];
-
-        var rows = [];   /* [{label: string|null, value: string}] */
-
-        raw.forEach(function (item) {
-            if (item === null || item === undefined) return;
-
-            if (typeof item === 'string') {
-                var s = item.trim();
-                if (isBad(s) || isCamelKey(s) || s.length < 2) return;
-                rows.push({ label: null, value: s });
-
-            } else if (typeof item === 'object' && !Array.isArray(item)) {
-                /* Handle {"label":"…","value":"…"} objects as a first-class case */
-                if ('label' in item && 'value' in item) {
-                    var lbl = String(item.label || '').trim();
-                    var val = String(item.value === null ? '' : item.value).trim();
-                    if (!isBad(val) && !isCamelKey(val) && val.length >= 1)
-                        rows.push({ label: lbl || null, value: val });
-                    return;
-                }
-                /* Generic key→value object */
-                Object.keys(item).forEach(function (k) {
-                    var v = item[k];
-                    if (isBad(v)) return;
-                    var vs = String(v).trim();
-                    if (vs.length < 1 || isCamelKey(vs)) return;
-                    rows.push({ label: camelToLabel(k), value: vs });
-                });
-            }
-        });
-
-        if (rows.length === 0) {
-            /* Leave the no-highlights paragraph visible */
-            return;
-        }
-
-        /* Render clean list */
-        var html = '';
-        rows.forEach(function (row) {
-            if (row.label) {
-                html += '<li class="history-highlight-item">'
-                      + '<span class="hh-label">' + esc(row.label) + ':</span> '
-                      + '<span class="hh-value">'  + esc(row.value) + '</span>'
-                      + '</li>';
-            } else {
-                html += '<li class="history-highlight-item">' + esc(row.value) + '</li>';
-            }
-        });
-
-        listEl.innerHTML = html;
-        listEl.style.display = '';
-        if (noHl) noHl.style.display = 'none';
-    })();
-    </script>
+    <script src="{{ url_for('static', filename='car_page.js') }}"></script>
 </body>
 </html>

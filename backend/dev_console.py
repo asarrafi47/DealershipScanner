@@ -4,11 +4,13 @@ from __future__ import annotations
 import json
 import logging
 import os
+import posixpath
 import subprocess
 import sys
 import threading
 from functools import wraps
 from pathlib import Path
+from urllib.parse import urlparse
 
 from flask import (
     Blueprint,
@@ -24,6 +26,20 @@ from backend.dev_dealers import DEALERS_PATH, load_dealers, save_dealers, valida
 
 bp = Blueprint("dev_console", __name__)
 logger = logging.getLogger(__name__)
+
+
+@bp.before_request
+def _dev_console_csrf() -> None:
+    from backend.utils.csrf import validate_csrf_form, validate_csrf_header
+
+    ep = request.endpoint or ""
+    if request.method not in ("POST", "PUT", "PATCH", "DELETE"):
+        return
+    if ep in ("dev_console.dev_login", "dev_console.dev_logout"):
+        validate_csrf_form()
+    else:
+        validate_csrf_header()
+
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 _SCANNER_SCRIPT = _PROJECT_ROOT / "scanner.py"
@@ -46,6 +62,17 @@ _DISABLED_API = (
     "Developer console is disabled for this server process. "
     "Set environment variable DEV_CONSOLE=1 (e.g. export DEV_CONSOLE=1) and restart."
 )
+
+
+def _safe_manifest_next_url(next_url: str, *, default: str) -> str:
+    """Post-login redirect: same-origin /dev/manifest paths only (SEC-021 style)."""
+    raw = (next_url or "").strip()
+    if not raw.startswith("/") or raw.startswith("//") or "\\" in raw:
+        return default
+    path = posixpath.normpath(urlparse(raw).path or "/")
+    if path != "/dev/manifest" and not path.startswith("/dev/manifest/"):
+        return default
+    return raw
 
 
 def require_dev_access(*, api: bool = False):
@@ -81,9 +108,8 @@ def dev_login():
         expected = (os.environ.get("DEV_CONSOLE_SECRET") or "").strip()
         if provided and provided == expected:
             session["dev_console_ok"] = True
-            nxt = request.args.get("next") or url_for("dev_console.dev_home")
-            if not nxt.startswith("/") or nxt.startswith("//"):
-                nxt = url_for("dev_console.dev_home")
+            raw_next = request.args.get("next") or url_for("dev_console.dev_home")
+            nxt = _safe_manifest_next_url(raw_next, default=url_for("dev_console.dev_home"))
             return redirect(nxt)
         error = "Invalid secret."
     return render_template("dev_login.html", error=error)

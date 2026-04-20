@@ -1,7 +1,9 @@
+import os
 import sqlite3
 
 from backend.db.password_hash import hash_password, verify_or_legacy
 from backend.db.users_sqlite import DB_PATH, get_users_conn
+from backend.utils.runtime_env import is_production_env
 
 
 def get_conn():
@@ -21,14 +23,21 @@ def init_users_db():
         )
         """
     )
-    default_pw = hash_password("password")
-    cursor.execute(
-        """
-        INSERT OR IGNORE INTO users (username, email, password)
-        VALUES ('admin', 'admin@admin.com', ?)
-        """,
-        (default_pw,),
+    allow_default = (os.environ.get("ALLOW_DEFAULT_APP_USER") or "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
     )
+    if (not is_production_env()) or allow_default:
+        default_pw = hash_password("password")
+        cursor.execute(
+            """
+            INSERT OR IGNORE INTO users (username, email, password)
+            VALUES ('admin', 'admin@admin.com', ?)
+            """,
+            (default_pw,),
+        )
     conn.commit()
     conn.close()
 

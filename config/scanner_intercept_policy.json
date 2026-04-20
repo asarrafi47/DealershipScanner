@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "default_allow_url_substrings": [
+    "getinventory",
+    "getinventoryandfacets",
+    "ws-inv-data",
+    "/inventory",
+    "algolia",
+    "algolianet",
+    "dealer.com",
+    "dealerinspire",
+    "cdk"
+  ],
+  "notes": "Used by backend/scrapers/scanner_intercept_filter.py and scanner.js (require ./scanner_intercept). SCANNER_INTERCEPT_URL_ALLOW / SCANNER_INTERCEPT_URL_DENY still merge at runtime."
+}

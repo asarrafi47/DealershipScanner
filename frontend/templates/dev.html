@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Developer Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -16,7 +17,10 @@
             <a href="/listings">Listings</a>
             {% if admin_username %}
             <span class="nav-links-meta">Admin: {{ admin_username }}</span>
-            <a href="{{ url_for('dev.admin_logout') }}">Log out</a>
+            <form method="post" action="{{ url_for('dev.admin_logout') }}" class="dev-logout-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="dev-logout-button">Log out</button>
+            </form>
             {% endif %}
         </div>
     </nav>
@@ -25,7 +29,7 @@
         <header class="dev-hero">
             <p class="db-eyebrow">Internal tools</p>
             <h1 class="dev-title">Developer Dashboard</h1>
-            <p class="dev-sub">Paste one dealer URL per line for Smart Import (discovery + full inventory scrape + registry row). Sign in at <code>/dev/login</code>. Bulk jobs run sequentially; the log shows the active job.</p>
+            <p class="dev-sub">Paste one dealer URL per line for Smart Import (discovery + full inventory scrape; registry row when city/state resolve). Project-root <code>dealers.json</code> updates after a successful inventory persist so <code>python scanner.py --dealer-id …</code> works even if the registry row still needs a manual geocode. The public <a href="/listings">Listings</a> page hides incomplete cars. Sign in at <code>/dev/login</code>. Bulk jobs run sequentially; the log shows the active job.</p>
         </header>
 
         <section class="db-section dev-section">
@@ -48,6 +52,25 @@
                     </p>
                     <p class="dev-status-meta">{{ status.node_executable or "Install Node 18+ and ensure it is on PATH." }}</p>
                 </div>
+                <div class="dev-status-card">
+                    <p class="dev-status-label">Dev accounts DB</p>
+                    <p class="dev-status-value dev-ok">dev_users.db</p>
+                    <p class="dev-status-meta">{{ status.dev_users_db_path }}</p>
+                </div>
+                <div class="dev-status-card">
+                    <p class="dev-status-label">Admin bootstrap</p>
+                    <p class="dev-status-value {% if status.admin_password_configured %}dev-ok{% else %}dev-bad{% endif %}">
+                        {% if status.admin_password_configured %}Ready{% else %}ADMIN_PASSWORD unset{% endif %}
+                    </p>
+                    <p class="dev-status-meta">{% if status.is_production %}Production requires ADMIN_PASSWORD.{% else %}Non-production may use env defaults.{% endif %}</p>
+                </div>
+                <div class="dev-status-card">
+                    <p class="dev-status-label">Dev self-register</p>
+                    <p class="dev-status-value {% if status.dev_registration_open %}dev-ok{% else %}dev-bad{% endif %}">
+                        {% if status.dev_registration_open %}Open{% else %}Closed{% endif %}
+                    </p>
+                    <p class="dev-status-meta">{% if status.is_production %}Production: set ALLOW_DEV_PUBLIC_REGISTER=1 to allow /dev/register.{% else %}Non-prod: set DEV_DISABLE_PUBLIC_REGISTER=1 to close.{% endif %}</p>
+                </div>
             </div>
             <button type="button" class="secondary-button dev-refresh-status" id="dev-refresh-status">Refresh status</button>
         </section>
@@ -57,7 +80,7 @@
                 <p class="db-eyebrow">Smart import</p>
                 <h2 class="db-section-title">Bulk magic URLs</h2>
             </div>
-            <p class="dev-hint">Runs <code>node scanner.js --url … --smart-import</code> (Dealer.com search API + getInventory, lazy-load scroll). Saves the dealership and links scraped rows for listings filters.</p>
+            <p class="dev-hint">Runs <code>node scanner.js --url … --smart-import</code> (Dealer.com search API + getInventory, lazy-load scroll). When inventory is persisted, <strong>adds or updates</strong> project-root <code>dealers.json</code> so <code>python scanner.py --dealer-id …</code> picks up the dealer. The registry row (geocode + listings filters) is written only when discovery returns a valid city/state; until then, listings may omit incomplete vehicles.</p>
             <label class="dev-textarea-label" for="dev-smart-urls">Dealer URLs (one per line)</label>
             <textarea id="dev-smart-urls" class="dev-url-textarea" rows="5" placeholder="https://www.example-bmw.com&#10;https://www.other-dealer.com"></textarea>
             <div class="dev-playground-row dev-playground-row--mt">
@@ -108,6 +131,96 @@
             </div>
             <p class="dev-hint">Geocode uses <code>pgeocode</code> (city + state). Deduplicate uses <code>thefuzz</code> token match to set <code>duplicate_of_id</code> on likely duplicates.</p>
             <pre class="dev-log-pre dev-log-pre--compact" id="dev-maint-log" aria-live="polite"></pre>
+        </section>
+
+        <section class="db-section dev-section">
+            <div class="db-section-header dev-tools-header">
+                <div>
+                    <p class="db-eyebrow">Data quality</p>
+                    <h2 class="db-section-title">Missing data
+                        <span class="dev-incomplete-count" id="dev-incomplete-count">{{ incomplete_cars|length }}</span>
+                    </h2>
+                </div>
+                <div class="dev-tool-actions">
+                    <button type="button" class="secondary-button" id="dev-refresh-incomplete">Refresh</button>
+                </div>
+            </div>
+            <p class="dev-hint">Cars missing titles, images, make/model/year, or with placeholder values (N/A, --, etc). These are excluded from public listings.</p>
+
+            {% if incomplete_cars %}
+            <div class="dev-incomplete-grid" id="dev-incomplete-grid">
+                {% for c in incomplete_cars %}
+                <div class="result-card dev-incomplete-card" data-car-id="{{ c.id }}">
+                    <div class="result-image-wrap">
+                        {% set gallery = c.gallery if c.gallery is iterable and c.gallery is not string else [] %}
+                        {% set img_src = gallery[0] if gallery|length > 0 and gallery[0] else (c.image_url or '') %}
+                        {% set img_src = img_src if img_src and img_src.startswith('http') else '/static/placeholder.svg' %}
+                        <div class="result-image" style="background-image:url('{{ img_src }}')"></div>
+                        <span class="dev-incomplete-badge">Incomplete</span>
+                    </div>
+                    <div class="result-content">
+                        <h2>{{ c.title or 'No title' }}</h2>
+                        <p class="result-trim">{{ c.trim or '' }}</p>
+                        <p class="result-price">
+                            {% if c.price and c.price > 0 %}
+                                ${{ "{:,.0f}".format(c.price) }}
+                            {% else %}
+                                No price
+                            {% endif %}
+                        </p>
+                        <p class="result-meta">
+                            {% if c.mileage %}{{ "{:,}".format(c.mileage) }} mi{% else %}-- mi{% endif %}
+                            &middot; {{ c.fuel_type or '--' }}
+                            &middot; {{ c.drivetrain or '--' }}
+                        </p>
+                        <p class="result-dealer">{{ c.dealer_name or 'Unknown dealer' }}</p>
+                        <div class="dev-incomplete-missing">
+                            {% set bad = ['', 'n/a', 'na', 'null', 'none', 'unknown', 'undefined', '-', '--', '---'] %}
+                            {% set placeholders = ['n/a', 'na', 'null', 'none', 'unknown', 'undefined', '-', '--', '---'] %}
+                            {% if not c.title or c.title|lower in bad %}
+                                <span class="dev-missing-tag">No title</span>
+                            {% endif %}
+                            {% if not img_src or img_src == '/static/placeholder.svg' %}
+                                <span class="dev-missing-tag">No images</span>
+                            {% endif %}
+                            {% if not c.make or c.make|lower in bad %}
+                                <span class="dev-missing-tag">No make</span>
+                            {% endif %}
+                            {% if not c.model or c.model|lower in bad %}
+                                <span class="dev-missing-tag">No model</span>
+                            {% endif %}
+                            {% if not c.price or c.price == 0 %}
+                                <span class="dev-missing-tag">No price</span>
+                            {% endif %}
+                            {% if c.transmission and c.transmission|lower in placeholders %}
+                                <span class="dev-missing-tag">Transmission: {{ c.transmission }}</span>
+                            {% endif %}
+                            {% if c.drivetrain and c.drivetrain|lower in placeholders %}
+                                <span class="dev-missing-tag">Drivetrain: {{ c.drivetrain }}</span>
+                            {% endif %}
+                            {% if c.fuel_type and c.fuel_type|lower in placeholders %}
+                                <span class="dev-missing-tag">Fuel type: {{ c.fuel_type }}</span>
+                            {% endif %}
+                            {% if c.exterior_color and c.exterior_color|lower in placeholders %}
+                                <span class="dev-missing-tag">Ext. color: {{ c.exterior_color }}</span>
+                            {% endif %}
+                            {% if c.interior_color and c.interior_color|lower in placeholders %}
+                                <span class="dev-missing-tag">Int. color: {{ c.interior_color }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="dev-incomplete-actions">
+                            <a href="/car/{{ c.id }}" class="dev-view-site-btn" target="_blank">View</a>
+                            <button type="button" class="dev-delete-btn dev-delete-car-btn" data-car-id="{{ c.id }}">Delete</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="dev-incomplete-empty">
+                <p>All cars have complete data.</p>
+            </div>
+            {% endif %}
         </section>
 
         <section class="db-section dev-section">

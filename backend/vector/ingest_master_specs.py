@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Download EPA Fuel Economy vehicle data, build canonical description strings,
-and index them into a dedicated ChromaDB store (sentence-transformers locally).
+and index them into Postgres + pgvector (sentence-transformers locally).
 
 Data source (official EPA / fueleconomy.gov epadata):
   https://www.fueleconomy.gov/feg/epadata/vehicles.csv.zip
@@ -15,7 +15,8 @@ Usage:
   python -m backend.vector.ingest_master_specs --reindex --batch-size 100
 
 Environment:
-  MASTER_CATALOG_BATCH (optional) default batch size for Chroma upserts.
+  MASTER_CATALOG_BATCH (optional) default batch size for embedding upserts.
+  PGVECTOR_URL or DATABASE_URL — Postgres with the ``vector`` extension.
 """
 
 from __future__ import annotations
@@ -34,7 +35,7 @@ from typing import Any
 import requests
 
 from backend.vector.catalog_service import (
-    _COLLECTION,
+    MASTER_SPEC_CATALOG_LABEL,
     known_packages_for_row,
     master_catalog_persist_dir,
 )
@@ -254,7 +255,7 @@ def build_canonical_description(r: dict[str, Any], package_line: str) -> str:
 
 
 def row_chroma_metadata(r: dict[str, Any], package_line: str) -> dict[str, Any]:
-    """Chroma metadata: str/int/float only (flatten packages)."""
+    """Row metadata stored as JSONB (str/int/float only; flatten packages)."""
     trim = _trim_hint(r.get("base_model") or "", r.get("model") or "")
     return {
         "make": (r.get("make") or "")[:120],
@@ -273,13 +274,6 @@ def row_chroma_metadata(r: dict[str, Any], package_line: str) -> dict[str, Any]:
         "vehicle_class": (r.get("vehicle_class") or "")[:120],
         "known_packages": (package_line or "")[:2000],
     }
-
-
-def _clear_collection(client: Any, name: str) -> None:
-    try:
-        client.delete_collection(name)
-    except Exception:
-        pass
 
 
 def ingest(
@@ -322,21 +316,12 @@ def ingest(
         return len(deduped)
 
     from sentence_transformers import SentenceTransformer
-    import chromadb
-    from chromadb.config import Settings
+
+    from backend.vector.pgvector_service import master_spec_truncate, master_spec_upsert_batch
 
     persist = master_catalog_persist_dir()
-    client = chromadb.PersistentClient(
-        path=str(persist),
-        settings=Settings(anonymized_telemetry=False),
-    )
     if reindex:
-        _clear_collection(client, _COLLECTION)
-
-    col = client.get_or_create_collection(
-        _COLLECTION,
-        metadata={"source": "epa_vehicles_csv", "model": MODEL_NAME},
-    )
+        master_spec_truncate()
 
     model = SentenceTransformer(MODEL_NAME)
     n_indexed = 0
@@ -355,7 +340,7 @@ def ingest(
             convert_to_numpy=True,
         )
         vectors = emb.tolist()
-        col.add(ids=batch_ids, documents=batch_docs, metadatas=batch_meta, embeddings=vectors)
+        master_spec_upsert_batch(batch_ids, batch_docs, batch_meta, vectors)
         n_indexed += len(batch_ids)
         batch_ids, batch_docs, batch_meta = [], [], []
 
@@ -371,7 +356,7 @@ def ingest(
             flush()
     flush()
 
-    logger.info("Indexed %s documents into %s / %s", n_indexed, persist, _COLLECTION)
+    logger.info("Indexed %s documents into Postgres %s (%s)", n_indexed, persist, MASTER_SPEC_CATALOG_LABEL)
     return n_indexed
 
 
@@ -381,22 +366,22 @@ def main(argv: list[str] | None = None) -> int:
         format="%(asctime)s [%(levelname)s] %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-    p = argparse.ArgumentParser(description="EPA Master Spec Catalog → ChromaDB")
+    p = argparse.ArgumentParser(description="EPA Master Spec Catalog → Postgres pgvector")
     p.add_argument(
         "--reindex",
         action="store_true",
-        help="Delete existing master_spec_catalog collection and rebuild from EPA data.",
+        help="Truncate master spec embeddings and rebuild from EPA data.",
     )
     p.add_argument(
         "--batch-size",
         type=int,
         default=int(os.environ.get("MASTER_CATALOG_BATCH", "100")),
-        help="Records per Chroma add / embedding batch (default 100).",
+        help="Records per pgvector upsert / embedding batch (default 100).",
     )
     p.add_argument(
         "--dry-run",
         action="store_true",
-        help="Parse, filter, and dedupe only; print a few canonical strings; no Chroma writes.",
+        help="Parse, filter, and dedupe only; print a few canonical strings; no database writes.",
     )
     args = p.parse_args(argv)
 

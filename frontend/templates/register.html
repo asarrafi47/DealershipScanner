@@ -20,7 +20,12 @@
                 <p class="eyebrow">Get Started</p>
                 <h1>Create Account</h1>
 
+                {% if error %}
+                <div class="error-box">{{ error }}</div>
+                {% endif %}
+
                 <form method="POST" action="/register" class="auth-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <div class="field-group">
                         <label>Username</label>
                         <input type="text" name="username" required>

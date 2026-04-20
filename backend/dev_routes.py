@@ -6,18 +6,29 @@ Smart URL import, scanner jobs, dealership registry tools.
 from __future__ import annotations
 
 import json
+import logging
+import os
+import posixpath
+import re
 import shutil
 import sqlite3
 import subprocess
+import sys
 import threading
 import uuid
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 from flask import Blueprint, jsonify, redirect, render_template, request, session, url_for
 from pydantic import ValidationError
 
-from backend.db.admin_users_db import authenticate_admin
+from backend.db.admin_users_db import (
+    authenticate_admin,
+    dev_public_registration_allowed,
+    dev_users_db_path,
+    save_dev_admin_user,
+)
 from backend.db.dealerships_db import (
     DB_PATH,
     deduplicate_dealerships,
@@ -26,7 +37,24 @@ from backend.db.dealerships_db import (
     insert_dealership,
     list_recent_dealerships,
 )
-from backend.db.inventory_db import get_conn, link_cars_to_dealership_registry
+from backend.dev_dealers import (
+    normalize_manifest_url,
+    smart_import_manifest_display_name,
+    smart_import_scrape_succeeded,
+    upsert_dealer_manifest_row,
+)
+from backend.db.inventory_db import (
+    get_car_by_id,
+    get_car_by_vin,
+    get_conn,
+    get_incomplete_cars,
+    link_cars_to_dealership_registry,
+)
+from backend.knowledge_engine import prepare_car_detail_context
+from backend.utils.car_serialize import build_detail_display_snapshot, serialize_car_for_api
+from backend.utils.client_ip import client_ip
+from backend.utils.ip_rate_limit import allow_request
+from backend.utils.registration_validation import registration_form_error
 from schemas.dealership import DealerCreate
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -42,28 +70,55 @@ SCANNER_PROFILES = ("default", "resilient", "bare")
 
 LAST_SCRAPE_SAMPLES_PATH = PROJECT_ROOT / "debug" / "last_scrape_samples.json"
 
+logger = logging.getLogger(__name__)
 
-def _chroma_reindex_background() -> None:
+_MIN_PASSWORD_LEN = max(8, int(os.environ.get("MIN_PASSWORD_LENGTH", "8")))
+_DEV_LOGIN_RPM = int(os.environ.get("RATE_LIMIT_DEV_LOGIN_PER_MIN", "20"))
+_DEV_REGISTER_RPM = int(os.environ.get("RATE_LIMIT_DEV_REGISTER_PER_MIN", "5"))
+
+
+def _vector_reindex_background() -> None:
     try:
-        from backend.vector.chroma_service import reindex_all
+        from backend.vector.pgvector_service import reindex_all
 
         reindex_all()
     except Exception:
-        pass
+        logger.exception("pgvector reindex failed after scanner job")
 
 
-def _spawn_chroma_reindex_background() -> None:
-    """Refresh Chroma from SQLite after a successful scanner run (non-blocking)."""
-    threading.Thread(target=_chroma_reindex_background, daemon=True).start()
+def _spawn_vector_reindex_background() -> None:
+    """Refresh pgvector embeddings from SQLite after a successful scanner run (non-blocking)."""
+    threading.Thread(target=_vector_reindex_background, daemon=True).start()
 
 
 def _admin_session_ok() -> bool:
     return bool(session.get("admin_user_id"))
 
 
+def _safe_dev_next_url(next_url: str, *, default_endpoint: str = "dev.dev_dashboard") -> str:
+    """Post-login redirect: same-origin ``/dev`` paths only (SEC-021)."""
+    default = url_for(default_endpoint)
+    raw = (next_url or "").strip()
+    if not raw.startswith("/") or raw.startswith("//") or "\\" in raw:
+        return default
+    path = posixpath.normpath(urlparse(raw).path or "/")
+    if path != "/dev" and not path.startswith("/dev/"):
+        return default
+    return raw
+
+
 @dev_bp.before_request
 def _dev_require_admin() -> Any:
-    if request.endpoint in ("dev.admin_login", "dev.admin_logout"):
+    from backend.utils.csrf import validate_csrf_form, validate_csrf_header
+
+    ep = request.endpoint or ""
+    if request.method in ("POST", "PUT", "PATCH", "DELETE"):
+        if ep in ("dev.admin_login", "dev.admin_register", "dev.admin_logout"):
+            validate_csrf_form()
+        else:
+            validate_csrf_header()
+
+    if ep in ("dev.admin_login", "dev.admin_register", "dev.admin_logout"):
         return None
     if _admin_session_ok():
         return None
@@ -79,6 +134,10 @@ def _json_body_no_token(data: dict[str, Any] | None) -> dict[str, Any]:
 
 
 def _dev_status() -> dict[str, Any]:
+    from backend.utils.project_env import load_project_dotenv
+
+    load_project_dotenv()
+
     db_ok = False
     try:
         conn = get_conn()
@@ -87,10 +146,21 @@ def _dev_status() -> dict[str, Any]:
         db_ok = True
     except (OSError, sqlite3.Error):
         pass
+    from backend.utils.runtime_env import is_production_env
+
+    prod = is_production_env()
+    env_file = PROJECT_ROOT / ".env"
+    admin_pw_set = bool((os.environ.get("ADMIN_PASSWORD") or "").strip())
     return {
         "db_connected": db_ok,
         "inventory_db_path": str(DB_PATH),
+        "dev_users_db_path": dev_users_db_path(),
+        "dev_registration_open": dev_public_registration_allowed(),
         "node_executable": shutil.which("node"),
+        "is_production": prod,
+        "admin_password_configured": admin_pw_set or not prod,
+        "dotenv_file_present": env_file.is_file(),
+        "dotenv_file_path": str(env_file),
     }
 
 
@@ -133,7 +203,7 @@ def _run_scanner_job(job_id: str, url: str, headed: bool = False) -> None:
             scanner_jobs[job_id]["exit_code"] = code
 
     if code == 0:
-        _spawn_chroma_reindex_background()
+        _spawn_vector_reindex_background()
 
 
 def _parse_prefixed_json(line: str, prefix: str) -> dict[str, Any] | None:
@@ -153,6 +223,7 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
     resolved_result: dict[str, Any] | None = None
     last_error: dict[str, Any] | None = None
     final_code: int | None = None
+    error_partial: dict[str, Any] = {}
 
     def append(text: str) -> None:
         log_parts.append(text)
@@ -207,6 +278,11 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
                         raw = line[idx + len("SMART_IMPORT_ERROR:") :].strip()
                         try:
                             attempt_error = json.loads(raw)
+                            par = attempt_error.get("partial") if isinstance(attempt_error, dict) else None
+                            if isinstance(par, dict):
+                                for pk, pv in par.items():
+                                    if pv not in (None, "", [], {}):
+                                        error_partial[str(pk)] = pv
                         except json.JSONDecodeError:
                             attempt_error = {"reason": "parse_error", "raw": raw[:200]}
 
@@ -240,13 +316,61 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
     insert_error: list | None = None
     insert_id: int | None = None
     cars_linked = 0
+    manifest_written = False
+    full_log = "".join(log_parts)
+
     if resolved_result:
         try:
             body = DealerCreate.model_validate(resolved_result)
-            insert_id = insert_dealership(body.row_dict())
+            rd = body.row_dict()
+            try:
+                action, manifest_id = upsert_dealer_manifest_row(
+                    name=str(rd.get("name") or ""),
+                    website_url=str(rd.get("website_url") or ""),
+                    provider="dealer_dot_com",
+                )
+                append(
+                    f"[dev] dealers.json {action}: dealer_id={manifest_id} "
+                    f"(python scanner.py --dealer-id)\n"
+                )
+                manifest_written = True
+            except ValueError as e:
+                append(f"[dev] dealers.json upsert skipped (registry path): {e}\n")
+            insert_id = insert_dealership(rd)
             cars_linked = link_cars_to_dealership_registry(insert_id, str(body.website_url))
         except ValidationError as e:
             insert_error = e.errors()
+
+    scrape_ok = smart_import_scrape_succeeded(final_code, full_log)
+    if scrape_ok and not manifest_written:
+        wurl = normalize_manifest_url(url)
+        if not wurl:
+            append("[dev] dealers.json skipped (manifest-only): could not normalize job URL\n")
+        else:
+            try:
+                disp = smart_import_manifest_display_name(
+                    url,
+                    resolved=resolved_result,
+                    error_partial=error_partial,
+                    discovery=discovery,
+                )
+                action, manifest_id = upsert_dealer_manifest_row(
+                    name=disp,
+                    website_url=wurl,
+                    provider="dealer_dot_com",
+                )
+                manifest_written = True
+                append(
+                    f"[dev] dealers.json {action} (manifest-only; registry row skipped until "
+                    f"city/state are resolved): dealer_id={manifest_id}\n"
+                )
+            except ValueError as e:
+                append(f"[dev] dealers.json manifest-only upsert skipped: {e}\n")
+    elif final_code == 0 and not manifest_written:
+        append(
+            "[dev] dealers.json skipped: process exited 0 but log shows no persisted vehicles "
+            "(expected SCAN_VEHICLE_COUNT > 0 or Upserted N > 0).\n"
+        )
 
     with scanner_lock:
         if job_id not in scanner_jobs:
@@ -260,14 +384,25 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
         scanner_jobs[job_id]["cars_linked"] = cars_linked
 
     if final_code == 0:
-        _spawn_chroma_reindex_background()
+        _spawn_vector_reindex_background()
 
 
 @dev_bp.route("/login", methods=["GET", "POST"])
 def admin_login():
     if _admin_session_ok():
         return redirect(url_for("dev.dev_dashboard"))
+    registered = (request.args.get("registered") or "").strip().lower() in ("1", "true", "yes")
     if request.method == "POST":
+        ip = client_ip(request)
+        if not allow_request(f"dev_login:{ip}", max_events=_DEV_LOGIN_RPM, window_seconds=60.0):
+            return (
+                render_template(
+                    "admin_login.html",
+                    error="Too many sign-in attempts. Try again in a minute.",
+                    registration_open=dev_public_registration_allowed(),
+                ),
+                429,
+            )
         login_input = (request.form.get("login") or "").strip()
         password = (request.form.get("password") or "").strip()
         auth = authenticate_admin(login_input, password)
@@ -275,18 +410,65 @@ def admin_login():
             uid, uname = auth
             session["admin_user_id"] = uid
             session["admin_username"] = uname
-            next_url = (request.form.get("next") or request.args.get("next") or "").strip()
-            if not next_url.startswith("/dev"):
-                next_url = url_for("dev.dev_dashboard")
+            raw_next = (request.form.get("next") or request.args.get("next") or "").strip()
+            next_url = _safe_dev_next_url(raw_next)
             return redirect(next_url)
         return render_template(
             "admin_login.html",
             error="Invalid username/email or password.",
+            registration_open=dev_public_registration_allowed(),
         )
-    return render_template("admin_login.html")
+    return render_template(
+        "admin_login.html",
+        registered_ok=registered,
+        registration_open=dev_public_registration_allowed(),
+    )
 
 
-@dev_bp.route("/logout")
+@dev_bp.route("/register", methods=["GET", "POST"])
+def admin_register():
+    if _admin_session_ok():
+        return redirect(url_for("dev.dev_dashboard"))
+    if not dev_public_registration_allowed():
+        msg = (
+            "Dev account registration is disabled. In production, set ALLOW_DEV_PUBLIC_REGISTER=1 to allow "
+            "new operator sign-up, or use ADMIN_PASSWORD bootstrap. In development, set DEV_DISABLE_PUBLIC_REGISTER=1 to turn this off."
+        )
+        if request.method == "POST":
+            return render_template("dev_register.html", error=msg, registration_allowed=False), 403
+        return render_template("dev_register.html", error=msg, registration_allowed=False)
+    if request.method == "POST":
+        ip = client_ip(request)
+        if not allow_request(f"dev_register:{ip}", max_events=_DEV_REGISTER_RPM, window_seconds=60.0):
+            return (
+                render_template(
+                    "dev_register.html",
+                    error="Too many registration attempts. Try again later.",
+                    registration_allowed=True,
+                ),
+                429,
+            )
+        username = request.form.get("username", "")
+        email = request.form.get("email", "")
+        password = request.form.get("password", "")
+        err = registration_form_error(
+            username, email, password, min_password_len=_MIN_PASSWORD_LEN
+        )
+        if err:
+            return render_template("dev_register.html", error=err, registration_allowed=True)
+        try:
+            save_dev_admin_user(username, email, password)
+        except sqlite3.IntegrityError:
+            return render_template(
+                "dev_register.html",
+                error="That username or email is already registered for dev access.",
+                registration_allowed=True,
+            )
+        return redirect(url_for("dev.admin_login", registered=1))
+    return render_template("dev_register.html", registration_allowed=True)
+
+
+@dev_bp.post("/logout")
 def admin_logout():
     session.pop("admin_user_id", None)
     session.pop("admin_username", None)
@@ -300,6 +482,7 @@ def dev_dashboard():
         dealerships=list_recent_dealerships(10),
         status=_dev_status(),
         admin_username=session.get("admin_username") or "",
+        incomplete_cars=get_incomplete_cars(),
     )
 
 
@@ -313,9 +496,34 @@ def api_dev_dealers():
     return jsonify({"ok": True, "dealerships": list_recent_dealerships(10)})
 
 
+@dev_bp.route("/api/incomplete-cars")
+def api_incomplete_cars():
+    from backend.utils.car_serialize import serialize_car_for_api
+
+    cars = get_incomplete_cars()
+    safe = [serialize_car_for_api(c, include_verified=False) for c in cars]
+    return jsonify({"ok": True, "cars": safe, "count": len(safe)})
+
+
+@dev_bp.route("/api/incomplete-cars/<int:car_id>", methods=["DELETE"])
+def api_delete_incomplete_car(car_id: int):
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM cars WHERE id = ?", (car_id,))
+    deleted = cursor.rowcount
+    conn.commit()
+    conn.close()
+    if deleted:
+        return jsonify({"ok": True})
+    return jsonify({"ok": False, "error": "not found"}), 404
+
+
 @dev_bp.route("/api/audit-last-scrape")
 def api_audit_last_scrape():
-    """Latest DB rows plus optional raw JSON samples from the last scanner run (token-gated)."""
+    """Latest DB rows plus optional raw JSON samples from the last scanner run.
+
+    Requires an authenticated ``/dev`` admin session (``before_request``); not public.
+    """
     conn = get_conn()
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
@@ -448,7 +656,13 @@ def api_scanner_job(job_id: str):
     with scanner_lock:
         job = scanner_jobs.get(job_id)
     if not job:
-        return jsonify({"ok": False, "error": "unknown job"}), 404
+        return jsonify(
+            {
+                "ok": False,
+                "error": "job_expired",
+                "message": "Server restarted — refresh /dev and start the job again.",
+            }
+        )
     return jsonify(
         {
             "ok": True,
@@ -520,7 +734,15 @@ def api_smart_import_bulk():
 def api_import_queue(queue_id: str):
     q = import_queues.get(queue_id)
     if not q:
-        return jsonify({"ok": False, "error": "unknown queue"}), 404
+        return jsonify(
+            {
+                "ok": False,
+                "error": "queue_expired",
+                "message": "Server restarted — refresh /dev and start the job again.",
+                "items": [],
+                "queue_done": True,
+            }
+        )
     out: list[dict[str, Any]] = []
     for it in q["items"]:
         jid = it["job_id"]
@@ -574,6 +796,46 @@ def _spawn_inventory_enrich(
         logging.getLogger("dev_routes").exception("Inventory enrichment background job failed")
 
 
+@dev_bp.route("/api/cars/<int:car_id>/spec-backfill", methods=["POST"])
+def api_car_spec_backfill(car_id: int):
+    """
+    Run EPA/VDP/search spec backfill for one vehicle (dev session + CSRF header).
+
+    JSON body (optional): ``{"dry_run": true, "use_vdp": true, "use_search": true, "search_pause_s": 1.2}``
+    """
+    from backend.spec_backfill import run_spec_backfill_for_car
+
+    data = request.get_json(silent=True) or {}
+    dry = bool(data.get("dry_run"))
+    use_vdp = bool(data.get("use_vdp", True))
+    use_search = bool(data.get("use_search", True))
+    pause = data.get("search_pause_s", 1.2)
+    try:
+        pause_f = float(pause)
+    except (TypeError, ValueError):
+        pause_f = 1.2
+    r = run_spec_backfill_for_car(
+        car_id,
+        use_vdp=use_vdp,
+        use_search=use_search,
+        dry_run=dry,
+        search_pause_s=max(0.0, pause_f),
+    )
+    code = 404 if r.message == "not_found" else 200
+    return (
+        jsonify(
+            {
+                "ok": r.ok,
+                "car_id": r.car_id,
+                "updated_fields": r.updated_fields,
+                "tiers": r.tiers,
+                "message": r.message,
+            }
+        ),
+        code,
+    )
+
+
 @dev_bp.route("/api/dev/enrich_all", methods=["POST"])
 def api_dev_enrich_all():
     """
@@ -616,3 +878,45 @@ def api_dev_enrich_all():
             "message": "Enrichment started in background; check server logs for progress.",
         }
     ), 202
+
+
+@dev_bp.route("/api/car-debug", methods=["GET"])
+def api_car_debug():
+    """
+    Dev-only: compare SQLite row vs serializer output for one vehicle.
+    Query: ?vin=... or ?car_id=... (admin session required via /dev).
+    """
+    vin_q = (request.args.get("vin") or "").strip()
+    car_id_raw = request.args.get("car_id") or request.args.get("id")
+    raw: dict[str, Any] | None = None
+    if vin_q:
+        raw = get_car_by_vin(vin_q) or get_car_by_vin(vin_q.upper())
+    elif car_id_raw:
+        try:
+            raw = get_car_by_id(int(car_id_raw))
+        except (TypeError, ValueError):
+            raw = None
+    if not raw:
+        return jsonify({"ok": False, "error": "not_found"}), 404
+    ctx = prepare_car_detail_context(raw)
+    vs = ctx.get("verified_specs") or {}
+    detail_payload = serialize_car_for_api(raw, include_verified=False, verified_specs=vs)
+    listing_payload = serialize_car_for_api(raw, include_verified=False)
+    display_snapshot = build_detail_display_snapshot(vs, detail_payload)
+    payload = {
+        "ok": True,
+        "vin": raw.get("vin"),
+        "car_id": raw.get("id"),
+        "note": "in-memory pre-upsert is not stored; use SCANNER_TRACE_VIN during scan logs, or compare raw_db_row here after upsert.",
+        "raw_db_row": {k: raw[k] for k in sorted(raw.keys())},
+        "verified_specs": vs,
+        "serialized_car_detail": detail_payload,
+        "serialized_listing_style": listing_payload,
+        "display_values_car_detail_template": display_snapshot,
+    }
+    if (raw.get("make") or "").strip().upper() == "BMW":
+        payload["bmw_trace_env"] = (
+            "Optional: set BMW_TRACE_VINS=VIN[,VIN2] for INFO logs from "
+            "analytics_ep merge + serialize_car_for_api (condition/interior merge trace)."
+        )
+    return jsonify(payload)

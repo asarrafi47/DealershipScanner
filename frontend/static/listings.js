@@ -1,6 +1,11 @@
 /**
  * Smart search: debounced POST /api/search/smart + filter highlights.
  */
+function listingsCsrfToken() {
+    const m = document.querySelector('meta[name="csrf-token"]');
+    return m ? (m.getAttribute("content") || "").trim() : "";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("smart-search-input");
     const chips = document.getElementById("smart-parse-chips");
@@ -68,6 +73,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (form) {
         form.addEventListener("change", clearSmartBecauseFilters, true);
         form.addEventListener("input", clearSmartBecauseFilters, true);
+        form.addEventListener("submit", () => {
+            const h = document.getElementById("form-q-sync");
+            if (h && input) h.value = (input.value || "").trim();
+        });
     }
 
     function runSmartSearch() {
@@ -80,9 +89,13 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        const headers = { "Content-Type": "application/json" };
+        const t = listingsCsrfToken();
+        if (t) headers["X-CSRF-Token"] = t;
         fetch("/api/search/smart", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers,
+            credentials: "same-origin",
             body: JSON.stringify({ query: q }),
         })
             .then((r) => {

@@ -25,6 +25,7 @@
                 {% endif %}
 
                 <form method="POST" action="/login" class="auth-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <div class="field-group">
                         <label>Username or Email</label>
                         <input type="text" name="login" required>

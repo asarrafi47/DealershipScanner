@@ -1,0 +1,27 @@
+---
+description: DealershipScanner coding and communication standards for AI agents.
+alwaysApply: true
+---
+
+# DealershipScanner — agent standards
+
+## Scope and edits
+
+- Change only what the task requires; no drive-by refactors or unrelated files.
+- Match existing naming, imports, and style in touched files.
+
+## Security
+
+- Follow `docs/SECURITY_MASTER_TODO.md` for all security work (see companion rule *security-master-todo-workflow*).
+- Prefer parameterized SQL; never interpolate user input into SQL strings.
+- No `shell=True` for subprocess; validate high-risk inputs (URLs, IDs) before spawning processes.
+
+## Quality
+
+- Prefer clear errors over silent `except: pass` for operator-visible behavior.
+- Run validation steps from the master todo when completing a security item.
+
+## Communication
+
+- Use proper code citations (`startLine:endLine:path`) when referencing existing code.
+- Write complete sentences; avoid filler and engagement bait.

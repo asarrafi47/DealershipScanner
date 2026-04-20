@@ -2,15 +2,15 @@
 <html>
 <head>
     <title>Listings</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<script>
-const CAR_ROWS        = {{ options.car_rows | tojson }};
-const ALL_CARS        = {{ options.all_cars | tojson }};
-const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
-</script>
+<script type="application/json" id="ds-listings-car-rows">{{ options.car_rows | tojson }}</script>
+<script type="application/json" id="ds-listings-all-cars">{{ options.all_cars | tojson }}</script>
+<script type="application/json" id="ds-listings-country-to-makes">{{ options.country_to_makes | tojson }}</script>
+<script type="application/json" id="ds-listings-initial-grid">{{ (initial_grid_cars or []) | tojson }}</script>
 
 <div class="page">
 
@@ -26,6 +26,7 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
     {# ── Filter bar — starts centered, docks left on scroll ── #}
     <div class="filter-bar" id="filter-bar">
         <form method="GET" action="/search" id="search-form">
+            <input type="hidden" name="q" id="form-q-sync" value="{{ active.get('q', '') if active else '' }}">
             <input type="hidden" name="dealership_registry_id" id="dealership-registry-id"
                 value="{{ active.dealership_registry_id if active and active.get('dealership_registry_id') else '' }}">
 
@@ -36,6 +37,7 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
                         <label class="smart-search-label" for="smart-search-input">Smart search</label>
                         <input type="search" id="smart-search-input" class="smart-search-input"
                             placeholder="Search by anything (e.g., White X5 under 70k)"
+                            value="{{ active.get('q', '') if active else '' }}"
                             autocomplete="off" spellcheck="false">
                         <div id="smart-parse-chips" class="smart-parse-chips" aria-live="polite"></div>
                     </div>
@@ -96,9 +98,9 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
                 <div class="pill-options" id="options-trim">
                     {% for make, model, trim in options.trim_rows %}
                     <label class="filter-option" data-make="{{ make }}" data-model="{{ model }}">
-                        <input type="checkbox" name="trim" value="{{ trim }}" data-make="{{ make }}" data-model="{{ model }}"
-                            {% if active is defined and trim in active.get('trim', []) %}checked{% endif %}>
-                        <span>{{ trim }}</span>
+                        <input type="checkbox" name="trim" value="{{ trim or '' }}" data-make="{{ make }}" data-model="{{ model }}"
+                            {% if active is defined and (trim or '') in active.get('trim', []) %}checked{% endif %}>
+                        <span>{{ trim or '—' }}</span>
                     </label>
                     {% endfor %}
                 </div>
@@ -147,6 +149,18 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
                         <input type="checkbox" name="drivetrain" value="{{ d }}"
                             {% if active is defined and d in active.get('drivetrain', []) %}checked{% endif %}>
                         <span>{{ d }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% endcall %}
+
+                {% call pill("Body", "body_style") %}
+                <div class="pill-options" id="options-body_style">
+                    {% for b in options.body_styles %}
+                    <label class="filter-option">
+                        <input type="checkbox" name="body_style" value="{{ b }}"
+                            {% if active is defined and b in active.get('body_style', []) %}checked{% endif %}>
+                        <span>{{ b }}</span>
                     </label>
                     {% endfor %}
                 </div>
@@ -290,10 +304,10 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
                     <div class="acc-options" id="acc-options-trim">
                         {% for make, model, trim in options.trim_rows %}
                         <label class="filter-option" data-make="{{ make }}" data-model="{{ model }}">
-                            <input type="checkbox" name="trim" value="{{ trim }}"
+                            <input type="checkbox" name="trim" value="{{ trim or '' }}"
                                 data-make="{{ make }}" data-model="{{ model }}"
-                                {% if active is defined and trim in active.get('trim', []) %}checked{% endif %}>
-                            <span>{{ trim }}</span>
+                                {% if active is defined and (trim or '') in active.get('trim', []) %}checked{% endif %}>
+                            <span>{{ trim or '—' }}</span>
                         </label>
                         {% endfor %}
                     </div>
@@ -342,6 +356,18 @@ const COUNTRY_TO_MAKES = {{ options.country_to_makes | tojson }};
                             <input type="checkbox" name="drivetrain" value="{{ d }}"
                                 {% if active is defined and d in active.get('drivetrain', []) %}checked{% endif %}>
                             <span>{{ d }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+
+                    {% call acc("Body style", "body_style") %}
+                    <div class="acc-options" id="acc-options-body_style">
+                        {% for b in options.body_styles %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="body_style" value="{{ b }}"
+                                {% if active is defined and b in active.get('body_style', []) %}checked{% endif %}>
+                            <span>{{ b }}</span>
                         </label>
                         {% endfor %}
                     </div>

@@ -22,5 +22,11 @@
     "url": "https://www.tuttleclickmazda.com",
     "provider": "dealer_dot_com",
     "dealer_id": "tuttle-click-mazda"
+  },
+  {
+    "name": "Keffer Chrysler Dodge Jeep RAM",
+    "url": "https://www.kefferjeep.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "kefferjeep-com"
   }
 ]

@@ -1,5 +1,7 @@
 """
-SQLite connection for users.db (public users + admin_users).
+SQLite connection for users.db (public app users only).
+
+Dev operator accounts live in dev_users.db (see dev_users_sqlite / admin_users_db).
 
 Optional encryption: set USERS_DB_ENCRYPTION_KEY to enable SQLCipher on this file.
 Requires: pip install sqlcipher3

@@ -2,6 +2,10 @@
 /**
  * Dealership inventory scanner — Node.js + Puppeteer (stealth), optimized for speed.
  * Shares inventory.db with the Python Flask app. Run: node scanner.js
+ *
+ * Warmup (aligned with scanner.py): SCANNER_WARMUP_POST_GOTO_SEC (idle cap, default 4),
+ * SCANNER_WARMUP_SIGNAL_TIMEOUT_MS (default 12000), SCANNER_WARMUP_SCROLL_SEC (default 1),
+ * SCANNER_WARMUP_DOM_SELECTORS (optional CSV).
  */
 const path = require("path");
 const { spawnSync } = require("child_process");
@@ -25,6 +29,9 @@ const FALLBACK_IMAGE_URL = "/static/placeholder.svg";
 const DEFAULT_STR = "N/A";
 const TARGET_PAGE_SIZE = Math.min(500, parseInt(process.env.INVENTORY_PAGE_SIZE || "500", 10) || 500);
 const MAX_EXTRA_PAGES = 50;
+/** Max VDP pages to open for analytics / dataLayer ep extraction (0 = off; default 10 matches scanner.py). */
+const SCANNER_VDP_EP_MAX = Math.min(100, parseInt(process.env.SCANNER_VDP_EP_MAX || "10", 10) || 0);
+const EP_RESPONSE_MAX_BYTES = 2 * 1024 * 1024;
 
 const INVENTORY_PATHS = [
   "/new-inventory/index.htm",
@@ -40,6 +47,8 @@ const USER_AGENTS = [
 
 // Import the data collection agent
 const { process_dealer_scraping_guidance } = require('./agents/data_collection_agent');
+const { runBatchVdpExtraction } = require("./vdp_framework");
+const { responseLooksLikeInventoryJsonIntercept } = require("./scanner_intercept");
 
 function randomUserAgent() {
   return USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)];
@@ -56,6 +65,16 @@ function randomDelayMs() {
 function normStr(v) {
   if (v == null) return "";
   return String(v).trim();
+}
+
+/** Match Python `normalize_optional_str`: placeholders → null for SQLite TEXT columns. */
+const SQL_OPTIONAL_EMPTY_RE =
+  /^(n\/?a|na|null|none|unknown|undefined|tbd|not specified|unspecified|[\-—]+)$/i;
+
+function sqlOptionalStr(v) {
+  const s = normStr(v);
+  if (!s || SQL_OPTIONAL_EMPTY_RE.test(s)) return null;
+  return s;
 }
 
 function normInt(v) {
@@ -80,6 +99,107 @@ function normFloat(v) {
   return 0;
 }
 
+function looksLikeVin17(v) {
+  const s = normStr(v).toUpperCase();
+  return /^[A-HJ-NPR-Z0-9]{17}$/.test(s);
+}
+
+/** Walk JSON and collect every object stored under an ``ep`` key (analytics / data layer). */
+function collectEpPayloadsFromJson(root) {
+  const eps = [];
+  function walk(o) {
+    if (!o || typeof o !== "object") return;
+    if (o.ep && typeof o.ep === "object" && !Array.isArray(o.ep)) {
+      eps.push(o.ep);
+    }
+    if (Array.isArray(o)) {
+      for (const x of o) walk(x);
+    } else {
+      for (const v of Object.values(o)) walk(v);
+    }
+  }
+  walk(root);
+  return eps;
+}
+
+function registerEpByVin(vinToEp, ep) {
+  if (!ep || typeof ep !== "object") return;
+  const vinRaw = normStr(ep.vin || ep.VIN || "").toUpperCase();
+  if (!looksLikeVin17(vinRaw)) return;
+  const cur = vinToEp.get(vinRaw) || {};
+  vinToEp.set(vinRaw, { ...cur, ...ep });
+}
+
+/**
+ * Attach listener: JSON responses that contain an ``ep`` object with a VIN are merged into *vinToEp*.
+ */
+function attachAnalyticsEpResponseListener(page, vinToEp) {
+  page.on("response", async (response) => {
+    try {
+      if (response.status() !== 200) return;
+      const ct = (response.headers()["content-type"] || "").toLowerCase();
+      if (!ct.includes("json")) return;
+      const buf = await response.text();
+      if (!buf || buf.length > EP_RESPONSE_MAX_BYTES) return;
+      if (!buf.includes('"ep"') && !buf.includes("'ep'")) return;
+      let parsed;
+      try {
+        parsed = JSON.parse(buf);
+      } catch {
+        return;
+      }
+      const eps = collectEpPayloadsFromJson(parsed);
+      for (const ep of eps) registerEpByVin(vinToEp, ep);
+    } catch {
+      /* ignore */
+    }
+  });
+}
+
+function pickVehicleDetailUrl(obj, baseUrl) {
+  const candidates = [
+    obj.vdpUrl,
+    obj.vdp_url,
+    obj.vehicleUrl,
+    obj.vehicle_url,
+    obj.detailUrl,
+    obj.detail_url,
+    obj.inventoryUrl,
+    obj.inventory_url,
+    obj.url,
+    obj.href,
+    obj.link,
+  ];
+  for (const raw of candidates) {
+    if (typeof raw !== "string" || !raw.trim()) continue;
+    let u = raw.trim();
+    if (u.startsWith("//")) u = "https:" + u;
+    if (!/^https?:\/\//i.test(u)) {
+      try {
+        u = new URL(u, baseUrl).href;
+      } catch {
+        continue;
+      }
+    }
+    if (/\/vdp\//i.test(u) || /vehicle-inventory|\/inventory\/|\/used\/|\/new\/|certified/i.test(u)) {
+      return u;
+    }
+  }
+  return null;
+}
+
+function attachEpToVehicles(vehicles, vinToEp) {
+  for (const v of vehicles) {
+    if (!v.source_url && v._detail_url) v.source_url = v._detail_url;
+    if (!vinToEp || vinToEp.size === 0) continue;
+    const vin = normStr(v.vin).toUpperCase();
+    if (!looksLikeVin17(vin)) continue;
+    if (vinToEp.has(vin)) {
+      v._ep_analytics = { ...vinToEp.get(vin) };
+    }
+  }
+}
+
 function findTrackingAttr(arr, nameWant) {
   if (!Array.isArray(arr)) return null;
   const want = String(nameWant).trim().toLowerCase();
@@ -92,6 +212,67 @@ function findTrackingAttr(arr, nameWant) {
     }
   }
   return null;
+}
+
+function normAttrKey(s) {
+  return String(s || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+/** Match Dealer.com tracking attribute names with inconsistent spacing/casing. */
+function findTrackingAttrLoose(arr, needles) {
+  if (!Array.isArray(arr) || !needles || !needles.length) return null;
+  for (const item of arr) {
+    if (!item || typeof item !== "object") continue;
+    const nk = normAttrKey(item.name ?? item.key ?? item.id);
+    if (!nk) continue;
+    for (const needle of needles) {
+      const nd = String(needle).toLowerCase().replace(/[^a-z0-9]+/g, "");
+      if (nd.length < 5) continue;
+      if (nk === nd || nk.includes(nd) || nd.includes(nk)) {
+        const v = item.value ?? item.text;
+        if (v != null && String(v).trim()) return String(v).trim();
+      }
+    }
+  }
+  return null;
+}
+
+const INTERIOR_TRACKING_NEEDLES = [
+  "interiorcolor",
+  "interiortrim",
+  "upholstery",
+  "seatcolor",
+  "seattrim",
+  "cabincolor",
+  "leathercolor",
+  "intcolor",
+  "interiorpackage",
+  "cabintrim",
+];
+
+const BODY_TRACKING_NEEDLES = ["bodystyle", "bodytype", "vehiclebody", "vehicletype", "vehbodystyle", "bodyshape"];
+
+function extractInteriorColorFromAttrs(arr, obj) {
+  const fromArr = findTrackingAttrLoose(arr, INTERIOR_TRACKING_NEEDLES);
+  if (fromArr) return sqlOptionalStr(fromArr);
+  return sqlOptionalStr(
+    obj.interiorColor ||
+      obj.interior_color ||
+      obj.interiorTrim ||
+      obj.interior_trim ||
+      ""
+  );
+}
+
+function extractBodyStyleFromAttrs(arr, obj) {
+  const direct = normStr(
+    obj.bodyStyle || obj.body_style || obj.bodyType || obj.body_type || ""
+  );
+  if (direct) return sqlOptionalStr(direct);
+  const fromArr = findTrackingAttrLoose(arr, BODY_TRACKING_NEEDLES);
+  return sqlOptionalStr(fromArr || "");
 }
 
 function cleanImageUrl(url, baseUrl) {
@@ -710,11 +891,11 @@ function mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl) {
   const arr = obj.trackingAttributes || obj.tracking_attributes;
   const exteriorColor = (() => {
     const v = findTrackingAttr(arr, "exteriorColor");
-    if (v != null && String(v).trim()) return normStr(v) || DEFAULT_STR;
-    return safeStr(obj.exteriorColor || obj.exterior_color);
+    if (v != null && String(v).trim()) return sqlOptionalStr(v);
+    return sqlOptionalStr(obj.exteriorColor || obj.exterior_color);
   })();
 
-  const fuelType = safeStr(obj.fuelType || obj.fuel_type);
+  const fuelType = sqlOptionalStr(obj.fuelType || obj.fuel_type);
 
   const vhrUrl = obj.vhr_url || obj.carfax_token;
   let carfaxUrl = "";
@@ -740,13 +921,15 @@ function mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl) {
     if (c != null) cylinders = normInt(c);
   }
 
+  const _detail_url = pickVehicleDetailUrl(obj, baseUrl);
+
   return {
     vin,
     stock_number: stockNumber,
     year,
     make,
     model,
-    trim: normStr(trim) || normStr(obj.trim || obj.Trim || obj.trimName || ""),
+    trim: sqlOptionalStr(normStr(trim) || normStr(obj.trim || obj.Trim || obj.trimName || "")),
     title,
     price,
     mileage,
@@ -754,17 +937,19 @@ function mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl) {
     gallery,
     dealer_id: dealerId,
     dealer_name: dealerName,
-    dealer_url: dealerUrl,
-    zip_code: safeStr(obj.zipCode || obj.zip_code),
+    dealer_url: sqlOptionalStr(dealerUrl),
+    zip_code: sqlOptionalStr(obj.zipCode || obj.zip_code),
     fuel_type: fuelType,
-    transmission: safeStr(obj.transmission || obj.transmissionType),
-    drivetrain: safeStr(obj.drivetrain || obj.driveType),
+    transmission: sqlOptionalStr(obj.transmission || obj.transmissionType),
+    drivetrain: sqlOptionalStr(obj.drivetrain || obj.driveType),
     exterior_color: exteriorColor,
-    interior_color: safeStr(obj.interiorColor || obj.interior_color),
-    carfax_url: carfaxUrl || null,
+    interior_color: extractInteriorColorFromAttrs(arr, obj),
+    body_style: extractBodyStyleFromAttrs(arr, obj),
+    carfax_url: sqlOptionalStr(carfaxUrl),
     history_highlights: extractHistoryHighlights(obj),
     cylinders: cylinders || null,
     msrp: msrp > 0 ? msrp : null,
+    ...( _detail_url ? { _detail_url } : {}),
   };
 }
 
@@ -901,27 +1086,79 @@ async function setupRequestBlocking(page) {
   });
 }
 
-/** Turbo: primary inventory JSON (full search API preferred over small getInventory slices). */
-function isInventoryJsonResponse(response) {
-  return isPrimaryInventoryJsonResponse(response);
+/**
+ * Inventory JSON intercept gate (same URL policy as Python ``intercept_url_allowed`` +
+ * ``config/scanner_intercept_policy.json``). Pass dealer base URL (no trailing slash) from manifest.
+ */
+function isInventoryInterceptJsonResponse(response, dealerBaseUrl) {
+  return responseLooksLikeInventoryJsonIntercept(response, dealerBaseUrl);
 }
 
-function isPrimaryInventoryJsonResponse(response) {
-  const u = response.url();
-  const ct = (response.headers()["content-type"] || "").toLowerCase();
-  if (!ct.includes("application/json")) return false;
-  if (isDealerComSearchOrVehiclesUrl(u)) return true;
-  if (/getInventory/i.test(u)) return true;
-  return false;
+function readWarmupPostGotoSec() {
+  const v = parseFloat(String(process.env.SCANNER_WARMUP_POST_GOTO_SEC || "4").trim());
+  return Number.isFinite(v) && v >= 0 ? v : 4;
 }
 
-/** Broader match for slow fallback (some endpoints omit "getInventory" in the path). */
-function isSlowInventoryJsonResponse(response) {
-  const u = response.url();
-  const ct = (response.headers()["content-type"] || "").toLowerCase();
-  if (!ct.includes("application/json")) return false;
-  if (isDealerComSearchOrVehiclesUrl(u)) return true;
-  return /getInventory|\/api\/inventory\/v\d+\//i.test(u);
+function readWarmupScrollSec() {
+  const v = parseFloat(String(process.env.SCANNER_WARMUP_SCROLL_SEC || "1").trim());
+  return Number.isFinite(v) && v >= 0 ? v : 1;
+}
+
+function readWarmupSignalTimeoutMs() {
+  const v = parseInt(String(process.env.SCANNER_WARMUP_SIGNAL_TIMEOUT_MS || "12000").trim(), 10);
+  return Number.isFinite(v) && v >= 0 ? v : 12000;
+}
+
+/**
+ * Same idea as Python ``_warmup_settle_after_base_goto``: race first gated JSON response vs idle cap,
+ * optional DOM probes, mid-page scroll, then tail sleep (SCANNER_WARMUP_* env vars).
+ */
+async function warmupSettleAfterGoto(page, dealerBaseUrl, dealerNameForLog = "") {
+  const maxIdleSec = readWarmupPostGotoSec();
+  const scrollSec = readWarmupScrollSec();
+  const signalMs = readWarmupSignalTimeoutMs();
+
+  const armResponse = () =>
+    page
+      .waitForResponse((r) => responseLooksLikeInventoryJsonIntercept(r, dealerBaseUrl), {
+        timeout: Math.max(1, signalMs),
+      })
+      .catch(() => null);
+
+  const armCap = () => sleep(Math.max(1, Math.ceil(maxIdleSec * 1000)));
+
+  if (maxIdleSec > 0 && signalMs > 0) {
+    await Promise.race([armResponse(), armCap()]);
+  } else if (signalMs > 0) {
+    await armResponse();
+  } else if (maxIdleSec > 0) {
+    await armCap();
+  }
+
+  const domCsv = (process.env.SCANNER_WARMUP_DOM_SELECTORS || "").trim();
+  const defaultDom =
+    "[data-vehicle],[data-vin],[data-vehicle-id],.vehicle-card,.inventory-vehicle,a[href*='/inventory/']";
+  const selectors = (domCsv || defaultDom)
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, 8);
+
+  const label = dealerNameForLog ? `[warmup] ${dealerNameForLog}` : "[warmup]";
+  for (const sel of selectors) {
+    try {
+      await page.waitForSelector(sel, { timeout: 1200 });
+      console.info(`${label} — DOM signal ${sel.slice(0, 72)}`);
+      break;
+    } catch {
+      /* try next selector */
+    }
+  }
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
+  if (scrollSec > 0) {
+    await sleep(Math.ceil(scrollSec * 1000));
+  }
 }
 
 async function scrollLazyLoadInventory(page) {
@@ -1071,13 +1308,15 @@ async function runDealerSlow(browser, dealer, opts = {}) {
   const profile = opts.profile || "default";
   const scrollLazy = opts.scrollLazyLoad !== false && profile !== "bare";
   const intercepted = [];
+  const vinToEp = new Map();
   const page = await browser.newPage();
   await page.setUserAgent(randomUserAgent());
   await page.setViewport({ width: 1920, height: 1080 });
+  attachAnalyticsEpResponseListener(page, vinToEp);
 
   page.on("response", async (response) => {
     try {
-      if (!isSlowInventoryJsonResponse(response)) return;
+      if (!isInventoryInterceptJsonResponse(response, url)) return;
       const u = response.url();
       console.log("[dev] Intercepted URL:", u);
       const body = await response.json();
@@ -1094,12 +1333,9 @@ async function runDealerSlow(browser, dealer, opts = {}) {
     const slowWait = getPageGotoWaitUntil(profile);
     const slowNavTimeout = profile === "resilient" ? 120000 : 30000;
     await page.goto(url, { waitUntil: slowWait, timeout: slowNavTimeout });
-    await sleep(4000);
+    await warmupSettleAfterGoto(page, url, name);
     if (scrollLazy) {
       await scrollLazyLoadInventory(page);
-    } else {
-      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
-      await sleep(1000);
     }
 
     const invWait = getPageGotoWaitUntil(profile);
@@ -1109,7 +1345,7 @@ async function runDealerSlow(browser, dealer, opts = {}) {
       try {
         await page.goto(fullUrl, { waitUntil: invWait, timeout: invNavTimeout });
         await page
-          .waitForResponse((r) => isSlowInventoryJsonResponse(r) && r.status() === 200, { timeout: 25000 })
+          .waitForResponse((r) => isInventoryInterceptJsonResponse(r, url) && r.status() === 200, { timeout: 25000 })
           .catch(() => null);
         await sleep(800);
 
@@ -1141,14 +1377,13 @@ async function runDealerSlow(browser, dealer, opts = {}) {
           });
           if (!clicked) break;
           await sleep(randomDelayMs());
-          await page.waitForResponse((r) => isSlowInventoryJsonResponse(r), { timeout: 20000 }).catch(() => null);
+          await page.waitForResponse((r) => isInventoryInterceptJsonResponse(r, url), { timeout: 20000 }).catch(() => null);
         }
       } catch (e) {
         console.warn(`[slow] ${fullUrl}: ${e.message}`);
       }
     }
 
-    await page.close();
     const byVin = new Map();
     for (const b of intercepted) {
       for (const v of parseJsonList(b, url, dealerId, name, url)) {
@@ -1157,7 +1392,13 @@ async function runDealerSlow(browser, dealer, opts = {}) {
         if (v.vin && !byVin.has(v.vin)) byVin.set(v.vin, v);
       }
     }
-    return [...byVin.values()];
+    const mergedList = [...byVin.values()];
+    if (SCANNER_VDP_EP_MAX > 0 && mergedList.length) {
+      await runBatchVdpExtraction(page, mergedList, vinToEp, url, SCANNER_VDP_EP_MAX);
+    }
+    attachEpToVehicles(mergedList, vinToEp);
+    await page.close();
+    return mergedList;
   } catch (e) {
     await page.close().catch(() => {});
     throw e;
@@ -1193,11 +1434,14 @@ async function runDealerTurbo(browser, dealer, opts = {}) {
   await page.setViewport({ width: 1920, height: 1080 });
   await setupRequestBlocking(page);
 
+  const vinToEp = new Map();
+  attachAnalyticsEpResponseListener(page, vinToEp);
+
   const captured = [];
   const seenRespUrls = new Set();
   page.on("response", async (response) => {
     try {
-      if (!isPrimaryInventoryJsonResponse(response) || response.status() !== 200) return;
+      if (!isInventoryInterceptJsonResponse(response, url) || response.status() !== 200) return;
       const u = response.url();
       console.log("[dev] Intercepted URL:", u);
       if (seenRespUrls.has(u)) return;
@@ -1217,14 +1461,11 @@ async function runDealerTurbo(browser, dealer, opts = {}) {
     for (const invPath of INVENTORY_PATHS) {
       const fullUrl = url + invPath;
       await page.goto(fullUrl, { waitUntil, timeout: navTimeout });
+      await warmupSettleAfterGoto(page, url, name);
       if (scrollLazy) {
         await scrollLazyLoadInventory(page);
-      } else {
-        await sleep(1000);
       }
-      await sleep(2000);
     }
-    await sleep(4000);
 
     const bestCap = pickBestInventoryCapture(captured);
     let firstInvUrl = bestCap ? bestCap.url : null;
@@ -1243,8 +1484,6 @@ async function runDealerTurbo(browser, dealer, opts = {}) {
       bodiesToParse = await fetchAdditionalInventoryPages(page, firstInvUrl, firstBody);
     }
 
-    await page.close();
-
     const byVin = new Map();
     const pushBody = (b) => {
       for (const v of parseJsonList(b, url, dealerId, name, url)) {
@@ -1256,7 +1495,15 @@ async function runDealerTurbo(browser, dealer, opts = {}) {
     for (const b of bodiesToParse) pushBody(b);
     for (const { body } of captured) pushBody(body);
 
-    return [...byVin.values()];
+    const mergedList = [...byVin.values()];
+    if (SCANNER_VDP_EP_MAX > 0 && mergedList.length) {
+      await runBatchVdpExtraction(page, mergedList, vinToEp, url, SCANNER_VDP_EP_MAX);
+    }
+    attachEpToVehicles(mergedList, vinToEp);
+
+    await page.close();
+
+    return mergedList;
   } catch (e) {
     await page.close().catch(() => {});
     throw e;
@@ -1452,6 +1699,15 @@ async function ensureSchema(db) {
     ["history_highlights", "TEXT"],
     ["msrp", "REAL"],
     ["dealership_registry_id", "INTEGER"],
+    ["body_style", "TEXT"],
+    ["engine_description", "TEXT"],
+    ["condition", "TEXT"],
+    ["source_url", "TEXT"],
+    ["mpg_city", "INTEGER"],
+    ["mpg_highway", "INTEGER"],
+    ["is_cpo", "INTEGER"],
+    ["model_full_raw", "TEXT"],
+    ["data_quality_score", "REAL"],
   ]) {
     if (!cols.includes(col)) {
       await run(db, `ALTER TABLE cars ADD COLUMN ${col} ${ctype}`);
@@ -1471,8 +1727,7 @@ async function ensureSchema(db) {
 }
 
 function isNaOrMissingTransmission(t) {
-  const s = normStr(t);
-  return !s || s === DEFAULT_STR || /^n\/?a$/i.test(s);
+  return sqlOptionalStr(t) == null;
 }
 
 async function applySelfCorrection(db, vehicle) {
@@ -1522,8 +1777,10 @@ async function upsertVehicle(db, v) {
       image_url, dealer_name, dealer_url, dealer_id, scraped_at,
       zip_code, fuel_type, cylinders, transmission, drivetrain,
       exterior_color, interior_color, stock_number, gallery, carfax_url, history_highlights, msrp,
-      dealership_registry_id
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      dealership_registry_id,
+      body_style, engine_description, condition, source_url,
+      mpg_city, mpg_highway, is_cpo, model_full_raw, data_quality_score
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(vin) DO UPDATE SET
       title=excluded.title, year=excluded.year, make=excluded.make,
       model=excluded.model, trim=excluded.trim, price=excluded.price,
@@ -1531,13 +1788,27 @@ async function upsertVehicle(db, v) {
       dealer_name=excluded.dealer_name, dealer_url=excluded.dealer_url,
       dealer_id=excluded.dealer_id, scraped_at=excluded.scraped_at,
       zip_code=excluded.zip_code, fuel_type=excluded.fuel_type,
-      cylinders=excluded.cylinders, transmission=excluded.transmission,
+      cylinders=COALESCE(excluded.cylinders, cylinders), transmission=excluded.transmission,
       drivetrain=excluded.drivetrain, exterior_color=excluded.exterior_color,
       interior_color=excluded.interior_color, stock_number=excluded.stock_number,
       gallery=excluded.gallery, carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights,
       msrp=excluded.msrp,
-      dealership_registry_id=COALESCE(excluded.dealership_registry_id, dealership_registry_id)
+      dealership_registry_id=COALESCE(excluded.dealership_registry_id, dealership_registry_id),
+      body_style=COALESCE(excluded.body_style, body_style),
+      engine_description=COALESCE(excluded.engine_description, engine_description),
+      condition=COALESCE(excluded.condition, condition),
+      source_url=COALESCE(excluded.source_url, source_url),
+      mpg_city=COALESCE(excluded.mpg_city, mpg_city),
+      mpg_highway=COALESCE(excluded.mpg_highway, mpg_highway),
+      is_cpo=COALESCE(excluded.is_cpo, is_cpo),
+      model_full_raw=COALESCE(excluded.model_full_raw, model_full_raw),
+      data_quality_score=COALESCE(excluded.data_quality_score, data_quality_score)
   `;
+
+  const mpgCity = v.mpg_city != null && normInt(v.mpg_city) > 0 ? normInt(v.mpg_city) : null;
+  const mpgHwy = v.mpg_highway != null && normInt(v.mpg_highway) > 0 ? normInt(v.mpg_highway) : null;
+  const isCpo =
+    v.is_cpo === 0 || v.is_cpo === 1 ? normInt(v.is_cpo) : v.is_cpo === true ? 1 : v.is_cpo === false ? 0 : null;
 
   const params = [
     v.vin,
@@ -1545,27 +1816,38 @@ async function upsertVehicle(db, v) {
     v.year ?? null,
     v.make || "",
     v.model || "",
-    v.trim || "",
+    sqlOptionalStr(v.trim),
     price,
     mileage,
     v.image_url || "",
     v.dealer_name || "",
-    v.dealer_url || "",
+    sqlOptionalStr(v.dealer_url),
     v.dealer_id || "",
     now,
-    v.zip_code === DEFAULT_STR ? null : v.zip_code || null,
-    v.fuel_type === DEFAULT_STR ? null : v.fuel_type || null,
+    sqlOptionalStr(v.zip_code),
+    sqlOptionalStr(v.fuel_type),
     v.cylinders ?? null,
-    v.transmission === DEFAULT_STR ? null : v.transmission || null,
-    v.drivetrain === DEFAULT_STR ? null : v.drivetrain || null,
-    v.exterior_color === DEFAULT_STR ? null : v.exterior_color || null,
-    v.interior_color === DEFAULT_STR ? null : v.interior_color || null,
+    sqlOptionalStr(v.transmission),
+    sqlOptionalStr(v.drivetrain),
+    sqlOptionalStr(v.exterior_color),
+    sqlOptionalStr(v.interior_color),
     v.stock_number || "",
     galleryJson,
-    v.carfax_url || "",
+    sqlOptionalStr(v.carfax_url),
     highlightsJson,
     v.msrp != null && v.msrp > 0 ? v.msrp : null,
     v.dealership_registry_id != null ? v.dealership_registry_id : null,
+    sqlOptionalStr(v.body_style),
+    sqlOptionalStr(v.engine_description),
+    sqlOptionalStr(v.condition),
+    sqlOptionalStr(v.source_url),
+    mpgCity,
+    mpgHwy,
+    isCpo,
+    sqlOptionalStr(v.model_full_raw),
+    v.data_quality_score != null && Number.isFinite(Number(v.data_quality_score))
+      ? Number(v.data_quality_score)
+      : null,
   ];
 
   await run(db, sql, params);
@@ -1577,9 +1859,32 @@ async function upsertAll(db, vehicles) {
     const vin = normStr(v.vin);
     if (vin) byVin[vin] = v;
   }
-  let count = 0;
-  for (const v of Object.values(byVin)) {
+  let list = Object.values(byVin);
+  for (const v of list) {
     await applySelfCorrection(db, v);
+  }
+  const py = process.env.PYTHON || process.env.PYTHON3 || "python3";
+  const mergeScript = path.join(ROOT, "scripts", "merge_ep_batch.py");
+  try {
+    if (fs.existsSync(mergeScript)) {
+      const r = spawnSync(py, [mergeScript], {
+        cwd: ROOT,
+        input: JSON.stringify(list),
+        encoding: "utf8",
+        maxBuffer: 50 * 1024 * 1024,
+        env: { ...process.env, PYTHONPATH: ROOT },
+      });
+      if (r.status === 0 && r.stdout) {
+        list = JSON.parse(r.stdout);
+      } else if (r.status !== 0) {
+        console.warn("[ep] merge_ep_batch failed:", (r.stderr || r.stdout || "").slice(0, 400));
+      }
+    }
+  } catch (e) {
+    console.warn("[ep] merge_ep_batch error:", e.message || e);
+  }
+  let count = 0;
+  for (const v of list) {
     await upsertVehicle(db, v);
     count++;
   }
@@ -1758,13 +2063,13 @@ function mapCrawl4aiVehicle(v, dealer, dealerId) {
     dealer_name: dealer.name || dealerId,
     dealer_url: dealer.url || "",
     dealer_id: dealerId,
-    zip_code: normStr(v.zip_code) || DEFAULT_STR,
-    fuel_type: normStr(v.fuel_type) || DEFAULT_STR,
+    zip_code: sqlOptionalStr(v.zip_code),
+    fuel_type: sqlOptionalStr(v.fuel_type),
     cylinders: normInt(v.cylinders) || null,
-    transmission: normStr(v.transmission) || DEFAULT_STR,
-    drivetrain: normStr(v.drivetrain) || DEFAULT_STR,
-    exterior_color: normStr(v.exterior_color) || DEFAULT_STR,
-    interior_color: normStr(v.interior_color) || DEFAULT_STR,
+    transmission: sqlOptionalStr(v.transmission),
+    drivetrain: sqlOptionalStr(v.drivetrain),
+    exterior_color: sqlOptionalStr(v.exterior_color),
+    interior_color: sqlOptionalStr(v.interior_color),
     stock_number: normStr(v.stock_number) || "",
     gallery: [],
     carfax_url: "",
@@ -1950,6 +2255,7 @@ async function discoverDealerMetadata(page, url, profile = "default") {
   return { name, city, state, sources: extracted.sources || [] };
 }
 
+/** Keep in sync with Python ``backend.dev_dealers.slug_from_url`` (Flask smart-import writes dealers.json). */
 function slugFromUrl(urlStr) {
   try {
     const u = new URL(urlStr);

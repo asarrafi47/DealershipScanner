@@ -1,0 +1,21 @@
+---
+description: Security work must follow docs/SECURITY_MASTER_TODO.md — read, update, validate.
+alwaysApply: true
+---
+
+# Security master todo (mandatory workflow)
+
+## Rule
+
+1. **Before** changing anything security-related (auth, secrets, sessions, CSRF, XSS, rate limits, admin/dev routes, LLM/chat APIs, subprocess, SQL patterns, cookies, headers): open `docs/SECURITY_MASTER_TODO.md` and identify the matching **SEC-xxx** item(s).
+2. **If no item exists** for the work: add a new row with **Status**, **Outcome**, and **Validation** before implementing.
+3. **Same PR / same commit series** as the code change: update the todo — **Status**, **Last verified** (date when validation was run), and **Changelog** at the bottom of `docs/SECURITY_MASTER_TODO.md`.
+4. **Do not** mark work complete in chat only; the document is the contract.
+
+## Security-related paths (non-exhaustive)
+
+`backend/main.py`, `backend/dev_routes.py`, `backend/dev_console.py`, `backend/login.py`, `backend/register.py`, `backend/ai_agent.py`, `backend/db/users_db.py`, `backend/db/admin_users_db.py`, `backend/db/users_sqlite.py`, `backend/db/password_hash.py`, `backend/hybrid_inventory_search.py`, `frontend/static/*.js`, `frontend/templates/*.html`, `llm/`
+
+## Validation
+
+Every todo item defines **Validation** and **Outcome**. Re-run that validation after changes and note the date in **Last verified**.

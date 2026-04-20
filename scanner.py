@@ -1,28 +1,101 @@
 #!/usr/bin/env python3
 """
 Manifest-driven dealership inventory scanner. Uses playwright + stealth,
-session warmup to avoid 403, network interception for JSON, and HTML fallback.
+session warmup to avoid 403, network interception for JSON, HTML fallback, and
+optional ``__NEXT_DATA__`` (Next.js) extraction when the raw HTML shell has no rows.
+
+Gallery / images (inventory + VDP):
+  SCANNER_INVENTORY_GALLERY_MAX — max URLs stored per vehicle after dedupe (default: 48).
+  Inventory parsers deep-walk intercepted JSON for nested media keys (see backend/parsers/base.py).
+
+Optional VDP (detail page) enrichment (see scanner_vdp):
+  SCANNER_VDP_EP_MAX — max VDP **page navigations** per dealer (default: 10; set 0 to disable).
+    This single budget covers both EP-style spec extraction and gallery harvesting; there is no
+    separate paid API. To “do more VDP for images”, raise this value (full dealer runs: keep
+    moderate to avoid opening thousands of VDPs).
+  SCANNER_VDP_GALLERY_MIN_HTTPS — rows with fewer than this many unique https gallery URLs get
+    extra priority in the VDP visit queue when SCANNER_VDP_GALLERY_PRIORITY is enabled (default: 3).
+  SCANNER_VDP_GALLERY_PRIORITY — truthy (default): thin-gallery vehicles compete for VDP slots.
+  SCANNER_VDP_ROTATION — truthy (default): among equal-priority rows, rotate which VINs get VDP visits
+    using SCANNER_VDP_ROTATION_SEED or the UTC date + dealer_id (long-tail coverage when EP_MAX is low).
+  SCANNER_VDP_NAV_TIMEOUT_MS — navigation timeout per VDP (default: 32000).
+  SCANNER_VDP_SETTLE_MS — wait after load for analytics/XHR (default: 2200).
+  SCANNER_GALLERY_MERGE_REPLACE_IF_BELOW — VDP merge replaces whole gallery when existing https
+    count is below this (default: 3); otherwise VDP URLs extend listing gallery (see gallery_merge).
+  SCANNER_MAX_DEALER_CONCURRENCY — parallel dealer scans (default: 2; set 1 for sequential).
+  SCANNER_MAX_VDP_CONCURRENCY — parallel VDP page visits per dealer (default: 2).
+
+Inventory JSON intercept gating (drops third-party vehicle-shaped JSON, e.g. payment widgets):
+  SCANNER_INTERCEPT_URL_ALLOW — comma-separated URL substrings that always allow (lowercased match).
+  SCANNER_INTERCEPT_URL_DENY — comma-separated substrings that always deny (e.g. carnow.com,payments).
+  Default: same registrable host / subdomain as the dealer base URL from dealers.json, OR substrings
+  from config/scanner_intercept_policy.json (mirrored in scanner.js), after the deny list is applied.
+
+Inventory page timing:
+  SCANNER_INVENTORY_WAIT_MS — max milliseconds for ``page.wait_for_event("response", ...)`` after
+    each inventory navigation (default 18000). Uses the same URL gate as the predicate; vehicle-list
+    validation still runs in the response handler.
+  SCANNER_PAGINATION_RESPONSE_WAIT_MS — after each Next/Load-more click, max ms to wait for a matching
+    JSON response (default 8000, capped by SCANNER_INVENTORY_WAIT_MS), then a short fixed tail sleep.
+
+Warmup (first dealer base URL load):
+  SCANNER_WARMUP_POST_GOTO_SEC — max seconds to wait after domcontentloaded (default 4; set 0 to skip
+    the idle cap arm). Races against SCANNER_WARMUP_SIGNAL_TIMEOUT_MS for the first JSON response that
+    passes the inventory URL gate — whichever finishes first ends the wait early.
+  SCANNER_WARMUP_SIGNAL_TIMEOUT_MS — max ms to wait for that first qualifying ``response`` (default 12000).
+  SCANNER_WARMUP_SCROLL_SEC — seconds after mid-page scroll (default 1; set 0 to skip).
+  SCANNER_WARMUP_DOM_SELECTORS — optional comma-separated CSS selectors tried briefly before scroll
+    (defaults include ``[data-vehicle]``, ``[data-vin]``, ``.vehicle-card``, …).
+
+Navigation resilience:
+  SCANNER_GOTO_MAX_ATTEMPTS — retries per ``page.goto`` with exponential backoff + jitter (default 3).
+  SCANNER_GOTO_403_EXTRA_ATTEMPTS — extra tries after HTTP 403/429 with longer backoff (default 2).
+
+Browser:
+  SCANNER_USER_AGENT — optional; when unset, Playwright’s default Chromium UA is used (recommended).
+    Set only when you need a pinned string for testing.
+
 Run from project root: python scanner.py
 """
 import argparse
 import asyncio
+import contextlib
 import json
 import logging
 import os
+import random
 import sys
+import time
 from pathlib import Path
+from typing import Any
 
 # Project root = directory containing this file
 ROOT = Path(__file__).resolve().parent
 os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
 
+try:
+    from backend.utils.project_env import load_project_dotenv
+
+    load_project_dotenv()
+except ImportError:
+    pass
+
 # Import BMW enhancement
 from bmw_enhancer import bmw_optimized_browsing, is_bmw_dealership, enhance_scraping_for_bmw_dealerships
 
 from backend.database import upsert_vehicles
 from backend.parsers import parse
-from backend.parsers.base import find_vehicle_list, get_total_count
+from backend.parsers.base import find_vehicle_list
+from backend.utils.gallery_merge import gallery_https_bin_histogram
+from scanner_vdp import enrich_vehicles_vdp, _max_vdp_concurrency
+
+from backend.scrapers.inventory_vin_merge import merge_inventory_rows_same_vin
+from backend.scrapers.next_data_inventory import fetch_next_data_json_from_page, parse_next_data_json_from_html
+from backend.scrapers.scanner_intercept_filter import (
+    intercept_url_allowed,
+    pick_total_count_from_intercepts,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -30,6 +103,21 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 logger = logging.getLogger("scanner")
+
+
+def _log_gallery_bins(dealer_name: str, phase: str, vehicles: list[dict[str, Any]]) -> None:
+    h = gallery_https_bin_histogram(vehicles)
+    logger.info(
+        "Gallery bins [%s] %s: https 0=%d 1=%d 2-4=%d 5+=%d (vehicles=%d)",
+        dealer_name,
+        phase,
+        h["0"],
+        h["1"],
+        h["2_4"],
+        h["5p"],
+        len(vehicles),
+    )
+
 
 MANIFEST_PATH = ROOT / "dealers.json"
 DEBUG_DIR = ROOT / "debug"
@@ -51,6 +139,190 @@ NEXT_SELECTORS = [
 MAX_PAGINATION_CLICKS = 15
 
 
+def _inventory_wait_ms() -> int:
+    raw = (os.environ.get("SCANNER_INVENTORY_WAIT_MS") or "18000").strip()
+    try:
+        return max(1000, int(raw))
+    except ValueError:
+        return 18000
+
+
+def _pagination_response_wait_ms() -> int:
+    raw = (os.environ.get("SCANNER_PAGINATION_RESPONSE_WAIT_MS") or "8000").strip()
+    try:
+        return max(300, min(_inventory_wait_ms(), int(raw)))
+    except ValueError:
+        return min(_inventory_wait_ms(), 8000)
+
+
+def _warmup_delays() -> tuple[float, float]:
+    try:
+        post = float((os.environ.get("SCANNER_WARMUP_POST_GOTO_SEC") or "4").strip())
+    except ValueError:
+        post = 4.0
+    try:
+        scroll = float((os.environ.get("SCANNER_WARMUP_SCROLL_SEC") or "1").strip())
+    except ValueError:
+        scroll = 1.0
+    return max(0.0, post), max(0.0, scroll)
+
+
+def _warmup_signal_timeout_ms() -> int:
+    raw = (os.environ.get("SCANNER_WARMUP_SIGNAL_TIMEOUT_MS") or "12000").strip()
+    try:
+        return max(0, int(raw))
+    except ValueError:
+        return 12000
+
+
+def _goto_403_extra_attempts() -> int:
+    raw = (os.environ.get("SCANNER_GOTO_403_EXTRA_ATTEMPTS") or "2").strip()
+    try:
+        return max(0, int(raw))
+    except ValueError:
+        return 2
+
+
+def _goto_max_attempts() -> int:
+    raw = (os.environ.get("SCANNER_GOTO_MAX_ATTEMPTS") or "3").strip()
+    try:
+        return max(1, int(raw))
+    except ValueError:
+        return 3
+
+
+async def _goto_with_retries(page: Any, target: str, *, log_label: str, timeout_ms: int = 30000) -> None:
+    base_attempts = _goto_max_attempts()
+    extra_403 = _goto_403_extra_attempts()
+    max_total = base_attempts + extra_403
+    last_exc: BaseException | None = None
+    for i in range(max_total):
+        try:
+            resp = await page.goto(target, wait_until="domcontentloaded", timeout=timeout_ms)
+        except BaseException as e:
+            last_exc = e
+            if i >= max_total - 1:
+                break
+            delay = 0.6 * (2 ** min(i, 8)) + random.random() * 0.35
+            logger.warning(
+                "%s: goto retry %s/%s (%s, sleep %.2fs)",
+                log_label,
+                i + 1,
+                max_total,
+                type(e).__name__,
+                delay,
+            )
+            await asyncio.sleep(delay)
+            continue
+
+        if resp is not None and resp.status in (403, 429):
+            delay = min(60.0, 2.8 * (2 ** min(i, 6)) + random.random() * 0.45)
+            logger.warning(
+                "%s: HTTP %s — backoff retry %s/%s (sleep %.2fs)",
+                log_label,
+                resp.status,
+                i + 1,
+                max_total,
+                delay,
+            )
+            await asyncio.sleep(delay)
+            if i >= max_total - 1:
+                raise RuntimeError(
+                    f"{log_label}: navigation blocked (HTTP {resp.status}) after {max_total} attempt(s)"
+                )
+            continue
+        return
+
+    if last_exc is not None:
+        raise last_exc
+    raise RuntimeError("goto failed with no exception captured")
+
+
+async def _warmup_settle_after_base_goto(
+    page: Any,
+    pred: Any,
+    *,
+    dealer_name: str,
+    max_idle_sec: float,
+    scroll_sec: float,
+) -> None:
+    """
+    Race inventory-shaped JSON ``response`` vs a max idle cap, then best-effort DOM signals,
+    mid-page scroll, and optional scroll sleep.
+    """
+    signal_ms = _warmup_signal_timeout_ms()
+    max_idle_sec = max(0.0, max_idle_sec)
+    scroll_sec = max(0.0, scroll_sec)
+
+    async def arm_response() -> None:
+        if signal_ms <= 0:
+            return
+        try:
+            await page.wait_for_event("response", pred, timeout=signal_ms)
+        except BaseException:
+            pass
+
+    async def arm_cap() -> None:
+        if max_idle_sec > 0:
+            await asyncio.sleep(max_idle_sec)
+
+    if max_idle_sec > 0 and signal_ms > 0:
+        t1 = asyncio.create_task(arm_response())
+        t2 = asyncio.create_task(arm_cap())
+        done, pending = await asyncio.wait({t1, t2}, return_when=asyncio.FIRST_COMPLETED)
+        for p in pending:
+            p.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await p
+        for d in done:
+            with contextlib.suppress(asyncio.CancelledError):
+                await d
+    elif signal_ms > 0:
+        await arm_response()
+    elif max_idle_sec > 0:
+        await arm_cap()
+
+    dom_csv = (os.environ.get("SCANNER_WARMUP_DOM_SELECTORS") or "").strip()
+    default_dom = (
+        "[data-vehicle],[data-vin],[data-vehicle-id],.vehicle-card,.inventory-vehicle,"
+        "a[href*='/inventory/']"
+    )
+    selectors = [s.strip() for s in (dom_csv or default_dom).split(",") if s.strip()][:8]
+    for sel in selectors:
+        try:
+            await page.locator(sel).first.wait_for(state="attached", timeout=1200)
+            logger.info("Warmup: %s — DOM signal matched selector %s", dealer_name, sel[:72])
+            break
+        except BaseException:
+            continue
+
+    await page.evaluate("window.scrollTo(0, document.body.scrollHeight / 2)")
+    if scroll_sec:
+        await asyncio.sleep(scroll_sec)
+
+
+def _truncate_url(u: str, max_len: int = 120) -> str:
+    s = (u or "").strip()
+    if len(s) <= max_len:
+        return s
+    return s[: max_len - 3] + "..."
+
+
+class _DealerResponseErrorBudget:
+    """DEBUG logs for response-handler failures without per-response spam."""
+
+    def __init__(self, *, first_n: int = 12, then_every: int = 40) -> None:
+        self._first_n = max(0, first_n)
+        self._then_every = max(1, then_every)
+        self._n = 0
+
+    def should_log(self) -> bool:
+        self._n += 1
+        if self._n <= self._first_n:
+            return True
+        return (self._n - self._first_n) % self._then_every == 1
+
+
 def load_manifest():
     with open(MANIFEST_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -67,6 +339,22 @@ def filter_manifest_by_dealer_id(dealers: list, dealer_id: str) -> list:
 def _is_valid_vehicle_list(body) -> bool:
     """True if JSON contains a list with at least 3 dicts that have vin/VIN (same as parser logic)."""
     return find_vehicle_list(body) is not None
+
+
+def _playwright_inventory_json_predicate(dealer_base_url: str):
+    """Sync predicate for ``page.wait_for_event("response", ...)`` — URL gate + JSON content-type only."""
+
+    def _pred(resp: Any) -> bool:
+        try:
+            ct = (resp.headers.get("content-type") or "").lower()
+            if "application/json" not in ct:
+                return False
+            u = str(getattr(resp, "url", "") or "")
+            return intercept_url_allowed(u, dealer_base_url)
+        except Exception:
+            return False
+
+    return _pred
 
 
 def _is_playwright_shutdown_error(exc: BaseException) -> bool:
@@ -86,34 +374,87 @@ def _is_playwright_shutdown_error(exc: BaseException) -> bool:
     return False
 
 
-async def _safe_close_playwright(context, browser) -> None:
+async def _safe_close_context(context) -> None:
     if context is not None:
         try:
             await context.close()
         except BaseException:
             pass
-    if browser is not None:
-        try:
-            await browser.close()
-        except BaseException:
-            pass
 
 
-async def run_dealer(playwright, dealer: dict, browser_type="chromium"):
+def _max_dealer_concurrency() -> int:
+    raw = (os.environ.get("SCANNER_MAX_DEALER_CONCURRENCY") or "2").strip()
+    try:
+        return max(1, int(raw))
+    except ValueError:
+        return 2
+
+
+async def _upsert_vehicles_serialized(write_lock: asyncio.Lock, vehicles: list[dict]) -> int:
+    """One SQLite writer at a time; run blocking upsert in a thread."""
+    if not vehicles:
+        return 0
+    async with write_lock:
+        return await asyncio.to_thread(upsert_vehicles, vehicles)
+
+
+def _emit_dealer_run_summary(result: dict[str, Any]) -> None:
+    """One parseable INFO line per dealer (JSON), capped ~2KB for log pipelines."""
+    payload: dict[str, Any] = {
+        "dealer_id": result.get("dealer_id"),
+        "intercept_count": result.get("intercept_count"),
+        "filtered_count": result.get("filtered_count"),
+        "inventory_rows": result.get("inventory_rows"),
+        "deduped_rows": result.get("deduped_rows"),
+        "vdps_visited": result.get("vdps_visited"),
+        "gallery_bins": result.get("gallery_bins"),
+        "seconds": round(float(result.get("seconds") or 0.0), 2),
+        "upserted": result.get("upserted"),
+    }
+    err = result.get("error")
+    if err:
+        payload["error"] = str(err)[:400]
+    line = json.dumps(payload, separators=(",", ":"), default=str, ensure_ascii=False)
+    if len(line) > 2048:
+        line = line[:2045] + "..."
+    logger.info("dealer_run_summary %s", line)
+
+
+async def run_dealer(browser: Any, dealer: dict, write_lock: asyncio.Lock) -> dict[str, Any]:
     name = dealer.get("name", "")
     url = dealer.get("url", "").rstrip("/")
     provider = dealer.get("provider", "dealer_dot_com")
     dealer_id = dealer.get("dealer_id", "")
+    result: dict[str, Any] = {
+        "dealer_id": dealer_id,
+        "dealer_name": name,
+        "upserted": 0,
+        "inventory_rows": 0,
+        "deduped_rows": 0,
+        "vdps_visited": 0,
+        "vehicles_vdp_enriched": 0,
+        "gallery_vdp_urls_added": 0,
+        "intercept_count": 0,
+        "filtered_count": 0,
+        "gallery_bins": None,
+        "seconds": 0.0,
+        "error": None,
+    }
+    t0 = time.perf_counter()
     if not url or not dealer_id:
         logger.warning("Skipping dealer missing url or dealer_id: %s", dealer)
-        return 0
+        result["seconds"] = time.perf_counter() - t0
+        _emit_dealer_run_summary(result)
+        return result
 
+    logger.info("Dealer start: %s", name)
     logger.info("Warmup: %s — navigating to base URL", name)
-    launch = getattr(playwright, browser_type, playwright.chromium).launch
-    browser = None
     context = None
-    intercepted_json = []
+    intercept_records: list[tuple[str, Any]] = []
+    body_parse_cache: dict[int, list[dict[str, Any]]] = {}
+    gate_stats = {"url_denied": 0}
     found_data = {"value": False}
+    resp_err_budget = _DealerResponseErrorBudget()
 
     async def handle_response(response):
         try:
@@ -121,37 +462,99 @@ async def run_dealer(playwright, dealer: dict, browser_type="chromium"):
             if "application/json" not in ct:
                 return
             body = await response.json()
-            if _is_valid_vehicle_list(body):
-                intercepted_json.append(body)
-                found_data["value"] = True
-                logger.info("Intercepting: %s — got valid vehicle list (%s)", name, response.url[:80])
-        except Exception:
-            pass
+            if not _is_valid_vehicle_list(body):
+                return
+            rurl = str(getattr(response, "url", "") or "")
+            if not intercept_url_allowed(rurl, url):
+                gate_stats["url_denied"] += 1
+                logger.debug(
+                    "Intercept URL denied [%s]: %s",
+                    name,
+                    _truncate_url(rurl),
+                )
+                return
+            intercept_records.append((rurl, body))
+            found_data["value"] = True
+            logger.info(
+                "Intercepting: %s — got valid vehicle list (%s)",
+                name,
+                _truncate_url(rurl, 80),
+            )
+        except Exception as e:
+            if resp_err_budget.should_log():
+                rurl = _truncate_url(str(getattr(response, "url", "") or ""))
+                logger.debug(
+                    "Intercept handler failure [%s] url=%s type=%s msg=%s",
+                    name,
+                    rurl,
+                    type(e).__name__,
+                    str(e)[:200],
+                )
 
     try:
-        browser = await launch(headless=True)
-        context = await browser.new_context(
-            viewport={"width": 1920, "height": 1080},
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        )
+        ctx_opts: dict[str, Any] = {"viewport": {"width": 1920, "height": 1080}}
+        _ua = (os.environ.get("SCANNER_USER_AGENT") or "").strip()
+        if _ua:
+            ctx_opts["user_agent"] = _ua
+        context = await browser.new_context(**ctx_opts)
         page = await context.new_page()
-        await page.goto(url, wait_until="domcontentloaded", timeout=30000)
-        await asyncio.sleep(4)
-        await page.evaluate("window.scrollTo(0, document.body.scrollHeight / 2)")
-        await asyncio.sleep(1)
-        logger.info("Warmup: %s — done (4s wait + scroll)", name)
+        warm_pred = _playwright_inventory_json_predicate(url)
+        await _goto_with_retries(page, url, log_label=f"Warmup:{name}", timeout_ms=30000)
+        w_post, w_scroll = _warmup_delays()
+        await _warmup_settle_after_base_goto(
+            page,
+            warm_pred,
+            dealer_name=name,
+            max_idle_sec=w_post,
+            scroll_sec=w_scroll,
+        )
+        logger.info("Warmup: %s — done (signal race cap=%.1fs + scroll %.1fs)", name, w_post, w_scroll)
 
         page.on("response", handle_response)
         # Accumulate intercepted JSON across all three category URLs
-        intercepted_json.clear()
+        intercept_records.clear()
+        body_parse_cache.clear()
+        gate_stats["url_denied"] = 0
+
+        def _vehicles_for_body(body: Any) -> list[dict[str, Any]]:
+            bid = id(body)
+            cached = body_parse_cache.get(bid)
+            if cached is not None:
+                return cached
+            vehicles = list(
+                parse(provider, body, base_url=url, dealer_id=dealer_id, dealer_name=name, dealer_url=url)
+            )
+            for v in vehicles:
+                v.setdefault("dealer_name", name)
+                v.setdefault("dealer_url", url)
+            body_parse_cache[bid] = vehicles
+            return vehicles
+
+        def _vin_count_from_intercepts() -> tuple[int, dict[str, dict[str, Any]]]:
+            by_vin: dict[str, dict[str, Any]] = {}
+            for _ru, body in intercept_records:
+                for v in _vehicles_for_body(body):
+                    vin = (v.get("vin") or "").strip()
+                    if vin:
+                        by_vin[vin] = v
+            return len(by_vin), by_vin
+
+        inv_wait_ms = _inventory_wait_ms()
+        pag_wait_ms = _pagination_response_wait_ms()
+        pred = _playwright_inventory_json_predicate(url)
 
         for inv_path in INVENTORY_PATHS:
             found_data["value"] = False
             full_url = url + inv_path
             logger.info("Navigating: %s — %s", name, full_url)
             try:
-                await page.goto(full_url, wait_until="domcontentloaded", timeout=20000)
-                for _ in range(18):
+                await _goto_with_retries(page, full_url, log_label=f"Nav:{name}", timeout_ms=20000)
+                try:
+                    await page.wait_for_event("response", pred, timeout=inv_wait_ms)
+                except Exception:
+                    pass
+                idle_cap = 3 if found_data["value"] else 18
+                for _ in range(idle_cap):
                     await asyncio.sleep(1)
                     if found_data["value"]:
                         logger.info("Intercepting: %s — stopping wait (data found)", name)
@@ -166,19 +569,8 @@ async def run_dealer(playwright, dealer: dict, browser_type="chromium"):
 
                 # API pagination: click Next/Load More until we have totalCount
                 for _ in range(MAX_PAGINATION_CLICKS):
-                    def _parsed_count():
-                        by_vin = {}
-                        for body in intercepted_json:
-                            for v in parse(provider, body, base_url=url, dealer_id=dealer_id, dealer_name=name, dealer_url=url):
-                                vin = (v.get("vin") or "").strip()
-                                if vin:
-                                    by_vin[vin] = v
-                        return len(by_vin), by_vin
-
-                    total_count = None
-                    if intercepted_json:
-                        total_count = get_total_count(intercepted_json[-1])
-                    current_count, _ = _parsed_count()
+                    total_count = pick_total_count_from_intercepts(intercept_records, url)
+                    current_count, _ = _vin_count_from_intercepts()
                     if total_count is not None and total_count > current_count:
                         clicked = False
                         for sel in NEXT_SELECTORS:
@@ -189,7 +581,11 @@ async def run_dealer(playwright, dealer: dict, browser_type="chromium"):
                                     if await first.is_visible():
                                         await first.click()
                                         logger.info("Pagination: %s — clicked %s", name, sel)
-                                        await asyncio.sleep(3)
+                                        try:
+                                            await page.wait_for_event("response", pred, timeout=pag_wait_ms)
+                                        except Exception:
+                                            pass
+                                        await asyncio.sleep(0.35)
                                         clicked = True
                                         break
                             except Exception:
@@ -205,45 +601,159 @@ async def run_dealer(playwright, dealer: dict, browser_type="chromium"):
         # Parse all accumulated payloads and merge by VIN (upsert_vehicles dedupes).
         # Parser extracts carfax_url, history_report_url, vhr_url, and carfax_token from getInventory;
         # when vhr_url or carfax_token is present, uses partner link (vhr.carfax.com) for less iframe blocking.
-        all_vehicles = []
-        for body in intercepted_json:
-            vehicles = parse(provider, body, base_url=url, dealer_id=dealer_id, dealer_name=name, dealer_url=url)
-            for v in vehicles:
-                v.setdefault("dealer_name", name)
-                v.setdefault("dealer_url", url)
-            all_vehicles.extend(vehicles)
+        all_vehicles: list[dict[str, Any]] = []
+        for _resp_url, body in intercept_records:
+            all_vehicles.extend(_vehicles_for_body(body))
+
+        result["inventory_rows"] = len(all_vehicles)
 
         if not all_vehicles:
-            logger.info("Extraction backup: %s — no JSON, trying page.content()", name)
+            logger.info(
+                "Extraction backup: %s — no vehicles from %d JSON intercept(s); trying page.content() HTML",
+                name,
+                len(intercept_records),
+            )
             html = await page.content()
-            all_vehicles = parse(provider, html, base_url=url, dealer_id=dealer_id, dealer_name=name, dealer_url=url)
+            all_vehicles = list(
+                parse(provider, html, base_url=url, dealer_id=dealer_id, dealer_name=name, dealer_url=url)
+            )
             for v in all_vehicles:
                 v.setdefault("dealer_name", name)
                 v.setdefault("dealer_url", url)
+            result["inventory_rows"] = len(all_vehicles)
+            if not all_vehicles:
+                nd = parse_next_data_json_from_html(html or "")
+                if nd is None:
+                    nd = await fetch_next_data_json_from_page(page)
+                if nd is not None:
+                    all_vehicles = list(
+                        parse(provider, nd, base_url=url, dealer_id=dealer_id, dealer_name=name, dealer_url=url)
+                    )
+                    for v in all_vehicles:
+                        v.setdefault("dealer_name", name)
+                        v.setdefault("dealer_url", url)
+                    result["inventory_rows"] = len(all_vehicles)
+                if all_vehicles:
+                    logger.info(
+                        "HTML fallback: %s — recovered %d vehicle row(s) from __NEXT_DATA__",
+                        name,
+                        len(all_vehicles),
+                    )
+                else:
+                    logger.info(
+                        "HTML fallback: %s — 0 vehicles (SPA shell or unsupported HTML; %d chars)",
+                        name,
+                        len(html or ""),
+                    )
+            else:
+                logger.info("HTML fallback: %s — recovered %d vehicle row(s) from HTML", name, len(all_vehicles))
 
         if all_vehicles:
+            # One row per VIN for downstream VDP enrichment (listing payloads may repeat VINs).
+            by_vin: dict[str, dict] = {}
+            for v in all_vehicles:
+                vin = (v.get("vin") or "").strip()
+                if vin:
+                    if vin in by_vin:
+                        merge_inventory_rows_same_vin(by_vin[vin], v)
+                    else:
+                        by_vin[vin] = v
+            all_vehicles = list(by_vin.values())
+            result["deduped_rows"] = len(all_vehicles)
+            _log_gallery_bins(name, "after_inventory_merge", all_vehicles)
+
+            vdp_stats: dict[str, Any] = {}
+            try:
+                vdp_stats = await enrich_vehicles_vdp(page, all_vehicles, name, dealer_id=dealer_id)
+            except Exception as e:
+                logger.warning("VDP enrichment failed for %s (continuing with listing data only): %s", name, e)
+            result["vdps_visited"] = int(vdp_stats.get("vdps_visited") or 0)
+            result["vehicles_vdp_enriched"] = int(vdp_stats.get("vehicles_enriched") or 0)
+            result["gallery_vdp_urls_added"] = int(vdp_stats.get("gallery_vdp_urls_added") or 0)
+            _log_gallery_bins(name, "after_vdp", all_vehicles)
+            result["gallery_bins"] = gallery_https_bin_histogram(all_vehicles)
+            if vdp_stats.get("gallery_phase_bins"):
+                logger.info("Gallery phase bins [%s]: %s", name, vdp_stats.get("gallery_phase_bins"))
+
             # Ensure gallery is always a list for DB (stored as json.dumps(gallery) in database.py)
             for v in all_vehicles:
                 g = v.get("gallery")
-                v["gallery"] = g if isinstance(g, list) else []
-            count = upsert_vehicles(all_vehicles)
-            logger.info("Parsing: %s — extracted %d vehicles (deduped by VIN), upserted %d", name, len(all_vehicles), count)
-            return count
+                if not isinstance(g, list):
+                    g = []
+                hero = v.get("image_url")
+                if (
+                    not any(isinstance(x, str) and x.strip().lower().startswith("http") for x in g)
+                    and isinstance(hero, str)
+                    and hero.strip().lower().startswith("http")
+                ):
+                    g = [hero.strip()]
+                v["gallery"] = g
+            count = await _upsert_vehicles_serialized(write_lock, all_vehicles)
+            result["upserted"] = count
+            result["seconds"] = time.perf_counter() - t0
+            logger.info(
+                "Parsing: %s — extracted %d vehicles (deduped by VIN), upserted %d",
+                name,
+                len(all_vehicles),
+                count,
+            )
+            logger.info(
+                "Dealer complete: %s (%d inventory rows, %d deduped, %d VDP visited, %d VDP-enriched, "
+                "%d upserted, %.1fs)",
+                name,
+                result["inventory_rows"],
+                result["deduped_rows"],
+                result["vdps_visited"],
+                result["vehicles_vdp_enriched"],
+                count,
+                result["seconds"],
+            )
+            return result
         # No path returned vehicles
         logger.warning("Parsing: %s — no vehicles from any inventory path", name)
         DEBUG_DIR.mkdir(parents=True, exist_ok=True)
         screenshot_path = DEBUG_DIR / f"fail_{dealer_id}.png"
         await page.screenshot(path=str(screenshot_path))
         logger.info("Debug: saved screenshot to %s", screenshot_path)
-        return 0
+        result["seconds"] = time.perf_counter() - t0
+        logger.info(
+            "Dealer complete: %s (%d inventory rows, %d deduped, %d VDP visited, %d VDP-enriched, %d upserted, %.1fs)",
+            name,
+            result["inventory_rows"],
+            result["deduped_rows"],
+            result["vdps_visited"],
+            result["vehicles_vdp_enriched"],
+            result["upserted"],
+            result["seconds"],
+        )
+        return result
     except asyncio.CancelledError:
         raise
     except Exception as e:
+        result["error"] = str(e)
+        result["seconds"] = time.perf_counter() - t0
         if _is_playwright_shutdown_error(e):
-            return 0
-        raise
+            return result
+        logger.exception("Dealer %s failed: %s", dealer_id, e)
+        logger.info(
+            "Dealer complete: %s (%d inventory rows, %d deduped, %d VDP visited, %d VDP-enriched, %d upserted, %.1fs) [error]",
+            name,
+            result["inventory_rows"],
+            result["deduped_rows"],
+            result["vdps_visited"],
+            result["vehicles_vdp_enriched"],
+            result["upserted"],
+            result["seconds"],
+        )
+        return result
     finally:
-        await _safe_close_playwright(context, browser)
+        result["intercept_count"] = len(intercept_records)
+        result["filtered_count"] = gate_stats["url_denied"]
+        if result.get("gallery_bins") is None:
+            result["gallery_bins"] = {}
+        result["seconds"] = time.perf_counter() - t0
+        _emit_dealer_run_summary(result)
+        await _safe_close_context(context)
 
 
 async def main(dealers: list | None = None):
@@ -255,59 +765,88 @@ async def main(dealers: list | None = None):
         return
     logger.info("Found %d dealer(s) to run", len(dealers))
 
-    # Enhance BMW dealerships with special optimization
+    dealer_conc = _max_dealer_concurrency()
+    vdp_conc = _max_vdp_concurrency()
+    logger.info("Scanner: dealer concurrency = %d", dealer_conc)
+    logger.info("Scanner: VDP concurrency = %d", vdp_conc)
+
     bmw_enhanced_dealers = enhance_scraping_for_bmw_dealerships(dealers)
-    
+    write_lock = asyncio.Lock()
+    scan_t0 = time.perf_counter()
+    total_upserted = 0
+    sem = asyncio.Semaphore(dealer_conc)
+    outcomes: list[Any] = []
+
+    async def run_dealers_with_browser(p) -> list[Any]:
+        browser = await p.chromium.launch(headless=True)
+
+        async def one_dealer(dealer: dict) -> dict[str, Any]:
+            did = dealer.get("dealer_id", "")
+            if dealer.get("optimize_for") == "bmw":
+                logger.info("Applying BMW-specific optimization for %s", dealer.get("name"))
+            try:
+                return await run_dealer(browser, dealer, write_lock)
+            except asyncio.CancelledError:
+                raise
+            except Exception as e:
+                logger.exception("Dealer %s failed: %s", did, e)
+                DEBUG_DIR.mkdir(parents=True, exist_ok=True)
+                try:
+                    pg = await browser.new_page()
+                    try:
+                        await pg.goto(dealer.get("url", "about:blank"), timeout=10000)
+                        await pg.screenshot(path=str(DEBUG_DIR / f"fail_{did or 'unknown'}.png"))
+                    finally:
+                        await pg.close()
+                except Exception:
+                    pass
+                return {
+                    "dealer_id": did,
+                    "dealer_name": dealer.get("name", ""),
+                    "upserted": 0,
+                    "error": str(e),
+                }
+
+        async def bounded(dealer: dict) -> dict[str, Any]:
+            async with sem:
+                return await one_dealer(dealer)
+
+        try:
+            return await asyncio.gather(
+                *[bounded(d) for d in bmw_enhanced_dealers],
+                return_exceptions=True,
+            )
+        finally:
+            await browser.close()
+
     try:
         from playwright_stealth import Stealth
         from playwright.async_api import async_playwright
+
         async with Stealth().use_async(async_playwright()) as p:
-            for dealer in bmw_enhanced_dealers:
-                try:
-                    # Apply BMW-specific optimization if needed
-                    if dealer.get('optimize_for') == 'bmw':
-                        logger.info("Applying BMW-specific optimization for %s", dealer.get('name'))
-                        # This would be where we would call the BMW-specific enhanced browsing
-                        pass
-                    await run_dealer(p, dealer)
-                except asyncio.CancelledError:
-                    raise
-                except Exception as e:
-                    logger.exception("Dealer %s failed: %s", dealer.get("dealer_id"), e)
-                    DEBUG_DIR.mkdir(parents=True, exist_ok=True)
-                    try:
-                        from playwright.async_api import async_playwright
-                        async with async_playwright() as pw:
-                            browser = await pw.chromium.launch(headless=True)
-                            page = await browser.new_page()
-                            await page.goto(dealer.get("url", "about:blank"), timeout=10000)
-                            await page.screenshot(path=str(DEBUG_DIR / f"fail_{dealer.get('dealer_id', 'unknown')}.png"))
-                            await browser.close()
-                    except Exception:
-                        pass
+            outcomes = await run_dealers_with_browser(p)
     except ImportError:
         logger.warning("playwright_stealth not found, using plain playwright")
         from playwright.async_api import async_playwright
-        async with async_playwright() as p:
-            for dealer in bmw_enhanced_dealers:
-                try:
-                    await run_dealer(p, dealer)
-                except asyncio.CancelledError:
-                    raise
-                except Exception as e:
-                    logger.exception("Dealer %s failed: %s", dealer.get("dealer_id"), e)
-                    DEBUG_DIR.mkdir(parents=True, exist_ok=True)
-                    try:
-                        async with async_playwright() as pw:
-                            browser = await pw.chromium.launch(headless=True)
-                            page = await browser.new_page()
-                            await page.goto(dealer.get("url", "about:blank"), timeout=10000)
-                            await page.screenshot(path=str(DEBUG_DIR / f"fail_{dealer.get('dealer_id', 'unknown')}.png"))
-                            await browser.close()
-                    except Exception:
-                        pass
 
-    logger.info("Scanner finished.")
+        async with async_playwright() as p:
+            outcomes = await run_dealers_with_browser(p)
+
+    for o in outcomes:
+        if isinstance(o, BaseException):
+            logger.error("Dealer task ended with exception: %s", o)
+            continue
+        if isinstance(o, dict):
+            total_upserted += int(o.get("upserted") or 0)
+
+    elapsed = time.perf_counter() - scan_t0
+    logger.info(
+        "Scanner finished — total runtime %.1fs, dealer_concurrency=%d, vdp_concurrency=%d, total vehicles upserted=%d",
+        elapsed,
+        dealer_conc,
+        vdp_conc,
+        total_upserted,
+    )
 
 
 if __name__ == "__main__":

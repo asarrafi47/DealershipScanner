@@ -27,6 +27,7 @@
             {% endif %}
 
             <form method="POST" class="auth-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 <div class="field-group">
                     <label for="secret">Secret</label>
                     <input type="password" id="secret" name="secret" required autocomplete="current-password">

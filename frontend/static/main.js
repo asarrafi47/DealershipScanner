@@ -1,4 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
+    /** Listings boot: JSON blobs (CSP-friendly) — see listings.html */
+    (function loadListingsBootFromJson() {
+        if (!document.getElementById("ds-listings-car-rows")) return;
+        function readJsonScript(id, fallback) {
+            const el = document.getElementById(id);
+            if (!el) return fallback;
+            const raw = el.textContent.trim();
+            if (!raw) return fallback;
+            try {
+                return JSON.parse(raw);
+            } catch {
+                return fallback;
+            }
+        }
+        window.CAR_ROWS = readJsonScript("ds-listings-car-rows", []);
+        window.ALL_CARS = readJsonScript("ds-listings-all-cars", []);
+        window.COUNTRY_TO_MAKES = readJsonScript("ds-listings-country-to-makes", {});
+        window.INITIAL_GRID_CARS = readJsonScript("ds-listings-initial-grid", []);
+    })();
 
     // Fade in
     document.body.style.opacity = 0;
@@ -76,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const trims  = excluding === "trim"       ? [] : checked("trim");
         const fuels  = excluding === "fuel_type"  ? [] : checked("fuel_type");
         const drives = excluding === "drivetrain" ? [] : checked("drivetrain");
+        const bodies = excluding === "body_style" ? [] : checked("body_style");
         const cyls   = excluding === "cylinders"  ? [] : checked("cylinders");
 
         return CAR_ROWS.filter(r => {
@@ -84,6 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (trims.length  && !valueInListCI(trims, r.trim))        return false;
             if (fuels.length  && !fuels.includes(r.fuel))        return false;
             if (drives.length && !drives.includes(r.drive))      return false;
+            if (bodies.length && !valueInListCI(bodies, r.body_style)) return false;
             if (cyls.length   && !cyls.includes(String(r.cyl))) return false;
             return true;
         });
@@ -101,6 +122,11 @@ document.addEventListener("DOMContentLoaded", () => {
         cascadeParam("trim",        r => r.trim,        ["options-trim",        "acc-options-trim"]);
         cascadeParam("fuel_type",   r => r.fuel,        ["options-fuel_type",   "acc-options-fuel_type"]);
         cascadeParam("drivetrain",  r => r.drive,       ["options-drivetrain",  "acc-options-drivetrain"]);
+        cascadeParam(
+            "body_style",
+            r => (r.body_style != null && String(r.body_style).trim() !== "" ? String(r.body_style) : ""),
+            ["options-body_style", "acc-options-body_style"]
+        );
         cascadeParam("cylinders",   r => String(r.cyl), ["options-cylinders",   "acc-options-cylinders"]);
         updateCylinders();
         updateAllCounts();
@@ -237,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateAllCounts() {
         ["country", "make", "model", "trim", "fuel_type", "cylinders",
-         "transmission", "drivetrain", "exterior_color", "interior_color"]
+         "transmission", "drivetrain", "body_style", "exterior_color", "interior_color"]
             .forEach(updateCount);
 
         // Sidebar total badge
@@ -291,6 +317,29 @@ document.addEventListener("DOMContentLoaded", () => {
         return "$" + Number(n).toLocaleString("en-US", {maximumFractionDigits: 0});
     }
 
+    function escapeHtml(s) {
+        return String(s ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+    }
+
+    /** Resolve URL and allow only http(s) for CSS background-image (mitigates javascript: / data: in listings). */
+    function cssSingleQuotedUrl(url) {
+        const raw = String(url || "").trim();
+        if (!raw) return "/static/placeholder.svg";
+        try {
+            const abs = new URL(raw, window.location.origin);
+            if (abs.protocol !== "http:" && abs.protocol !== "https:") {
+                return "/static/placeholder.svg";
+            }
+            return abs.href.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+        } catch (_) {
+            return "/static/placeholder.svg";
+        }
+    }
+
     function renderCarGrid(cars) {
         if (!resultsGrid) return;
 
@@ -308,26 +357,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
         resultsGrid.innerHTML = cars.map(c => {
             const gallery = Array.isArray(c.gallery) ? c.gallery : [];
-            const imgSrc = (gallery.length && gallery[0]) ? gallery[0] : (c.image_url || "") || "/static/placeholder.svg";
-            const esc = (s) => (s || "").replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+            const imgRaw = (gallery.length && gallery[0]) ? gallery[0] : (c.image_url || "") || "/static/placeholder.svg";
+            const imgSrcQuoted = cssSingleQuotedUrl(imgRaw);
             const photoCount = gallery.length;
             const photoLabel = photoCount > 1 ? `${photoCount} photos` : "";
+            const idNum = Number(c.id);
+            const idStr = Number.isFinite(idNum) && idNum > 0 ? String(Math.floor(idNum)) : "0";
+            const dashLike = (v) => {
+                const s = String(v || "").trim();
+                return !s || s === "\u2014" || s === "-" || s === "--";
+            };
+            const specBits = [];
+            if (!dashLike(c.body_style)) specBits.push(`Body: ${escapeHtml(c.body_style)}`);
+            if (!dashLike(c.condition)) specBits.push(`Condition: ${escapeHtml(c.condition)}`);
+            if (!dashLike(c.exterior_color)) specBits.push(`Exterior: ${escapeHtml(c.exterior_color)}`);
+            const specLine = specBits.length
+                ? `<p class="result-meta result-meta--specs">${specBits.join(" &middot; ")}</p>`
+                : "";
             return `
-            <a href="/car/${c.id}" class="result-card">
+            <a href="/car/${idStr}" class="result-card">
                 <div class="result-image-wrap">
-                    <div class="result-image" style="background-image:url('${esc(imgSrc)}')"></div>
-                    ${photoLabel ? `<span class="result-photo-count">${photoLabel}</span>` : ""}
+                    <div class="result-image" style="background-image:url('${imgSrcQuoted}')"></div>
+                    ${photoLabel ? `<span class="result-photo-count">${escapeHtml(photoLabel)}</span>` : ""}
                 </div>
                 <div class="result-content">
-                    <h2>${c.title}</h2>
-                    <p class="result-trim">${c.trim || ""}</p>
+                    <h2>${escapeHtml(c.title)}</h2>
+                    <p class="result-trim">${escapeHtml(c.trim || "")}</p>
                     <p class="result-price">${fmtUSD(c.price)}</p>
                     <p class="result-meta">
                         ${fmt(c.mileage)} mi
-                        &middot; ${c.fuel_type || ""}
-                        &middot; ${c.drivetrain || ""}
+                        &middot; ${escapeHtml(c.fuel_type || "")}
+                        &middot; ${escapeHtml(c.drivetrain || "")}
                     </p>
-                    <p class="result-dealer">${c.dealer_name || ""}</p>
+                    ${specLine}
+                    <p class="result-dealer">${escapeHtml(c.dealer_name || "")}</p>
                 </div>
             </a>`;
         }).join("");
@@ -346,6 +409,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const cyls        = checked("cylinders");
         const trans       = checked("transmission");
         const drives      = checked("drivetrain");
+        const bodies      = checked("body_style");
         const extColors   = checked("exterior_color");
         const intColors   = checked("interior_color");
         const countries   = checked("country");
@@ -370,6 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (cyls.length       && !cyls.includes(String(c.cylinders)))return false;
             if (trans.length      && !trans.includes(c.transmission))    return false;
             if (drives.length     && !drives.includes(c.drivetrain))     return false;
+            if (bodies.length     && !valueInListCI(bodies, c.body_style)) return false;
             if (extColors.length  && !extColors.includes(c.exterior_color)) return false;
             if (intColors.length  && !intColors.includes(c.interior_color)) return false;
             if (maxPrice    && c.price   > maxPrice)   return false;
@@ -395,7 +460,11 @@ document.addEventListener("DOMContentLoaded", () => {
     window.__DS_runFilterRender = renderResults;
 
     runCascade();
-    renderResults();
+    if (typeof INITIAL_GRID_CARS !== "undefined" && Array.isArray(INITIAL_GRID_CARS) && INITIAL_GRID_CARS.length) {
+        renderCarGrid(INITIAL_GRID_CARS);
+    } else {
+        renderResults();
+    }
 
     // ── Pill dropdown open/close ───────────────────────────────────────
 

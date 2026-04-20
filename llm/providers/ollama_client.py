@@ -72,6 +72,7 @@ class OpenAICompatibleClient(LLMClient):
         user: str,
         model: str | None = None,
         temperature: float = 0.5,
+        max_tokens: int | None = None,
     ) -> str:
         """Plain chat completion (no JSON mode) for conversational UIs."""
         model = model or os.environ.get("LLM_MODEL") or "llama3.2"
@@ -88,6 +89,8 @@ class OpenAICompatibleClient(LLMClient):
                 {"role": "user", "content": user},
             ],
         }
+        if max_tokens is not None:
+            payload["max_tokens"] = max_tokens
 
         try:
             r = requests.post(url, json=payload, headers=headers, timeout=self.timeout)

@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Developer console — Dealership Scanner</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='dev_console.css') }}">
@@ -15,6 +16,7 @@
             <a href="/">App home</a>
             {% if secret_gate %}
             <form method="post" action="{{ url_for('dev_console.dev_logout') }}" class="dev-inline-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 <button type="submit" class="dev-link-button">Sign out</button>
             </form>
             {% endif %}

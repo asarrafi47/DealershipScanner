@@ -1,4 +1,4 @@
-"""Semantic lookup against the local EPA-derived Master Spec Catalog (ChromaDB)."""
+"""Semantic lookup against the local EPA-derived Master Spec Catalog (Postgres + pgvector)."""
 
 from __future__ import annotations
 
@@ -9,57 +9,40 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
-_MASTER_PERSIST = Path(__file__).resolve().parent / "chroma_master_catalog"
-# Shared with ingest_master_specs (same collection name).
-_COLLECTION = "master_spec_catalog"
+# Human-readable label for logs (table name is ``master_spec_embeddings`` in ``pgvector_service``).
+MASTER_SPEC_CATALOG_LABEL = "master_spec_catalog"
 _MODEL_NAME = "all-MiniLM-L6-v2"
 _KNOWN_PACKAGES_PATH = Path(__file__).resolve().parent / "known_packages.json"
 
 
 def master_catalog_persist_dir() -> Path:
-    _MASTER_PERSIST.mkdir(parents=True, exist_ok=True)
-    return _MASTER_PERSIST
+    from backend.vector.pgvector_service import vector_data_dir
 
-
-def _client():
-    import chromadb
-    from chromadb.config import Settings
-
-    return chromadb.PersistentClient(
-        path=str(master_catalog_persist_dir()),
-        settings=Settings(anonymized_telemetry=False),
-    )
-
-
-def _encode_model():
-    from sentence_transformers import SentenceTransformer
-
-    return SentenceTransformer(_MODEL_NAME)
+    return vector_data_dir()
 
 
 class MasterCatalog:
     """
-    Ground-truth spec lookup using the same Chroma collection as ``ingest_master_specs``.
+    Ground-truth spec lookup using the same pgvector table as ``ingest_master_specs``.
 
     ``lookup_car`` builds a short natural-language query from partial scraper fields and
     returns the best EPA row's engine, transmission, drivetrain, and MPG (plus metadata).
     """
 
     def __init__(self) -> None:
-        self._client = _client()
         self._st_model: Any | None = None
 
     def _model(self):
         if self._st_model is None:
-            self._st_model = _encode_model()
+            from sentence_transformers import SentenceTransformer
+
+            self._st_model = SentenceTransformer(_MODEL_NAME)
         return self._st_model
 
     def collection_exists(self) -> bool:
-        try:
-            cols = self._client.list_collections()
-            return any(c.name == _COLLECTION for c in cols)
-        except Exception:
-            return False
+        from backend.vector.pgvector_service import master_spec_catalog_nonempty
+
+        return master_spec_catalog_nonempty()
 
     def lookup_car(
         self,
@@ -71,8 +54,10 @@ class MasterCatalog:
         ``partial_data`` may include: make, model, trim, year (any subset).
 
         Returns a dict with ``ok``, ``query``, ``best`` (top match summary), and ``hits``
-        (raw Chroma-style rows for debugging).
+        (raw rows for debugging).
         """
+        from backend.vector.pgvector_service import master_catalog_query
+
         parts: list[str] = []
         for key in ("year", "make", "model", "trim"):
             v = partial_data.get(key)
@@ -91,10 +76,8 @@ class MasterCatalog:
             "transmission, drivetrain, EPA fuel economy MPG."
         )
 
-        try:
-            col = self._client.get_collection(_COLLECTION)
-        except Exception as e:
-            logger.warning("Master catalog collection missing: %s", e)
+        if not self.collection_exists():
+            logger.warning("Master catalog table is empty (run ingest_master_specs --reindex)")
             return {
                 "ok": False,
                 "error": "collection_missing",
@@ -111,15 +94,11 @@ class MasterCatalog:
         else:
             qe = list(emb)
 
-        res = col.query(
-            query_embeddings=[qe],
-            n_results=max(1, min(n_results, 50)),
-            include=["metadatas", "distances", "documents"],
-        )
-        ids = (res.get("ids") or [[]])[0]
-        metas = (res.get("metadatas") or [[]])[0]
-        dists = (res.get("distances") or [[]])[0]
-        docs = (res.get("documents") or [[]])[0]
+        try:
+            ids, metas, dists, docs = master_catalog_query(qe, n_results=max(1, min(n_results, 50)))
+        except Exception as e:
+            logger.warning("Master catalog query failed: %s", e)
+            return {"ok": False, "error": "query_failed", "message": str(e), "query": query}
 
         hits: list[dict[str, Any]] = []
         for i, rid in enumerate(ids):

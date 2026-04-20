@@ -2,6 +2,11 @@
  * Car detail page chat: POST /api/car/<id>/chat
  */
 (function () {
+    function readCsrfToken() {
+        const m = document.querySelector('meta[name="csrf-token"]');
+        return m ? (m.getAttribute("content") || "").trim() : "";
+    }
+
     const root = document.getElementById("car-chat-section");
     if (!root) return;
     const carId = root.getAttribute("data-car-id");
@@ -24,9 +29,13 @@
         appendBubble(text, "user");
         input.value = "";
         sendBtn.disabled = true;
+        const headers = { "Content-Type": "application/json" };
+        const t = readCsrfToken();
+        if (t) headers["X-CSRF-Token"] = t;
         fetch("/api/car/" + encodeURIComponent(carId) + "/chat", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers,
+            credentials: "same-origin",
             body: JSON.stringify({ message: text }),
         })
             .then(function (r) {

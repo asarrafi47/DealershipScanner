@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dev account — Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="page page--admin-login">
+
+    <nav class="topbar">
+        <div class="logo">Dealership Scanner</div>
+        <div class="nav-links">
+            <a href="{{ url_for('dev.admin_login') }}">Dev sign in</a>
+            <a href="/login">User login</a>
+        </div>
+    </nav>
+
+    <section class="auth-section auth-section--admin">
+        <div class="auth-card auth-card--admin">
+            <header class="auth-card__head">
+                <p class="eyebrow">Developer</p>
+                <h1>Create dev account</h1>
+                <p class="auth-card__lede">Operator accounts for <code>/dev</code> are stored in <code>dev_users.db</code>, separate from public app users.</p>
+            </header>
+
+            {% if error %}
+            <div class="error-box error-box--admin">{{ error }}</div>
+            {% endif %}
+
+            {% if registration_allowed %}
+            <form method="POST" action="{{ url_for('dev.admin_register') }}" class="auth-form auth-form--admin">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div class="field-group">
+                    <label for="dev-reg-user">Username</label>
+                    <input id="dev-reg-user" type="text" name="username" required autocomplete="username" minlength="2">
+                </div>
+                <div class="field-group">
+                    <label for="dev-reg-email">Email</label>
+                    <input id="dev-reg-email" type="email" name="email" required autocomplete="email">
+                </div>
+                <div class="field-group">
+                    <label for="dev-reg-pass">Password</label>
+                    <input id="dev-reg-pass" type="password" name="password" required autocomplete="new-password" minlength="8">
+                </div>
+                <button type="submit" class="primary-button full-width">Register</button>
+            </form>
+            {% endif %}
+        </div>
+    </section>
+
+</div>
+
+</body>
+</html>

@@ -8,6 +8,10 @@ import sqlite3
 from datetime import datetime
 from pathlib import Path
 
+from backend.db.inventory_db import ensure_cars_table_columns
+from backend.utils.analytics_ep import apply_ep_from_scanner_dict
+from backend.utils.field_clean import clean_car_row_dict, compute_data_quality_score
+
 # Use same DB path as inventory_db / dealerships_db when running from project root
 DB_PATH = os.environ.get("INVENTORY_DB_PATH", "inventory.db")
 logger = logging.getLogger(__name__)
@@ -61,11 +65,17 @@ def _ensure_schema(conn):
         ("history_highlights", "TEXT"),
         ("msrp", "REAL"),
         ("dealership_registry_id", "INTEGER"),
+        ("is_cpo", "INTEGER"),
+        ("model_full_raw", "TEXT"),
+        ("mpg_city", "INTEGER"),
+        ("mpg_highway", "INTEGER"),
     ]:
         if col not in cols:
             logger.info("Adding %s column to cars table", col)
             cursor.execute(f"ALTER TABLE cars ADD COLUMN {col} {ctype}")
             conn.commit()
+    ensure_cars_table_columns(cursor)
+    conn.commit()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS model_specs (
             make TEXT NOT NULL,
@@ -128,11 +138,17 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
     cursor = conn.cursor()
     now = datetime.utcnow().isoformat() + "Z"
     count = 0
-    for v in vehicles:
+    for raw in vehicles:
+        merged = apply_ep_from_scanner_dict(dict(raw))
+        v = clean_car_row_dict(merged)
         vin = (v.get("vin") or "").strip()
         if not vin:
             continue
-        title = v.get("title") or f"{v.get('year')} {v.get('make')} {v.get('model')} {v.get('trim') or ''}".strip()
+        title = (
+            v.get("title")
+            or f"{v.get('year') or ''} {v.get('make') or ''} {v.get('model') or ''} {v.get('trim') or ''}".strip()
+            or "Unknown vehicle"
+        )
         # Price: ensure number (strip $ and , already done in parser); store as int/float
         try:
             price = v.get("price")
@@ -166,6 +182,18 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
             gallery_json = "[]"
         highlights = v.get("history_highlights")
         highlights_json = json.dumps(highlights) if isinstance(highlights, list) else (highlights if isinstance(highlights, str) else "[]")
+        img = v.get("image_url")
+        if not img or not str(img).strip().startswith("http"):
+            img = "/static/placeholder.svg"
+        preview = {
+            **v,
+            "vin": vin,
+            "title": title,
+            "price": price,
+            "mileage": mileage,
+            "image_url": img,
+        }
+        dq = compute_data_quality_score(preview)
         cursor.execute(
             """
             INSERT INTO cars (
@@ -173,21 +201,46 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 image_url, dealer_name, dealer_url, dealer_id, scraped_at,
                 zip_code, fuel_type, cylinders, transmission, drivetrain,
                 exterior_color, interior_color, stock_number, gallery, carfax_url, history_highlights, msrp,
-                dealership_registry_id
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                dealership_registry_id,
+                source_url, body_style, engine_description, condition, description, data_quality_score,
+                mpg_city, mpg_highway, is_cpo, model_full_raw
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(vin) DO UPDATE SET
                 title=excluded.title, year=excluded.year, make=excluded.make,
-                model=excluded.model, trim=excluded.trim, price=excluded.price,
-                mileage=excluded.mileage, image_url=excluded.image_url,
+                model=excluded.model, trim=COALESCE(excluded.trim, trim), price=excluded.price,
+                mileage=excluded.mileage,
+                image_url=CASE
+                    WHEN excluded.image_url LIKE 'http%' THEN excluded.image_url
+                    WHEN cars.image_url LIKE 'http%' THEN cars.image_url
+                    ELSE excluded.image_url
+                END,
                 dealer_name=excluded.dealer_name, dealer_url=excluded.dealer_url,
                 dealer_id=excluded.dealer_id, scraped_at=excluded.scraped_at,
-                zip_code=excluded.zip_code, fuel_type=excluded.fuel_type,
-                cylinders=excluded.cylinders, transmission=excluded.transmission,
-                drivetrain=excluded.drivetrain, exterior_color=excluded.exterior_color,
-                interior_color=excluded.interior_color, stock_number=excluded.stock_number,
-                gallery=excluded.gallery, carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights,
+                zip_code=excluded.zip_code,
+                fuel_type=COALESCE(excluded.fuel_type, fuel_type),
+                cylinders=COALESCE(excluded.cylinders, cylinders),
+                transmission=COALESCE(excluded.transmission, transmission),
+                drivetrain=COALESCE(excluded.drivetrain, drivetrain),
+                exterior_color=COALESCE(NULLIF(TRIM(excluded.exterior_color), ''), exterior_color),
+                interior_color=COALESCE(NULLIF(TRIM(excluded.interior_color), ''), interior_color),
+                stock_number=COALESCE(NULLIF(excluded.stock_number, ''), stock_number),
+                gallery=COALESCE(
+                    NULLIF(NULLIF(TRIM(excluded.gallery), ''), '[]'),
+                    cars.gallery
+                ),
+                carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights,
                 msrp=excluded.msrp,
-                dealership_registry_id=COALESCE(excluded.dealership_registry_id, dealership_registry_id)
+                dealership_registry_id=COALESCE(excluded.dealership_registry_id, dealership_registry_id),
+                source_url=COALESCE(excluded.source_url, source_url),
+                body_style=COALESCE(excluded.body_style, body_style),
+                engine_description=COALESCE(excluded.engine_description, engine_description),
+                condition=COALESCE(NULLIF(TRIM(excluded.condition), ''), condition),
+                description=COALESCE(excluded.description, description),
+                data_quality_score=excluded.data_quality_score,
+                mpg_city=COALESCE(excluded.mpg_city, mpg_city),
+                mpg_highway=COALESCE(excluded.mpg_highway, mpg_highway),
+                is_cpo=COALESCE(excluded.is_cpo, is_cpo),
+                model_full_raw=COALESCE(excluded.model_full_raw, model_full_raw)
             """,
             (
                 vin,
@@ -195,12 +248,12 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 v.get("year"),
                 v.get("make") or "",
                 v.get("model") or "",
-                v.get("trim") or "",
+                v.get("trim"),
                 price,
                 mileage,
-                v.get("image_url") or "",
+                img,
                 v.get("dealer_name") or "",
-                v.get("dealer_url") or "",
+                v.get("dealer_url"),
                 v.get("dealer_id") or "",
                 now,
                 v.get("zip_code"),
@@ -212,13 +265,42 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 v.get("interior_color"),
                 v.get("stock_number") or "",
                 gallery_json,
-                v.get("carfax_url") or "",
+                v.get("carfax_url"),
                 highlights_json,
                 msrp,
                 v.get("dealership_registry_id"),
+                v.get("source_url"),
+                v.get("body_style"),
+                v.get("engine_description"),
+                v.get("condition"),
+                v.get("description"),
+                dq,
+                v.get("mpg_city"),
+                v.get("mpg_highway"),
+                v.get("is_cpo"),
+                v.get("model_full_raw"),
             ),
         )
         count += 1
+        trace_vin = (os.environ.get("SCANNER_TRACE_VIN") or "").strip().upper()
+        if trace_vin and vin.upper() == trace_vin[:17]:
+            cursor.execute(
+                "SELECT transmission, drivetrain, interior_color, exterior_color, fuel_type, "
+                "body_style, engine_description, cylinders, mpg_city, mpg_highway, trim "
+                "FROM cars WHERE vin = ?",
+                (vin,),
+            )
+            rb = cursor.fetchone()
+            logger.info(
+                "UPSERT VERIFY VIN %s mem: tr=%r drv=%r int=%r ext=%r fuel=%r | DB: %s",
+                vin[:17],
+                v.get("transmission"),
+                v.get("drivetrain"),
+                v.get("interior_color"),
+                v.get("exterior_color"),
+                v.get("fuel_type"),
+                rb,
+            )
     conn.commit()
     conn.close()
     logger.info("Upserted %d vehicles", count)
