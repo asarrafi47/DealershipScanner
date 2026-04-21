@@ -13,7 +13,13 @@
         <div class="nav-links">
             <a href="/dashboard">Dashboard</a>
             <a href="/listings">Listings</a>
-            <a href="/login">Logout</a>
+            {% if logged_in_user %}
+            <a href="/inventory">My inventory</a>
+            {% endif %}
+            {% if nav_store_admin %}
+            <a href="/admin/">Store admin</a>
+            {% endif %}
+            <a href="/logout">Logout</a>
         </div>
     </nav>
 

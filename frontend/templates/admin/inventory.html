@@ -1,0 +1,96 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Inventory{% endblock %}
+{% block content %}
+<section class="db-section">
+    <div class="db-section-header">
+        <p class="db-eyebrow">Operations</p>
+        <h1 class="db-section-title">Inventory</h1>
+        <p class="admin-lead">{{ total }} unit(s) match filters. <a href="{{ url_for('store_admin.admin_inventory_export', q=q, limit=5000) }}">Export CSV</a></p>
+    </div>
+
+    <form class="admin-filters" method="get" action="{{ url_for('store_admin.admin_inventory') }}">
+        <label>Search <input type="search" name="q" value="{{ q }}" placeholder="VIN, stock, make, model"></label>
+        <label>Sort
+            <select name="sort">
+                <option value="scraped_at" {% if sort == 'scraped_at' %}selected{% endif %}>Scraped</option>
+                <option value="price" {% if sort == 'price' %}selected{% endif %}>Price</option>
+                <option value="mileage" {% if sort == 'mileage' %}selected{% endif %}>Mileage</option>
+                <option value="data_quality_score" {% if sort == 'data_quality_score' %}selected{% endif %}>Completeness</option>
+                <option value="vin" {% if sort == 'vin' %}selected{% endif %}>VIN</option>
+            </select>
+        </label>
+        <label>Dir
+            <select name="dir">
+                <option value="desc" {% if direction == 'desc' %}selected{% endif %}>Desc</option>
+                <option value="asc" {% if direction == 'asc' %}selected{% endif %}>Asc</option>
+            </select>
+        </label>
+        <label><input type="checkbox" name="active" value="1" {% if active_only %}checked{% endif %}> Active only</label>
+        <label><input type="checkbox" name="stale" value="1" {% if stale_only %}checked{% endif %}> Stale price only</label>
+        <input type="hidden" name="per_page" value="{{ per_page }}">
+        <button type="submit" class="secondary-button">Apply</button>
+    </form>
+
+    <p class="admin-muted">This page’s KPI counts are for the current result page only.</p>
+    {% if kpis.rule_hits %}
+    <ul class="admin-inline-kpis">
+        {% for code, n in kpis.rule_hits.items() %}
+        <li><strong>{{ n }}</strong> {{ code|replace('_',' ') }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="admin-table-wrap" role="region" aria-label="Inventory table">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>VIN</th>
+                    <th>Stock</th>
+                    <th>Vehicle</th>
+                    <th>Cond.</th>
+                    <th>Miles</th>
+                    <th>Price</th>
+                    <th>Photos</th>
+                    <th>DQ</th>
+                    <th>Days</th>
+                    <th>Issues</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in rows %}
+                <tr>
+                    <td><code>{{ r.vin }}</code></td>
+                    <td>{{ r.stock_number or '—' }}</td>
+                    <td>{{ r.year }} {{ r.make }} {{ r.model }} {{ r.trim or '' }}</td>
+                    <td>{{ r.condition or '—' }}</td>
+                    <td>{% if r.mileage is not none %}{{ "{:,}".format(r.mileage) }}{% else %}—{% endif %}</td>
+                    <td>{% if r.price %}${{ "{:,.0f}".format(r.price) }}{% else %}—{% endif %}</td>
+                    <td>{{ r._photo_n }}</td>
+                    <td>
+                        {% if r.data_quality_score is not none %}
+                            {% if r.data_quality_score <= 1.001 %}{{ (r.data_quality_score * 100)|round(0)|int }}%{% else %}{{ r.data_quality_score|round(1) }}{% endif %}
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>{% if r._days is not none %}{{ r._days|round(1) }}{% else %}—{% endif %}</td>
+                    <td class="admin-issues">{% if r._issue_labels %}{{ r._issue_labels|join('; ') }}{% else %}—{% endif %}</td>
+                    <td><a href="{{ url_for('store_admin.admin_inventory_detail', car_id=r.id) }}">Open</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% set ap = '1' if active_only else '0' %}
+    {% set st = '1' if stale_only else '0' %}
+    <nav class="admin-pagination" aria-label="Pagination">
+        {% if page > 1 %}
+        <a class="secondary-button" href="{{ url_for('store_admin.admin_inventory', page=page-1, q=q, sort=sort, dir=direction, active=ap, stale=st, per_page=per_page) }}">Previous</a>
+        {% endif %}
+        <span class="admin-muted">Page {{ page }} / {{ total_pages }}</span>
+        {% if page < total_pages %}
+        <a class="secondary-button" href="{{ url_for('store_admin.admin_inventory', page=page+1, q=q, sort=sort, dir=direction, active=ap, stale=st, per_page=per_page) }}">Next</a>
+        {% endif %}
+    </nav>
+</section>
+{% endblock %}

@@ -333,9 +333,19 @@ def fetch_enrichment_candidate_ids(
     *,
     vision_only: bool,
     limit: int | None,
+    only_ids: list[int] | None = None,
 ) -> list[int]:
     cur = conn.cursor()
     lim = "LIMIT ?" if limit is not None else ""
+    id_filter = ""
+    id_params: list[int] = []
+    if only_ids:
+        uniq = sorted({int(x) for x in only_ids})
+        if not uniq:
+            return []
+        id_filter = f" AND id IN ({','.join('?' * len(uniq))}) "
+        id_params = uniq
+
     if vision_only:
         sql = f"""
             SELECT id FROM cars
@@ -349,10 +359,10 @@ def fetch_enrichment_candidate_ids(
                     (image_url IS NOT NULL AND TRIM(image_url) LIKE 'http%')
                     OR (gallery IS NOT NULL AND gallery LIKE '%http%')
                 )
+                {id_filter}
             ORDER BY id
             {lim}
         """
-        params: tuple[Any, ...] = (limit,) if limit is not None else ()
     else:
         sql = f"""
             SELECT id FROM cars
@@ -369,11 +379,14 @@ def fetch_enrichment_candidate_ids(
                         OR (gallery IS NOT NULL AND gallery LIKE '%http%')
                     )
                 )
+                {id_filter}
             ORDER BY id
             {lim}
         """
-        params = (limit,) if limit is not None else ()
-    cur.execute(sql, params)
+    params_list: list[Any] = list(id_params)
+    if limit is not None:
+        params_list.append(limit)
+    cur.execute(sql, tuple(params_list))
     return [int(r[0]) for r in cur.fetchall()]
 
 
@@ -679,6 +692,13 @@ class InventoryEnricher:
                     vals = list(updates.values()) + [vehicle_id]
                     conn.execute(f"UPDATE cars SET {cols} WHERE id = ?", vals)
                 conn.commit()
+                try:
+                    from backend.db import incomplete_listings_db as ild
+
+                    for vehicle_id, _ in batch:
+                        ild.sync_incomplete_listing_for_car_id(int(vehicle_id))
+                except Exception:
+                    logger.exception("incomplete_listings sync after enrichment batch failed")
                 return
             except sqlite3.OperationalError as e:
                 if "locked" in str(e).lower() and attempt < _DB_RETRY_ATTEMPTS:
@@ -837,11 +857,17 @@ class InventoryEnricher:
         limit: int | None = None,
         vision_only: bool = False,
         max_workers: int = DEFAULT_MAX_WORKERS,
+        only_ids: list[int] | None = None,
     ) -> dict[str, Any]:
         conn = get_conn()
         try:
             ensure_enrichment_columns(conn)
-            ids = fetch_enrichment_candidate_ids(conn, vision_only=vision_only, limit=limit)
+            ids = fetch_enrichment_candidate_ids(
+                conn,
+                vision_only=vision_only,
+                limit=limit,
+                only_ids=only_ids,
+            )
             url_map = _fetch_vision_urls_for_ids(conn, ids)
         finally:
             conn.close()

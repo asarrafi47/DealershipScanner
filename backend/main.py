@@ -7,19 +7,22 @@ load_project_dotenv()
 import os
 import sqlite3
 
-from flask import Flask, jsonify, redirect, render_template, request, send_from_directory
+from flask import Flask, abort, jsonify, redirect, render_template, request, send_from_directory, session, url_for
 
 from backend.ai_agent import run_car_page_chat
+from backend.dealer_admin import store_admin_bp
+from backend.dealer_portal import bp as dealer_portal_bp
 from backend.dev_console import register_dev_console
 from backend.dev_routes import dev_bp
 from backend.db.admin_users_db import init_admin_db
+from backend.db.dealer_portal_db import init_dealer_portal_db
 from backend.db.inventory_db import (
     get_car_by_id,
     get_filter_options,
     init_inventory_db,
     search_cars,
 )
-from backend.db.users_db import check_user, init_users_db, save_user
+from backend.db.users_db import check_user, get_user_by_login, init_users_db, save_user
 from backend.hybrid_inventory_search import (
     flask_request_to_search_cars_kwargs,
     hybrid_search_with_kwargs,
@@ -71,15 +74,25 @@ app.config["SESSION_COOKIE_SECURE"] = session_cookie_secure_default()
 init_users_db()
 init_admin_db()
 init_inventory_db()
+init_dealer_portal_db()
 app.register_blueprint(dev_bp, url_prefix="/dev")
+app.register_blueprint(store_admin_bp)
+app.register_blueprint(dealer_portal_bp)
 register_dev_console(app)
 
 
 @app.context_processor
 def inject_csrf_and_flags():
+    role = (session.get("user_role") or "").strip().lower()
+    has_scope = bool(
+        (session.get("user_dealer_id") or "").strip() or (session.get("user_dealership_registry_id") or "").strip()
+    )
+    nav_store_admin = bool(session.get("user_id")) and (role == "admin" or has_scope)
     return {
         "csrf_token": ensure_csrf_token(),
         "is_production": is_production_env(),
+        "logged_in_user": session.get("username"),
+        "nav_store_admin": nav_store_admin,
     }
 
 
@@ -89,6 +102,10 @@ def _csrf_mutating_requests():
         return
     ep = request.endpoint or ""
     if ep in ("login_page", "register_page"):
+        validate_csrf_form()
+    elif ep and str(ep).startswith("dealer_portal."):
+        validate_csrf_form()
+    elif ep and str(ep).startswith("store_admin."):
         validate_csrf_form()
     elif ep in ("api_search_smart", "api_car_chat"):
         validate_csrf_header()
@@ -144,6 +161,14 @@ def login_page():
         login_input = request.form["login"]
         password = request.form["password"]
         if check_user(login_input, password):
+            u = get_user_by_login(login_input)
+            if u:
+                session["user_id"] = u["id"]
+                session["username"] = u["username"]
+                session["user_role"] = (u.get("role") or "dealer_staff").strip().lower()
+                session["user_dealer_id"] = (u.get("dealer_id") or "").strip()
+                rid = u.get("dealership_registry_id")
+                session["user_dealership_registry_id"] = str(int(rid)) if rid is not None else ""
             return redirect("/dashboard")
         return render_template("login.html", error="Invalid username/email or password.")
     return render_template("login.html")
@@ -164,14 +189,28 @@ def register_page():
         if err:
             return render_template("register.html", error=err)
         try:
-            save_user(username.strip(), email.strip(), password)
+            uid = save_user(username.strip(), email.strip(), password)
         except sqlite3.IntegrityError:
             return render_template(
                 "register.html",
                 error="That username or email is already registered.",
             )
+        session["user_id"] = uid
+        session["username"] = username.strip()
+        u = get_user_by_login(username.strip())
+        if u:
+            session["user_role"] = (u.get("role") or "dealer_staff").strip().lower()
+            session["user_dealer_id"] = (u.get("dealer_id") or "").strip()
+            rid = u.get("dealership_registry_id")
+            session["user_dealership_registry_id"] = str(int(rid)) if rid is not None else ""
         return redirect("/dashboard")
     return render_template("register.html")
+
+
+@app.route("/logout", methods=["GET", "POST"])
+def logout_page():
+    session.clear()
+    return redirect(url_for("login_page"))
 
 
 @app.route("/dashboard")
@@ -227,6 +266,8 @@ def search():
         "country": g("country"),
         "max_price": max_price,
         "max_mileage": max_mileage,
+        "engine_l_min": scalar("engine_l_min") or scalar("engine_displacement_l_min"),
+        "engine_l_max": scalar("engine_l_max") or scalar("engine_displacement_l_max"),
         "zip_code": zip_code,
         "radius": radius,
         "dealership_registry_id": reg_id_raw,
@@ -243,9 +284,9 @@ def search():
 
 @app.route("/car/<int:car_id>")
 def car_detail(car_id):
-    car_raw = get_car_by_id(car_id)
+    car_raw = get_car_by_id(car_id, include_inactive=False)
     if not car_raw:
-        return redirect("/dashboard")
+        abort(404)
     ctx = prepare_car_detail_context(car_raw)
     car = serialize_car_for_api(
         car_raw,
@@ -257,6 +298,13 @@ def car_detail(car_id):
         car=car,
         gallery_images=ctx.get("gallery_images") or [],
         verified_specs=ctx.get("verified_specs") or {},
+        listing_packages_sections=ctx.get("listing_packages_sections") or [],
+        listing_standalone_features=ctx.get("listing_standalone_features") or [],
+        listing_observed_features=ctx.get("listing_observed_features") or [],
+        interior_from_listing_description=bool(ctx.get("interior_from_listing_description")),
+        interior_from_llava_vision=bool(ctx.get("interior_from_llava_vision")),
+        packages_panel_has_content=bool(ctx.get("packages_panel_has_content")),
+        llava_interior_section=ctx.get("llava_interior_section"),
         mopar_vin_lookup_url=mopar_vin_lookup_url(make=car.get("make"), vin=car.get("vin")),
     )
 
@@ -287,6 +335,11 @@ def _highlight_params_from_filters(filters: dict) -> list[str]:
             keys.append(k)
         elif k == "interior_color":
             keys.append("interior_color")
+        elif k in ("engine_displacement_l_min", "engine_displacement_l_max", "engine_l_min", "engine_l_max"):
+            if "engine_l_min" not in keys:
+                keys.append("engine_l_min")
+            if "engine_l_max" not in keys:
+                keys.append("engine_l_max")
     return keys
 
 
@@ -322,7 +375,7 @@ def api_car_chat(car_id: int):
     if request.content_length is not None and request.content_length > _CHAT_MAX_BODY:
         return jsonify({"ok": False, "error": "payload_too_large"}), 413
 
-    car_raw = get_car_by_id(car_id)
+    car_raw = get_car_by_id(car_id, include_inactive=False)
     if not car_raw:
         return jsonify({"ok": False, "error": "not_found"}), 404
     body = request.get_json() or {}

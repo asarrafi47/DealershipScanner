@@ -11,6 +11,7 @@ from pathlib import Path
 from backend.db.inventory_db import ensure_cars_table_columns
 from backend.utils.analytics_ep import apply_ep_from_scanner_dict
 from backend.utils.field_clean import clean_car_row_dict, compute_data_quality_score
+from backend.utils.interior_color_buckets import interior_color_buckets_json
 
 # Use same DB path as inventory_db / dealerships_db when running from project root
 DB_PATH = os.environ.get("INVENTORY_DB_PATH", "inventory.db")
@@ -194,17 +195,33 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
             "image_url": img,
         }
         dq = compute_data_quality_score(preview)
+        interior_buckets_json = interior_color_buckets_json(v.get("interior_color"), v.get("make"))
+        spec_src = v.get("spec_source_json")
+        if isinstance(spec_src, dict):
+            spec_src = json.dumps(spec_src, ensure_ascii=False)
+        elif spec_src is not None and not isinstance(spec_src, str):
+            spec_src = str(spec_src)
+        pkg_raw = v.get("packages")
+        if isinstance(pkg_raw, dict):
+            packages_json = json.dumps(pkg_raw, ensure_ascii=False)
+        elif isinstance(pkg_raw, str) and pkg_raw.strip() not in ("", "{}", "[]", "null"):
+            packages_json = pkg_raw.strip()
+        else:
+            packages_json = None
         cursor.execute(
             """
             INSERT INTO cars (
                 vin, title, year, make, model, trim, price, mileage,
                 image_url, dealer_name, dealer_url, dealer_id, scraped_at,
                 zip_code, fuel_type, cylinders, transmission, drivetrain,
-                exterior_color, interior_color, stock_number, gallery, carfax_url, history_highlights, msrp,
+                exterior_color, interior_color, interior_color_buckets, stock_number, gallery, carfax_url, history_highlights, msrp,
                 dealership_registry_id,
                 source_url, body_style, engine_description, condition, description, data_quality_score,
-                mpg_city, mpg_highway, is_cpo, model_full_raw
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                mpg_city, mpg_highway, is_cpo, model_full_raw,
+                packages,
+                listing_active, listing_removed_at, spec_source_json,
+                first_seen_at, last_price_change_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(vin) DO UPDATE SET
                 title=excluded.title, year=excluded.year, make=excluded.make,
                 model=excluded.model, trim=COALESCE(excluded.trim, trim), price=excluded.price,
@@ -223,6 +240,10 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 drivetrain=COALESCE(excluded.drivetrain, drivetrain),
                 exterior_color=COALESCE(NULLIF(TRIM(excluded.exterior_color), ''), exterior_color),
                 interior_color=COALESCE(NULLIF(TRIM(excluded.interior_color), ''), interior_color),
+                interior_color_buckets=CASE
+                    WHEN NULLIF(TRIM(excluded.interior_color), '') IS NOT NULL THEN excluded.interior_color_buckets
+                    ELSE cars.interior_color_buckets
+                END,
                 stock_number=COALESCE(NULLIF(excluded.stock_number, ''), stock_number),
                 gallery=COALESCE(
                     NULLIF(NULLIF(TRIM(excluded.gallery), ''), '[]'),
@@ -240,7 +261,22 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 mpg_city=COALESCE(excluded.mpg_city, mpg_city),
                 mpg_highway=COALESCE(excluded.mpg_highway, mpg_highway),
                 is_cpo=COALESCE(excluded.is_cpo, is_cpo),
-                model_full_raw=COALESCE(excluded.model_full_raw, model_full_raw)
+                model_full_raw=COALESCE(excluded.model_full_raw, model_full_raw),
+                packages=COALESCE(NULLIF(TRIM(excluded.packages), ''), cars.packages),
+                listing_active=1,
+                listing_removed_at=NULL,
+                spec_source_json=CASE
+                    WHEN excluded.spec_source_json IS NOT NULL AND length(trim(excluded.spec_source_json)) > 0
+                    THEN excluded.spec_source_json
+                    ELSE cars.spec_source_json
+                END,
+                first_seen_at=COALESCE(cars.first_seen_at, excluded.scraped_at),
+                last_price_change_at=CASE
+                    WHEN IFNULL(cars.price, -1e12) != IFNULL(excluded.price, -1e12) THEN excluded.scraped_at
+                    ELSE COALESCE(cars.last_price_change_at, cars.first_seen_at, excluded.scraped_at)
+                END,
+                internal_notes=cars.internal_notes,
+                marked_for_review=cars.marked_for_review
             """,
             (
                 vin,
@@ -263,6 +299,7 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 v.get("drivetrain"),
                 v.get("exterior_color"),
                 v.get("interior_color"),
+                interior_buckets_json,
                 v.get("stock_number") or "",
                 gallery_json,
                 v.get("carfax_url"),
@@ -279,6 +316,12 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 v.get("mpg_highway"),
                 v.get("is_cpo"),
                 v.get("model_full_raw"),
+                packages_json,
+                1,
+                None,
+                spec_src,
+                now,
+                now,
             ),
         )
         count += 1
@@ -304,4 +347,37 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
     conn.commit()
     conn.close()
     logger.info("Upserted %d vehicles", count)
+    if count > 0:
+        try:
+            from backend.db import incomplete_listings_db as ild
+            from backend.db.inventory_db import get_car_by_id, refresh_car_data_quality_score, update_car_row_partial
+            from backend.nhtsa_vpic import looks_like_decode_vin
+            from backend.spec_structured_backfill import apply_structured_spec_backfill_for_car
+            from backend.utils.field_clean import is_effectively_empty
+            from backend.utils.inventory_repair import collect_row_storage_repairs
+
+            conn2 = get_conn()
+            cur2 = conn2.cursor()
+            for vin_key in by_vin:
+                cur2.execute("SELECT id FROM cars WHERE vin = ?", (vin_key,))
+                row_id = cur2.fetchone()
+                if not row_id:
+                    continue
+                cid = int(row_id[0])
+                ild.sync_incomplete_listing_for_car_id(cid)
+                car = get_car_by_id(cid, include_inactive=True)
+                if not car or not is_effectively_empty(car.get("transmission")):
+                    continue
+                if not looks_like_decode_vin(vin_key):
+                    continue
+                tier1 = collect_row_storage_repairs(car)
+                if tier1.get("transmission"):
+                    update_car_row_partial(cid, tier1)
+                    refresh_car_data_quality_score(cid)
+                    ild.sync_incomplete_listing_for_car_id(cid)
+                else:
+                    apply_structured_spec_backfill_for_car(cid, use_vpic_cache=True)
+            conn2.close()
+        except Exception:
+            logger.exception("incomplete_listings / transmission backfill after upsert failed")
     return count

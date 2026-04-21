@@ -285,6 +285,20 @@ def decode_trim_logic(
         elif suv:
             out["body_style_hint"] = "SUV"
 
+    # Title-driven transmission (Ford/GM marketing copy; vPIC often omits TransmissionStyle for trucks).
+    if out.get("transmission_hint") is None and re.search(
+        r"\bTEN[\s-]*SPEED\s+AUTOMATIC\b", blob, re.I
+    ):
+        out["transmission_hint"] = "10-Speed Automatic"
+        if out.get("gears") is None:
+            out["gears"] = 10
+    if out.get("transmission_hint") is None and out.get("gears") and re.search(
+        r"\b(AUTOMATIC|AUTO\.?\s*TRANS)\b", blob, re.I
+    ):
+        out["transmission_hint"] = f"{out['gears']}-Speed Automatic"
+    if out.get("transmission_hint") is None and re.search(r"\bCVT\b", blob, re.I):
+        out["transmission_hint"] = "CVT"
+
     return out
 
 
@@ -347,16 +361,16 @@ def format_transmission_display(trany: str | None) -> str | None:
     if not trany:
         return None
     s = trany.strip()
-    m = re.match(r"Auto\s*\(\s*S(\d+)\s*\)", s, re.I)
+    m = re.match(r"Auto(?:matic)?\s*\(\s*S(\d+)\s*\)", s, re.I)
     if m:
         return f"{int(m.group(1))}-Speed Automatic"
-    m = re.match(r"Auto\s*\(\s*AM-S(\d+)\s*\)", s, re.I)
+    m = re.match(r"Auto(?:matic)?\s*\(\s*AM-S(\d+)\s*\)", s, re.I)
     if m:
         return f"{int(m.group(1))}-Speed DCT"
-    m = re.match(r"Auto\s*\(\s*A(\d+)\s*\)", s, re.I)
+    m = re.match(r"Auto(?:matic)?\s*\(\s*A(\d+)\s*\)", s, re.I)
     if m:
         return f"{int(m.group(1))}-Speed Automatic"
-    m = re.match(r"Auto\s*\(\s*CVT\s*\)", s, re.I)
+    m = re.match(r"Auto(?:matic)?\s*\(\s*CVT\s*\)", s, re.I)
     if m:
         return "CVT"
     if re.search(r"CVT", s, re.I) and "Auto" not in s:
@@ -440,9 +454,17 @@ def build_master_engine_string(
     cyl = epa.get("cylinders")
     disp = epa_displ
     if cyl is not None and int(cyl) > 0 and disp is not None and float(disp) > 0:
-        return f"{float(disp):.1f}L {int(cyl)}-cylinder (EPA mode aggregate)"
+        n = int(cyl)
+        layout = {3: "I3", 4: "I4", 5: "I5", 6: "V6", 8: "V8", 10: "V10", 12: "V12"}.get(
+            n, f"{n}-cyl"
+        )
+        return f"{float(disp):.1f}L {layout} (EPA mode aggregate)"
     if cyl is not None and int(cyl) > 0:
-        return f"{int(cyl)}-cylinder (EPA mode aggregate)"
+        n = int(cyl)
+        layout = {3: "I3", 4: "I4", 5: "I5", 6: "V6", 8: "V8", 10: "V10", 12: "V12"}.get(
+            n, f"{n}-cyl"
+        )
+        return f"{layout} (EPA mode aggregate)"
     return None
 
 
@@ -478,6 +500,21 @@ def _drivetrain_ui_label(drive_display: str, make: str | None, blob: str) -> str
     return "AWD"
 
 
+def _ford_epa_pickup_like_pattern(make: str | None, model: str | None) -> str | None:
+    """
+    Dealer DMS often lists ``F-150`` / ``F150 XLT`` while EPA uses ``F150 Pickup 2WD`` / ``F150 Pickup 4WD``.
+    Return a LIKE pattern (``F150 Pickup%``) or None.
+    """
+    mk = (make or "").strip().upper()
+    if mk != "FORD":
+        return None
+    alnum = re.sub(r"[^A-Z0-9]", "", (model or "").upper())
+    m = re.match(r"^F(150|250|350|450|550|650)", alnum)
+    if not m:
+        return None
+    return f"F{m.group(1)} Pickup%"
+
+
 def lookup_epa_aggregate(year: int | None, make: str | None, model: str | None) -> dict[str, Any]:
     """
     Mode row from epa_master: cylinders, drive, transmission, MPG, displacement, atv_type.
@@ -501,8 +538,7 @@ def lookup_epa_aggregate(year: int | None, make: str | None, model: str | None) 
         conn = _conn()
         _ensure_epa_columns(conn)
         cur = conn.cursor()
-        cur.execute(
-            """
+        sql_mode = """
             SELECT cylinders, drive, trany, COUNT(*) AS n,
                    AVG(displacement) AS disp,
                    AVG(city08) AS c08,
@@ -512,14 +548,24 @@ def lookup_epa_aggregate(year: int | None, make: str | None, model: str | None) 
                    GROUP_CONCAT(DISTINCT atv_type) AS atv_cat,
                    GROUP_CONCAT(DISTINCT fuel_type) AS fuel_cat
             FROM epa_master
-            WHERE year = ? AND lower(make) = lower(?) AND lower(model) = lower(?)
+            WHERE year = ? AND lower(make) = lower(?) AND {model_clause}
             GROUP BY cylinders, drive, trany
             ORDER BY n DESC
             LIMIT 1
-            """,
+            """
+        cur.execute(
+            sql_mode.format(model_clause="lower(model) = lower(?)"),
             (year, make.strip(), model.strip()),
         )
         row = cur.fetchone()
+        if not row:
+            like_pat = _ford_epa_pickup_like_pattern(make, model)
+            if like_pat:
+                cur.execute(
+                    sql_mode.format(model_clause="model LIKE ?"),
+                    (year, make.strip(), like_pat),
+                )
+                row = cur.fetchone()
         conn.close()
         if not row:
             return out
@@ -559,6 +605,21 @@ def lookup_epa_aggregate(year: int | None, make: str | None, model: str | None) 
                 (year, make.strip(), model.strip()),
             )
             row = cur.fetchone()
+            if not row:
+                like_pat = _ford_epa_pickup_like_pattern(make, model)
+                if like_pat:
+                    cur.execute(
+                        """
+                        SELECT cylinders, drive, trany, COUNT(*) AS n
+                        FROM epa_master
+                        WHERE year = ? AND lower(make) = lower(?) AND model LIKE ?
+                        GROUP BY cylinders, drive, trany
+                        ORDER BY n DESC
+                        LIMIT 1
+                        """,
+                        (year, make.strip(), like_pat),
+                    )
+                    row = cur.fetchone()
             conn.close()
             if row:
                 cyl, drive, trany, _ = row
@@ -709,7 +770,7 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
         or regex.get("transmission_hint")
     ):
         sources.append("Trim decoder")
-    if epa.get("cylinders") is not None or epa.get("drivetrain") or epa.get("gears"):
+    if epa.get("cylinders") is not None or epa.get("drivetrain") or epa.get("gears") or epa.get("transmission"):
         sources.append("EPA dataset")
 
     return {
@@ -749,4 +810,143 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
     if not urls and car.get("image_url"):
         urls = [car["image_url"]]
     verified = merge_verified_specs(car)
-    return {"gallery_images": urls, "verified_specs": verified}
+
+    listing_packages_sections: list[dict[str, Any]] = []
+    listing_standalone_features: list[str] = []
+    listing_observed_features: list[str] = []
+    interior_from_listing_description = False
+    interior_from_llava_vision = False
+    llava_interior_section: dict[str, Any] | None = None
+
+    def _normalized_pkg_title(entry: dict[str, Any]) -> str:
+        for key in ("name", "canonical_name", "name_verbatim"):
+            v = entry.get(key)
+            if v is not None and str(v).strip():
+                return str(v).strip()[:200]
+        return ""
+
+    pkg_raw = car.get("packages")
+    pj: dict[str, Any] | None = None
+    if pkg_raw and str(pkg_raw).strip() not in ("{}", "[]", "null"):
+        try:
+            parsed = json.loads(pkg_raw) if isinstance(pkg_raw, str) else pkg_raw
+        except (TypeError, ValueError, json.JSONDecodeError):
+            parsed = None
+        if isinstance(parsed, dict):
+            pj = parsed
+
+    if pj is not None:
+        liv = pj.get("llava_interior_cabin")
+        if isinstance(liv, dict) and liv:
+            ib = liv.get("interior_buckets") or []
+            bucket_list = [str(x).strip() for x in ib if str(x).strip()][:24]
+            llava_interior_section = {
+                "guess": str(liv.get("interior_guess_text") or "").strip()[:240],
+                "buckets": bucket_list,
+                "evidence": str(liv.get("evidence") or "").strip()[:400],
+                "confidence": liv.get("confidence"),
+            }
+        seen_titles: set[str] = set()
+        for entry in pj.get("packages_normalized") or []:
+            if not isinstance(entry, dict):
+                continue
+            title = _normalized_pkg_title(entry)
+            if not title:
+                continue
+            low = title.lower()
+            if low in seen_titles:
+                continue
+            seen_titles.add(low)
+            feats = entry.get("features") or []
+            feat_list = [str(x).strip() for x in feats if isinstance(x, str) and str(x).strip()]
+            listing_packages_sections.append(
+                {
+                    "name": title,
+                    "features": feat_list[:30],
+                    "source": "listing",
+                    "from_listing_description": True,
+                    "from_vision": False,
+                }
+            )
+
+        for raw in pj.get("possible_packages") or []:
+            if not isinstance(raw, str):
+                continue
+            label = raw.strip()[:200]
+            if not label:
+                continue
+            low = label.lower()
+            if low in seen_titles:
+                continue
+            seen_titles.add(low)
+            listing_packages_sections.append(
+                {
+                    "name": label,
+                    "features": [],
+                    "source": "vision_possible",
+                    "from_listing_description": False,
+                    "from_vision": True,
+                }
+            )
+
+        seen_sf: set[str] = set()
+        sf = pj.get("standalone_features_from_description")
+        if isinstance(sf, list):
+            for x in sf:
+                s = str(x).strip()[:200]
+                if not s:
+                    continue
+                k = s.lower()
+                if k in seen_sf:
+                    continue
+                seen_sf.add(k)
+                listing_standalone_features.append(s)
+        listing_standalone_features = listing_standalone_features[:40]
+
+        seen_obs: set[str] = set()
+        obs = pj.get("observed_features")
+        if isinstance(obs, list):
+            for x in obs:
+                s = str(x).strip()[:200]
+                if not s:
+                    continue
+                k = s.lower()
+                if k in seen_obs:
+                    continue
+                seen_obs.add(k)
+                listing_observed_features.append(s)
+        listing_observed_features = listing_observed_features[:40]
+    spec_raw = car.get("spec_source_json")
+    if spec_raw and str(spec_raw).strip():
+        try:
+            sj = json.loads(spec_raw) if isinstance(spec_raw, str) else spec_raw
+        except (TypeError, ValueError, json.JSONDecodeError):
+            sj = None
+        if isinstance(sj, dict):
+            ic = sj.get("interior_color")
+            if isinstance(ic, dict) and str(ic.get("source") or "").strip().lower() == "listing_description":
+                interior_from_listing_description = True
+            if isinstance(ic, dict) and str(ic.get("source") or "").strip().lower() == "llava_vision":
+                interior_from_llava_vision = True
+            icv = sj.get("interior_cabin_vision")
+            if isinstance(icv, dict) and str(icv.get("source") or "").strip().lower() == "llava_vision":
+                interior_from_llava_vision = True
+
+    packages_panel_has_content = bool(
+        listing_packages_sections
+        or listing_standalone_features
+        or listing_observed_features
+        or llava_interior_section
+    )
+
+    return {
+        "gallery_images": urls,
+        "verified_specs": verified,
+        "listing_packages_sections": listing_packages_sections,
+        "listing_standalone_features": listing_standalone_features,
+        "listing_observed_features": listing_observed_features,
+        "interior_from_listing_description": interior_from_listing_description,
+        "interior_from_llava_vision": interior_from_llava_vision,
+        "packages_panel_has_content": packages_panel_has_content,
+        "llava_interior_section": llava_interior_section,
+    }

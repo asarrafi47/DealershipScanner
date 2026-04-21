@@ -145,9 +145,23 @@
                     <button type="button" class="secondary-button" id="dev-refresh-incomplete">Refresh</button>
                 </div>
             </div>
-            <p class="dev-hint">Cars missing titles, images, make/model/year, or with placeholder values (N/A, --, etc). These are excluded from public listings.</p>
+            <p class="dev-hint">Indexed in <code>incomplete_listings.db</code> when the car detail spec sheet (year through VIN) has a gap. Public <a href="/listings">listings</a> hide rows that fail the shorter public checklist (see <code>listing_completeness.py</code>). MPG is not part of this index.</p>
 
             {% if incomplete_cars %}
+            <div class="dev-incomplete-issues" id="dev-incomplete-issues" aria-label="Most common incomplete listing gaps">
+                {% if incomplete_issues_summary %}
+                <h3 class="dev-incomplete-issues-title">What to fix first</h3>
+                <p class="dev-incomplete-issues-lead">Counts are across all <strong>{{ incomplete_cars|length }}</strong> incomplete row(s) below (a car can have multiple gaps).</p>
+                <ol class="dev-incomplete-issues-list">
+                    {% for row in incomplete_issues_summary %}
+                    <li>
+                        <span class="dev-incomplete-issues-label">{{ row.label }}</span>
+                        <span class="dev-incomplete-issues-meta">{{ row.count }} car{% if row.count != 1 %}s{% endif %} ({{ row.pct }}%)</span>
+                    </li>
+                    {% endfor %}
+                </ol>
+                {% endif %}
+            </div>
             <div class="dev-incomplete-grid" id="dev-incomplete-grid">
                 {% for c in incomplete_cars %}
                 <div class="result-card dev-incomplete-card" data-car-id="{{ c.id }}">
@@ -175,6 +189,18 @@
                         </p>
                         <p class="result-dealer">{{ c.dealer_name or 'Unknown dealer' }}</p>
                         <div class="dev-incomplete-missing">
+                            {% set miss_labels = {
+                                'title': 'Title', 'images': 'Images / photos', 'price': 'Price', 'year': 'Year',
+                                'make': 'Make', 'model': 'Model', 'trim': 'Trim', 'engine': 'Engine',
+                                'transmission': 'Transmission', 'drivetrain': 'Drivetrain', 'body_style': 'Body style',
+                                'fuel_type': 'Fuel type', 'condition': 'Condition', 'cylinders': 'Cylinders',
+                                'exterior_color': 'Exterior color', 'interior_color': 'Interior color', 'vin': 'VIN'
+                            } %}
+                            {% if c.get('incomplete_missing_fields') %}
+                                {% for code in c.incomplete_missing_fields %}
+                                <span class="dev-missing-tag">{{ miss_labels.get(code, code) }}</span>
+                                {% endfor %}
+                            {% else %}
                             {% set bad = ['', 'n/a', 'na', 'null', 'none', 'unknown', 'undefined', '-', '--', '---'] %}
                             {% set placeholders = ['n/a', 'na', 'null', 'none', 'unknown', 'undefined', '-', '--', '---'] %}
                             {% if not c.title or c.title|lower in bad %}
@@ -206,6 +232,7 @@
                             {% endif %}
                             {% if c.interior_color and c.interior_color|lower in placeholders %}
                                 <span class="dev-missing-tag">Int. color: {{ c.interior_color }}</span>
+                            {% endif %}
                             {% endif %}
                         </div>
                         <div class="dev-incomplete-actions">

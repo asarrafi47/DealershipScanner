@@ -618,7 +618,32 @@ document.addEventListener("DOMContentLoaded", () => {
         return "$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
     }
 
+    const INCOMPLETE_FIELD_LABELS = {
+        title: "Title",
+        images: "Images / photos",
+        price: "Price",
+        year: "Year",
+        make: "Make",
+        model: "Model",
+        trim: "Trim",
+        engine: "Engine",
+        transmission: "Transmission",
+        drivetrain: "Drivetrain",
+        body_style: "Body style",
+        fuel_type: "Fuel type",
+        condition: "Condition",
+        cylinders: "Cylinders",
+        exterior_color: "Exterior color",
+        interior_color: "Interior color",
+        vin: "VIN",
+    };
+
     function missingTags(c) {
+        if (Array.isArray(c.incomplete_missing_fields) && c.incomplete_missing_fields.length) {
+            return c.incomplete_missing_fields.map(
+                (code) => INCOMPLETE_FIELD_LABELS[code] || code
+            );
+        }
         const bad = new Set(["", "n/a", "na", "null", "none", "unknown", "undefined", "-", "--", "---"]);
         const isMissing = (v) => v == null || bad.has(String(v).trim().toLowerCase());
         const isPlaceholder = (v) => v != null && String(v).trim() !== "" && bad.has(String(v).trim().toLowerCase());
@@ -639,9 +664,64 @@ document.addEventListener("DOMContentLoaded", () => {
         return tags;
     }
 
-    function renderIncompleteGrid(cars) {
+    function summarizeIncompleteFromCars(cars) {
+        const counts = new Map();
+        for (const c of cars) {
+            const f = c.incomplete_missing_fields;
+            if (!Array.isArray(f)) continue;
+            for (const code of f) {
+                if (!code || typeof code !== "string") continue;
+                const k = code.trim();
+                if (!k) continue;
+                counts.set(k, (counts.get(k) || 0) + 1);
+            }
+        }
+        const n = cars.length;
+        return Array.from(counts.entries())
+            .sort((a, b) => b[1] - a[1])
+            .map(([code, count]) => ({
+                code,
+                label: INCOMPLETE_FIELD_LABELS[code] || code,
+                count,
+                pct: n ? Math.round((1000 * count) / n) / 10 : 0,
+            }));
+    }
+
+    function renderIssuesSummary(cars, issuesSummary) {
+        const el = document.getElementById("dev-incomplete-issues");
+        if (!el) return;
+        if (!cars.length) {
+            el.innerHTML = "";
+            el.style.display = "none";
+            return;
+        }
+        el.style.display = "";
+        const rows =
+            Array.isArray(issuesSummary) && issuesSummary.length
+                ? issuesSummary
+                : summarizeIncompleteFromCars(cars);
+        if (!rows.length) {
+            el.innerHTML = "";
+            return;
+        }
+        const n = cars.length;
+        const items = rows
+            .map((r) => {
+                const cnt = Number(r.count) || 0;
+                const pct = r.pct != null ? String(r.pct) : "";
+                const plural = cnt === 1 ? "" : "s";
+                return `<li><span class="dev-incomplete-issues-label">${escHtml(r.label || r.code)}</span> <span class="dev-incomplete-issues-meta">${fmtNumber(cnt)} car${plural} (${escHtml(pct)}%)</span></li>`;
+            })
+            .join("");
+        el.innerHTML = `<h3 class="dev-incomplete-issues-title">What to fix first</h3><p class="dev-incomplete-issues-lead">Counts are across all <strong>${fmtNumber(
+            n
+        )}</strong> incomplete row(s) below (a car can have multiple gaps).</p><ol class="dev-incomplete-issues-list">${items}</ol>`;
+    }
+
+    function renderIncompleteGrid(cars, issuesSummary) {
         if (!incompleteGrid) return;
         if (incompleteCount) incompleteCount.textContent = cars.length;
+        renderIssuesSummary(cars, issuesSummary);
 
         if (!cars.length) {
             incompleteGrid.innerHTML = '<div class="dev-incomplete-empty"><p>All cars have complete data.</p></div>';
@@ -704,7 +784,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function refreshIncompleteCars() {
         const res = await devFetch(devApi("incomplete-cars"));
         const data = await res.json();
-        if (data.ok) renderIncompleteGrid(data.cars || []);
+        if (data.ok) renderIncompleteGrid(data.cars || [], data.issues_summary);
     }
 
     if (refreshIncomplete) {

@@ -1,0 +1,121 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Unit {{ car.id }}{% endblock %}
+{% block content %}
+<section class="db-section">
+    <p class="admin-back"><a href="{{ url_for('store_admin.admin_inventory') }}">← Back to inventory</a></p>
+    <div class="db-section-header">
+        <p class="db-eyebrow">VIN {{ car.vin }}</p>
+        <h1 class="db-section-title">{{ car.title or (car.year ~ ' ' ~ car.make ~ ' ' ~ car.model) }}</h1>
+        <p class="admin-lead">
+            <a href="{{ url_for('car_detail', car_id=car.id) }}" target="_blank" rel="noopener noreferrer">Public listing</a>
+            {% if car.source_url %}
+            · <a href="{{ car.source_url }}" target="_blank" rel="noopener noreferrer">Dealer VDP</a>
+            {% elif car.dealer_url %}
+            · <a href="{{ car.dealer_url }}" target="_blank" rel="noopener noreferrer">Dealer site</a>
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="admin-detail-grid">
+        <div>
+            <h2 class="admin-subh">Listing quality</h2>
+            {% if issues %}
+            <ul class="admin-issue-list">
+                {% for label in issue_labels %}
+                <li>{{ label }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="admin-muted">No automated merchandising flags for this row.</p>
+            {% endif %}
+
+            <h2 class="admin-subh">Customer-ready checklist</h2>
+            <ul class="admin-checklist">
+                <li>{% if checklist.has_price %}✓{% else %}○{% endif %} Priced</li>
+                <li>{% if checklist.has_photos %}✓{% else %}○{% endif %} Photo coverage</li>
+                <li>{% if checklist.has_trim %}✓{% else %}○{% endif %} Trim present</li>
+                <li>{% if checklist.has_colors %}✓{% else %}○{% endif %} Colors present</li>
+                <li>{% if checklist.has_packages_or_no_desc %}✓{% else %}○{% endif %} Packages or no long description</li>
+                <li>{% if checklist.not_stale_price %}✓{% else %}○{% endif %} Price not stale (heuristic)</li>
+            </ul>
+        </div>
+        <div>
+            <h2 class="admin-subh">Price &amp; trust (read-only)</h2>
+            <table class="admin-mini-table">
+                {% for pr in price_rows %}
+                <tr>
+                    <th>{{ pr.label }}</th>
+                    <td>{% if pr.value %}${{ "{:,.0f}".format(pr.value) }}{% else %}—{% endif %}</td>
+                    <td class="admin-muted">{{ pr.source }}{% if pr.note %} — {{ pr.note }}{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <p class="admin-muted">Internet price is from the inventory feed / scraper unless a VDP merge note exists in stored JSON. Not legal fee disclosure.</p>
+
+            <h2 class="admin-subh">Carfax / history</h2>
+            {% if car.carfax_url %}
+            <p><a href="{{ car.carfax_url }}" target="_blank" rel="noopener noreferrer">Open Carfax link</a></p>
+            {% else %}
+            <p class="admin-muted">No Carfax URL stored.</p>
+            {% endif %}
+            {% if car.history_highlights %}
+            <ul>
+                {% for h in car.history_highlights %}
+                <li>{{ h }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+
+    <h2 class="admin-subh">Gallery</h2>
+    <div class="admin-gallery-strip">
+        {% set g = car.gallery if car.gallery is iterable and car.gallery is not string else [] %}
+        {% for u in g[:24] %}
+        {% if u and u is string and u.startswith('http') %}
+        <a href="{{ u }}" target="_blank" rel="noopener noreferrer" class="admin-gallery-thumb"><img src="{{ u }}" alt="" loading="lazy"></a>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <h2 class="admin-subh">Internal notes (dealer-only)</h2>
+    <form method="post" action="{{ url_for('store_admin.admin_inventory_notes', car_id=car.id) }}" class="admin-notes-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <textarea name="internal_notes" rows="6" class="admin-textarea" placeholder="Not shown on public pages">{{ car.internal_notes or '' }}</textarea>
+        <button type="submit" class="primary-button">Save notes</button>
+    </form>
+
+    <h2 class="admin-subh">Review flag</h2>
+    <form method="post" action="{{ url_for('store_admin.admin_inventory_review', car_id=car.id) }}" class="admin-inline-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <label><input type="checkbox" name="marked_for_review" value="1" {% if car.marked_for_review %}checked{% endif %}> Mark for review</label>
+        <button type="submit" class="secondary-button">Update</button>
+    </form>
+
+    <h2 class="admin-subh">Raw packages JSON</h2>
+    {% if packages_pretty %}
+    <pre class="admin-json">{{ packages_pretty }}</pre>
+    {% else %}
+    <p class="admin-muted">No packages JSON.</p>
+    {% endif %}
+
+    <h2 class="admin-subh">Spec / provenance JSON</h2>
+    {% if spec_pretty %}
+    <pre class="admin-json">{{ spec_pretty }}</pre>
+    {% else %}
+    <p class="admin-muted">No spec_source_json.</p>
+    {% endif %}
+
+    <h2 class="admin-subh">All columns</h2>
+    <div class="admin-table-wrap">
+        <table class="admin-table admin-table-tall">
+            <tbody>
+                {% for k in car|sort %}
+                {% set v = car[k] %}
+                <tr><th>{{ k }}</th><td>{% if v is sameas none %}—{% else %}{{ v }}{% endif %}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

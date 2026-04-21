@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Store admin{% endblock %} — Dealership Scanner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="page">
+    <nav class="topbar">
+        <div class="logo">Dealership Scanner</div>
+        <div class="nav-links">
+            <a href="{{ url_for('store_admin.admin_home') }}">Store dashboard</a>
+            <a href="{{ url_for('store_admin.admin_inventory') }}">Inventory</a>
+            <a href="{{ url_for('store_admin.admin_scans') }}">Scans</a>
+            <a href="{{ url_for('dashboard') }}">App home</a>
+            <a href="{{ url_for('listings') }}">Public listings</a>
+            <a href="{{ url_for('logout_page') }}">Logout</a>
+        </div>
+    </nav>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="admin-flash-wrap" role="status">
+            {% for category, message in messages %}
+            <p class="admin-flash admin-flash-{{ category }}">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+    <main class="admin-main">
+        {% block content %}{% endblock %}
+    </main>
+</div>
+</body>
+</html>

@@ -1443,6 +1443,57 @@ h1 {
     color: rgba(255, 255, 255, 0.75);
 }
 
+.car-kbb-panel {
+    margin-top: 20px;
+    margin-bottom: 4px;
+    padding: 14px 16px;
+    border-radius: var(--main-radius);
+    border: 1px solid rgba(120, 200, 255, 0.22);
+    background: rgba(30, 60, 90, 0.35);
+    max-width: 520px;
+}
+
+.car-kbb-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin: 0 0 10px;
+}
+
+.car-kbb-line {
+    margin: 6px 0;
+    font-size: 0.98rem;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.car-kbb-label {
+    display: inline-block;
+    min-width: 11rem;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.9rem;
+}
+
+.car-kbb-vs {
+    margin: 12px 0 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(190, 235, 255, 0.95);
+}
+
+.car-kbb-disclaimer,
+.car-kbb-meta {
+    margin: 10px 0 0;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.car-kbb-meta {
+    margin-top: 8px;
+    color: rgba(255, 255, 255, 0.42);
+}
+
 /* Single spec sheet — engine/EPA data merged into rows (see car.html) */
 .car-specs.car-spec-sheet {
     margin-top: 28px;
@@ -2164,6 +2215,50 @@ h1 {
 
 /* ── Dev: Missing / Incomplete cars section ── */
 
+.dev-incomplete-issues {
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--main-radius);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.dev-incomplete-issues-title {
+    font-size: 1rem;
+    margin: 0 0 8px;
+    font-weight: 600;
+}
+
+.dev-incomplete-issues-lead {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0 10px;
+    line-height: 1.45;
+}
+
+.dev-incomplete-issues-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.dev-incomplete-issues-list li {
+    margin-bottom: 4px;
+}
+
+.dev-incomplete-issues-label {
+    font-weight: 600;
+}
+
+.dev-incomplete-issues-meta {
+    margin-left: 6px;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 400;
+}
+
 .dev-incomplete-count {
     display: inline-block;
     background: #ef4444;
@@ -2181,7 +2276,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
-    margin-top: 16px;
+    margin-top: 8px;
 }
 
 @media (max-width: 1200px) {
@@ -2447,4 +2542,576 @@ button.back-link {
 .car-detail-dealer-link-unavailable {
     opacity: 0.55;
     pointer-events: none;
+}
+
+/* ── Car detail: listing-derived packages (native disclosure) ── */
+.listing-packages-panel {
+    margin-top: 20px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--main-radius);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.listing-packages-heading {
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+}
+
+.listing-packages-lead {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 12px;
+}
+
+.listing-packages-empty {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 10px 0 0;
+}
+
+.listing-vision-guess {
+    font-size: 0.9rem;
+    margin: 8px 0 0 1.1rem;
+    color: rgba(255, 255, 255, 0.86);
+}
+
+.listing-vision-evidence {
+    font-size: 0.82rem;
+    margin: 8px 0 0 1.1rem;
+    color: rgba(255, 255, 255, 0.55);
+    font-style: italic;
+}
+
+.listing-packages-sub-heading {
+    font-size: 0.92rem;
+    margin: 16px 0 8px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.listing-package-inline-list {
+    margin-top: 6px;
+}
+
+.listing-package-disclosure {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 10px 0;
+}
+
+.listing-package-disclosure:first-of-type {
+    border-top: none;
+    padding-top: 4px;
+}
+
+.listing-package-summary {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.listing-package-summary::-webkit-details-marker {
+    display: none;
+}
+
+.listing-package-title {
+    flex: 1 1 auto;
+}
+
+.listing-package-features {
+    margin: 10px 0 0 1.1rem;
+    padding: 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.45;
+}
+
+.spec-source-badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.06);
+    vertical-align: middle;
+}
+
+/* ── Dealer portal (/inventory) ── */
+.nav-link-active {
+    color: #ffffff;
+    font-weight: 600;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.35);
+    padding-bottom: 2px;
+}
+
+.dealer-inv-layout {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 48px 64px;
+}
+
+.dealer-inv-flash-wrap {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dealer-inv-flash {
+    padding: 12px 16px;
+    border-radius: var(--main-radius);
+    font-size: 0.92rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dealer-inv-flash--success {
+    background: rgba(46, 160, 67, 0.15);
+    border-color: rgba(46, 160, 67, 0.35);
+}
+
+.dealer-inv-flash--error {
+    background: rgba(200, 60, 60, 0.15);
+    border-color: rgba(200, 60, 60, 0.35);
+}
+
+.dealer-inv-flash--info {
+    background: rgba(80, 140, 220, 0.12);
+    border-color: rgba(120, 160, 255, 0.3);
+}
+
+.dealer-inv-section {
+    margin-bottom: 40px;
+}
+
+.dealer-inv-hint {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.92rem;
+    margin-bottom: 16px;
+    max-width: 720px;
+    line-height: 1.5;
+}
+
+.dealer-inv-vin-form {
+    margin-top: 8px;
+}
+
+.dealer-inv-vin-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.dealer-inv-label {
+    flex: 1 1 100%;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.dealer-inv-vin-input {
+    flex: 1 1 280px;
+    min-width: 200px;
+    padding: 12px 14px;
+    border-radius: var(--main-radius);
+    border: 1px solid #333;
+    background: #000;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.dealer-inv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+}
+
+.dealer-inv-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.dealer-inv-card-img {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dealer-inv-card-body {
+    padding: 16px 18px 20px;
+}
+
+.dealer-inv-card-title {
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+}
+
+.dealer-inv-card-vin {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 14px;
+}
+
+.dealer-inv-edit-form .dealer-inv-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 12px;
+    margin-bottom: 12px;
+}
+
+.dealer-inv-edit-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.dealer-inv-edit-form input,
+.dealer-inv-edit-form textarea {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #0a0a0a;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.88rem;
+}
+
+.dealer-inv-notes {
+    grid-column: 1 / -1;
+}
+
+.dealer-inv-upload-form {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dealer-inv-upload-label {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 6px;
+}
+
+.dealer-inv-file-input {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+}
+
+.dealer-inv-thumb-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.dealer-inv-thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dealer-inv-delete-form {
+    margin-top: 14px;
+}
+
+.dealer-inv-delete-btn {
+    background: transparent;
+    border: 1px solid rgba(200, 80, 80, 0.45);
+    color: rgba(255, 160, 160, 0.95);
+    padding: 8px 12px;
+    border-radius: var(--main-radius);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+}
+
+.dealer-inv-delete-btn:hover {
+    background: rgba(200, 60, 60, 0.12);
+}
+
+.dealer-inv-empty {
+    padding: 28px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.55);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: var(--main-radius);
+}
+
+/* —— Store admin (/admin) —— */
+.admin-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 48px;
+}
+
+.admin-lead,
+.admin-muted {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.admin-muted {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.48);
+}
+
+.admin-flash-wrap {
+    max-width: 1200px;
+    margin: 12px auto 0;
+    padding: 0 20px;
+}
+
+.admin-flash {
+    padding: 10px 14px;
+    border-radius: var(--main-radius);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.admin-flash-error {
+    background: rgba(120, 40, 40, 0.35);
+    border: 1px solid rgba(255, 120, 120, 0.25);
+}
+
+.admin-flash-success {
+    background: rgba(40, 100, 60, 0.3);
+    border: 1px solid rgba(120, 220, 160, 0.2);
+}
+
+.admin-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.admin-kpi-card {
+    padding: 16px 18px;
+    border-radius: var(--main-radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.admin-kpi-label {
+    margin: 0 0 6px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.admin-kpi-value {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.admin-kpi-hint {
+    margin: 8px 0 0;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.admin-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    align-items: flex-end;
+    margin: 20px 0;
+    font-size: 0.88rem;
+}
+
+.admin-filters label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.admin-filters input[type="search"],
+.admin-filters select {
+    min-width: 160px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #0c0c0c;
+    color: #fff;
+}
+
+.admin-table-wrap {
+    overflow-x: auto;
+    margin-top: 12px;
+    border-radius: var(--main-radius);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    vertical-align: top;
+}
+
+.admin-table th {
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.admin-table a {
+    color: rgba(140, 200, 255, 0.95);
+}
+
+.admin-issues {
+    max-width: 220px;
+    color: rgba(255, 220, 160, 0.9);
+    font-size: 0.8rem;
+}
+
+.admin-pagination {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.admin-inline-kpis {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.admin-back {
+    margin: 0 0 12px;
+}
+
+.admin-back a {
+    color: rgba(160, 200, 255, 0.9);
+}
+
+.admin-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 16px;
+}
+
+.admin-subh {
+    font-size: 1.05rem;
+    margin: 24px 0 10px;
+}
+
+.admin-issue-list,
+.admin-checklist {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.5;
+}
+
+.admin-mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+}
+
+.admin-mini-table th,
+.admin-mini-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    text-align: left;
+    vertical-align: top;
+}
+
+.admin-gallery-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.admin-gallery-thumb img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-textarea {
+    width: 100%;
+    max-width: 720px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #0a0a0a;
+    color: #fff;
+    font-family: inherit;
+    margin-bottom: 10px;
+}
+
+.admin-notes-form,
+.admin-inline-form {
+    margin-top: 8px;
+}
+
+.admin-json {
+    max-height: 420px;
+    overflow: auto;
+    padding: 14px;
+    background: #070707;
+    border-radius: var(--main-radius);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: rgba(220, 240, 255, 0.88);
+}
+
+.admin-table-tall th {
+    width: 180px;
+}
+
+.admin-error-text,
+.admin-error-wrap code {
+    color: rgba(255, 180, 160, 0.95);
+    font-size: 0.78rem;
+    word-break: break-word;
 }

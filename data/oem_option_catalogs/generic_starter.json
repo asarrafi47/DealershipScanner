@@ -1,0 +1,14 @@
+{
+  "catalog_version": "1",
+  "make": "*",
+  "entries": [
+    {
+      "keywords": ["premium audio", "upgraded speakers"],
+      "canonical_name": "Premium audio"
+    },
+    {
+      "keywords": ["heated front seats", "heated seats"],
+      "canonical_name": "Heated seats"
+    }
+  ]
+}

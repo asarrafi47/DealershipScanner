@@ -14,7 +14,10 @@
             <div class="nav-links">
                 <a href="/dashboard">Dashboard</a>
                 <a href="/listings">Listings</a>
-                <a href="/login">Logout</a>
+                {% if logged_in_user %}
+                <a href="/inventory">My inventory</a>
+                {% endif %}
+                <a href="/logout">Logout</a>
             </div>
         </nav>
 
@@ -28,6 +31,8 @@
 
             <div class="car-detail-info-wrapper">
             <div class="car-detail-layout">
+                {# Prefer VDP/listing URL (source_url); fall back to dealer homepage (dealer_url). #}
+                {% set dealership_view_url = car.source_url or car.dealer_url %}
 
                 {# Col 1: Gallery — JSON in script tag avoids broken data-gallery attributes #}
                 <div class="car-detail-gallery" id="car-gallery">
@@ -72,7 +77,31 @@
                         {% endif %}
                     </p>
 
-                    {% set vd = verified_specs.get('cylinders_display') %}
+                    {% if car.kbb and car.kbb.has_data %}
+                    <div class="car-kbb-panel" role="region" aria-label="KBB valuation summary">
+                        <p class="car-kbb-eyebrow">Kelley Blue Book</p>
+                        {% if car.kbb.fair_purchase_display %}
+                        <p class="car-kbb-line"><span class="car-kbb-label">Typical listing / fair purchase</span> <strong>{{ car.kbb.fair_purchase_display }}</strong></p>
+                        {% endif %}
+                        {% if car.kbb.range_display %}
+                        <p class="car-kbb-line"><span class="car-kbb-label">Fair market range</span> <strong>{{ car.kbb.range_display }}</strong></p>
+                        {% endif %}
+                        {% if car.kbb.private_party_display %}
+                        <p class="car-kbb-line"><span class="car-kbb-label">Private party</span> <strong>{{ car.kbb.private_party_display }}</strong></p>
+                        {% endif %}
+                        {% if car.kbb.trade_in_display %}
+                        <p class="car-kbb-line"><span class="car-kbb-label">Trade-in</span> <strong>{{ car.kbb.trade_in_display }}</strong></p>
+                        {% endif %}
+                        {% if car.kbb.vs_listing_label %}
+                        <p class="car-kbb-vs">{{ car.kbb.vs_listing_label }}</p>
+                        {% endif %}
+                        <p class="car-kbb-disclaimer">Values reflect licensed KBB data (equipment, mileage, region). They are not an appraisal or purchase offer.</p>
+                        {% if car.kbb.fetched_at and car.kbb.fetched_at != '—' %}
+                        <p class="car-kbb-meta">Updated {{ car.kbb.fetched_at }}</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
                     <div class="car-specs car-spec-sheet">
                         <div class="spec-row">
                             <span class="spec-label">Year</span>
@@ -119,10 +148,6 @@
                             <span class="spec-value">{{ car.condition | fmt_spec }}</span>
                         </div>
                         <div class="spec-row">
-                            <span class="spec-label">Cylinders</span>
-                            <span class="spec-value">{% if vd is not none %}{% if vd == 0 %}Electric{% elif vd == 1 %}1 cylinder{% else %}{{ vd }} cylinders{% endif %}{% elif car.cylinders is not none and car.cylinders != '' %}{% if car.cylinders == 0 %}Electric{% elif car.cylinders == 1 %}1 cylinder{% else %}{{ car.cylinders }} cylinders{% endif %}{% else %}—{% endif %}</span>
-                        </div>
-                        <div class="spec-row">
                             <span class="spec-label">Efficiency</span>
                             <span class="spec-value">{{ car.fuel_economy_display }}</span>
                         </div>
@@ -132,7 +157,7 @@
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">Interior</span>
-                            <span class="spec-value">{{ car.interior_color | fmt_spec }}</span>
+                            <span class="spec-value">{{ car.interior_color | fmt_spec }}{% if interior_from_listing_description %} <span class="spec-source-badge" title="Inferred from dealer listing text">From listing description</span>{% endif %}{% if interior_from_llava_vision %} <span class="spec-source-badge" title="Inferred from vehicle photos (Ollama LLaVA)">Vision assist</span>{% endif %}</span>
                         </div>
                         <div class="spec-row">
                             <span class="spec-label">VIN</span>
@@ -146,9 +171,73 @@
                         {% endif %}
                     </div>
 
+                    <div class="listing-packages-panel" role="region" aria-label="Packages and equipment">
+                        <h2 class="listing-packages-heading">Packages &amp; equipment</h2>
+                        <p class="listing-packages-lead">Structured package names and features from the dealer listing, optional vision-assisted cabin notes, and normalized equipment when available — not the full marketing page.</p>
+                        {% if llava_interior_section %}
+                        <details class="listing-package-disclosure">
+                            <summary class="listing-package-summary">
+                                <span class="listing-package-title">Interior (cabin vision)</span>
+                                <span class="spec-source-badge">Vision assist</span>
+                            </summary>
+                            {% if llava_interior_section.get('guess') %}
+                            <p class="listing-vision-guess">{{ llava_interior_section.guess }}</p>
+                            {% endif %}
+                            {% if llava_interior_section.get('buckets') %}
+                            <ul class="listing-package-features">
+                                {% for b in llava_interior_section.buckets %}
+                                <li>{{ b }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            {% if llava_interior_section.get('evidence') %}
+                            <p class="listing-vision-evidence">{{ llava_interior_section.evidence }}</p>
+                            {% endif %}
+                        </details>
+                        {% endif %}
+                        {% for pkg in listing_packages_sections %}
+                        <details class="listing-package-disclosure">
+                            <summary class="listing-package-summary">
+                                <span class="listing-package-title">{{ pkg.name }}</span>
+                                {% if pkg.get('from_vision') %}
+                                <span class="spec-source-badge">Vision assist</span>
+                                {% elif pkg.get('from_listing_description') %}
+                                <span class="spec-source-badge">From listing description</span>
+                                {% endif %}
+                            </summary>
+                            {% if pkg.features %}
+                            <ul class="listing-package-features">
+                                {% for feat in pkg.features %}
+                                <li>{{ feat }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </details>
+                        {% endfor %}
+                        {% if listing_standalone_features %}
+                        <h3 class="listing-packages-sub-heading">Also noted in listing</h3>
+                        <ul class="listing-package-features listing-package-inline-list">
+                            {% for feat in listing_standalone_features %}
+                            <li>{{ feat }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {% if listing_observed_features %}
+                        <h3 class="listing-packages-sub-heading">Observed on vehicle</h3>
+                        <ul class="listing-package-features listing-package-inline-list">
+                            {% for feat in listing_observed_features %}
+                            <li>{{ feat }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {% if not packages_panel_has_content %}
+                        <p class="listing-packages-empty">No structured package data yet.</p>
+                        {% endif %}
+                    </div>
+
                     <div class="car-detail-actions">
-                        {% if car.dealer_url and car.dealer_url != '—' %}
-                        <a href="{{ car.dealer_url }}" target="_blank" rel="noopener noreferrer" class="primary-button">View at Dealership</a>
+                        {% if dealership_view_url %}
+                        <a href="{{ dealership_view_url }}" target="_blank" rel="noopener noreferrer" class="primary-button">View at Dealership</a>
                         {% else %}
                         <span class="primary-button car-detail-dealer-link-unavailable">Dealer link not available</span>
                         {% endif %}
@@ -170,8 +259,8 @@
                     <a href="{{ car.carfax_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View Full CARFAX Report</a>
                     {% elif car.vin and not car.vin.startswith('unknown-') %}
                     <a href="https://www.carfax.com/VehicleHistory/p/Report.cfx?vin={{ car.vin }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View Full CARFAX Report</a>
-                    {% else %}
-                    <a href="{{ car.dealer_url }}" target="_blank" class="carfax-report-btn carfax-report-btn-secondary">Contact Dealer for History Report</a>
+                    {% elif dealership_view_url %}
+                    <a href="{{ dealership_view_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn carfax-report-btn-secondary">Contact Dealer for History Report</a>
                     {% endif %}
                     {% if mopar_vin_lookup_url %}
                     <p class="oem-vin-lookup-hint">Chrysler, Dodge, Jeep, and Ram owners can look up factory specs and features on Mopar’s official site (enter this VIN on the next page).</p>

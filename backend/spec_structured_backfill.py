@@ -194,7 +194,10 @@ def apply_structured_spec_backfill_for_car(
     tier2: dict[str, Any] = {}
     vpic_err: str | None = None
     vin = (merged.get("vin") or "").strip().upper()
-    if looks_like_decode_vin(vin):
+    needs_vpic = looks_like_decode_vin(vin) and any(
+        slot_fillable_for_vpic(merged, k, allow_overwrite_dealer=allow_ow) for k in _VPIC_TARGET_KEYS
+    )
+    if needs_vpic:
         flat: dict[str, str] | None = None
         body: dict[str, Any] | None = None
         if use_vpic_cache:

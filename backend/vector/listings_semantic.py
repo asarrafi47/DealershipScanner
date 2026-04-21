@@ -6,10 +6,12 @@ natural-language queries (e.g. “white X5 under 70k”, “AWD plug-in hybrid s
 """
 from __future__ import annotations
 
+import json
 import re
 from typing import Any
 
 from backend.utils.field_clean import clean_car_row_dict, is_effectively_empty
+from backend.utils.listing_description_extract import semantic_packages_snippet
 
 
 def _money(n: Any) -> str | None:
@@ -134,6 +136,23 @@ def build_semantic_listing_document(
             segments.append(f"Listing quality score {dq:.0f}.")
     except (TypeError, ValueError):
         pass
+
+    pkg_raw = c.get("packages")
+    if pkg_raw and str(pkg_raw).strip() not in ("{}", "[]", "null"):
+        try:
+            pj = json.loads(pkg_raw) if isinstance(pkg_raw, str) else pkg_raw
+        except (json.JSONDecodeError, TypeError):
+            pj = None
+        if isinstance(pj, dict):
+            desc_seg = semantic_packages_snippet(
+                {
+                    "packages": pj.get("packages_normalized") or [],
+                    "standalone_features": pj.get("standalone_features_from_description") or [],
+                },
+                max_chars=420,
+            )
+            if desc_seg:
+                segments.append(f"Equipment hints: {desc_seg}")
 
     text = " ".join(segments)
     text = re.sub(r"\s+", " ", text).strip()

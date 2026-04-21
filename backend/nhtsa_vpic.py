@@ -83,17 +83,165 @@ def _normalize_drivetrain(raw: str) -> str | None:
     return raw.strip()
 
 
+def _parse_engine_cylinder_count(flat: dict[str, str]) -> int | None:
+    ec = flat.get("EngineCylinders") or ""
+    if _vpic_scalar_empty(ec):
+        return None
+    try:
+        c = int(float(str(ec).strip()))
+    except (TypeError, ValueError):
+        return None
+    return c if c > 0 else None
+
+
+def _format_liter_displacement(raw: str) -> str:
+    """
+    vPIC ``DisplacementL`` is liters without a unit token — normalize to ``5.7L`` / ``2.0L`` style.
+
+    Never used for ``DisplacementCI`` (cubic inches); those use :func:`_format_ci_displacement`
+    so we never append a misleading ``L``.
+    """
+    t = str(raw).strip()
+    base = re.sub(r"(?i)\s*l\s*$", "", t).strip()
+    try:
+        val = float(base)
+    except ValueError:
+        return t if re.search(r"(?i)l\s*$", t) else f"{t}L"
+    has_decimal_point = "." in base
+    is_whole = abs(val - round(val)) < 1e-9
+    # Keep ``2.0L`` / ``3.0L`` when vPIC sends a decimal (marketing style); bare ``6`` → ``6L``.
+    if is_whole and has_decimal_point:
+        return f"{val:.1f}L"
+    if is_whole:
+        return f"{int(round(val))}L"
+    return f"{val:g}L"
+
+
+def _format_ci_displacement(raw: str) -> str:
+    """Cubic inches: keep US-style wording, **no** ``L`` suffix (not liters)."""
+    t = str(raw).strip()
+    if re.fullmatch(r"\d+(\.\d+)?", t):
+        return f"{t} CI"
+    return t
+
+
+def _layout_token_from_vpic(engine_configuration: str, cylinders: int | None) -> str | None:
+    """
+    Map NHTSA ``EngineConfiguration`` + cylinder count to ``V8`` / ``I4`` / ``H6`` style.
+
+    Returns ``None`` when cylinders are missing or the label is not recognized — caller then
+    keeps the raw ``EngineConfiguration`` text (same as pre-normalization behavior).
+    """
+    cfg = (engine_configuration or "").strip()
+    if not cfg or _vpic_scalar_empty(cfg) or cylinders is None or cylinders <= 0:
+        return None
+
+    norm = re.sub(r"[_]+", " ", cfg.lower())
+    norm = re.sub(r"\s+", " ", norm.replace("-", " ")).strip()
+
+    if re.search(r"\bw\s*shaped\b", norm) or re.search(r"\bw\s*type\b", norm):
+        return f"W{cylinders}"
+    if re.search(r"\bv\s*shaped\b", norm) or re.search(r"\bv\s*type\b", norm) or norm in ("v", "vee"):
+        return f"V{cylinders}"
+    if (
+        re.search(r"\bin\s*line\b", norm)
+        or re.search(r"\binline\b", norm)
+        or re.search(r"\bstraight\b", norm)
+        or re.search(r"\bi\s*shaped\b", norm)
+    ):
+        return f"I{cylinders}"
+    if "horizontally opposed" in norm or "opposed" in norm or "boxer" in norm:
+        return f"H{cylinders}"
+
+    return None
+
+
+def _disp_numeric_for_dedup(disp_token: str | None) -> float | None:
+    if not disp_token:
+        return None
+    m = re.match(r"^([\d.]+)\s*L$", disp_token, re.I)
+    if m:
+        try:
+            return float(m.group(1))
+        except ValueError:
+            return None
+    m = re.match(r"^([\d.]+)\s*CI$", disp_token, re.I)
+    if m:
+        try:
+            return float(m.group(1))
+        except ValueError:
+            return None
+    return None
+
+
+def _strip_redundant_engine_model_tokens(
+    eng: str,
+    disp_token: str | None,
+    layout_token: str | None,
+) -> str:
+    """Drop tokens that duplicate displacement or the normalized layout (e.g. ``5.7L``, ``V8``)."""
+    if not eng or not str(eng).strip():
+        return ""
+    disp_val = _disp_numeric_for_dedup(disp_token)
+    layout_u = layout_token.upper() if layout_token else None
+    kept: list[str] = []
+    for raw_t in str(eng).split():
+        t = raw_t.strip()
+        if not t:
+            continue
+        tu = t.upper()
+        if layout_u and tu == layout_u:
+            continue
+        if layout_u and re.fullmatch(r"[VVIWH]\d+", tu) and tu == layout_u:
+            continue
+        if disp_val is not None:
+            m = re.match(r"^([\d.]+)\s*L?$", t, re.I)
+            if m:
+                try:
+                    if abs(float(m.group(1)) - disp_val) < 1e-6:
+                        continue
+                except ValueError:
+                    pass
+            if disp_token and disp_token.upper().endswith(" CI"):
+                m2 = re.fullmatch(r"([\d.]+)", t)
+                if m2:
+                    try:
+                        if abs(float(m2.group(1)) - disp_val) < 1e-6:
+                            continue
+                    except ValueError:
+                        pass
+        kept.append(t)
+    return " ".join(kept)
+
+
 def _build_engine_description(flat: dict[str, str]) -> str | None:
+    cyl_n = _parse_engine_cylinder_count(flat)
+
+    l_raw = flat.get("DisplacementL") or ""
+    ci_raw = flat.get("DisplacementCI") or ""
+    # Prefer liters when present; CI is a different unit — never suffix ``L`` there.
+    disp_token: str | None = None
+    if not _vpic_scalar_empty(l_raw):
+        disp_token = _format_liter_displacement(l_raw)
+    elif not _vpic_scalar_empty(ci_raw):
+        disp_token = _format_ci_displacement(ci_raw)
+
+    cfg_raw = (flat.get("EngineConfiguration") or "").strip()
+    layout_token = _layout_token_from_vpic(cfg_raw, cyl_n)
+
+    eng_raw = (flat.get("EngineModel") or "").strip()
+    model_part = _strip_redundant_engine_model_tokens(eng_raw, disp_token, layout_token)
+
     parts: list[str] = []
-    disp = flat.get("DisplacementL") or flat.get("DisplacementCI") or ""
-    if not _vpic_scalar_empty(disp):
-        parts.append(str(disp).strip())
-    eng = flat.get("EngineModel") or ""
-    if not _vpic_scalar_empty(eng):
-        parts.append(str(eng).strip())
-    cfg = flat.get("EngineConfiguration") or ""
-    if not _vpic_scalar_empty(cfg):
-        parts.append(str(cfg).strip())
+    if disp_token:
+        parts.append(disp_token)
+    if layout_token:
+        parts.append(layout_token)
+    elif cfg_raw and not _vpic_scalar_empty(cfg_raw):
+        parts.append(cfg_raw)
+    if model_part:
+        parts.append(model_part)
+
     turbo = (flat.get("Turbo") or "").strip().upper()
     if turbo in ("Y", "YES", "1", "TRUE"):
         parts.append("Turbo")

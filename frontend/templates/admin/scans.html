@@ -1,0 +1,59 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Scan history{% endblock %}
+{% block content %}
+<section class="db-section">
+    <div class="db-section-header">
+        <p class="db-eyebrow">Sync reliability</p>
+        <h1 class="db-section-title">Scanner runs</h1>
+        <p class="admin-lead">One row per dealer per scanner process. Re-run requires <code>ALLOW_STORE_ADMIN_RESCAN=1</code> and admin role.</p>
+    </div>
+
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Finished (UTC)</th>
+                    <th>Dealer</th>
+                    <th>Seconds</th>
+                    <th>Upserted</th>
+                    <th>Inventory / deduped</th>
+                    <th>VDP</th>
+                    <th>Reconcile</th>
+                    <th>Error</th>
+                    {% if is_store_admin %}<th>Actions</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in scans %}
+                <tr>
+                    <td>{{ s.finished_at }}</td>
+                    <td><code>{{ s.dealer_id }}</code><br><span class="admin-muted">{{ s.dealer_name or '' }}</span></td>
+                    <td>{{ "%.1f"|format(s.duration_seconds or 0) }}</td>
+                    <td>{{ s.upserted }}</td>
+                    <td>{{ s._summary.get('inventory_rows') }} / {{ s._summary.get('deduped_rows') }}</td>
+                    <td>{{ s.vdps_visited }}</td>
+                    <td>
+                        {% set rec = s._summary.get('reconcile') %}
+                        {% if rec %}
+                        ran={{ rec.get('ran') }}, inactive={{ rec.get('marked_inactive') }}
+                        {% else %}—{% endif %}
+                    </td>
+                    <td class="admin-error-wrap">{% if s.error %}<code>{{ s.error }}</code>{% else %}—{% endif %}</td>
+                    {% if is_store_admin %}
+                    <td>
+                        <form method="post" action="{{ url_for('store_admin.admin_dealer_rescan', dealer_id=s.dealer_id) }}" class="admin-inline-form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                            <button type="submit" class="secondary-button">Re-run scan</button>
+                        </form>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if not scans %}
+    <p class="admin-muted">No rows in <code>scan_runs</code> yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

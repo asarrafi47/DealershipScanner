@@ -20,6 +20,13 @@ Optional VDP (detail page) enrichment (see scanner_vdp):
     using SCANNER_VDP_ROTATION_SEED or the UTC date + dealer_id (long-tail coverage when EP_MAX is low).
   SCANNER_VDP_NAV_TIMEOUT_MS — navigation timeout per VDP (default: 32000).
   SCANNER_VDP_SETTLE_MS — wait after load for analytics/XHR (default: 2200).
+  SCANNER_VDP_GALLERY_MAX_ROUNDS — max carousel-advance iterations per VDP (default: 80).
+  SCANNER_VDP_GALLERY_IDLE_ROUNDS — stop gallery loop after this many rounds with no new HTTPS URL (default: 3).
+  SCANNER_VDP_DOWNLOAD_IMAGES — when truthy, persist gallery bytes under SCANNER_VDP_IMAGE_DOWNLOAD_DIR
+    (default ``vdp_images``) keyed by VIN or stock (``SCANNER_VDP_IMAGE_DOWNLOAD_KEY=vin|stock``); manifest +
+    ``spec_source_json.vdp_gallery_local`` updated on the vehicle row (see backend.database upsert).
+  VDP price (JSON-LD / dataLayer / DOM) fills ``price`` only when the scraped row has no positive price;
+    provenance is stored under ``spec_source_json.vdp_price``.
   SCANNER_GALLERY_MERGE_REPLACE_IF_BELOW — VDP merge replaces whole gallery when existing https
     count is below this (default: 3); otherwise VDP URLs extend listing gallery (see gallery_merge).
   SCANNER_MAX_DEALER_CONCURRENCY — parallel dealer scans (default: 2; set 1 for sequential).
@@ -54,6 +61,46 @@ Navigation resilience:
 Browser:
   SCANNER_USER_AGENT — optional; when unset, Playwright’s default Chromium UA is used (recommended).
     Set only when you need a pinned string for testing.
+
+Post-scan pipeline (SQLite, same run):
+
+  By default, after all dealers finish, rows for VINs touched in this scan are repaired
+  (``backend.utils.inventory_repair``: placeholders, ``merge_verified_specs`` backfill, condition).
+
+  SCANNER_POST_REPAIR — ``0`` / ``false`` / ``off`` disables repair (default: on).
+
+  By default, each touched row's ``description`` is parsed into structured ``packages`` JSON
+  (``packages_normalized``, OEM catalog hints, optional interior from text). Set
+  SCANNER_POST_LISTING_DESCRIPTION=0 or use ``--no-post-listing-description`` to skip.
+  Optional LLM tier: LISTING_DESC_PARSE_USE_LLM=1 (local Ollama).
+
+  Optional enrichment (EPA catalog in Postgres + Ollama vision), after repair + listing parse:
+
+  --post-enrich / SCANNER_POST_ENRICH=1 — ``InventoryEnricher`` for scanned VINs only (needs catalog).
+
+  --post-enrich-vision-only / SCANNER_POST_ENRICH_VISION=1 — vision pass only (catalog not required).
+
+  Per-dealer inventory reconcile (after each successful upsert): soft-unlist DB rows for that
+  dealer whose VIN is no longer in the scraped feed (``listing_active=0``). Disabled when
+  SCANNER_RECONCILE=0. Skipped when ``deduped_rows`` < SCANNER_RECONCILE_MIN_ROWS (default 8) or
+  when there are no valid normalized VINs in the scrape.
+
+Vision passes (default **on** for ``python scanner.py``; requires local Ollama, default
+``OLLAMA_VISION_MODEL=llava:13b``):
+
+  **Gallery** — each HTTPS gallery / hero URL is classified with LLaVA; non-vehicle images are
+  removed. Opt out: ``SCANNER_GALLERY_VISION_FILTER=0`` or ``--no-gallery-vision-filter``.
+  ``SCANNER_GALLERY_VISION_MAX_WORKERS`` (default ``1``) sets parallel Ollama calls per vehicle.
+
+  **Monroney** — after gallery cleanup, LLaVA reads sticker-like URLs and VDP Monroney text into
+  ``packages`` / empty specs. Opt out: ``SCANNER_MONRONEY_VISION=0`` or ``--no-monroney-vision``.
+
+  **Post-scan interior** — LLaVA cabin inference for touched VINs (see ``SCANNER_POST_INTERIOR_VISION``).
+  Default on; opt out: ``SCANNER_POST_INTERIOR_VISION=0`` or ``--no-post-interior-vision``.
+
+  **Post-scan KBB (optional)** — licensed Kelley Blue Book IDWS values for touched VINs
+  (``--post-kbb`` or ``SCANNER_POST_KBB=1``). Requires ``KBB_API_KEY`` and usually a ZIP
+  on each row or ``KBB_DEFAULT_ZIP``. See ``backend/kbb_idws.py``.
 
 Run from project root: python scanner.py
 """
@@ -95,6 +142,18 @@ from backend.scrapers.next_data_inventory import fetch_next_data_json_from_page,
 from backend.scrapers.scanner_intercept_filter import (
     intercept_url_allowed,
     pick_total_count_from_intercepts,
+)
+from backend.scanner_post_pipeline import (
+    aggregate_vins_from_dealer_results,
+    gallery_vision_filter_env_enabled,
+    monroney_vision_env_enabled,
+    post_enrich_env_enabled,
+    post_enrich_vision_env_enabled,
+    post_interior_vision_env_enabled,
+    post_listing_description_env_enabled,
+    post_kbb_env_enabled,
+    post_repair_env_enabled,
+    run_post_scan,
 )
 
 logging.basicConfig(
@@ -398,6 +457,119 @@ async def _upsert_vehicles_serialized(write_lock: asyncio.Lock, vehicles: list[d
         return await asyncio.to_thread(upsert_vehicles, vehicles)
 
 
+def _apply_gallery_vision_filter_to_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, int]:
+    """
+    Mutate each vehicle's ``gallery`` and ``image_url`` to drop images LLaVA classifies as not
+    vehicle exterior, interior, or window sticker. Requires Ollama (``OLLAMA_HOST``) and a vision
+    model (default ``llava:13b`` via ``OLLAMA_VISION_MODEL``).
+    """
+    from backend.vision import ollama_llava as _llv
+
+    raw = (os.environ.get("SCANNER_GALLERY_VISION_MAX_WORKERS") or "1").strip()
+    try:
+        max_w = max(1, int(raw))
+    except ValueError:
+        max_w = 1
+    total_before = 0
+    total_after = 0
+    for v in vehicles:
+        hero = v.get("image_url")
+        raw_g = v.get("gallery")
+        g_list = raw_g if isinstance(raw_g, list) else []
+        urls: list[str] = []
+        if isinstance(hero, str) and hero.strip().lower().startswith("http"):
+            urls.append(hero.strip())
+        for u in g_list:
+            if isinstance(u, str) and u.strip().lower().startswith("http"):
+                urls.append(u.strip())
+        seen_u: set[str] = set()
+        n_before = 0
+        for u in urls:
+            if u not in seen_u:
+                seen_u.add(u)
+                n_before += 1
+        total_before += n_before
+        filtered = _llv.filter_gallery_urls_for_vehicle_listing(urls, max_workers=max_w)
+        seen_f: set[str] = set()
+        n_after = 0
+        for u in filtered:
+            if u not in seen_f:
+                seen_f.add(u)
+                n_after += 1
+        total_after += n_after
+        v["gallery"] = filtered
+        v["image_url"] = filtered[0] if filtered else ""
+    dropped = max(0, total_before - total_after)
+    return {
+        "gallery_vision_unique_before": total_before,
+        "gallery_vision_unique_after": total_after,
+        "gallery_vision_unique_dropped": dropped,
+    }
+
+
+def _apply_monroney_vision_to_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, Any]:
+    """
+    LLaVA read of window-sticker images (URL heuristics) plus VDP ``_monroney_page_texts`` snippets.
+    Mutates vehicles; pops ``_monroney_page_texts``. Requires Ollama (``OLLAMA_VISION_MODEL``).
+    """
+    from backend.vision import ollama_llava as ol
+    from backend.vision.monroney_merge import merge_monroney_parsed_into_vehicle
+
+    stats: dict[str, Any] = {"rows_touched": 0, "sticker_image_calls": 0, "page_text_calls": 0}
+    for v in vehicles:
+        touched = False
+        texts = v.pop("_monroney_page_texts", None)
+        if isinstance(texts, list) and texts:
+            tp = ol.analyze_monroney_from_page_texts(texts)
+            stats["page_text_calls"] += 1
+            if isinstance(tp, dict) and merge_monroney_parsed_into_vehicle(v, tp):
+                touched = True
+        hero = v.get("image_url")
+        g = v.get("gallery") if isinstance(v.get("gallery"), list) else []
+        urls_dedup: list[str] = []
+        seen_u: set[str] = set()
+        seq: list[str] = []
+        if isinstance(hero, str) and hero.strip().lower().startswith("http"):
+            seq.append(hero.strip())
+        for x in g:
+            if isinstance(x, str):
+                seq.append(x.strip())
+        for u in seq:
+            if not u.lower().startswith("http") or u in seen_u:
+                continue
+            seen_u.add(u)
+            urls_dedup.append(u)
+        sticker_urls = [u for u in urls_dedup if ol.is_probable_sticker_image_url(u)][:2]
+        merged: dict[str, Any] = {}
+        for su in sticker_urls:
+            sp = ol.analyze_monroney_sticker_from_image_url(su)
+            stats["sticker_image_calls"] += 1
+            if not isinstance(sp, dict):
+                continue
+            for k, val in sp.items():
+                if k in ("vision_model", "source"):
+                    continue
+                if isinstance(val, list) and val:
+                    cur = merged.setdefault(k, [])
+                    if not isinstance(cur, list):
+                        cur = []
+                        merged[k] = cur
+                    seenn = {str(x).strip().lower() for x in cur}
+                    for it in val:
+                        ss = str(it).strip()
+                        if ss and ss.lower() not in seenn:
+                            cur.append(ss)
+                            seenn.add(ss.lower())
+                elif val not in (None, "", []):
+                    if merged.get(k) in (None, "", []):
+                        merged[k] = val
+        if merged and merge_monroney_parsed_into_vehicle(v, merged):
+            touched = True
+        if touched:
+            stats["rows_touched"] += 1
+    return stats
+
+
 def _emit_dealer_run_summary(result: dict[str, Any]) -> None:
     """One parseable INFO line per dealer (JSON), capped ~2KB for log pipelines."""
     payload: dict[str, Any] = {
@@ -408,19 +580,36 @@ def _emit_dealer_run_summary(result: dict[str, Any]) -> None:
         "deduped_rows": result.get("deduped_rows"),
         "vdps_visited": result.get("vdps_visited"),
         "gallery_bins": result.get("gallery_bins"),
+        "gallery_vision": result.get("gallery_vision"),
+        "monroney_vision": result.get("monroney_vision"),
         "seconds": round(float(result.get("seconds") or 0.0), 2),
         "upserted": result.get("upserted"),
     }
     err = result.get("error")
     if err:
         payload["error"] = str(err)[:400]
+    rec = result.get("reconcile")
+    if isinstance(rec, dict):
+        payload["reconcile"] = {
+            "ran": rec.get("ran"),
+            "scraped_candidates": rec.get("scraped_candidates"),
+            "marked_inactive": rec.get("marked_inactive"),
+            "skipped_reason": rec.get("skipped_reason"),
+        }
     line = json.dumps(payload, separators=(",", ":"), default=str, ensure_ascii=False)
     if len(line) > 2048:
         line = line[:2045] + "..."
     logger.info("dealer_run_summary %s", line)
 
 
-async def run_dealer(browser: Any, dealer: dict, write_lock: asyncio.Lock) -> dict[str, Any]:
+async def run_dealer(
+    browser: Any,
+    dealer: dict,
+    write_lock: asyncio.Lock,
+    *,
+    gallery_vision_filter: bool = True,
+    monroney_vision: bool = True,
+) -> dict[str, Any]:
     name = dealer.get("name", "")
     url = dealer.get("url", "").rstrip("/")
     provider = dealer.get("provider", "dealer_dot_com")
@@ -439,6 +628,10 @@ async def run_dealer(browser: Any, dealer: dict, write_lock: asyncio.Lock) -> di
         "gallery_bins": None,
         "seconds": 0.0,
         "error": None,
+        "vins": [],
+        "reconcile": None,
+        "gallery_vision": None,
+        "monroney_vision": None,
     }
     t0 = time.perf_counter()
     if not url or not dealer_id:
@@ -599,8 +792,8 @@ async def run_dealer(browser: Any, dealer: dict, write_lock: asyncio.Lock) -> di
                 continue
 
         # Parse all accumulated payloads and merge by VIN (upsert_vehicles dedupes).
-        # Parser extracts carfax_url, history_report_url, vhr_url, and carfax_token from getInventory;
-        # when vhr_url or carfax_token is present, uses partner link (vhr.carfax.com) for less iframe blocking.
+        # Parser sets carfax_url from explicit feed links first, then vhr.carfax.com. VDP capture
+        # overwrites weak links with anchor/data URLs scraped from the live detail page when better.
         all_vehicles: list[dict[str, Any]] = []
         for _resp_url, body in intercept_records:
             all_vehicles.extend(_vehicles_for_body(body))
@@ -660,6 +853,7 @@ async def run_dealer(browser: Any, dealer: dict, write_lock: asyncio.Lock) -> di
                         by_vin[vin] = v
             all_vehicles = list(by_vin.values())
             result["deduped_rows"] = len(all_vehicles)
+            result["vins"] = sorted({(v.get("vin") or "").strip() for v in all_vehicles if (v.get("vin") or "").strip()})
             _log_gallery_bins(name, "after_inventory_merge", all_vehicles)
 
             vdp_stats: dict[str, Any] = {}
@@ -688,8 +882,66 @@ async def run_dealer(browser: Any, dealer: dict, write_lock: asyncio.Lock) -> di
                 ):
                     g = [hero.strip()]
                 v["gallery"] = g
+            if gallery_vision_filter:
+                try:
+                    gv = await asyncio.to_thread(_apply_gallery_vision_filter_to_vehicles, all_vehicles)
+                    result["gallery_vision"] = gv
+                    logger.info(
+                        "Gallery vision filter [%s]: dropped %s of %s unique HTTPS image URLs (LLaVA)",
+                        name,
+                        gv.get("gallery_vision_unique_dropped"),
+                        gv.get("gallery_vision_unique_before"),
+                    )
+                except Exception as e:
+                    logger.warning(
+                        "Gallery vision filter failed for %s (saving unfiltered images): %s",
+                        name,
+                        e,
+                    )
+                    result["gallery_vision"] = {"error": str(e)[:200]}
+            if monroney_vision:
+                try:
+                    mv = await asyncio.to_thread(_apply_monroney_vision_to_vehicles, all_vehicles)
+                    result["monroney_vision"] = mv
+                    logger.info(
+                        "Monroney vision [%s]: rows_touched=%s sticker_image_calls=%s page_text_calls=%s",
+                        name,
+                        mv.get("rows_touched"),
+                        mv.get("sticker_image_calls"),
+                        mv.get("page_text_calls"),
+                    )
+                except Exception as e:
+                    logger.warning("Monroney vision failed for %s: %s", name, e)
+                    result["monroney_vision"] = {"error": str(e)[:200]}
             count = await _upsert_vehicles_serialized(write_lock, all_vehicles)
             result["upserted"] = count
+            try:
+                from backend.scanner_inventory_reconcile import (
+                    normalized_vin_set_from_vehicles,
+                    reconcile_dealer_inventory_after_scan,
+                )
+
+                scraped_norm = normalized_vin_set_from_vehicles(all_vehicles)
+                result["reconcile"] = await asyncio.to_thread(
+                    reconcile_dealer_inventory_after_scan,
+                    dealer_id,
+                    url,
+                    scraped_norm,
+                    result,
+                )
+            except Exception as e:
+                logger.warning(
+                    "Inventory reconcile failed for %s (inventory already saved): %s",
+                    name,
+                    e,
+                )
+                result["reconcile"] = {
+                    "ran": False,
+                    "scraped_candidates": 0,
+                    "marked_inactive": 0,
+                    "skipped_reason": "exception",
+                    "error": str(e)[:200],
+                }
             result["seconds"] = time.perf_counter() - t0
             logger.info(
                 "Parsing: %s — extracted %d vehicles (deduped by VIN), upserted %d",
@@ -756,7 +1008,19 @@ async def run_dealer(browser: Any, dealer: dict, write_lock: asyncio.Lock) -> di
         await _safe_close_context(context)
 
 
-async def main(dealers: list | None = None):
+async def main(
+    dealers: list | None = None,
+    *,
+    post_repair: bool = True,
+    post_listing_description: bool = True,
+    post_interior_vision: bool = True,
+    post_enrich: bool = False,
+    post_enrich_vision_only: bool = False,
+    post_kbb: bool = False,
+    enrichment_max_workers: int | None = None,
+    gallery_vision_filter: bool = True,
+    monroney_vision: bool = True,
+):
     if dealers is None:
         dealers = load_manifest()
     logger.info("Loading manifest: %s", MANIFEST_PATH)
@@ -785,7 +1049,13 @@ async def main(dealers: list | None = None):
             if dealer.get("optimize_for") == "bmw":
                 logger.info("Applying BMW-specific optimization for %s", dealer.get("name"))
             try:
-                return await run_dealer(browser, dealer, write_lock)
+                return await run_dealer(
+                    browser,
+                    dealer,
+                    write_lock,
+                    gallery_vision_filter=gallery_vision_filter,
+                    monroney_vision=monroney_vision,
+                )
             except asyncio.CancelledError:
                 raise
             except Exception as e:
@@ -848,6 +1118,39 @@ async def main(dealers: list | None = None):
         total_upserted,
     )
 
+    scanned_vins = aggregate_vins_from_dealer_results(outcomes)
+    try:
+        from datetime import datetime, timezone
+
+        from backend.db.inventory_db import record_scan_outcomes
+
+        record_scan_outcomes(outcomes, finished_at=datetime.now(timezone.utc).isoformat())
+    except Exception:
+        logger.exception("record_scan_outcomes failed (inventory.db scan_runs)")
+
+    if (
+        post_repair
+        or post_listing_description
+        or post_interior_vision
+        or post_enrich
+        or post_enrich_vision_only
+        or post_kbb
+    ):
+        try:
+            post_summary = run_post_scan(
+                scanned_vins,
+                post_repair=post_repair,
+                post_listing_description=post_listing_description,
+                post_interior_vision=post_interior_vision,
+                post_enrich=post_enrich,
+                post_enrich_vision_only=post_enrich_vision_only,
+                post_kbb=post_kbb,
+                enrichment_max_workers=enrichment_max_workers,
+            )
+            logger.info("Post-scan summary: %s", json.dumps(post_summary, default=str)[:1800])
+        except Exception:
+            logger.exception("Post-scan pipeline failed (inventory already saved)")
+
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(
@@ -858,6 +1161,52 @@ if __name__ == "__main__":
         metavar="ID",
         default=None,
         help="Scan only this dealer_id from dealers.json (e.g. from the /dev console).",
+    )
+    ap.add_argument(
+        "--no-post-repair",
+        action="store_true",
+        help="Skip SQLite repair for VINs touched in this run (see SCANNER_POST_REPAIR).",
+    )
+    ap.add_argument(
+        "--no-post-listing-description",
+        action="store_true",
+        help="Skip parsing each listing description into packages JSON (see SCANNER_POST_LISTING_DESCRIPTION).",
+    )
+    ap.add_argument(
+        "--post-enrich",
+        action="store_true",
+        help="After repair + listing parse, run InventoryEnricher for scanned rows (requires indexed EPA catalog).",
+    )
+    ap.add_argument(
+        "--post-enrich-vision-only",
+        action="store_true",
+        help="After repair + listing parse, vision-only enrichment for scanned rows (Ollama; catalog not required).",
+    )
+    ap.add_argument(
+        "--no-post-interior-vision",
+        action="store_true",
+        help="Skip post-scan Ollama LLaVA interior/cabin pass (default is on; see SCANNER_POST_INTERIOR_VISION).",
+    )
+    ap.add_argument(
+        "--no-gallery-vision-filter",
+        action="store_true",
+        help="Skip LLaVA gallery cleanup before upsert (default is on; see SCANNER_GALLERY_VISION_FILTER).",
+    )
+    ap.add_argument(
+        "--no-monroney-vision",
+        action="store_true",
+        help="Skip LLaVA Monroney / sticker pass before upsert (default is on; see SCANNER_MONRONEY_VISION).",
+    )
+    ap.add_argument(
+        "--enrichment-workers",
+        type=int,
+        default=None,
+        help="Worker threads for post-scan enrichment (default: ENRICHMENT_MAX_WORKERS or enricher default).",
+    )
+    ap.add_argument(
+        "--post-kbb",
+        action="store_true",
+        help="After scan, refresh KBB IDWS values for touched VINs (needs KBB_API_KEY; see SCANNER_POST_KBB).",
     )
     args = ap.parse_args()
     to_run = load_manifest()
@@ -871,8 +1220,30 @@ if __name__ == "__main__":
             )
             sys.exit(1)
 
+    do_repair = not args.no_post_repair and post_repair_env_enabled()
+    do_listing = not args.no_post_listing_description and post_listing_description_env_enabled()
+    do_vision = bool(args.post_enrich_vision_only) or post_enrich_vision_env_enabled()
+    do_enrich = bool(args.post_enrich) or post_enrich_env_enabled()
+    do_interior_vision = (not args.no_post_interior_vision) and post_interior_vision_env_enabled()
+    do_gallery_vision = (not args.no_gallery_vision_filter) and gallery_vision_filter_env_enabled()
+    do_monroney = (not args.no_monroney_vision) and monroney_vision_env_enabled()
+    do_kbb = bool(args.post_kbb) or post_kbb_env_enabled()
+
     try:
-        asyncio.run(main(to_run))
+        asyncio.run(
+            main(
+                to_run,
+                post_repair=do_repair,
+                post_listing_description=do_listing,
+                post_interior_vision=do_interior_vision,
+                post_enrich=do_enrich and not do_vision,
+                post_enrich_vision_only=do_vision,
+                post_kbb=do_kbb,
+                enrichment_max_workers=args.enrichment_workers,
+                gallery_vision_filter=do_gallery_vision,
+                monroney_vision=do_monroney,
+            )
+        )
     except KeyboardInterrupt:
         logger.info("Scanner gracefully stopped by user.")
         sys.exit(0)

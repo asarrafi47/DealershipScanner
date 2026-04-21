@@ -1,0 +1,93 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Store dashboard{% endblock %}
+{% block content %}
+<section class="db-section">
+    <div class="db-section-header">
+        <p class="db-eyebrow">Operations</p>
+        <h1 class="db-section-title">Store dashboard</h1>
+        <p class="admin-lead">Scraped inventory health for your assigned dealer(s). Public listings remain unchanged.</p>
+    </div>
+    <div class="admin-kpi-grid">
+        <div class="admin-kpi-card">
+            <p class="admin-kpi-label">Active units</p>
+            <p class="admin-kpi-value">{{ dash.active_units }}</p>
+        </div>
+        <div class="admin-kpi-card">
+            <p class="admin-kpi-label">Inactive / sold-off</p>
+            <p class="admin-kpi-value">{{ dash.inactive_units }}</p>
+        </div>
+        <div class="admin-kpi-card">
+            <p class="admin-kpi-label">Stale list price (approx.)</p>
+            <p class="admin-kpi-value">{{ dash.stale_price_units }}</p>
+            <p class="admin-kpi-hint">No price change since first seen threshold (see <code>STORE_ADMIN_STALE_PRICE_DAYS</code>).</p>
+        </div>
+    </div>
+</section>
+
+{% if is_store_admin and dash.top_dealers %}
+<section class="db-section">
+    <div class="db-section-header">
+        <p class="db-eyebrow">All dealers</p>
+        <h2 class="db-section-title">Top dealers by active units</h2>
+    </div>
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Dealer ID</th>
+                    <th>Name</th>
+                    <th>Active</th>
+                    <th>Last scrape</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in dash.top_dealers %}
+                <tr>
+                    <td><code>{{ d.dealer_id }}</code></td>
+                    <td>{{ d.dealer_name or '—' }}</td>
+                    <td>{{ d.active_units }}</td>
+                    <td>{{ d.last_scraped_at or '—' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endif %}
+
+<section class="db-section">
+    <div class="db-section-header">
+        <p class="db-eyebrow">Sync</p>
+        <h2 class="db-section-title">Recent scans</h2>
+        <p class="admin-lead">Written after each <code>scanner.py</code> run. <a href="{{ url_for('store_admin.admin_scans') }}">View all</a></p>
+    </div>
+    {% if scans %}
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Finished</th>
+                    <th>Dealer</th>
+                    <th>Upserted</th>
+                    <th>VDP visits</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in scans %}
+                <tr>
+                    <td>{{ s.finished_at }}</td>
+                    <td><code>{{ s.dealer_id }}</code> — {{ s.dealer_name or '' }}</td>
+                    <td>{{ s.upserted }}</td>
+                    <td>{{ s.vdps_visited }}</td>
+                    <td>{% if s.error %}<span class="admin-error-text">{{ s.error[:120] }}</span>{% else %}—{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="admin-muted">No scan rows yet. Run the scanner to populate history.</p>
+    {% endif %}
+</section>
+{% endblock %}

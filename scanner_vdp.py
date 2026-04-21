@@ -6,6 +6,22 @@ per dealer, extracts analytics ep.*, network JSON, JSON-LD, inline JSON, and DOM
 then merges into vehicle rows via merge_analytics_ep_into_vehicle (conservative fallback).
 Gallery URLs from network JSON and in-page extraction are merged separately (see
 backend.utils.gallery_merge.merge_vdp_gallery_into_vehicle) after EP merge.
+
+Gallery interaction (after load + ``PAGE_EXTRACT_JS`` settle): ``GALLERY_COLLECT_URLS_JS`` runs in a
+loop while advancing the carousel (ArrowRight → next/chevron locators → thumbnails) until no new
+unique HTTPS URLs appear for ``SCANNER_VDP_GALLERY_IDLE_ROUNDS`` rounds or ``SCANNER_VDP_GALLERY_MAX_ROUNDS``.
+Image ``response`` URLs (``image/*`` and common CDN path hints) merge with DOM harvest.
+
+Optional local image download (default off): set ``SCANNER_VDP_DOWNLOAD_IMAGES=1`` to save bytes under
+``SCANNER_VDP_IMAGE_DOWNLOAD_DIR`` (default ``vdp_images`` in the process cwd), keyed by VIN with
+optional ``SCANNER_VDP_IMAGE_DOWNLOAD_KEY=vin|stock`` (default ``vin``). A ``manifest.json`` is
+written per vehicle folder; a compact summary is merged into ``spec_source_json`` (``vdp_gallery_local``)
+when downloads run. Reuses ``SCANNER_VDP_NAV_TIMEOUT_MS``, ``SCANNER_VDP_SETTLE_MS``,
+``SCANNER_MAX_VDP_CONCURRENCY``.
+
+VDP price hints (JSON-LD ``offers``, ``dataLayer`` keys like ``internetPrice`` / ``salePrice``, light
+DOM) merge into ``price`` only when the listing has no positive price; provenance is stored under
+``spec_source_json`` key ``vdp_price`` when applied (see ``backend.database.upsert_vehicles``).
 """
 from __future__ import annotations
 
@@ -16,6 +32,7 @@ import logging
 import os
 import re
 from collections import Counter
+from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
@@ -29,10 +46,85 @@ from backend.utils.gallery_merge import (
     gallery_https_bin_histogram,
     merge_vdp_gallery_into_vehicle,
 )
+from backend.utils.spec_provenance import merge_spec_source_json
+from backend.utils.vdp_gallery_urls import merge_https_url_batches
+from backend.utils.vdp_price_merge import (
+    merge_vdp_price_into_vehicle,
+    pick_vdp_price_from_hints,
+)
 
 log = logging.getLogger("scanner.vdp")
 
 MAX_JSON_BYTES = 2 * 1024 * 1024
+
+_GENERIC_VHR_VIN_ONLY = re.compile(
+    r"^https?://vhr\.carfax\.com/main\?vin=[0-9a-z]+(&format=\w+)?$",
+    re.I,
+)
+
+
+def _is_generic_vhr_vin_only_url(url: str) -> bool:
+    u = (url or "").strip()
+    return bool(u) and bool(_GENERIC_VHR_VIN_ONLY.match(u))
+
+
+def _pick_best_vehicle_history_url(candidates: list[Any]) -> str | None:
+    """
+    Prefer dealer-provided Carfax / AutoCheck / partner URLs (absolute https) from DOM or JSON.
+    """
+    good: list[str] = []
+    seen: set[str] = set()
+    for raw in candidates:
+        if not isinstance(raw, str):
+            continue
+        s = raw.strip()
+        if not s.lower().startswith("http"):
+            continue
+        if "javascript:" in s.lower():
+            continue
+        low = s.lower()
+        if "carfax" not in low and "autocheck" not in low:
+            continue
+        if s in seen:
+            continue
+        seen.add(s)
+        good.append(s[:900])
+    if not good:
+        return None
+
+    def score(u: str) -> tuple[int, int]:
+        low = u.lower()
+        sc = 0
+        if "partner" in low or "dealer" in low or "token" in low or "pid=" in low or "otp=" in low:
+            sc += 6
+        if "vhr.carfax.com" in low and not _is_generic_vhr_vin_only_url(u):
+            sc += 4
+        if "report" in low or "vehiclehistory" in low or "displayhistory" in low:
+            sc += 2
+        if _is_generic_vhr_vin_only_url(u):
+            sc -= 3
+        return (sc, len(u))
+
+    good.sort(key=lambda u: score(u), reverse=True)
+    return good[0]
+
+
+def _merge_vdp_vehicle_history_url(vehicle: dict[str, Any], dom_urls: list[Any]) -> bool:
+    """Set ``carfax_url`` from *dom_urls* when it improves on the listing JSON link. Returns True if updated."""
+    picked = _pick_best_vehicle_history_url(dom_urls)
+    if not picked:
+        return False
+    cur = str(vehicle.get("carfax_url") or "").strip()
+    if not cur.lower().startswith("http"):
+        vehicle["carfax_url"] = picked
+        return True
+    if _is_generic_vhr_vin_only_url(cur) and not _is_generic_vhr_vin_only_url(picked):
+        vehicle["carfax_url"] = picked
+        return True
+    if len(picked) > len(cur) + 12 and ("partner" in picked.lower() or "token" in picked.lower()):
+        vehicle["carfax_url"] = picked
+        return True
+    return False
 
 
 def _detach_response_handler(page: Any, handler: Any) -> None:
@@ -171,6 +263,62 @@ def _vdp_gallery_priority_enabled() -> bool:
     )
 
 
+def _gallery_max_rounds() -> int:
+    try:
+        return max(4, min(120, int((os.environ.get("SCANNER_VDP_GALLERY_MAX_ROUNDS") or "80").strip())))
+    except ValueError:
+        return 80
+
+
+def _gallery_idle_rounds() -> int:
+    try:
+        return max(1, min(20, int((os.environ.get("SCANNER_VDP_GALLERY_IDLE_ROUNDS") or "3").strip())))
+    except ValueError:
+        return 3
+
+
+def _vdp_download_images_enabled() -> bool:
+    return (os.environ.get("SCANNER_VDP_DOWNLOAD_IMAGES") or "0").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    )
+
+
+def _vdp_image_download_dir() -> Path:
+    raw = (os.environ.get("SCANNER_VDP_IMAGE_DOWNLOAD_DIR") or "vdp_images").strip()
+    return Path(raw).expanduser()
+
+
+def _response_maybe_gallery_image_url(url: str, content_type: str) -> bool:
+    u = (url or "").strip()
+    if not u.lower().startswith("https://"):
+        return False
+    ct = (content_type or "").lower()
+    if ct.startswith("image/"):
+        return True
+    low = u.lower()
+    if re.search(r"\.(jpe?g|png|webp|gif|avif)(\?|#|$)", low):
+        return True
+    for frag in (
+        "/image/",
+        "/images/",
+        "/photos/",
+        "/media/",
+        "/inventory/",
+        "cloudinary",
+        "dealerinspire",
+        "dealer.com",
+        "carsforsale",
+        "inventoryphoto",
+        "vehiclephoto",
+    ):
+        if frag in low:
+            return True
+    return False
+
+
 def _response_origin(url: str) -> str:
     try:
         p = urlparse(url or "")
@@ -248,6 +396,19 @@ def _vdp_queue_sort_key(vehicle: dict[str, Any], seed: str, *, rotation: bool) -
 def _looks_like_vin17(v: str) -> bool:
     s = (v or "").strip().upper()
     return bool(re.match(r"^[A-HJ-NPR-Z0-9]{17}$", s))
+
+
+def _vdp_image_download_key(vehicle: dict[str, Any]) -> str:
+    mode = (os.environ.get("SCANNER_VDP_IMAGE_DOWNLOAD_KEY") or "vin").strip().lower()
+    if mode == "stock":
+        s = (vehicle.get("stock_number") or "").strip()
+        if s:
+            return re.sub(r"[^\w.\-]+", "_", s)[:80]
+    vin = (vehicle.get("vin") or "").strip().upper()
+    if _looks_like_vin17(vin):
+        return vin
+    s = (vehicle.get("stock_number") or "").strip()
+    return re.sub(r"[^\w.\-]+", "_", s)[:80] if s else "unknown"
 
 
 def _analyze_json_signals(obj: Any, depth: int = 0) -> tuple[float, list[str], list[dict[str, Any]]]:
@@ -400,6 +561,9 @@ PAGE_EXTRACT_JS = r"""
     domBadges: [],
     domGalleryUrls: [],
     jsonGalleryUrls: [],
+    domVehicleHistoryUrls: [],
+    domMonroneyTextSnippets: [],
+    vdpPriceHints: [],
     scriptSrcSample: [],
     metaGenerator: "",
     galleryExtractDebug: { photosTabClicked: false, domImgSample: 0 },
@@ -787,7 +951,220 @@ PAGE_EXTRACT_JS = r"""
   for (const node of result.ldJsonVehicle || []) {
     walkJsonImg(node, 0);
   }
+  function pushPriceHint(raw, source) {
+    if (raw === null || raw === undefined) return;
+    let num = null;
+    if (typeof raw === "number" && isFinite(raw)) {
+      num = raw;
+    } else if (typeof raw === "string") {
+      const t = raw.replace(/[$,]/g, "").trim();
+      if (!t || /call|contact|request|quote/i.test(t)) return;
+      const m = t.match(/(\\d{3,7})(?:\\.\\d{2})?/);
+      if (m) num = parseFloat(m[1]);
+    }
+    if (num === null || !isFinite(num) || num < 500 || num > 2500000) return;
+    result.vdpPriceHints.push({ value: num, raw: String(raw).slice(0, 60), source: String(source || "?") });
+  }
+  function walkDataLayerPrice(obj, depth, seen) {
+    if (depth > 14 || !obj || typeof obj !== "object" || seen.has(obj)) return;
+    seen.add(obj);
+    const keys = [
+      "internetPrice",
+      "InternetPrice",
+      "salePrice",
+      "SalePrice",
+      "price",
+      "Price",
+      "vehiclePrice",
+      "askingPrice",
+      "listPrice",
+      "retailPrice",
+      "msrp",
+      "MSRP",
+    ];
+    for (const k of keys) {
+      if (Object.prototype.hasOwnProperty.call(obj, k)) pushPriceHint(obj[k], "dataLayer:" + k);
+    }
+    for (const v of Object.values(obj)) {
+      if (v && typeof v === "object") walkDataLayerPrice(v, depth + 1, seen);
+    }
+  }
+  try {
+    if (window.dataLayer && Array.isArray(window.dataLayer)) {
+      const seen = new WeakSet();
+      for (let i = 0; i < Math.min(40, window.dataLayer.length); i++) {
+        walkDataLayerPrice(window.dataLayer[i], 0, seen);
+      }
+    }
+  } catch (e3) {}
+  function offersFromLd(node) {
+    const out = [];
+    if (!node || typeof node !== "object") return out;
+    const o = node.offers || node.offer;
+    if (!o) return out;
+    return [].concat(o);
+  }
+  for (const node of result.ldJsonVehicle || []) {
+    for (const off of offersFromLd(node)) {
+      if (!off || typeof off !== "object") continue;
+      const p = off.price || off.Price || (off.priceSpecification && off.priceSpecification.price);
+      pushPriceHint(p, "json_ld_offer");
+    }
+    const p2 = node.price || node.Price;
+    if (p2) pushPriceHint(p2, "json_ld_product");
+  }
+  try {
+    document.querySelectorAll('[itemprop="price"],[itemprop=price]').forEach((el, idx) => {
+      if (idx > 12) return;
+      const c = el.getAttribute("content");
+      if (c) pushPriceHint(c, "dom_itemprop");
+      else pushPriceHint((el.textContent || "").trim(), "dom_itemprop");
+    });
+  } catch (e4) {}
+  const priceSelectors = [
+    ".vehicle-price",
+    ".internetPrice",
+    ".sale-price",
+    ".price-value",
+    ".pricing-price",
+    "[class*='vehicle-price']",
+    "[data-vehicle-price]",
+    "[data-price]",
+  ];
+  for (const sel of priceSelectors) {
+    try {
+      const el = document.querySelector(sel);
+      if (!el) continue;
+      const t = (el.textContent || "").trim();
+      if (t && t.length < 80) pushPriceHint(t, "dom_dealer:" + sel.slice(0, 40));
+    } catch (e5) {}
+  }
+  result.domVehicleHistoryUrls = [];
+  result.domMonroneyTextSnippets = [];
+  function absUrl(href) {
+    try {
+      if (!href || typeof href !== "string") return "";
+      const t = href.trim();
+      if (!t || t.toLowerCase().indexOf("javascript:") === 0) return "";
+      const u = new URL(t, document.baseURI);
+      return u.href;
+    } catch (eAbs) {
+      return "";
+    }
+  }
+  try {
+    document
+      .querySelectorAll(
+        'a[href*="carfax"], a[href*="CARFAX"], a[href*="vhr.carfax"], a[href*="autocheck"], a[href*="AutoCheck"], area[href]'
+      )
+      .forEach((a, idx) => {
+        if (idx > 70 || result.domVehicleHistoryUrls.length >= 16) return;
+        const h = absUrl(a.getAttribute("href") || "");
+        if (!/^https?:\\/\\//i.test(h)) return;
+        const low = h.toLowerCase();
+        if (low.indexOf("carfax") < 0 && low.indexOf("autocheck") < 0) return;
+        if (result.domVehicleHistoryUrls.includes(h)) return;
+        result.domVehicleHistoryUrls.push(h.slice(0, 900));
+      });
+  } catch (eVhr) {}
+  try {
+    document.querySelectorAll("[data-carfax-url], [data-carfax-href], [data-vhr-url]").forEach((el, idx) => {
+      if (idx > 30 || result.domVehicleHistoryUrls.length >= 18) return;
+      const raw =
+        el.getAttribute("data-carfax-url") ||
+        el.getAttribute("data-carfax-href") ||
+        el.getAttribute("data-vhr-url") ||
+        "";
+      const h = absUrl(raw);
+      if (!/^https?:\\/\\//i.test(h)) return;
+      if (result.domVehicleHistoryUrls.includes(h)) return;
+      result.domVehicleHistoryUrls.push(h.slice(0, 900));
+    });
+  } catch (eDa) {}
+  let monoBudget = 0;
+  const monoSelectors = [
+    "[class*='monroney']",
+    "[class*='Monroney']",
+    "[class*='window-sticker']",
+    "[class*='windowSticker']",
+    "[class*='WindowSticker']",
+    "[id*='monroney']",
+    "[id*='Monroney']",
+    "[data-widget*='sticker']",
+  ];
+  for (const sel of monoSelectors) {
+    try {
+      document.querySelectorAll(sel).forEach((el) => {
+        if (monoBudget >= 5 || result.domMonroneyTextSnippets.length >= 5) return;
+        const t = (el.textContent || "").trim().replace(/\\s+/g, " ");
+        if (t.length < 50 || t.length > 3200) return;
+        if (!/engine|trans|equip|option|msrp|vin|standard|included|warranty|drivetrain|fuel/i.test(t)) return;
+        result.domMonroneyTextSnippets.push(t.slice(0, 2400));
+        monoBudget++;
+      });
+    } catch (eM) {}
+  }
   return result;
+}
+"""
+
+
+GALLERY_COLLECT_URLS_JS = r"""
+() => {
+  const out = [];
+  const seen = new Set();
+  function push(u) {
+    if (!u || typeof u !== "string") return;
+    let t = u.trim();
+    if (t.startsWith("//")) t = "https:" + t;
+    if (t.startsWith("http://")) t = "https://" + t.slice(7);
+    if (!/^https:\\/\\//i.test(t)) return;
+    const low = t.toLowerCase();
+    if (
+      !/\\.(jpe?g|png|webp|gif|avif)(\\?|#|$)/i.test(low) &&
+      !/(\\/image\\/|\\/images\\/|\\/photos\\/|\\/media\\/|cloudinary|dealerinspire|inventoryphoto)/i.test(low)
+    ) {
+      return;
+    }
+    if (seen.has(t)) return;
+    seen.add(t);
+    if (out.length < 220) out.push(t.slice(0, 900));
+  }
+  function fromSrcset(ss) {
+    if (!ss || typeof ss !== "string") return;
+    for (const part of ss.split(",")) {
+      const p = part.trim().split(/\\s+/)[0];
+      if (p) push(p);
+    }
+  }
+  try {
+    document.querySelectorAll("img").forEach((img, idx) => {
+      if (idx > 220) return;
+      try {
+        if (img.currentSrc) push(img.currentSrc);
+      } catch (e0) {}
+      push(img.getAttribute("src"));
+      fromSrcset(img.getAttribute("srcset"));
+      const lazy = [
+        "data-src",
+        "data-lazy-src",
+        "data-original",
+        "data-lazy",
+        "data-image",
+        "data-zoom-src",
+        "data-fullsrc",
+      ];
+      for (const a of lazy) push(img.getAttribute(a));
+    });
+  } catch (e1) {}
+  try {
+    document.querySelectorAll("picture source[srcset], picture source[src]").forEach((src, idx) => {
+      if (idx > 80) return;
+      fromSrcset(src.getAttribute("srcset"));
+      push(src.getAttribute("src"));
+    });
+  } catch (e2) {}
+  return out;
 }
 """
 
@@ -943,6 +1320,180 @@ def _vdp_count_gallery_signals(
     return n
 
 
+async def _drain_pending_tasks(pending: list[asyncio.Task[Any]]) -> None:
+    if not pending:
+        return
+    await asyncio.gather(*pending, return_exceptions=True)
+    pending.clear()
+
+
+async def _vdp_gallery_step_advance(wp: Any, thumb_rot: list[int]) -> None:
+    for sel in (
+        ".vehicle-image-gallery",
+        ".vehicle-photos",
+        ".photo-gallery",
+        ".gallery",
+        "[class*='photo-gallery']",
+        "[class*='image-gallery']",
+    ):
+        try:
+            loc = wp.locator(sel).first
+            await loc.click(timeout=500)
+            await wp.keyboard.press("ArrowRight")
+            await asyncio.sleep(0.05)
+            return
+        except Exception:
+            continue
+    try:
+        await wp.keyboard.press("ArrowRight")
+        await asyncio.sleep(0.05)
+    except Exception:
+        pass
+    next_selectors = [
+        'button[aria-label*="next" i]',
+        'a[aria-label*="next" i]',
+        '[class*="gallery"] button:has-text("Next")',
+        ".gallery-next",
+        ".swiper-button-next",
+        "[class*='chevron-right'][role='button']",
+    ]
+    for s in next_selectors:
+        try:
+            loc = wp.locator(s).first
+            if await loc.count() > 0:
+                await loc.click(timeout=900)
+                return
+        except Exception:
+            continue
+    try:
+        thumbs = wp.locator(
+            ".thumbnail, .thumbnails button, [data-gallery-thumb], "
+            ".swiper-slide:not(.swiper-slide-duplicate), li.swiper-slide"
+        )
+        n = await thumbs.count()
+        if n > 1:
+            idx = thumb_rot[0] % n
+            thumb_rot[0] += 1
+            await thumbs.nth(idx).click(timeout=1200)
+    except Exception:
+        pass
+
+
+async def _vdp_gallery_interaction_loop(
+    wp: Any,
+    *,
+    settle_ms: int,
+    response_image_urls: list[str],
+    pending: list[asyncio.Task[Any]],
+) -> list[str]:
+    ordered: list[str] = []
+    seen: set[str] = set()
+    stall = 0
+    thumb_rot = [0]
+    cap = max(inventory_gallery_max(), 160)
+    settle_sleep = min(1200, max(240, int(settle_ms // 4)))
+    for _ in range(_gallery_max_rounds()):
+        snap = list(response_image_urls)
+        try:
+            dom_batch = await wp.evaluate(GALLERY_COLLECT_URLS_JS)
+        except Exception:
+            dom_batch = []
+        if not isinstance(dom_batch, list):
+            dom_batch = []
+        n1 = merge_https_url_batches(ordered, seen, dom_batch, max_total=cap)
+        n2 = merge_https_url_batches(ordered, seen, snap, max_total=cap)
+        if n1 + n2 == 0:
+            stall += 1
+            if stall >= _gallery_idle_rounds():
+                break
+        else:
+            stall = 0
+        await _vdp_gallery_step_advance(wp, thumb_rot)
+        await asyncio.sleep(settle_sleep / 1000.0)
+        await _drain_pending_tasks(pending)
+    return ordered
+
+
+def _apply_vdp_price_hints(
+    vehicle: dict[str, Any],
+    bundle: dict[str, Any] | None,
+    detail_url: str,
+) -> dict[str, Any]:
+    if not isinstance(bundle, dict):
+        return {"updated": False}
+    hints = [h for h in (bundle.get("vdpPriceHints") or []) if isinstance(h, dict)]
+    picked, meta = pick_vdp_price_from_hints(hints)
+    src = (meta or {}).get("source") or "vdp"
+    diag = merge_vdp_price_into_vehicle(vehicle, picked, provenance_source=str(src), detail_url=detail_url or "")
+    if diag.get("updated"):
+        vehicle["spec_source_json"] = merge_spec_source_json(
+            vehicle.get("spec_source_json"),
+            {
+                "vdp_price": {
+                    "source": "vdp_scan",
+                    "origin": str(src)[:120],
+                    "value": diag.get("value"),
+                    "url": (detail_url or "")[:500],
+                }
+            },
+        )
+    return diag
+
+
+async def _download_vdp_gallery_images(wp: Any, vehicle: dict[str, Any], urls: list[str]) -> dict[str, Any] | None:
+    if not urls or not _vdp_download_images_enabled():
+        return None
+    dest = _vdp_image_download_dir() / _vdp_image_download_key(vehicle)
+    dest.mkdir(parents=True, exist_ok=True)
+    manifest: dict[str, Any] = {"files": [], "errors": []}
+    req = wp.context.request
+    tmo = _nav_timeout_ms()
+    cap = inventory_gallery_max()
+    for i, url in enumerate(urls[:cap]):
+        if not isinstance(url, str) or not url.lower().startswith("https://"):
+            continue
+        try:
+            resp = await req.get(url, timeout=tmo)
+            if resp.status != 200:
+                manifest["errors"].append({"url": url[:220], "status": int(resp.status)})
+                continue
+            ct = (resp.headers.get("content-type") or "").lower()
+            if "image/" not in ct and not _response_maybe_gallery_image_url(url, ct):
+                manifest["errors"].append({"url": url[:220], "note": "skipped_non_image"})
+                continue
+            body = await resp.body()
+            if not body or len(body) < 80:
+                manifest["errors"].append({"url": url[:220], "note": "empty_body"})
+                continue
+            path = urlparse(url).path or ""
+            suf = Path(path).suffix.lower()
+            if suf not in (".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"):
+                suf = ".jpg"
+            name = f"{i:03d}_{hashlib.sha256(url.encode()).hexdigest()[:14]}{suf}"
+            fp = dest / name[:160]
+            fp.write_bytes(body)
+            manifest["files"].append({"url": url[:900], "path": str(fp)})
+        except Exception as e:
+            manifest["errors"].append({"url": url[:220], "err": str(e)[:160]})
+    try:
+        man_path = dest / "manifest.json"
+        man_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    except OSError as e:
+        log.warning("VDP: manifest write failed: %s", e)
+    vehicle["spec_source_json"] = merge_spec_source_json(
+        vehicle.get("spec_source_json"),
+        {
+            "vdp_gallery_local": {
+                "source": "vdp_download",
+                "dir": str(dest.resolve()),
+                "saved": len(manifest.get("files") or []),
+                "errors": len(manifest.get("errors") or []),
+            }
+        },
+    )
+    return manifest
+
+
 async def _vdp_visit_one(
     wp: Any,
     dealer_name: str,
@@ -961,9 +1512,11 @@ async def _vdp_visit_one(
         "filled": [],
         "skipped": [],
         "gallery_added": 0,
+        "price_updated": False,
     }
     visit_epoch = [0]
     network_rows: list[dict[str, Any]] = []
+    response_image_urls: list[str] = []
     pending: list[asyncio.Task[Any]] = []
 
     async def capture_response(response) -> None:
@@ -972,6 +1525,13 @@ async def _vdp_visit_one(
             if response.status != 200:
                 return
             ct = (response.headers.get("content-type") or "").lower()
+            url = (response.url or "").strip()
+            if _response_maybe_gallery_image_url(url, ct):
+                if visit_epoch[0] != my_epoch:
+                    return
+                if url.lower().startswith("https://"):
+                    response_image_urls.append(url[:900])
+                return
             if "application/json" not in ct:
                 return
             text = await response.text()
@@ -1038,9 +1598,11 @@ async def _vdp_visit_one(
         combined_ep: dict[str, Any] = {}
         success_u = u
         last_bundle: dict[str, Any] = {}
+        extra_loop_gallery: list[str] = []
         for try_url in urls_to_try:
             visit_epoch[0] += 1
             network_rows.clear()
+            response_image_urls.clear()
             out["visited"] = int(out.get("visited") or 0) + 1
 
             log.info("VDP: %s — visiting %s", dealer_name, try_url[:200])
@@ -1051,9 +1613,7 @@ async def _vdp_visit_one(
             except Exception as e:
                 nav_err = str(e)
             await asyncio.sleep(_settle_ms() / 1000.0)
-            if pending:
-                await asyncio.gather(*pending, return_exceptions=True)
-                pending.clear()
+            await _drain_pending_tasks(pending)
 
             if nav_err:
                 log.warning("VDP: %s — navigation issue: %s", dealer_name, nav_err[:120])
@@ -1063,6 +1623,17 @@ async def _vdp_visit_one(
             except Exception as e:
                 bundle = {"error": str(e)}
             last_bundle = bundle if isinstance(bundle, dict) else {}
+            await _drain_pending_tasks(pending)
+            try:
+                extra_loop_gallery = await _vdp_gallery_interaction_loop(
+                    wp,
+                    settle_ms=_settle_ms(),
+                    response_image_urls=response_image_urls,
+                    pending=pending,
+                )
+            except Exception as e:
+                log.warning("VDP: %s — gallery interaction loop: %s", dealer_name, str(e)[:160])
+            await _drain_pending_tasks(pending)
 
             async with preview_lock:
                 if preview_budget[0] > 0 and isinstance(bundle, dict):
@@ -1104,7 +1675,7 @@ async def _vdp_visit_one(
                 log.info("VDP: %s — extractors with data: %s", dealer_name, ", ".join(hits))
 
             combined_try = normalize_ep_field_aliases(_combine_ep_fragments(frags, vin))
-            gsig = _vdp_count_gallery_signals(network_rows, last_bundle)
+            gsig = _vdp_count_gallery_signals(network_rows, last_bundle) + len(extra_loop_gallery)
             log.info(
                 "VDP: %s — combined EP keys for VIN %s: %s (gallery_signal=%d)",
                 dealer_name,
@@ -1132,8 +1703,33 @@ async def _vdp_visit_one(
                 try_url[:120],
             )
 
-        g_total = _vdp_count_gallery_signals(network_rows, last_bundle)
-        if not combined_ep and g_total < 2:
+        img_net = len(
+            {u for u in response_image_urls if isinstance(u, str) and u.lower().startswith("https://")}
+        )
+        g_total = (
+            _vdp_count_gallery_signals(network_rows, last_bundle) + len(extra_loop_gallery) + img_net
+        )
+        dom_vhr: list[Any] = []
+        dom_mono: list[Any] = []
+        if isinstance(last_bundle, dict):
+            dom_vhr = last_bundle.get("domVehicleHistoryUrls") or []
+            dom_mono = last_bundle.get("domMonroneyTextSnippets") or []
+        has_dom_history = isinstance(dom_vhr, list) and any(
+            isinstance(x, str) and x.strip().lower().startswith("http") for x in dom_vhr
+        )
+        has_mono_text = isinstance(dom_mono, list) and any(
+            isinstance(x, str) and len(x.strip()) >= 50 for x in dom_mono
+        )
+        price_hints_n = 0
+        if isinstance(last_bundle, dict):
+            price_hints_n = len([h for h in (last_bundle.get("vdpPriceHints") or []) if isinstance(h, dict)])
+        if (
+            not combined_ep
+            and g_total < 2
+            and not has_dom_history
+            and not has_mono_text
+            and price_hints_n == 0
+        ):
             log.info(
                 "VDP: %s — no extractable ep/vehicle fields and minimal gallery signals after %d URL attempt(s)",
                 dealer_name,
@@ -1164,17 +1760,20 @@ async def _vdp_visit_one(
         if not v.get("source_url"):
             v["source_url"] = success_u
 
-        origin = _response_origin(success_u)
         cand_gallery: list[str] = []
+        gseen: set[str] = set()
+        mx_cap = max(inventory_gallery_max(), 200)
+
+        def _push_g(batch: list[str]) -> None:
+            merge_https_url_batches(cand_gallery, gseen, batch, max_total=mx_cap)
+
         if isinstance(last_bundle, dict):
             for key in ("domGalleryUrls", "jsonGalleryUrls"):
-                for u2 in last_bundle.get(key) or []:
-                    if isinstance(u2, str):
-                        cand_gallery.append(u2)
+                _push_g([u2 for u2 in (last_bundle.get(key) or []) if isinstance(u2, str)])
         for row in network_rows:
-            for u2 in row.get("image_urls") or []:
-                if isinstance(u2, str):
-                    cand_gallery.append(u2)
+            _push_g([u2 for u2 in (row.get("image_urls") or []) if isinstance(u2, str)])
+        _push_g(extra_loop_gallery)
+        _push_g(list(response_image_urls))
 
         gmerge = merge_vdp_gallery_into_vehicle(
             v,
@@ -1183,6 +1782,31 @@ async def _vdp_visit_one(
         )
         out["gallery_added"] = int(gmerge.get("added") or 0)
         out["gallery_merge_action"] = gmerge.get("action")
+
+        dom_carfax_updated = False
+        if isinstance(last_bundle, dict):
+            vhr_dom = last_bundle.get("domVehicleHistoryUrls") or []
+            dom_carfax_updated = _merge_vdp_vehicle_history_url(v, vhr_dom)
+            if dom_carfax_updated:
+                filled.append("carfax_url")
+                out["filled"] = list(filled)
+            snips = last_bundle.get("domMonroneyTextSnippets") or []
+            if isinstance(snips, list):
+                clean_snips = [s for s in snips if isinstance(s, str) and s.strip()]
+                if clean_snips:
+                    prev_txt = v.get("_monroney_page_texts")
+                    if not isinstance(prev_txt, list):
+                        prev_txt = []
+                    v["_monroney_page_texts"] = (prev_txt + clean_snips)[:8]
+
+        pdiag = _apply_vdp_price_hints(v, last_bundle, success_u)
+        out["price_updated"] = bool(pdiag.get("updated"))
+
+        if _vdp_download_images_enabled():
+            try:
+                await _download_vdp_gallery_images(wp, v, v.get("gallery") if isinstance(v.get("gallery"), list) else [])
+            except Exception as e:
+                log.warning("VDP: %s — image download: %s", dealer_name, str(e)[:160])
 
         if filled:
             log.info(
@@ -1207,7 +1831,7 @@ async def _vdp_visit_one(
                 gmerge.get("added"),
                 gmerge.get("final_len"),
             )
-        if filled or int(out.get("gallery_added") or 0) > 0:
+        if filled or int(out.get("gallery_added") or 0) > 0 or out.get("price_updated") or dom_carfax_updated:
             out["enriched"] = True
         return out
     except Exception as e:
@@ -1302,6 +1926,8 @@ async def enrich_vehicles_vdp(
         gallery_urls_added_total += int(r.get("gallery_added") or 0)
         for fn in r.get("filled") or []:
             field_fill_counter[fn] += 1
+        if r.get("price_updated"):
+            field_fill_counter["price"] += 1
         for sk in r.get("skipped") or []:
             head = sk.split(":", 1)[0].strip() if ":" in str(sk) else str(sk).strip()
             if head:

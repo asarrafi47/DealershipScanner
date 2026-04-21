@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/schemas/oem_option_catalog.json",
+  "title": "OEM option catalog file",
+  "type": "object",
+  "required": ["catalog_version", "make", "entries"],
+  "properties": {
+    "catalog_version": { "type": "string", "minLength": 1 },
+    "make": {
+      "type": "string",
+      "description": "Manufacturer label as in inventory (case-insensitive match), or '*' for global fallbacks."
+    },
+    "model_year_ranges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["mappings"],
+        "properties": {
+          "min_year": { "type": ["integer", "null"] },
+          "max_year": { "type": ["integer", "null"] },
+          "mappings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["keywords", "canonical_name"],
+              "properties": {
+                "keywords": {
+                  "type": "array",
+                  "items": { "type": "string", "minLength": 1 },
+                  "minItems": 1
+                },
+                "canonical_name": { "type": "string", "minLength": 1 }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "entries": {
+      "type": "array",
+      "description": "Flat keyword list applied when model_year_ranges is absent or as global rows.",
+      "items": {
+        "type": "object",
+        "required": ["keywords", "canonical_name"],
+        "properties": {
+          "keywords": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "minItems": 1
+          },
+          "canonical_name": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

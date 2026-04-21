@@ -142,6 +142,22 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
             out[num_key] = n if n >= 0 else None
         else:
             out[num_key] = n if n > 0 else None
+
+    pkg = out.get("packages")
+    if pkg is not None:
+        if isinstance(pkg, dict):
+            try:
+                out["packages"] = json.dumps(pkg, ensure_ascii=False)
+            except (TypeError, ValueError):
+                out["packages"] = None
+        elif isinstance(pkg, str):
+            s = pkg.strip()
+            if not s or s.lower() in ("{}", "[]", "null"):
+                out["packages"] = None
+            else:
+                out["packages"] = s[:800000]
+        else:
+            out["packages"] = None
     return out
 
 

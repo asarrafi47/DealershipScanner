@@ -10,6 +10,7 @@ from typing import Any
 from backend.knowledge_engine import merge_verified_specs
 from backend.utils.car_serialize import DISPLAY_DASH, _dealer_spec_wins, infer_condition_for_storage
 from backend.utils.field_clean import clean_car_row_dict, is_effectively_empty
+from backend.utils.interior_color_buckets import interior_color_buckets_json
 
 _CLEANABLE_FOR_SQL = frozenset(
     {
@@ -112,4 +113,8 @@ def collect_row_storage_repairs(raw: dict[str, Any]) -> dict[str, Any]:
     cond = infer_condition_for_storage(raw)
     if cond:
         updates["condition"] = cond
+    if "interior_color" in updates:
+        updates["interior_color_buckets"] = interior_color_buckets_json(
+            updates.get("interior_color"), raw.get("make")
+        )
     return updates

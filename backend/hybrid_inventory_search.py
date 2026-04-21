@@ -25,7 +25,13 @@ _HYBRID_DEBUG = os.environ.get("HYBRID_SEARCH_DEBUG", "").strip().lower() in ("1
 
 
 def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any]:
-    """Map parse_natural_query() output to search_cars() keyword arguments."""
+    """Map parse_natural_query() output to search_cars() keyword arguments.
+
+    Optional ``package_contains`` / ``packages_json_contains`` (substring, case-insensitive)
+    maps to ``search_cars(..., packages_json_contains=...)`` for JSON text in ``cars.packages``
+    (e.g. ``packages_normalized`` from listing-description parse). Not emitted by
+    ``parse_natural_query`` today; callers may attach it when exposing structured package search.
+    """
     if not filters:
         return {}
     out: dict[str, Any] = {}
@@ -43,6 +49,19 @@ def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any
         out["exterior_colors"] = filters["exterior_color"]
     if filters.get("interior_color"):
         out["interior_colors"] = filters["interior_color"]
+    bic = filters.get("interior_color_buckets") or filters.get("interior_color_bucket")
+    if bic:
+        out["interior_color_bucket_filters"] = bic if isinstance(bic, list) else [str(bic)]
+    if filters.get("engine_displacement_l_min") is not None:
+        try:
+            out["engine_displacement_l_min"] = float(filters["engine_displacement_l_min"])
+        except (TypeError, ValueError):
+            pass
+    if filters.get("engine_displacement_l_max") is not None:
+        try:
+            out["engine_displacement_l_max"] = float(filters["engine_displacement_l_max"])
+        except (TypeError, ValueError):
+            pass
     if filters.get("min_year") is not None:
         out["min_year"] = filters["min_year"]
     if filters.get("max_year") is not None:
@@ -51,6 +70,9 @@ def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any
         out["max_price"] = filters["max_price"]
     if filters.get("max_mileage") is not None:
         out["max_mileage"] = filters["max_mileage"]
+    pkg = filters.get("packages_json_contains") or filters.get("package_contains")
+    if isinstance(pkg, str) and pkg.strip():
+        out["packages_json_contains"] = pkg.strip()
     return out
 
 
@@ -90,7 +112,18 @@ def flask_request_to_search_cars_kwargs(request: Any) -> dict[str, Any]:
         except ValueError:
             return None
 
-    return {
+    pkg_needle = scalar("package_contains") or scalar("pkg")
+    eng_l_min = scalar("engine_l_min") or scalar("engine_displacement_l_min")
+    eng_l_max = scalar("engine_l_max") or scalar("engine_displacement_l_max")
+    interior_bucket_filters: list[str] = []
+    seen_ib: set[str] = set()
+    for key in ("interior_bucket", "interior_color_bucket"):
+        for x in g(key):
+            s = (x or "").strip().lower()
+            if s and s not in seen_ib:
+                seen_ib.add(s)
+                interior_bucket_filters.append(s)
+    out = {
         "makes": g("make") or None,
         "models": g("model") or None,
         "trims": g("trim") or None,
@@ -101,13 +134,19 @@ def flask_request_to_search_cars_kwargs(request: Any) -> dict[str, Any]:
         "body_styles": g("body_style") or None,
         "exterior_colors": g("exterior_color") or None,
         "interior_colors": g("interior_color") or None,
+        "interior_color_bucket_filters": interior_bucket_filters or None,
         "countries": g("country") or None,
         "max_price": _safe_float(max_price),
         "max_mileage": _safe_int(max_mileage),
         "zip_code": zip_code or None,
         "radius_miles": _safe_float(radius),
         "dealership_registry_id": dealership_registry_id,
+        "engine_displacement_l_min": _safe_float(eng_l_min),
+        "engine_displacement_l_max": _safe_float(eng_l_max),
     }
+    if pkg_needle:
+        out["packages_json_contains"] = pkg_needle
+    return out
 
 
 def hybrid_search_with_kwargs(

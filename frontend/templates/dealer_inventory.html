@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My inventory</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="page">
+
+    <nav class="topbar">
+        <div class="logo">Dealership Scanner</div>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/listings">Listings</a>
+            <a href="/inventory" class="nav-link-active">My inventory</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="db-layout dealer-inv-layout">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="dealer-inv-flash-wrap">
+            {% for category, message in messages %}
+            <div class="dealer-inv-flash dealer-inv-flash--{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <section class="db-section dealer-inv-section">
+            <div class="db-section-header">
+                <p class="db-eyebrow">Dealer tools</p>
+                <h2 class="db-section-title">Add vehicle by VIN</h2>
+            </div>
+            <p class="dealer-inv-hint">We decode your VIN with NHTSA vPIC and fill EPA-backed specs where possible. You can edit fields and upload your own photos below.</p>
+            <form method="POST" action="{{ url_for('dealer_portal.inventory_add_vin') }}" class="dealer-inv-vin-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div class="dealer-inv-vin-row">
+                    <label class="dealer-inv-label" for="dealer-vin-input">VIN (17 characters)</label>
+                    <input id="dealer-vin-input" name="vin" type="text" maxlength="17" minlength="17" class="dealer-inv-vin-input" placeholder="e.g. 1FTEW1EP5JFD12345" required autocomplete="off" spellcheck="false">
+                    <button type="submit" class="primary-button">Decode &amp; add</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="db-section dealer-inv-section">
+            <div class="db-section-header">
+                <p class="db-eyebrow">Your lot</p>
+                <h2 class="db-section-title">Vehicles ({{ vehicles|length }})</h2>
+            </div>
+
+            {% if vehicles %}
+            <div class="dealer-inv-grid">
+                {% for v in vehicles %}
+                <article class="dealer-inv-card" id="vehicle-{{ v.id }}">
+                    <div class="dealer-inv-card-visual">
+                        {% set hero = v.gallery[0] if v.gallery and v.gallery|length > 0 else '' %}
+                        {% if hero %}
+                        <div class="dealer-inv-card-img" style="background-image:url('{{ hero | e }}')"></div>
+                        {% else %}
+                        <div class="dealer-inv-card-img dealer-inv-card-img--empty" style="background-image:url('{{ url_for('static', filename='placeholder.svg') }}')"></div>
+                        {% endif %}
+                    </div>
+                    <div class="dealer-inv-card-body">
+                        <h3 class="dealer-inv-card-title">{{ v.title or 'Untitled vehicle' }}</h3>
+                        <p class="dealer-inv-card-vin">VIN {{ v.vin }}</p>
+                        <form method="POST" action="{{ url_for('dealer_portal.inventory_update_vehicle', vehicle_id=v.id) }}" class="dealer-inv-edit-form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                            <div class="dealer-inv-fields">
+                                <label>Title <input name="title" type="text" value="{{ v.title or '' }}"></label>
+                                <label>Year <input name="year" type="number" value="{{ v.year or '' }}"></label>
+                                <label>Make <input name="make" type="text" value="{{ v.make or '' }}"></label>
+                                <label>Model <input name="model" type="text" value="{{ v.model or '' }}"></label>
+                                <label>Trim <input name="trim" type="text" value="{{ v.trim or '' }}"></label>
+                                <label>Price <input name="price" type="number" step="1" placeholder="USD" value="{{ v.price if v.price is not none else '' }}"></label>
+                                <label>Mileage <input name="mileage" type="number" step="1" value="{{ v.mileage if v.mileage is not none else '' }}"></label>
+                                <label>Transmission <input name="transmission" type="text" value="{{ v.transmission or '' }}"></label>
+                                <label>Drivetrain <input name="drivetrain" type="text" value="{{ v.drivetrain or '' }}"></label>
+                                <label>Fuel <input name="fuel_type" type="text" value="{{ v.fuel_type or '' }}"></label>
+                                <label>Exterior <input name="exterior_color" type="text" value="{{ v.exterior_color or '' }}"></label>
+                                <label>Interior <input name="interior_color" type="text" value="{{ v.interior_color or '' }}"></label>
+                                <label>Cylinders <input name="cylinders" type="number" value="{{ v.cylinders if v.cylinders is not none else '' }}"></label>
+                                <label>Body style <input name="body_style" type="text" value="{{ v.body_style or '' }}"></label>
+                                <label>Engine <input name="engine_description" type="text" value="{{ v.engine_description or '' }}"></label>
+                                <label>Stock # <input name="stock_number" type="text" value="{{ v.stock_number or '' }}"></label>
+                                <label class="dealer-inv-notes">Notes <textarea name="notes" rows="2">{{ v.notes or '' }}</textarea></label>
+                            </div>
+                            <button type="submit" class="secondary-button">Save changes</button>
+                        </form>
+
+                        <form method="POST" action="{{ url_for('dealer_portal.inventory_upload_photos', vehicle_id=v.id) }}" enctype="multipart/form-data" class="dealer-inv-upload-form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                            <label class="dealer-inv-upload-label">Add photos (JPEG, PNG, WebP)</label>
+                            <input type="file" name="photos" accept="image/jpeg,image/png,image/webp" multiple class="dealer-inv-file-input">
+                            <button type="submit" class="secondary-button">Upload photos</button>
+                        </form>
+
+                        {% if v.gallery and v.gallery|length > 0 %}
+                        <div class="dealer-inv-thumb-row">
+                            {% for u in v.gallery %}
+                            <div class="dealer-inv-thumb" style="background-image:url('{{ u | e }}')"></div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <form method="POST" action="{{ url_for('dealer_portal.inventory_delete_vehicle', vehicle_id=v.id) }}" class="dealer-inv-delete-form" onsubmit="return confirm('Remove this vehicle from your inventory?');">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                            <button type="submit" class="dealer-inv-delete-btn">Delete vehicle</button>
+                        </form>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="dealer-inv-empty">
+                <p>No vehicles yet. Add your first VIN above.</p>
+            </div>
+            {% endif %}
+        </section>
+    </div>
+</div>
+</body>
+</html>

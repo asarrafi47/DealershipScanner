@@ -477,12 +477,16 @@ def admin_logout():
 
 @dev_bp.route("/")
 def dev_dashboard():
+    from backend.utils.listing_completeness import summarize_incomplete_missing_fields
+
+    incomplete = get_incomplete_cars()
     return render_template(
         "dev.html",
         dealerships=list_recent_dealerships(10),
         status=_dev_status(),
         admin_username=session.get("admin_username") or "",
-        incomplete_cars=get_incomplete_cars(),
+        incomplete_cars=incomplete,
+        incomplete_issues_summary=summarize_incomplete_missing_fields(incomplete),
     )
 
 
@@ -499,10 +503,24 @@ def api_dev_dealers():
 @dev_bp.route("/api/incomplete-cars")
 def api_incomplete_cars():
     from backend.utils.car_serialize import serialize_car_for_api
+    from backend.utils.listing_completeness import summarize_incomplete_missing_fields
 
     cars = get_incomplete_cars()
-    safe = [serialize_car_for_api(c, include_verified=False) for c in cars]
-    return jsonify({"ok": True, "cars": safe, "count": len(safe)})
+    safe = []
+    for c in cars:
+        row = dict(c)
+        missing = row.pop("incomplete_missing_fields", None) or []
+        payload = serialize_car_for_api(row, include_verified=False)
+        payload["incomplete_missing_fields"] = missing
+        safe.append(payload)
+    return jsonify(
+        {
+            "ok": True,
+            "cars": safe,
+            "count": len(safe),
+            "issues_summary": summarize_incomplete_missing_fields(safe),
+        }
+    )
 
 
 @dev_bp.route("/api/incomplete-cars/<int:car_id>", methods=["DELETE"])
@@ -514,6 +532,12 @@ def api_delete_incomplete_car(car_id: int):
     conn.commit()
     conn.close()
     if deleted:
+        try:
+            from backend.db import incomplete_listings_db as ild
+
+            ild.delete_incomplete_record(car_id)
+        except Exception:
+            logging.getLogger("dev_routes").exception("incomplete_listings cleanup after car delete failed")
         return jsonify({"ok": True})
     return jsonify({"ok": False, "error": "not found"}), 404
 
@@ -794,6 +818,52 @@ def _spawn_inventory_enrich(
         import logging
 
         logging.getLogger("dev_routes").exception("Inventory enrichment background job failed")
+
+
+@dev_bp.route("/api/cars/<int:car_id>/kbb-refresh", methods=["POST"])
+def api_car_kbb_refresh(car_id: int):
+    """
+    Fetch Kelley Blue Book IDWS values for one row (licensed ``KBB_API_KEY`` + CSRF header).
+
+    Optional JSON body: ``{"zip_override": "92618"}`` when the row has no usable ZIP.
+    """
+    from backend.db.inventory_db import get_car_by_id, refresh_car_data_quality_score, update_car_row_partial
+    from backend.kbb_idws import patch_from_refresh_result, refresh_kbb_for_vehicle_row
+
+    raw = get_car_by_id(car_id, include_inactive=True)
+    if not raw:
+        return jsonify({"ok": False, "message": "not_found", "car_id": car_id}), 404
+
+    data = request.get_json(silent=True) or {}
+    z_override = (data.get("zip_override") or data.get("zip_code") or "").strip() or None
+
+    res = refresh_kbb_for_vehicle_row(raw, zip_override=z_override)
+    if not res.ok:
+        return (
+            jsonify(
+                {
+                    "ok": False,
+                    "car_id": car_id,
+                    "message": res.message,
+                    "http_status": res.http_status,
+                }
+            ),
+            400,
+        )
+
+    patch = patch_from_refresh_result(res)
+    if patch:
+        update_car_row_partial(car_id, patch)
+        refresh_car_data_quality_score(car_id)
+    return jsonify(
+        {
+            "ok": True,
+            "car_id": car_id,
+            "message": res.message,
+            "updated_fields": sorted(patch.keys()),
+            "normalized": res.normalized,
+        }
+    )
 
 
 @dev_bp.route("/api/cars/<int:car_id>/spec-backfill", methods=["POST"])

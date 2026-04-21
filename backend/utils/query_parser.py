@@ -7,6 +7,12 @@ import re
 from typing import Any
 
 from backend.db.inventory_db import get_conn
+from backend.utils.field_clean import is_effectively_empty
+from backend.utils.interior_color_buckets import (
+    infer_paint_color_buckets,
+    parse_stored_buckets,
+    sort_paint_family_ids,
+)
 
 # Spoken / slang -> canonical token before make/model fuzzy match
 MAKE_SYNONYMS: dict[str, str] = {
@@ -96,13 +102,24 @@ def _load_inventory_keywords() -> tuple[list[tuple[str, str]], list[str], list[s
     )
     pairs = [(r[0], r[1]) for r in cur.fetchall()]
     cur.execute(
-        "SELECT DISTINCT exterior_color FROM cars WHERE exterior_color IS NOT NULL ORDER BY exterior_color"
+        """
+        SELECT exterior_color, interior_color, interior_color_buckets
+        FROM cars
+        WHERE (COALESCE(listing_active, 1) = 1)
+        """
     )
-    ext_colors = [r[0] for r in cur.fetchall()]
-    cur.execute(
-        "SELECT DISTINCT interior_color FROM cars WHERE interior_color IS NOT NULL ORDER BY interior_color"
-    )
-    int_colors = [r[0] for r in cur.fetchall()]
+    ext_ids: set[str] = set()
+    int_ids: set[str] = set()
+    for ext_raw, int_raw, int_bucks in cur.fetchall():
+        if not is_effectively_empty(ext_raw):
+            ext_ids.update(infer_paint_color_buckets(ext_raw, None))
+        ib = parse_stored_buckets(int_bucks)
+        if ib:
+            int_ids.update(ib)
+        elif not is_effectively_empty(int_raw):
+            int_ids.update(infer_paint_color_buckets(int_raw, None))
+    ext_colors = sort_paint_family_ids(ext_ids)
+    int_colors = sort_paint_family_ids(int_ids)
     cur.execute(
         """
         SELECT DISTINCT body_style FROM cars

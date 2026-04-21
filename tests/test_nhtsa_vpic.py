@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from backend.nhtsa_vpic import (
+    _build_engine_description,
     decode_vpic_http_response,
     fetch_decode_vin_values_extended,
     flat_vpic_result_to_car_patch,
@@ -31,6 +32,7 @@ def test_decode_and_flat_patch() -> None:
                 "EngineCylinders": "4",
                 "BodyClass": "Sedan/Saloon",
                 "DisplacementL": "1.5",
+                "EngineConfiguration": "In-Line",
             }
         ]
     }
@@ -43,6 +45,77 @@ def test_decode_and_flat_patch() -> None:
     assert patch.get("drivetrain") == "FWD"
     assert "Automatic" in (patch.get("transmission") or "")
     assert patch.get("body_style") == "Sedan/Saloon"
+    assert patch.get("engine_description") == "1.5L I4"
+
+
+def test_engine_description_durango_style_hemi() -> None:
+    flat = {
+        "DisplacementL": "5.7",
+        "EngineConfiguration": "V-Shaped",
+        "EngineCylinders": "8",
+        "EngineModel": "HEMI MDS VVT eTorque",
+    }
+    assert _build_engine_description(flat) == "5.7L V8 HEMI MDS VVT eTorque"
+    assert flat_vpic_result_to_car_patch(flat).get("engine_description") == "5.7L V8 HEMI MDS VVT eTorque"
+
+
+def test_engine_description_v6_pentastar() -> None:
+    flat = {
+        "DisplacementL": "3.6",
+        "EngineConfiguration": "V-shaped",
+        "EngineCylinders": "6",
+        "EngineModel": "Pentastar",
+    }
+    assert _build_engine_description(flat) == "3.6L V6 Pentastar"
+
+
+def test_engine_description_i4_turbo_model_word() -> None:
+    flat = {
+        "DisplacementL": "2.0",
+        "EngineConfiguration": "In-Line",
+        "EngineCylinders": "4",
+        "EngineModel": "Turbocharged DOHC",
+    }
+    assert _build_engine_description(flat) == "2.0L I4 Turbocharged DOHC"
+
+
+def test_engine_description_v_shaped_missing_cylinders_keeps_raw_config() -> None:
+    flat = {
+        "DisplacementL": "3.0",
+        "EngineConfiguration": "V-Shaped",
+        "EngineModel": "DOHC 24V",
+    }
+    assert _build_engine_description(flat) == "3.0L V-Shaped DOHC 24V"
+
+
+def test_engine_description_dedup_displacement_and_layout_in_model() -> None:
+    flat = {
+        "DisplacementL": "5.7",
+        "EngineConfiguration": "V-Shaped",
+        "EngineCylinders": "8",
+        "EngineModel": "5.7L V8 OHV 16V",
+    }
+    assert _build_engine_description(flat) == "5.7L V8 OHV 16V"
+
+
+def test_engine_description_ci_no_l_suffix() -> None:
+    flat = {
+        "DisplacementCI": "345",
+        "EngineConfiguration": "V-Shaped",
+        "EngineCylinders": "8",
+        "EngineModel": "HEMI",
+    }
+    assert _build_engine_description(flat) == "345 CI V8 HEMI"
+
+
+def test_engine_description_turbo_flag() -> None:
+    flat = {
+        "DisplacementL": "2.0",
+        "EngineConfiguration": "In-Line",
+        "EngineCylinders": "4",
+        "Turbo": "Y",
+    }
+    assert _build_engine_description(flat) == "2.0L I4 Turbo"
 
 
 def test_fetch_decode_uses_injected_get_json() -> None:

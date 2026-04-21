@@ -145,6 +145,48 @@ _MANUFACTURER_SPEC_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Listing/VDP text that is only a liter figure (no layout / cylinder / motor words) — merge with inferred cylinders.
+_DISP_ONLY_ENGINE_RE = re.compile(r"^\s*(\d+\.\d+|\d+)\s*l?\s*$", re.IGNORECASE)
+
+
+def _is_displacement_only_engine_text(s: str) -> bool:
+    t = (s or "").strip()
+    if not t or is_effectively_empty(t):
+        return False
+    if _MANUFACTURER_SPEC_RE.search(t):
+        return False
+    if re.search(
+        r"(?i)\b(v|i|inline|flat|h|w|twin|single|dual|triple|quad|turbo|supercharg|diesel|"
+        r"electric|plug|motor|hp|kw|lb[-\s]?ft|liter|litre|cylinders?|rotary|hybrid)\b",
+        t,
+    ):
+        return False
+    return bool(_DISP_ONLY_ENGINE_RE.match(t))
+
+
+def _effective_cylinder_count(car: dict[str, Any], vs: dict[str, Any]) -> int | None:
+    """Prefer dealer cylinders when valid; else merged ``cylinders_display`` / ``cylinders`` from verified specs."""
+    raw = car.get("cylinders")
+    try:
+        di = int(raw) if raw is not None and str(raw).strip() != "" else None
+    except (TypeError, ValueError):
+        di = None
+    if di is not None and di > 0:
+        return di
+    if not vs:
+        return None
+    for key in ("cylinders_display", "cylinders"):
+        v = vs.get(key)
+        if v is None or str(v).strip() == "":
+            continue
+        try:
+            vi = int(v)
+            if vi > 0:
+                return vi
+        except (TypeError, ValueError):
+            continue
+    return None
+
 
 def format_display_value(value: Any, *, dash: str = DISPLAY_DASH) -> str:
     """
@@ -190,35 +232,119 @@ def _fuel_word(car: dict[str, Any]) -> str:
     return ft[:40]
 
 
+def _cylinder_layout_token(cyl_i: int, *text_hints: str | None) -> str:
+    """
+    Short layout label (e.g. ``V8``, ``I4``). Prefer tokens found in listing/EPA text;
+    otherwise use common heuristics by cylinder count.
+    """
+    blob = " ".join(
+        p.strip() for p in text_hints if isinstance(p, str) and p.strip()
+    ).upper()
+    if blob:
+        m = re.search(r"\bV\s*-?\s*(\d{1,2})\b", blob)
+        if m:
+            return f"V{int(m.group(1))}"
+        m = re.search(r"\bI\s*-?\s*(\d)\b", blob)
+        if m:
+            return f"I{int(m.group(1))}"
+        if re.search(r"\b(FLAT|H)\s*-?\s*4\b", blob) or re.search(r"\bH4\b", blob):
+            return "H4"
+        if re.search(r"\b(FLAT|H)\s*-?\s*6\b", blob) or re.search(r"\bH6\b", blob):
+            return "H6"
+        if re.search(r"\bINLINE\s*-?\s*6\b", blob) or re.search(r"\bIN[-\s]?LINE\s*-?\s*6\b", blob):
+            return "I6"
+    if cyl_i <= 0:
+        return ""
+    by_count = {
+        1: "1-cyl",
+        2: "2-cyl",
+        3: "I3",
+        4: "I4",
+        5: "I5",
+        6: "V6",
+        7: "7-cyl",
+        8: "V8",
+        10: "V10",
+        12: "V12",
+    }
+    return by_count.get(cyl_i, f"{cyl_i}-cyl")
+
+
+def parse_engine_displacement_liters(car: dict[str, Any]) -> float | None:
+    """
+    Best-effort displacement in liters for structured filters (``engine_l`` column first,
+    then a ``N`` or ``N.N`` prefix before ``L`` in ``engine_description``).
+    """
+    raw = car.get("engine_l")
+    if raw is not None:
+        s = str(raw).strip().lower()
+        if s in ("electric", "phev", ""):
+            return None
+        try:
+            v = float(s.replace("l", "").strip())
+            if v > 0:
+                return v
+        except (TypeError, ValueError):
+            pass
+    ed = car.get("engine_description")
+    if isinstance(ed, str) and ed.strip():
+        m = re.search(r"(\d+\.\d+|\d+)\s*[lL]\b", ed)
+        if m:
+            try:
+                v = float(m.group(1))
+                return v if v > 0 else None
+            except ValueError:
+                return None
+    return None
+
+
+def car_matches_engine_displacement_l_range(
+    car: dict[str, Any],
+    lo: float | None,
+    hi: float | None,
+) -> bool:
+    """True when parsed liters is within ``[lo, hi]`` (inclusive); unknown liters never match."""
+    if lo is None and hi is None:
+        return True
+    v = parse_engine_displacement_liters(car)
+    if v is None:
+        return False
+    if lo is not None and v < lo:
+        return False
+    if hi is not None and v > hi:
+        return False
+    return True
+
+
 def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | None = None) -> str:
     """
-    Priority: engine_description → inferred master line (if not junk) →
-    engine_l + cylinders + fuel → partial → —.
+    Priority: rich ``engine_description`` (not manufacturer boilerplate, not displacement-only)
+    → inferred ``master_engine_string`` (same rules) →
+    ``{liters}L`` + layout (e.g. ``2.0L I4``, ``4.4L V8``) using ``engine_l`` / thin description
+    plus effective cylinder count (dealer row, else ``cylinders_display`` / ``cylinders`` from
+    verified specs) → partial → —.
+
+    Displacement-only strings (e.g. ``2``, ``2.0``, ``2.0L``) are never shown alone when verified
+    specs supply a positive cylinder count — common for BMW VDP rows missing an explicit layout.
     """
     c = clean_car_row_dict(car)
     dash = DISPLAY_DASH
+    vs = verified_specs or {}
+    mes = vs.get("master_engine_string") if isinstance(vs.get("master_engine_string"), str) else None
+
     ed = c.get("engine_description")
     if isinstance(ed, str) and ed.strip() and not is_effectively_empty(ed):
-        if not _MANUFACTURER_SPEC_RE.search(ed):
+        if not _MANUFACTURER_SPEC_RE.search(ed) and not _is_displacement_only_engine_text(ed):
             return format_display_value(ed, dash=dash)
 
-    vs = verified_specs or {}
-    mes = vs.get("master_engine_string")
     if isinstance(mes, str) and mes.strip():
-        fd = format_display_value(mes, dash=dash)
-        if fd != dash:
-            return fd
+        if not _is_displacement_only_engine_text(mes):
+            fd = format_display_value(mes, dash=dash)
+            if fd != dash:
+                return fd
 
     eng_l = c.get("engine_l")
-    cyl = c.get("cylinders")
-    if cyl is None and vs:
-        vc = vs.get("cylinders")
-        if vc is not None and str(vc).strip() != "":
-            cyl = vc
-    try:
-        cyl_i = int(cyl) if cyl is not None and str(cyl).strip() != "" else None
-    except (TypeError, ValueError):
-        cyl_i = None
+    cyl_i = _effective_cylinder_count(c, vs)
 
     if cyl_i == 0:
         return "Electric"
@@ -236,12 +362,28 @@ def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | N
             if not is_effectively_empty(s):
                 return format_display_value(s, dash=dash)
 
-    if lit and cyl_i is not None and cyl_i > 0:
-        return f"{lit} {cyl_i}-cylinder {_fuel_word(c)}"
+    if lit is None and isinstance(ed, str) and ed.strip() and _is_displacement_only_engine_text(ed):
+        try:
+            f = float(re.sub(r"(?i)l\s*$", "", ed.strip()))
+            if f > 0:
+                lit = f"{f:.1f}L"
+        except (TypeError, ValueError):
+            pass
+
+    layout_hints: tuple[str | None, ...] = ()
+    if isinstance(ed, str) and ed.strip():
+        layout_hints = (ed.strip(),)
+    if cyl_i is not None and cyl_i > 0:
+        layout = _cylinder_layout_token(cyl_i, *layout_hints, mes)
+    else:
+        layout = ""
+
+    if lit and layout:
+        return f"{lit} {layout}"
     if lit:
         return lit
-    if cyl_i is not None and cyl_i > 0:
-        return f"{cyl_i}-cylinder {_fuel_word(c)}"
+    if layout:
+        return layout
 
     return dash
 
@@ -377,6 +519,8 @@ def serialize_car_for_api(
 
     out: dict[str, Any] = {}
     for k, v in c.items():
+        if k in ("kbb_snapshot_json", "internal_notes", "marked_for_review", "price_provenance_json"):
+            continue
         if k in ("gallery", "history_highlights"):
             out[k] = v
             continue
@@ -397,6 +541,11 @@ def serialize_car_for_api(
             "id",
             "distance_miles",
             "dealership_registry_id",
+            "kbb_fair_purchase",
+            "kbb_range_low",
+            "kbb_range_high",
+            "kbb_private_party",
+            "kbb_trade_in",
         ):
             out[k] = v
             continue
@@ -469,7 +618,108 @@ def serialize_car_for_api(
 
     fill_derived_condition_for_display(c, out)
 
+    from backend.utils.interior_color_buckets import infer_paint_color_buckets, parse_stored_buckets
+
+    out["exterior_color_families"] = infer_paint_color_buckets(c.get("exterior_color"), c.get("make"))
+    _ib = parse_stored_buckets(car.get("interior_color_buckets"))
+    out["interior_color_families"] = (
+        _ib if _ib else infer_paint_color_buckets(c.get("interior_color"), c.get("make"))
+    )
+
+    _attach_kbb_listing_summary(c, out)
     return out
+
+
+def _fmt_usd0(n: float | int | None) -> str | None:
+    if n is None:
+        return None
+    try:
+        x = float(n)
+    except (TypeError, ValueError):
+        return None
+    if x <= 0:
+        return None
+    return f"${x:,.0f}"
+
+
+def _attach_kbb_listing_summary(c: dict[str, Any], out: dict[str, Any]) -> None:
+    """
+    Adds ``kbb`` summary for templates/API: fair purchase + range vs asking price.
+    Does not expose raw ``kbb_snapshot_json`` on the public car payload.
+    """
+    fp = c.get("kbb_fair_purchase")
+    lo = c.get("kbb_range_low")
+    hi = c.get("kbb_range_high")
+    fetched = c.get("kbb_fetched_at")
+    has_any = any(
+        x is not None
+        for x in (fp, lo, hi, c.get("kbb_private_party"), c.get("kbb_trade_in"))
+    )
+    if not has_any:
+        out["kbb"] = None
+        return
+
+    price = c.get("price")
+    try:
+        price_f = float(price) if price is not None and str(price).strip() != "" else None
+    except (TypeError, ValueError):
+        price_f = None
+    if price_f is not None and price_f <= 0:
+        price_f = None
+
+    vs = None
+    if price_f is not None:
+        if lo is not None and hi is not None:
+            try:
+                lo_f, hi_f = float(lo), float(hi)
+                if price_f < lo_f:
+                    vs = "below_kbb_range"
+                elif price_f > hi_f:
+                    vs = "above_kbb_range"
+                else:
+                    vs = "within_kbb_range"
+            except (TypeError, ValueError):
+                vs = None
+        if vs is None and fp is not None:
+            try:
+                fpp = float(fp)
+                if price_f < fpp * 0.97:
+                    vs = "below_kbb_fair_purchase"
+                elif price_f > fpp * 1.03:
+                    vs = "above_kbb_fair_purchase"
+                else:
+                    vs = "near_kbb_fair_purchase"
+            except (TypeError, ValueError):
+                vs = None
+
+    labels = {
+        "below_kbb_range": "Below KBB fair market range",
+        "within_kbb_range": "Within KBB fair market range",
+        "above_kbb_range": "Above KBB fair market range",
+        "below_kbb_fair_purchase": "Below KBB typical listing / fair purchase",
+        "near_kbb_fair_purchase": "Close to KBB typical listing / fair purchase",
+        "above_kbb_fair_purchase": "Above KBB typical listing / fair purchase",
+    }
+
+    range_txt = None
+    if lo is not None and hi is not None:
+        a, b = _fmt_usd0(lo), _fmt_usd0(hi)
+        if a and b:
+            range_txt = f"{a} – {b}"
+
+    out["kbb"] = {
+        "has_data": True,
+        "fair_purchase": fp,
+        "fair_purchase_display": _fmt_usd0(fp),
+        "range_low": lo,
+        "range_high": hi,
+        "range_display": range_txt,
+        "private_party_display": _fmt_usd0(c.get("kbb_private_party")),
+        "trade_in_display": _fmt_usd0(c.get("kbb_trade_in")),
+        "fetched_at": format_display_value(fetched) if fetched else None,
+        "vs_listing_code": vs,
+        "vs_listing_label": labels.get(vs) if vs else None,
+    }
 
 
 def fill_derived_condition_for_display(c: dict[str, Any], out: dict[str, Any]) -> None:
@@ -599,29 +849,12 @@ def build_detail_display_snapshot(
     Text the car detail template would show for key spec rows (for /dev/api/car-debug).
     *ser* must be from serialize_car_for_api(..., verified_specs=verified_specs).
     """
-    vd = verified_specs.get("cylinders_display")
-    cyl_render = "—"
-    if vd is not None:
-        if vd == 0:
-            cyl_render = "Electric"
-        elif vd == 1:
-            cyl_render = "1 cylinder"
-        else:
-            cyl_render = f"{vd} cylinders"
+    # Raw cylinder count for dev/debug; user-facing copy is folded into ``engine_display``.
+    cc = ser.get("cylinders")
+    if cc is None or str(cc).strip() == "":
+        cyl_render = "—"
     else:
-        cc = ser.get("cylinders")
-        if cc is not None and str(cc).strip() != "":
-            try:
-                ci = int(cc)
-            except (TypeError, ValueError):
-                ci = None
-            if ci is not None:
-                if ci == 0:
-                    cyl_render = "Electric"
-                elif ci == 1:
-                    cyl_render = "1 cylinder"
-                else:
-                    cyl_render = f"{ci} cylinders"
+        cyl_render = str(cc)
     return {
         "year": ser.get("year"),
         "make": ser.get("make"),

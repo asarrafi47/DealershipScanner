@@ -408,22 +408,26 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         gallery = gallery if gallery else [FALLBACK_IMAGE_URL]
     exterior_color = _extract_exterior_color(obj)
     fuel_type = _opt_str(obj.get("fuelType") or obj.get("fuel_type"))
-    # Prefer dealer VHR/partner link (vhr.carfax.com) — less likely to trigger iframe verification than consumer link
+    # Prefer an explicit dealer/feed URL (matches the link customers click). Synthesized
+    # vhr.carfax.com/main?vin=… is a last resort when the feed only provides a token.
     vhr_url = obj.get("vhr_url") or obj.get("carfax_token")
-    if vhr_url and isinstance(vhr_url, str) and vhr_url.strip().startswith("http"):
+    explicit = norm_str(
+        obj.get("carfax_url")
+        or obj.get("carfaxUrl")
+        or obj.get("carfaxLink")
+        or obj.get("history_report_url")
+        or obj.get("vehicleHistoryUrl")
+        or obj.get("vehicle_history_url")
+        or ""
+    )
+    if explicit.startswith("http"):
+        carfax_url = explicit
+    elif vhr_url and isinstance(vhr_url, str) and vhr_url.strip().startswith("http"):
         carfax_url = norm_str(vhr_url)
     elif vhr_url and vin and not vin.startswith("unknown"):
         carfax_url = f"https://vhr.carfax.com/main?vin={vin}"
     else:
-        carfax_url = norm_str(
-            obj.get("carfax_url")
-            or obj.get("carfaxUrl")
-            or obj.get("carfaxLink")
-            or obj.get("history_report_url")
-            or obj.get("vehicleHistoryUrl")
-            or obj.get("vehicle_history_url")
-            or ""
-        )
+        carfax_url = explicit if explicit else None
 
     cyl = norm_int(obj.get("cylinders") or 0)
     if not cyl:
@@ -464,7 +468,7 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         "exterior_color": exterior_color,
         "interior_color": _extract_interior_color(obj),
         "body_style": _extract_body_style(obj),
-        "carfax_url": carfax_url if carfax_url else None,
+        "carfax_url": carfax_url if (carfax_url and str(carfax_url).strip().lower().startswith("http")) else None,
         "history_highlights": _extract_history_highlights(obj),
         "cylinders": cyl or None,
     }

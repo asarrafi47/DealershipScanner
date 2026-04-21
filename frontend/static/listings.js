@@ -28,7 +28,12 @@ document.addEventListener("DOMContentLoaded", () => {
         clearHighlights();
         if (!highlightParams || !highlightParams.length) return;
         highlightParams.forEach((param) => {
-            if (param === "max_price" || param === "max_mileage") {
+            if (
+                param === "max_price" ||
+                param === "max_mileage" ||
+                param === "engine_l_min" ||
+                param === "engine_l_max"
+            ) {
                 document.querySelectorAll(`[data-filter-param="${param}"]`).forEach((el) => {
                     el.classList.add("smart-parse-active");
                 });

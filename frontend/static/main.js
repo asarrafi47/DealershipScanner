@@ -81,6 +81,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return list.some(x => normFilterStr(x) === v);
     }
 
+    /** Listings filters use paint-family bucket ids (e.g. red); car rows expose *_color_families arrays. */
+    function carMatchesPaintFamilyBuckets(car, param, selected) {
+        if (!selected.length) return true;
+        const key = param === "exterior_color" ? "exterior_color_families" : "interior_color_families";
+        const fams = Array.isArray(car[key]) ? car[key] : [];
+        return selected.some((s) => fams.includes(s));
+    }
+
     // Collect unique checked values (pill + accordion share names, deduplicate)
     function checked(name) {
         const seen = new Set();
@@ -415,8 +423,29 @@ document.addEventListener("DOMContentLoaded", () => {
         const countries   = checked("country");
         const maxPrice    = parseFloat(scalarVal("max_price"))   || null;
         const maxMileage  = parseInt(scalarVal("max_mileage"))   || null;
+        const engLMin     = parseFloat(scalarVal("engine_l_min")) || null;
+        const engLMax     = parseFloat(scalarVal("engine_l_max")) || null;
         const zipCode     = scalarVal("zip_code");
         const radiusMi    = parseFloat(scalarVal("radius"))      || null;
+
+        function parseEngineLiters(c) {
+            const raw = c.engine_l;
+            if (raw != null && String(raw).trim()) {
+                const s = String(raw).trim().toLowerCase();
+                if (s === "electric" || s === "phev") return null;
+                const v = parseFloat(s.replace(/l/gi, ""));
+                if (Number.isFinite(v) && v > 0) return v;
+            }
+            const ed = c.engine_description;
+            if (typeof ed === "string" && ed.trim()) {
+                const m = ed.match(/(\d+\.\d+|\d+)\s*[lL]\b/);
+                if (m) {
+                    const v = parseFloat(m[1]);
+                    if (Number.isFinite(v) && v > 0) return v;
+                }
+            }
+            return null;
+        }
 
         let makesFilter = makes.slice();
         if (countries.length && typeof COUNTRY_TO_MAKES === "object") {
@@ -435,10 +464,16 @@ document.addEventListener("DOMContentLoaded", () => {
             if (trans.length      && !trans.includes(c.transmission))    return false;
             if (drives.length     && !drives.includes(c.drivetrain))     return false;
             if (bodies.length     && !valueInListCI(bodies, c.body_style)) return false;
-            if (extColors.length  && !extColors.includes(c.exterior_color)) return false;
-            if (intColors.length  && !intColors.includes(c.interior_color)) return false;
+            if (extColors.length  && !carMatchesPaintFamilyBuckets(c, "exterior_color", extColors)) return false;
+            if (intColors.length  && !carMatchesPaintFamilyBuckets(c, "interior_color", intColors)) return false;
             if (maxPrice    && c.price   > maxPrice)   return false;
             if (maxMileage  && c.mileage > maxMileage) return false;
+            if (engLMin != null || engLMax != null) {
+                const disp = parseEngineLiters(c);
+                if (disp == null) return false;
+                if (engLMin != null && disp < engLMin) return false;
+                if (engLMax != null && disp > engLMax) return false;
+            }
             return true;
         });
 
