@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Inventory{% endblock %}</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="page">
+    <nav class="topbar">
+        <div class="logo">Dealership Scanner</div>
+        <div class="nav-links">
+            <a href="{{ url_for('dealer_portal.inventory_dashboard') }}"
+               class="{% if request.path.rstrip('/') == '/inventory' %}nav-link-active{% endif %}">Inventory dashboard</a>
+            <a href="{{ url_for('dealer_portal.inventory_listings') }}"
+               class="{% if request.path.startswith('/inventory/listings') %}nav-link-active{% endif %}">Listings</a>
+            <a href="{{ url_for('dashboard') }}">App dashboard</a>
+            <a href="{{ url_for('listings') }}">Public listings</a>
+            <a href="{{ url_for('logout_page') }}">Logout</a>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>
+

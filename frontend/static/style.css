@@ -311,6 +311,19 @@ h1 {
     box-sizing: border-box;
 }
 
+.page-dealer-auth .auth-card--dealer {
+    max-width: 480px;
+    padding: 28px 32px 30px;
+    background: rgba(40, 90, 130, 0.12);
+    border: 1px solid rgba(120, 190, 255, 0.2);
+    border-radius: 16px;
+    box-sizing: border-box;
+}
+
+.page-dealer-auth .topbar .logo {
+    color: #b8d8ff;
+}
+
 .auth-card__head {
     margin-bottom: 20px;
 }

@@ -80,11 +80,27 @@ def init_admin_db() -> None:
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
             email TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL
+            password TEXT NOT NULL,
+            totp_secret TEXT,
+            totp_enabled INTEGER NOT NULL DEFAULT 0
         )
         """
     )
     conn.commit()
+    try:
+        cursor.execute("PRAGMA table_info(admin_users)")
+        cols = {r[1] for r in cursor.fetchall()}
+        for col, ddl in (
+            ("totp_secret", "ALTER TABLE admin_users ADD COLUMN totp_secret TEXT"),
+            ("totp_enabled", "ALTER TABLE admin_users ADD COLUMN totp_enabled INTEGER NOT NULL DEFAULT 0"),
+            ("mfa_method", "ALTER TABLE admin_users ADD COLUMN mfa_method TEXT"),
+            ("mfa_phone", "ALTER TABLE admin_users ADD COLUMN mfa_phone TEXT"),
+        ):
+            if col not in cols:
+                cursor.execute(ddl)
+        conn.commit()
+    except sqlite3.Error:
+        pass
     _migrate_legacy_admin_users_if_empty(conn)
 
     default_user = (os.environ.get("ADMIN_USERNAME") or "admin").strip() or "admin"
@@ -156,6 +172,54 @@ def authenticate_admin(login_input: str, password: str) -> tuple[int, str] | Non
     if not ok:
         return None
     return int(uid), str(uname)
+
+
+def get_admin_totp(user_id: int) -> dict | None:
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return None
+    if uid <= 0:
+        return None
+    conn = get_dev_users_conn()
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(admin_users)")
+    cols = {r[1] for r in cursor.fetchall()}
+    if "totp_secret" not in cols:
+        conn.close()
+        return {"enabled": False, "secret": ""}
+    cursor.execute("SELECT totp_secret, totp_enabled FROM admin_users WHERE id = ?", (uid,))
+    row = cursor.fetchone()
+    conn.close()
+    if not row:
+        return None
+    sec, en = row
+    return {"enabled": bool(en), "secret": sec or ""}
+
+
+def set_admin_totp(user_id: int, *, secret: str, enabled: bool) -> bool:
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return False
+    if uid <= 0:
+        return False
+    conn = get_dev_users_conn()
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(admin_users)")
+    cols = {r[1] for r in cursor.fetchall()}
+    if "totp_secret" not in cols:
+        conn.close()
+        return False
+    sec = (secret or "").strip().upper().replace(" ", "")
+    cursor.execute(
+        "UPDATE admin_users SET totp_secret = ?, totp_enabled = ? WHERE id = ?",
+        (sec or None, 1 if enabled else 0, uid),
+    )
+    ok = cursor.rowcount > 0
+    conn.commit()
+    conn.close()
+    return bool(ok)
 
 
 def dev_users_db_path() -> str:

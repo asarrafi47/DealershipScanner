@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Approve sign-in</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="page" style="max-width: 480px; margin: 0 auto; padding: 2rem 1.25rem;">
+    <h1>Approve on {{ site_name or "this site" }}</h1>
+    <p class="hero-text">If you are signing in on another device, confirm here to complete that sign-in. If you did not start this, close this page.</p>
+    <form method="POST" action="{{ url_for('mfa_qr.mfa_qr_confirm_post', attempt_id=attempt_id) }}">
+        <input type="hidden" name="ap_nonce" value="{{ ap_nonce }}">
+        <button class="primary-button" type="submit" style="width: 100%; margin-top: 1.25rem;">Approve sign-in</button>
+    </form>
+</div>
+</body>
+</html>

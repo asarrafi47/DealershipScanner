@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Set up 2FA</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="page">
+    <nav class="topbar">
+        <div class="logo">Dealership Scanner</div>
+        <div class="nav-links">
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <p class="eyebrow">Security</p>
+        <h1>Set up two-factor authentication</h1>
+        <p class="hero-text">Get a code by email, or set up an authenticator app.</p>
+    </div>
+
+    <div class="dashboard-grid" style="grid-template-columns: 1fr; max-width: 860px;">
+        <div class="info-card">
+            {% if error %}
+            <p style="color:#ffb4b4; margin-bottom: 14px;">{{ error }}</p>
+            {% endif %}
+
+            <h2>Get a code by email</h2>
+            <p style="margin-top: 8px; margin-bottom: 14px;">We’ll send a 6‑digit code to your account email{% if account_name %} (<strong>{{ account_name }}</strong>){% endif %}.</p>
+            <form method="POST" action="{{ url_for('mfa_setup') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="method" value="email">
+                <div style="display:flex; gap: 12px; align-items:center; flex-wrap: wrap;">
+                    <button class="primary-button" type="submit">Send email code</button>
+                </div>
+            </form>
+
+            <hr style="margin: 22px 0; border: none; border-top: 1px solid rgba(255,255,255,0.08);">
+
+            <h2>Optional: authenticator app (QR code)</h2>
+            <p style="margin-top: 8px; margin-bottom: 14px;">If you use an authenticator app, scan this QR code and enter a code below to <strong>enable 2FA and complete sign-in</strong>.</p>
+            <p style="margin-top: 0; margin-bottom: 10px;"><a href="{{ url_for('mfa_setup', regenerate=1) }}" style="color:#8ec5ff;">Generate a new key</a> (invalidates the previous QR code)</p>
+            <div style="display:flex; gap: 16px; align-items:flex-start; flex-wrap: wrap;">
+                <img src="{{ url_for('mfa_qr') }}" alt="2FA QR code" style="width: 180px; height: 180px; background:#fff; padding: 8px; border-radius: 12px;">
+                <div>
+                    <p style="margin-bottom: 10px;">Manual setup key (base32)</p>
+                    <code style="background:#000; border:1px solid rgba(255,255,255,0.12); padding:10px 12px; border-radius:12px; display:inline-block;">{{ secret }}</code>
+                    <div style="margin-top: 10px;">
+                        <a class="secondary-button" href="{{ otpauth }}">Open in authenticator</a>
+                    </div>
+                </div>
+            </div>
+            <h3 style="margin-top: 20px; font-size: 1.05rem;">Confirm authenticator</h3>
+            <p style="margin-top: 6px; margin-bottom: 12px; color:#bcbcbc;">Enter the 6-digit code from your app.</p>
+            <form method="POST" action="{{ url_for('mfa_setup') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="mfa_action" value="confirm_totp">
+                <div style="display:flex; gap: 12px; align-items:center; flex-wrap: wrap;">
+                    <input name="code" type="text" inputmode="numeric" pattern="[0-9]*" minlength="6" maxlength="8" autocomplete="one-time-code" required
+                           placeholder="123456" aria-label="Authenticator code"
+                           style="max-width: 160px; padding: 12px 14px; border-radius: 12px; border:1px solid rgba(255,255,255,0.12); background:#000; color:#fff;">
+                    <button class="primary-button" type="submit">Enable and continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

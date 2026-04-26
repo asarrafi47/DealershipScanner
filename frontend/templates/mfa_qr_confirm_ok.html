@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title or "Done" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="page" style="max-width: 480px; margin: 0 auto; padding: 2rem 1.25rem;">
+    <h1>You're all set</h1>
+    <p class="hero-text">The other device should continue automatically. You can close this page.</p>
+    <p><a href="{{ next_login_url or '/' }}" class="primary-button" style="text-decoration: none; display: inline-block;">Open the site</a></p>
+</div>
+</body>
+</html>

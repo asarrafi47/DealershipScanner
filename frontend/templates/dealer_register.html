@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register dealership — My inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="page page-dealer-auth">
+
+        <nav class="topbar">
+            <div class="logo">My inventory (dealers)</div>
+            <div class="nav-links">
+                <a href="/listings">Public listings</a>
+                <a href="{{ url_for('dealer_portal.dealer_login') }}">Dealership sign in</a>
+                <a href="/register">Create a general account</a>
+            </div>
+        </nav>
+
+        <section class="auth-section">
+            <div class="auth-card auth-card--dealer">
+                <p class="eyebrow">Dealership / company</p>
+                <h1>Register for inventory</h1>
+                <p class="hero-text" style="max-width: 32rem; margin: 0 0 1.25rem;">Create a <strong>dealership</strong> account to add and manage your own vehicle listings. You will be asked to confirm your email (2FA), then you will go to the <strong>My inventory</strong> system. Billing, when enabled, is tied to your <strong>organization</strong> name below.</p>
+
+                {% if error %}
+                <div class="error-box">{{ error }}</div>
+                {% endif %}
+
+                <form method="POST" action="{{ url_for('dealer_portal.dealer_register') }}" class="auth-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <div class="field-group">
+                        <label>Username</label>
+                        <input type="text" name="username" required>
+                    </div>
+
+                    <div class="field-group">
+                        <label>Email</label>
+                        <input type="text" name="email" required>
+                    </div>
+
+                    <div class="field-group">
+                        <label>Password</label>
+                        <input type="password" name="password" required>
+                    </div>
+
+                    <div class="field-group">
+                        <label>Organization (dealership / company) name</label>
+                        <input type="text" name="org_name" placeholder="e.g. Westside Auto Group" required>
+                        <p class="field-hint">This identifies your business for subscription billing and future team invites.</p>
+                    </div>
+
+                    <button type="submit" class="primary-button full-width">Create dealership account</button>
+                </form>
+
+                <p class="auth-footer">Already have an account? <a href="{{ url_for('dealer_portal.dealer_login') }}">Sign in</a></p>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

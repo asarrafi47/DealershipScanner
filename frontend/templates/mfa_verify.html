@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>2FA verification</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="page">
+    <nav class="topbar">
+        <div class="logo">Dealership Scanner</div>
+        <div class="nav-links">
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <p class="eyebrow">Security</p>
+        <h1>Enter your 2FA code</h1>
+        <p class="hero-text">{% if mfa_is_totp|default(false) %}
+            Open your authenticator app and enter the current 6‑digit code.{% else %}
+            Enter the 6‑digit code we sent to your email.{% endif %}</p>
+    </div>
+
+    <div class="dashboard-grid" style="grid-template-columns: 1fr; max-width: 640px;">
+        <div class="info-card">
+            {% if mfa_test_last_code %}
+            <p style="background: rgba(255,200,100,0.12); border: 1px solid rgba(255,200,100,0.35); padding: 12px 14px; border-radius: 10px; margin-bottom: 16px; color: #e8e0d0; font-size: 14px;">
+                <strong>Dev only:</strong> code is <code style="font-size:1.15em;">{{ mfa_test_last_code }}</code> (set <code>RESEND_API_KEY</code> + <code>RESEND_FROM</code> for real email; <code>MFA_DEV_UI_CODE=0</code> hides this box).
+            </p>
+            {% endif %}
+            {% if error %}
+            <p style="color:#ffb4b4; margin-bottom: 14px;">{{ error }}</p>
+            {% endif %}
+            <form method="POST" action="{{ url_for('mfa_verify') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div style="display:flex; gap: 12px; align-items:center; flex-wrap: wrap;">
+                    <input name="code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6"
+                           placeholder="123456"
+                           style="max-width: 160px; padding: 12px 14px; border-radius: 12px; border:1px solid rgba(255,255,255,0.12); background:#000; color:#fff;">
+                    <button class="primary-button" type="submit">Verify</button>
+                </div>
+            </form>
+            <p style="margin-top: 14px; color:#bcbcbc;">{% if not mfa_is_totp|default(false) %}
+            Need a new code? <a href="{{ url_for('mfa_choose', change=1) }}" style="color:#d0d0d0;">Send again or change method</a>{% else %}
+            <a href="{{ url_for('mfa_choose', change=1) }}" style="color:#d0d0d0;">Use email instead</a>{% endif %}</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

@@ -1,16 +1,24 @@
 """
 VDP (vehicle detail page) enrichment for the Playwright scanner (scanner.py).
 
+This module does not start Playwright; the ``page`` passed in is the same as the main scanner
+browser, which (when ``playwright_stealth`` is installed) is created via
+``Stealth().use_async(async_playwright())`` in ``scanner.py``.
+
 Runs during the main scan when SCANNER_VDP_EP_MAX > 0: visits up to N unique VDP URLs
 per dealer, extracts analytics ep.*, network JSON, JSON-LD, inline JSON, and DOM heuristics,
 then merges into vehicle rows via merge_analytics_ep_into_vehicle (conservative fallback).
 Gallery URLs from network JSON and in-page extraction are merged separately (see
 backend.utils.gallery_merge.merge_vdp_gallery_into_vehicle) after EP merge.
 
-Gallery interaction (after load + ``PAGE_EXTRACT_JS`` settle): ``GALLERY_COLLECT_URLS_JS`` runs in a
-loop while advancing the carousel (ArrowRight → next/chevron locators → thumbnails) until no new
-unique HTTPS URLs appear for ``SCANNER_VDP_GALLERY_IDLE_ROUNDS`` rounds or ``SCANNER_VDP_GALLERY_MAX_ROUNDS``.
-Image ``response`` URLs (``image/*`` and common CDN path hints) merge with DOM harvest.
+Gallery interaction (after load + ``PAGE_EXTRACT_JS`` settle): ``GALLERY_COLLECT_URLS_JS`` runs
+on the main document and in each frame (SpinCar/Impel iframes, etc.; cross-origin frames are
+skipped) in a loop while advancing the carousel (ArrowRight → next/chevron locators → thumbnails)
+until no new unique HTTPS URLs appear for ``SCANNER_VDP_GALLERY_IDLE_ROUNDS`` rounds or
+``SCANNER_VDP_GALLERY_MAX_ROUNDS``. A short randomized pointer move runs before the gallery loop
+to nudge React/lazy clients. Network image URLs use ``Content-Type`` (e.g. ``image/webp``) not only
+URL extensions; JSON bodies are parsed when ``Content-Type`` is JSON-like or ``text/plain`` (e.g. GraphQL).
+Image ``response`` URLs merge with DOM harvest.
 
 Optional local image download (default off): set ``SCANNER_VDP_DOWNLOAD_IMAGES=1`` to save bytes under
 ``SCANNER_VDP_IMAGE_DOWNLOAD_DIR`` (default ``vdp_images`` in the process cwd), keyed by VIN with
@@ -30,6 +38,7 @@ import hashlib
 import json
 import logging
 import os
+import random
 import re
 from collections import Counter
 from pathlib import Path
@@ -292,11 +301,25 @@ def _vdp_image_download_dir() -> Path:
 
 
 def _response_maybe_gallery_image_url(url: str, content_type: str) -> bool:
+    """
+    True when a response is likely a vehicle-gallery image. Prefer ``Content-Type`` (many CDNs
+    serve ``?fmt=webp`` and similar with no file extension in the path).
+    """
     u = (url or "").strip()
     if not u.lower().startswith("https://"):
         return False
-    ct = (content_type or "").lower()
-    if ct.startswith("image/"):
+    ct = (content_type or "").lower().split(";")[0].strip()
+    if ct in (
+        "image/jpeg",
+        "image/jpg",
+        "image/pjpeg",
+        "image/png",
+        "image/webp",
+        "image/avif",
+        "image/gif",
+    ):
+        return True
+    if ct.startswith("image/") and "svg" not in ct and "x-icon" not in ct and "vnd" not in ct:
         return True
     low = u.lower()
     if re.search(r"\.(jpe?g|png|webp|gif|avif)(\?|#|$)", low):
@@ -316,6 +339,28 @@ def _response_maybe_gallery_image_url(url: str, content_type: str) -> bool:
     ):
         if frag in low:
             return True
+    return False
+
+
+def _vdp_wants_json_network_capture(content_type: str) -> bool:
+    """True when a response body may be JSON (including GraphQL with ``text/plain``)."""
+    c = (content_type or "").strip().lower()
+    if not c:
+        return False
+    if c.startswith("image/") or c.startswith("video/") or c.startswith("audio/"):
+        return False
+    if c.startswith("text/css"):
+        return False
+    if c.startswith("text/html") and "json" not in c:
+        return False
+    if c.startswith("text/javascript") or "text/javascript" in c:
+        return False
+    if c == "application/javascript" or c.startswith("application/x-javascript"):
+        return False
+    if c.startswith("text/plain"):
+        return True
+    if "json" in c or "+json" in c:
+        return True
     return False
 
 
@@ -1113,6 +1158,15 @@ GALLERY_COLLECT_URLS_JS = r"""
 () => {
   const out = [];
   const seen = new Set();
+  const bgRe = /url\\(\\s*['"]?([^'")\\s>]+)['"]?\\s*\\)/gi;
+  const cdnQParam = /[?&](fmt|format|f_auto|w_auto|fit|q|w|h)=/i;
+  function mightBeRasterUrl(low) {
+    if (/\\.(jpe?g|png|webp|gif|avif)(\\?|#|$)/i.test(low)) return true;
+    if (cdnQParam.test(low) && /(image|photo|media|cdn|dealer|inventory|vehicle|res\\.cloudinary|imgix|akamai|spin|impel|cfassets|photobucket)/i.test(low))
+      return true;
+    if (/(\\/image\\/|\\/images\\/|\\/photos\\/|\\/media\\/|cloudinary|dealerinspire|dealer\\.com|inventoryphoto|resizable)/i.test(low)) return true;
+    return false;
+  }
   function push(u) {
     if (!u || typeof u !== "string") return;
     let t = u.trim();
@@ -1120,12 +1174,7 @@ GALLERY_COLLECT_URLS_JS = r"""
     if (t.startsWith("http://")) t = "https://" + t.slice(7);
     if (!/^https:\\/\\//i.test(t)) return;
     const low = t.toLowerCase();
-    if (
-      !/\\.(jpe?g|png|webp|gif|avif)(\\?|#|$)/i.test(low) &&
-      !/(\\/image\\/|\\/images\\/|\\/photos\\/|\\/media\\/|cloudinary|dealerinspire|inventoryphoto)/i.test(low)
-    ) {
-      return;
-    }
+    if (!mightBeRasterUrl(low)) return;
     if (seen.has(t)) return;
     seen.add(t);
     if (out.length < 220) out.push(t.slice(0, 900));
@@ -1135,6 +1184,16 @@ GALLERY_COLLECT_URLS_JS = r"""
     for (const part of ss.split(",")) {
       const p = part.trim().split(/\\s+/)[0];
       if (p) push(p);
+    }
+  }
+  function fromBackgroundString(bg) {
+    if (!bg || typeof bg !== "string") return;
+    const s = bg.trim();
+    if (!s || /^none$|^initial$|^inherit$/i.test(s)) return;
+    let m;
+    const r = new RegExp(bgRe.source, "gi");
+    while ((m = r.exec(s)) !== null) {
+      if (m[1]) push(m[1].replace(/^["']|["']$/g, ""));
     }
   }
   try {
@@ -1164,6 +1223,26 @@ GALLERY_COLLECT_URLS_JS = r"""
       push(src.getAttribute("src"));
     });
   } catch (e2) {}
+  try {
+    const bsel =
+      "div,span,section,article,li,a,button,p,figure,header,footer,main,aside," +
+      "[style*='background'],[style*='Background']";
+    document.querySelectorAll(bsel).forEach((el, idx) => {
+      if (idx > 520) return;
+      try {
+        const st = el.getAttribute("style");
+        if (st && /background\\s*:|background-image\\s*:/i.test(st)) {
+          fromBackgroundString(st);
+        }
+        if (window.getComputedStyle) {
+          const cbg = window.getComputedStyle(el).backgroundImage;
+          if (cbg && cbg !== "none" && cbg !== "initial") {
+            fromBackgroundString(cbg);
+          }
+        }
+      } catch (eBg) {}
+    });
+  } catch (e3) {}
   return out;
 }
 """
@@ -1379,6 +1458,49 @@ async def _vdp_gallery_step_advance(wp: Any, thumb_rot: list[int]) -> None:
         pass
 
 
+async def _vdp_evaluate_gallery_all_frames(wp: Any) -> list[str]:
+    """
+    Run ``GALLERY_COLLECT_URLS_JS`` in the main document and in each child frame. Same-origin
+    gallery iframes (e.g. some 360 / embed hosts) are included; cross-origin frames raise and are
+    skipped.
+    """
+    merged: list[str] = []
+    frames = list(getattr(wp, "frames", None) or [])
+    for fr in frames:
+        try:
+            raw = await fr.evaluate(GALLERY_COLLECT_URLS_JS)
+        except Exception:
+            continue
+        if not isinstance(raw, list):
+            continue
+        for x in raw:
+            if isinstance(x, str) and x.strip():
+                merged.append(x)
+    return merged
+
+
+async def _vdp_mouse_jitter(wp: Any) -> None:
+    """Small random pointer moves to nudge lazy galleries and client-side anti-bot heuristics."""
+    try:
+        view = await wp.evaluate(
+            "() => ({ w: Math.max(0, window.innerWidth), h: Math.max(0, window.innerHeight) })"
+        )
+    except Exception:
+        view = {"w": 0, "h": 0}
+    wv = int(view.get("w") or 0)
+    hv = int(view.get("h") or 0)
+    if wv < 2 or hv < 2:
+        wv, hv = 800, 600
+    for _ in range(2):
+        x = random.randint(1, max(1, wv - 1))
+        y = random.randint(1, max(1, hv - 1))
+        try:
+            await wp.mouse.move(x, y, steps=max(1, min(8, 2 + int(random.random() * 5))))
+        except Exception:
+            break
+        await asyncio.sleep(0.03 + random.random() * 0.05)
+
+
 async def _vdp_gallery_interaction_loop(
     wp: Any,
     *,
@@ -1395,7 +1517,7 @@ async def _vdp_gallery_interaction_loop(
     for _ in range(_gallery_max_rounds()):
         snap = list(response_image_urls)
         try:
-            dom_batch = await wp.evaluate(GALLERY_COLLECT_URLS_JS)
+            dom_batch = await _vdp_evaluate_gallery_all_frames(wp)
         except Exception:
             dom_batch = []
         if not isinstance(dom_batch, list):
@@ -1532,7 +1654,7 @@ async def _vdp_visit_one(
                 if url.lower().startswith("https://"):
                     response_image_urls.append(url[:900])
                 return
-            if "application/json" not in ct:
+            if not _vdp_wants_json_network_capture(ct):
                 return
             text = await response.text()
             if visit_epoch[0] != my_epoch:
@@ -1624,6 +1746,10 @@ async def _vdp_visit_one(
                 bundle = {"error": str(e)}
             last_bundle = bundle if isinstance(bundle, dict) else {}
             await _drain_pending_tasks(pending)
+            try:
+                await _vdp_mouse_jitter(wp)
+            except Exception:
+                pass
             try:
                 extra_loop_gallery = await _vdp_gallery_interaction_loop(
                     wp,

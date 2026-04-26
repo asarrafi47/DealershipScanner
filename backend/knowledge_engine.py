@@ -20,21 +20,33 @@ def _bmw_has_30i_suffix(blob: str) -> bool:
     """
     330i / 530i / xDrive30i / sDrive30i — ``\\d30I`` matches three-series sedans;
     SAV trims glue ``30I`` after xDrive/sDrive (``E30I`` not ``\\d30I``).
+    Also handles new G-body naming: "30 xDrive" / "30 sDrive" (space before drive suffix).
     """
     u = (blob or "").upper()
     if re.search(r"\d30I\b", u):
         return True
-    return bool(re.search(r"(?:XDRIVE|SDRIVE)30I\b", u))
+    if re.search(r"(?:XDRIVE|SDRIVE)30I\b", u):
+        return True
+    # G-body: "30 xDrive" / "30 sDrive" (e.g. 2026 X3 30 xDrive)
+    return bool(re.search(r"\b30\s+(?:XDRIVE|SDRIVE)\b", u))
 
 
 def _bmw_has_40i_suffix(blob: str) -> bool:
     """
     40i motors: 740i (740I), M340i (M340I), xDrive40i (E40I in XDRIVE40I).
     \\b40I\\b fails when 40i is glued to xDrive (E and 4 are both \\w).
+    Also handles G-body naming: "M50 xDrive" (X3 M50), "40 xDrive" patterns.
     """
-    if re.search(r"\d40I\b", blob):
+    u = (blob or "").upper()
+    if re.search(r"\d40I\b", u):
         return True
-    return bool(re.search(r"\D40I\b", blob))
+    if re.search(r"\D40I\b", u):
+        return True
+    # G-body: "M50 xDrive" → treat as 40i-class (inline-6 turbo SAV)
+    if re.search(r"\bM50\s+(?:XDRIVE|SDRIVE)\b", u):
+        return True
+    # G-body: "40 xDrive" (e.g. future naming)
+    return bool(re.search(r"\b40\s+(?:XDRIVE|SDRIVE)\b", u))
 
 
 def _bmw_model_is_x5_x7_or_5_7_series(model: str) -> bool:
@@ -500,6 +512,21 @@ def _drivetrain_ui_label(drive_display: str, make: str | None, blob: str) -> str
     return "AWD"
 
 
+def _bmw_epa_model_like_pattern(model: str | None) -> str | None:
+    """
+    Dealer DB stores short model names ('X3', 'X5', 'X1') but EPA uses full trim strings
+    like 'X3 xDrive30i'. Return a LIKE pattern so lookup_epa_aggregate can fall back to
+    a fuzzy match when exact lookup returns nothing.
+    """
+    m = (model or "").strip().upper()
+    if not m:
+        return None
+    # Only applies to short SAV/sedan codes without spaces (X3, X5, X1, 530e, M340, etc.)
+    if " " not in m and re.match(r"^(X[1-9]|[0-9]|M[0-9]|Z[0-9])", m):
+        return f"{model.strip()}%"
+    return None
+
+
 def _ford_epa_pickup_like_pattern(make: str | None, model: str | None) -> str | None:
     """
     Dealer DMS often lists ``F-150`` / ``F150 XLT`` while EPA uses ``F150 Pickup 2WD`` / ``F150 Pickup 4WD``.
@@ -564,6 +591,15 @@ def lookup_epa_aggregate(year: int | None, make: str | None, model: str | None) 
                 cur.execute(
                     sql_mode.format(model_clause="model LIKE ?"),
                     (year, make.strip(), like_pat),
+                )
+                row = cur.fetchone()
+        # BMW fuzzy fallback: dealer stores 'X3' but EPA has 'X3 xDrive30i'
+        if not row and (make or "").strip().upper() == "BMW":
+            bmw_pat = _bmw_epa_model_like_pattern(model)
+            if bmw_pat:
+                cur.execute(
+                    sql_mode.format(model_clause="model LIKE ?"),
+                    (year, make.strip(), bmw_pat),
                 )
                 row = cur.fetchone()
         conn.close()

@@ -4,6 +4,7 @@ Database layer for scanner: connection to inventory.db and vehicle upsert.
 import json
 import logging
 import os
+import re
 import sqlite3
 from datetime import datetime
 from pathlib import Path
@@ -380,4 +381,210 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
             conn2.close()
         except Exception:
             logger.exception("incomplete_listings / transmission backfill after upsert failed")
+
+        # --- model_specs dictionary correction (cylinders + transmission) ---
+        try:
+            apply_model_specs_corrections(vins=list(by_vin.keys()))
+        except Exception:
+            logger.exception("model_specs correction after upsert failed")
+
     return count
+
+
+# ---------------------------------------------------------------------------
+# Canonical make resolution for model_specs lookups
+# Handles scraper-introduced make/model swaps (e.g. make='Wrangler' model='Wrangler')
+# ---------------------------------------------------------------------------
+_MAKE_FIX_MAP: dict[tuple[str, str], str] = {
+    ("wrangler",        "wrangler"):          "Jeep",
+    ("gladiator",       "gladiator"):         "Jeep",
+    ("grand",           "grand cherokee"):    "Jeep",
+    ("grand",           "grand cherokee l"):  "Jeep",
+    ("grand",           "grand wagoneer"):    "Jeep",
+    ("grand",           "grand wagoneer l"):  "Jeep",
+    ("cherokee",        "cherokee"):          "Jeep",
+    ("compass",         "compass"):           "Jeep",
+    ("1500",            "1500"):              "RAM",
+    ("2500",            "2500"):              "RAM",
+    ("3500",            "3500"):              "RAM",
+    ("classic",         "1500 classic"):      "RAM",
+    ("promaster",       "promaster 1500"):    "RAM",
+    ("promaster",       "promaster 2500"):    "RAM",
+    ("5500hd",          "5500hd"):            "RAM",
+    ("durango",         "durango"):           "Dodge",
+    ("charger",         "charger"):           "Dodge",
+    ("challenger",      "challenger"):        "Dodge",
+    ("journey",         "journey"):           "Dodge",
+    ("pacifica",        "pacifica"):          "Dodge",
+    ("sierra",          "sierra 1500"):       "GMC",
+    ("silverado",       "silverado 1500"):    "Chevrolet",
+    ("silverado",       "silverado 1500 ltd"):"Chevrolet",
+    ("tacoma",          "tacoma"):            "Toyota",
+    ("telluride",       "telluride"):         "Kia",
+    ("santa",           "santa fe"):          "Hyundai",
+    ("santa",           "santa fe sport"):    "Hyundai",
+    ("ioniq",           "ioniq 5"):           "Hyundai",
+    ("hyundai",         "ioniq 5"):           "Hyundai",
+    ("hyundai",         "ioniq 6"):           "Hyundai",
+    ("hyundai",         "kona"):              "Hyundai",
+    ("f-150",           "f-150"):             "Ford",
+    ("explorer",        "explorer"):          "Ford",
+    ("mustang",         "mustang"):           "Ford",
+    ("escape",          "escape"):            "Ford",
+    ("camaro",          "camaro"):            "Chevrolet",
+    ("escalade",        "escalade esv"):      "Cadillac",
+    ("tahoe",           "tahoe"):             "Chevrolet",
+    ("yukon",           "yukon"):             "GMC",
+    ("mdx",             "mdx"):               "Acura",
+    ("rdx",             "rdx"):               "Acura",
+    ("gx",              "gx"):                "Lexus",
+    ("cx-50",           "cx-50"):             "Mazda",
+    ("rav4",            "rav4"):              "Toyota",
+    ("lacrosse",        "lacrosse"):          "Buick",
+    ("tiguan",          "tiguan"):            "VW",
+    ("forte",           "forte"):             "Kia",
+    ("cooper",          "cooper s countryman"):"Mini",
+    ("golf",            "golf gti"):          "VW",
+    ("accord",          "accord sedan"):      "Honda",
+    ("lincoln",         "aviator"):           "Lincoln",
+    ("x5",              "x5"):                "BMW",
+    ("4",               "4 series"):          "BMW",
+}
+
+
+def _resolve_canonical_make(make: str, model: str) -> str:
+    """Return the canonical make for a (make, model) pair, handling scraper swaps."""
+    key = (make.strip().lower(), model.strip().lower())
+    return _MAKE_FIX_MAP.get(key, make)
+
+
+def _infer_drivetrain_from_trim(trim: str | None, title: str | None) -> str | None:
+    """
+    Return AWD/RWD/FWD/4WD based on known drivetrain keywords in trim or title.
+    Returns None when nothing conclusive is found (fall back to model_specs default).
+    """
+    blob = f"{trim or ''} {title or ''}".upper()
+    # AWD signals
+    if re.search(r"\b(XDRIVE|4MATIC|QUATTRO|SH-AWD|AWD|4X4|4WD|ALL[\s-]WHEEL)\b", blob):
+        return "AWD"
+    # 4WD truck signals
+    if re.search(r"\b(4X4|4WD)\b", blob):
+        return "4WD"
+    # RWD signals
+    if re.search(r"\b(SDRIVE|RWD|REAR[\s-]WHEEL)\b", blob):
+        return "RWD"
+    # FWD signals
+    if re.search(r"\b(FWD|FRONT[\s-]WHEEL)\b", blob):
+        return "FWD"
+    return None
+
+
+def apply_model_specs_corrections(
+    vins: list[str] | None = None,
+    conn: sqlite3.Connection | None = None,
+) -> int:
+    """
+    Fill NULL/empty cylinders, transmission, drivetrain, body_style, and fuel_type
+    from the model_specs dictionary.
+
+    For drivetrain: also applies trim-level overrides (xDrive → AWD, sDrive → RWD,
+    4MATIC → AWD, Quattro → AWD) which take precedence over the model default.
+
+    Called after every upsert (for the just-inserted VINs) and by the backfill
+    script (vins=None to scan all rows). Never overwrites a value the dealer
+    already provided.
+
+    Returns the number of rows updated.
+    """
+    owns_conn = conn is None
+    if owns_conn:
+        conn = get_conn()
+    cur = conn.cursor()
+
+    if vins is not None:
+        placeholders = ",".join("?" * len(vins))
+        cur.execute(
+            f"SELECT vin, make, model, trim, title, cylinders, transmission, drivetrain, body_style, fuel_type "
+            f"FROM cars WHERE vin IN ({placeholders})",
+            vins,
+        )
+    else:
+        cur.execute(
+            "SELECT vin, make, model, trim, title, cylinders, transmission, drivetrain, body_style, fuel_type "
+            "FROM cars"
+        )
+
+    rows = cur.fetchall()
+    updated = 0
+
+    for vin, raw_make, raw_model, trim, title, cylinders, transmission, drivetrain, body_style, fuel_type in rows:
+        needs_cyl = cylinders is None or (
+            isinstance(cylinders, (int, float)) and int(cylinders) == 0
+            and not _is_electric_make_model(raw_make, raw_model)
+        )
+        needs_trans = not transmission or str(transmission).strip() == ""
+        needs_drive = not drivetrain or str(drivetrain).strip() == ""
+        needs_body = not body_style or str(body_style).strip() == ""
+        needs_fuel = not fuel_type or str(fuel_type).strip() == ""
+
+        if not any([needs_cyl, needs_trans, needs_drive, needs_body, needs_fuel]):
+            continue
+
+        canonical_make = _resolve_canonical_make(raw_make or "", raw_model or "")
+        model = (raw_model or "").strip()
+
+        cur.execute(
+            "SELECT cylinders, transmission, drivetrain, body_style, fuel_type FROM model_specs "
+            "WHERE lower(make)=lower(?) AND lower(model)=lower(?) LIMIT 1",
+            (canonical_make, model),
+        )
+        spec = cur.fetchone()
+        if not spec:
+            continue
+
+        spec_cyl, spec_trans, spec_drive, spec_body, spec_fuel = spec
+        patch: dict[str, object] = {}
+
+        if needs_cyl and spec_cyl is not None:
+            patch["cylinders"] = int(spec_cyl)
+        if needs_trans and spec_trans and str(spec_trans).strip():
+            patch["transmission"] = str(spec_trans).strip()
+        if needs_drive and spec_drive:
+            # Trim/title overrides take precedence over model default
+            drive = _infer_drivetrain_from_trim(trim, title) or spec_drive
+            patch["drivetrain"] = drive
+        if needs_body and spec_body:
+            patch["body_style"] = str(spec_body).strip()
+        if needs_fuel and spec_fuel:
+            patch["fuel_type"] = str(spec_fuel).strip()
+
+        if patch:
+            sets = ", ".join(f"{k}=?" for k in patch)
+            cur.execute(
+                f"UPDATE cars SET {sets} WHERE vin=?",
+                (*patch.values(), vin),
+            )
+            updated += 1
+
+    conn.commit()
+    if owns_conn:
+        conn.close()
+
+    if updated:
+        logger.info("model_specs corrections: %d rows updated", updated)
+    return updated
+
+
+def _is_electric_make_model(make: str, model: str) -> bool:
+    """True for known BEV makes/models where 0 cylinders is correct."""
+    make_u = (make or "").strip().upper()
+    model_u = (model or "").strip().upper()
+    if make_u == "TESLA":
+        return True
+    if make_u == "BMW" and re.search(r"\bI[0-9X]\b", model_u):
+        return True
+    if make_u == "HYUNDAI" and "IONIQ" in model_u:
+        return True
+    if make_u in ("RIVIAN", "LUCID", "POLESTAR", "NIO", "FISKER"):
+        return True
+    return False

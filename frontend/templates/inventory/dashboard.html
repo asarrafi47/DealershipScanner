@@ -1,0 +1,75 @@
+{% extends "inventory/base_inventory.html" %}
+
+{% block title %}Inventory dashboard{% endblock %}
+
+{% block content %}
+<div class="db-layout dealer-inv-layout">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="dealer-inv-flash-wrap">
+        {% for category, message in messages %}
+        <div class="dealer-inv-flash dealer-inv-flash--{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <section class="db-section dealer-inv-section">
+        <div class="db-section-header">
+            <p class="db-eyebrow">Your lot</p>
+            <h2 class="db-section-title">Inventory overview</h2>
+        </div>
+
+        <div class="dashboard-grid" style="padding: 0; grid-template-columns: repeat(3, 1fr);">
+            <div class="info-card">
+                <h2>Total vehicles</h2>
+                <p style="font-size: 34px; margin-top: 10px; color: #fff; font-weight: 700;">{{ vehicles|length }}</p>
+                <p style="margin-top: 10px;">Manage your dealer-added vehicles separately from the public scan inventory.</p>
+            </div>
+            <div class="info-card">
+                <h2>Add by VIN</h2>
+                <p>Decode a VIN (NHTSA vPIC) and create a vehicle record you can edit and photo-merchandise.</p>
+                <a href="{{ url_for('dealer_portal.inventory_listings') }}#add-by-vin" class="primary-button" style="margin-top: 16px;">Add a VIN</a>
+            </div>
+            <div class="info-card">
+                <h2>Go to listings</h2>
+                <p>Edit titles, pricing, mileage, notes, and upload photos for each vehicle.</p>
+                <a href="{{ url_for('dealer_portal.inventory_listings') }}" class="secondary-button" style="margin-top: 16px; display: inline-block;">Open listings</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="db-section dealer-inv-section">
+        <div class="db-section-header">
+            <p class="db-eyebrow">Quick glance</p>
+            <h2 class="db-section-title">Recently updated</h2>
+        </div>
+
+        {% if vehicles %}
+        <div class="saved-grid" style="grid-template-columns: repeat(3, 1fr);">
+            {% for v in vehicles[:6] %}
+            <a href="{{ url_for('dealer_portal.inventory_listings') }}#vehicle-{{ v.id }}" class="saved-card">
+                {% set hero = v.gallery[0] if v.gallery and v.gallery|length > 0 else '' %}
+                <div class="saved-image" style="background-image: url('{{ hero or url_for('static', filename='placeholder.svg') }}')"></div>
+                <div class="saved-info">
+                    <p class="saved-title">{{ v.title or 'Untitled vehicle' }}</p>
+                    <p class="saved-trim">{{ (v.year or '') }} {{ (v.make or '') }} {{ (v.model or '') }}</p>
+                    <p class="saved-price">{% if v.price %}${{ "{:,.0f}".format(v.price) }}{% else %}Call for Price{% endif %}</p>
+                    <p class="saved-meta">VIN {{ v.vin }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="saved-empty">
+            <p class="saved-empty-title">No vehicles yet.</p>
+            <p class="saved-empty-sub">Add your first VIN to start building your inventory listings.</p>
+            <a href="{{ url_for('dealer_portal.inventory_listings') }}#add-by-vin" class="primary-button" style="margin-top: 20px; display: inline-block;">Add a VIN</a>
+        </div>
+        {% endif %}
+    </section>
+
+</div>
+{% endblock %}
+

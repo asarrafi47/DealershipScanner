@@ -78,6 +78,8 @@ def _require_store_profile():
 def _require_access():
     if request.endpoint == "store_admin.static":
         return None
+    if session.get("user_id") and not session.get("mfa_ok"):
+        return redirect(url_for("mfa_verify"))
     gate = _require_store_profile()
     if gate is None:
         return redirect(url_for("login_page"))

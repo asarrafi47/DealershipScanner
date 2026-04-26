@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subscription</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="page">
+        <nav class="topbar">
+            <div class="logo">Dealership Scanner</div>
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </nav>
+
+        <section class="auth-section">
+            <div class="auth-card">
+                <p class="eyebrow">Billing</p>
+                <h1>Thanks</h1>
+                <p style="margin-top: 8px; color: #5a5a5a;">
+                    We’re finalizing your subscription{% if org and org.name %} for <strong>{{ org.name }}</strong>{% endif %}.
+                </p>
+                <div style="margin-top: 18px;">
+                    <a class="primary-button full-width" href="/dashboard">Continue</a>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
+

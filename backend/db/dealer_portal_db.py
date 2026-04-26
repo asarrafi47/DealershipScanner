@@ -18,6 +18,22 @@ _log = logging.getLogger(__name__)
 DB_PATH = os.environ.get("DEALER_PORTAL_DB_PATH", "dealer_portal.db")
 
 
+def delete_vehicles_for_user(user_id: int) -> None:
+    """Remove all dealer inventory rows for an app user (e.g. account deletion)."""
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return
+    if uid <= 0:
+        return
+    conn = get_conn()
+    try:
+        conn.execute("DELETE FROM dealer_vehicles WHERE user_id = ?", (uid,))
+        conn.commit()
+    finally:
+        conn.close()
+
+
 def get_conn() -> sqlite3.Connection:
     conn = sqlite3.connect(DB_PATH)
     try:

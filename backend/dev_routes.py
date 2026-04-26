@@ -5,6 +5,7 @@ Smart URL import, scanner jobs, dealership registry tools.
 
 from __future__ import annotations
 
+import glob
 import json
 import logging
 import os
@@ -75,8 +76,6 @@ logger = logging.getLogger(__name__)
 _MIN_PASSWORD_LEN = max(8, int(os.environ.get("MIN_PASSWORD_LENGTH", "8")))
 _DEV_LOGIN_RPM = int(os.environ.get("RATE_LIMIT_DEV_LOGIN_PER_MIN", "20"))
 _DEV_REGISTER_RPM = int(os.environ.get("RATE_LIMIT_DEV_REGISTER_PER_MIN", "5"))
-
-
 def _vector_reindex_background() -> None:
     try:
         from backend.vector.pgvector_service import reindex_all
@@ -93,6 +92,19 @@ def _spawn_vector_reindex_background() -> None:
 
 def _admin_session_ok() -> bool:
     return bool(session.get("admin_user_id"))
+
+
+def _finalize_dev_session(*, user_id: int, username: str) -> bool:
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return False
+    if uid <= 0:
+        return False
+    uname = (username or "").strip() or f"user_{uid}"
+    session["admin_user_id"] = uid
+    session["admin_username"] = uname
+    return True
 
 
 def _safe_dev_next_url(next_url: str, *, default_endpoint: str = "dev.dev_dashboard") -> str:
@@ -112,13 +124,20 @@ def _dev_require_admin() -> Any:
     from backend.utils.csrf import validate_csrf_form, validate_csrf_header
 
     ep = request.endpoint or ""
+    # Legacy /dev/mfa/* URLs (2FA removed): always allow through to the redirect handler.
+    if ep == "dev.dev_mfa_gone":
+        return None
     if request.method in ("POST", "PUT", "PATCH", "DELETE"):
         if ep in ("dev.admin_login", "dev.admin_register", "dev.admin_logout"):
             validate_csrf_form()
         else:
             validate_csrf_header()
 
-    if ep in ("dev.admin_login", "dev.admin_register", "dev.admin_logout"):
+    if ep in (
+        "dev.admin_login",
+        "dev.admin_register",
+        "dev.admin_logout",
+    ):
         return None
     if _admin_session_ok():
         return None
@@ -131,6 +150,89 @@ def _json_body_no_token(data: dict[str, Any] | None) -> dict[str, Any]:
     if not isinstance(data, dict):
         return {}
     return {k: v for k, v in data.items() if k != "token"}
+
+
+def _node_version_string(exe: str) -> str | None:
+    try:
+        p = subprocess.run(
+            [exe, "-v"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
+        )
+        out = (p.stdout or p.stderr or "").strip()
+        if p.returncode == 0 and out.startswith("v"):
+            return out
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+    return None
+
+
+def _resolve_node_binary() -> tuple[str | None, str | None, str, str | None]:
+    """
+    Return (path, version, status_line, which_path) where *path* runs `node -v` successfully.
+    *which_path* is shutil.which("node") (may be None or a broken path) for diagnostics.
+    Tries: NODE_BINARY, PATH, /opt/homebrew, /usr/local, ~/.nvm/.../node.
+    """
+    cands: list[str] = []
+    seen: set[str] = set()
+    for raw in (os.environ.get("NODE_BINARY") or "", os.environ.get("NODE") or ""):
+        t = (raw or "").strip()
+        if t and t not in seen and os.path.isfile(t) and os.access(t, os.X_OK):
+            seen.add(t)
+            cands.append(t)
+    which = shutil.which("node")
+    if which and which not in seen and os.path.isfile(which) and os.access(which, os.X_OK):
+        seen.add(which)
+        cands.append(which)
+    for c in ("/opt/homebrew/bin/node", "/usr/local/bin/node"):
+        if c not in seen and os.path.isfile(c) and os.access(c, os.X_OK):
+            seen.add(c)
+            cands.append(c)
+    home = Path(os.path.expanduser("~"))
+    for m in glob.glob(str(home / ".nvm/versions/node/v*/bin/node")):
+        t = str(Path(m).resolve())
+        if t not in seen and os.path.isfile(t) and os.access(t, os.X_OK):
+            seen.add(t)
+            cands.append(t)
+
+    which_norm = os.path.normpath(which) if which else None
+    for exe in cands:
+        ver = _node_version_string(exe)
+        if not ver:
+            continue
+        en = os.path.normpath(exe)
+        on_path = bool(which_norm and en == which_norm)
+        env_set = bool((os.environ.get("NODE_BINARY") or os.environ.get("NODE") or "").strip())
+        if on_path and which is not None:
+            line = f"{ver} — {exe} (this process: `shutil.which('node')` → {which!r} and `node -v` works)"
+        elif which is None and not env_set:
+            line = (
+                f"{ver} — {exe} (no `node` on PATH in this process; found via a fixed path or nvm. "
+                "The scraper uses this full path.)"
+            )
+        else:
+            line = (
+                f"{ver} — {exe} (runnable, but `shutil.which` → {which!r} differs; "
+                "set NODE_BINARY or align PATH with your terminal, or the scraper still uses this file.)"
+            )
+        return exe, ver, line, which
+
+    wnote = f"`shutil.which('node')` → {which!r} on this process"
+    if which and _node_version_string(which) is None:
+        wnote += f"; {which!r} did not return a v… from `node -v` (broken or wrong binary)"
+    fail = (
+        f"Could not verify Node: {wnote}. Tried common paths; "
+        "install Node 18+ and ensure this server’s PATH (or set NODE_BINARY to the full `node` path) matches where Node is installed."
+    )
+    return None, None, fail, which
+
+
+def _node_for_scanner() -> str:
+    """Node binary to pass to Popen; falls back to `node` and may FileNotFoundError."""
+    p, _, _, _ = _resolve_node_binary()
+    return p or "node"
 
 
 def _dev_status() -> dict[str, Any]:
@@ -151,12 +253,16 @@ def _dev_status() -> dict[str, Any]:
     prod = is_production_env()
     env_file = PROJECT_ROOT / ".env"
     admin_pw_set = bool((os.environ.get("ADMIN_PASSWORD") or "").strip())
+    n_path, n_ver, n_line, n_which = _resolve_node_binary()
     return {
         "db_connected": db_ok,
         "inventory_db_path": str(DB_PATH),
         "dev_users_db_path": dev_users_db_path(),
         "dev_registration_open": dev_public_registration_allowed(),
-        "node_executable": shutil.which("node"),
+        "node_executable": n_path,
+        "node_version": n_ver,
+        "node_status_line": n_line,
+        "node_which": n_which,
         "is_production": prod,
         "admin_password_configured": admin_pw_set or not prod,
         "dotenv_file_present": env_file.is_file(),
@@ -175,7 +281,8 @@ def _run_scanner_job(job_id: str, url: str, headed: bool = False) -> None:
 
     code: int | None = None
     try:
-        cmd = ["node", str(PROJECT_ROOT / "scanner.js"), "--url", url]
+        nexe = _node_for_scanner()
+        cmd = [nexe, str(PROJECT_ROOT / "scanner.js"), "--url", url]
         if headed:
             cmd.append("--headed")
         proc = subprocess.Popen(
@@ -237,8 +344,9 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
         attempt_result: dict[str, Any] | None = None
         attempt_error: dict[str, Any] | None = None
         try:
+            nexe = _node_for_scanner()
             cmd = [
-                "node",
+                nexe,
                 str(PROJECT_ROOT / "scanner.js"),
                 "--url",
                 url,
@@ -408,11 +516,12 @@ def admin_login():
         auth = authenticate_admin(login_input, password)
         if auth:
             uid, uname = auth
-            session["admin_user_id"] = uid
-            session["admin_username"] = uname
+            session.clear()
             raw_next = (request.form.get("next") or request.args.get("next") or "").strip()
-            next_url = _safe_dev_next_url(raw_next)
-            return redirect(next_url)
+            nxt = _safe_dev_next_url(raw_next)
+            if not _finalize_dev_session(user_id=int(uid), username=str(uname)):
+                return redirect(url_for("dev.admin_login"))
+            return redirect(nxt)
         return render_template(
             "admin_login.html",
             error="Invalid username/email or password.",
@@ -472,7 +581,28 @@ def admin_register():
 def admin_logout():
     session.pop("admin_user_id", None)
     session.pop("admin_username", None)
+    for k in (
+        "admin_mfa_ok",
+        "admin_mfa_pending_user_id",
+        "admin_mfa_pending_login",
+        "admin_mfa_next",
+        "admin_mfa_pending_method",
+        "dev_mfa_test_last_code",
+        "dev_mfa_totp_setup_secret",
+        "dev_mfa_totp_setup_otpauth",
+    ):
+        session.pop(k, None)
     return redirect(url_for("dev.admin_login"))
+
+
+@dev_bp.route("/mfa/verify", methods=["GET", "POST"])
+@dev_bp.route("/mfa/setup", methods=["GET", "POST"])
+@dev_bp.route("/mfa/qr", methods=["GET"])
+def dev_mfa_gone() -> Any:
+    """2FA for /dev was removed. Old bookmarks, tabs, and session redirects go here; send them to the dashboard or login."""
+    if _admin_session_ok():
+        return redirect(url_for("dev.dev_dashboard"), code=302)
+    return redirect(url_for("dev.admin_login", next="/dev/"), code=302)
 
 
 @dev_bp.route("/")

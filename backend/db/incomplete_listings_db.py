@@ -124,6 +124,104 @@ def rebuild_incomplete_listings_index() -> int:
     return n
 
 
+def fast_rebuild_incomplete_listings_index() -> int:
+    """
+    Fast full resync of the incomplete_listings index — loads all cars in one
+    query and checks raw DB fields directly, without invoking the knowledge engine
+    (EPA lookups, trim decoder) on each row.  Use this after a scanner run where
+    specs have already been backfilled.  Returns the number of incomplete rows.
+    """
+    from backend.db.inventory_db import get_conn as inv_get_conn
+
+    _PLACEHOLDER_VALUES = frozenset({
+        "", "n/a", "na", "null", "none", "unknown", "--", "-", "—",
+        "/static/placeholder.svg",
+    })
+
+    def _empty(v: object) -> bool:
+        if v is None:
+            return True
+        s = str(v).strip()
+        return not s or s.lower() in _PLACEHOLDER_VALUES
+
+    def _has_real_image(car: dict) -> bool:
+        if str(car.get("image_url") or "").startswith("http"):
+            return True
+        raw_g = car.get("gallery")
+        try:
+            g = json.loads(raw_g) if isinstance(raw_g, str) else (raw_g or [])
+            return any(isinstance(u, str) and u.startswith("http") for u in g)
+        except (TypeError, ValueError):
+            return False
+
+    def _missing_fields(car: dict) -> list[str]:
+        missing: list[str] = []
+        if _empty(car.get("title")):
+            missing.append("title")
+        if not _has_real_image(car):
+            missing.append("images")
+        try:
+            price = int(float(car.get("price") or 0))
+        except (TypeError, ValueError):
+            price = 0
+        try:
+            msrp = int(float(car.get("msrp") or 0))
+        except (TypeError, ValueError):
+            msrp = 0
+        if price <= 0 and msrp <= 0:
+            missing.append("price")
+        if not car.get("year"):
+            missing.append("year")
+        for f in ("make", "model", "trim", "drivetrain", "body_style", "fuel_type", "condition"):
+            if _empty(car.get(f)):
+                missing.append(f)
+        if _empty(car.get("engine_description")):
+            missing.append("engine")
+        if _empty(car.get("transmission")):
+            missing.append("transmission")
+        cyl = car.get("cylinders")
+        if cyl is None or str(cyl).strip() == "":
+            missing.append("cylinders")
+        for f in ("exterior_color", "interior_color"):
+            if _empty(car.get(f)):
+                missing.append(f)
+        vin = str(car.get("vin") or "").strip()
+        if not vin or vin.lower().startswith("unknown"):
+            missing.append("vin")
+        return missing
+
+    inv = inv_get_conn()
+    inv.row_factory = sqlite3.Row
+    cur = inv.cursor()
+    cur.execute("SELECT * FROM cars")
+    all_cars = [dict(r) for r in cur.fetchall()]
+    inv.close()
+
+    now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    rows_to_upsert = [
+        (car["id"], str(car.get("vin") or "?").strip(), json.dumps(_missing_fields(car)), now)
+        for car in all_cars
+        if _missing_fields(car)
+    ]
+
+    conn_inc = get_conn()
+    _ensure_schema(conn_inc)
+    conn_inc.execute("DELETE FROM incomplete_listings")
+    conn_inc.executemany(
+        "INSERT INTO incomplete_listings (car_id, vin, missing_fields_json, updated_at) VALUES (?,?,?,?)",
+        rows_to_upsert,
+    )
+    conn_inc.commit()
+    conn_inc.close()
+
+    logger.info(
+        "fast_rebuild_incomplete_listings_index: %d incomplete / %d total",
+        len(rows_to_upsert),
+        len(all_cars),
+    )
+    return len(rows_to_upsert)
+
+
 def _mark_bootstrapped() -> None:
     conn = get_conn()
     _ensure_schema(conn)

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>How should we send your code?</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="page">
+    <nav class="topbar">
+        <div class="logo">Dealership Scanner</div>
+        <div class="nav-links">
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <p class="eyebrow">Security</p>
+        <h1>Choose how to get your sign-in code</h1>
+        <p class="hero-text">We’ll email a one-time 6-digit code, use an <strong>authenticator app</strong> if you set one up{% if can_qr|default(false) %}, or <strong>approve on your phone by scanning a QR</strong> (keep this page open on this device){% endif %}. You’ll continue on the next step.</p>
+    </div>
+
+    <div class="dashboard-grid" style="grid-template-columns: 1fr; max-width: 640px;">
+        <div class="info-card">
+            {% if error %}
+            <p style="color:#ffb4b4; margin-bottom: 14px;">{{ error }}</p>
+            {% endif %}
+            <form method="POST" action="{{ url_for('mfa_choose') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                    <label style="display: flex; gap: 10px; align-items: flex-start; cursor: pointer;">
+                        <input type="radio" name="channel" value="email" id="ch_email" {% if not can_email %}disabled{% endif %} {% if can_email %}checked required{% endif %}>
+                        <span>Email the code{% if can_email and email_to %} to <strong>{{ email_to }}</strong>{% else %} <span style="color:#ffb4b4;">(unavailable: add an email to your account)</span>{% endif %}</span>
+                    </label>
+                    {% if has_totp %}
+                    <label style="display: flex; gap: 10px; align-items: center; cursor: pointer;">
+                        <input type="radio" name="channel" value="totp" id="ch_totp" {% if not can_email and has_totp %}checked required{% endif %}>
+                        <span>Authenticator app (TOTP) — we won’t email you a code</span>
+                    </label>
+                    {% endif %}
+                    {% if can_qr|default(false) %}
+                    <label style="display: flex; gap: 10px; align-items: flex-start; cursor: pointer;">
+                        <input type="radio" name="channel" value="qr" id="ch_qr" {% if not can_email and not has_totp and can_qr|default(false) %}checked required{% endif %}>
+                        <span>Phone QR — scan a code on your phone and tap <strong>Approve</strong> (keeps the session on <em>this</em> device)</span>
+                    </label>
+                    {% endif %}
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="primary-button" type="submit">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

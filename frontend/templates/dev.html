@@ -47,10 +47,10 @@
                 </div>
                 <div class="dev-status-card">
                     <p class="dev-status-label">Node.js</p>
-                    <p class="dev-status-value {% if status.node_executable %}dev-ok{% else %}dev-bad{% endif %}">
-                        {% if status.node_executable %}Detected{% else %}Not found{% endif %}
+                    <p class="dev-status-value {% if status.node_version %}dev-ok{% else %}dev-bad{% endif %}">
+                        {{ status.node_version or "Not verified" }}
                     </p>
-                    <p class="dev-status-meta">{{ status.node_executable or "Install Node 18+ and ensure it is on PATH." }}</p>
+                    <p class="dev-status-meta" style="white-space: pre-wrap; word-break: break-word;">{{ status.node_status_line or "Probing `node`…" }}</p>
                 </div>
                 <div class="dev-status-card">
                     <p class="dev-status-label">Dev accounts DB</p>

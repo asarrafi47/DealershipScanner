@@ -560,11 +560,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await res.json();
         if (!data.ok) return;
         const dbCls = data.db_connected ? "dev-ok" : "dev-bad";
-        const nodeCls = data.node_executable ? "dev-ok" : "dev-bad";
+        const nodeCls = data.node_version ? "dev-ok" : "dev-bad";
         const adminCls = data.admin_password_configured ? "dev-ok" : "dev-bad";
         const regCls = data.dev_registration_open ? "dev-ok" : "dev-bad";
         const dbPath = escHtml(data.inventory_db_path || "");
-        const nodePath = escHtml(data.node_executable || "Install Node 18+ and ensure it is on PATH.");
+        const nodePath = escHtml(
+            data.node_status_line ||
+                data.node_executable ||
+                "Install Node 18+; server probes PATH, NODE_BINARY, Homebrew, and nvm."
+        );
+        const nodeVer = escHtml(data.node_version || "Not verified");
         const adminMeta = data.is_production
             ? "Production requires ADMIN_PASSWORD."
             : "Non-production may use env defaults.";
@@ -582,8 +587,8 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
             <div class="dev-status-card">
                 <p class="dev-status-label">Node.js</p>
-                <p class="dev-status-value ${nodeCls}">${data.node_executable ? "Detected" : "Not found"}</p>
-                <p class="dev-status-meta">${nodePath}</p>
+                <p class="dev-status-value ${nodeCls}">${nodeVer}</p>
+                <p class="dev-status-meta" style="white-space: pre-wrap; word-break: break-word;">${nodePath}</p>
             </div>
             <div class="dev-status-card">
                 <p class="dev-status-label">Dev accounts DB</p>

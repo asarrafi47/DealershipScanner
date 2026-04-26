@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scan to approve</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+<div class="page">
+    <nav class="topbar">
+        <div class="logo">Dealership Scanner</div>
+        <div class="nav-links">
+            <a href="/logout">Cancel</a>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <p class="eyebrow">Sign-in on your phone</p>
+        <h1>Scan with your phone</h1>
+        <p class="hero-text">Open the link on your phone and tap <strong>Approve sign-in</strong>. This page will continue when the phone approves. If the QR expires, <a href="{{ url_for('mfa_choose', change=1) }}">go back and choose a channel again</a>.</p>
+    </div>
+
+    <div class="dashboard-grid" style="grid-template-columns: 1fr; max-width: 420px;">
+        <div class="info-card" style="text-align: center;">
+            {% if img_url %}
+            <p style="margin-bottom: 12px;">Point your phone camera at this code:</p>
+            <div style="display: inline-block; background: #fff; padding: 12px; border-radius: 12px;">
+                <img src="{{ img_url }}" alt="QR" width="260" height="260" style="max-width: 100%; height: auto;">
+            </div>
+            {% endif %}
+            <form id="mfa-qr-fallback" method="POST" action="{{ url_for('mfa_qr.mfa_qr_complete') }}" style="margin-top: 24px;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
+                <button class="primary-button" type="submit" style="width: 100%;" title="If you already approved on the phone, finish sign-in here.">I approved on my phone</button>
+            </form>
+            <p id="mfa-qr-err" style="color: #ffb4b4; margin-top: 12px; min-height: 1.2em; font-size: 0.9rem;"></p>
+        </div>
+    </div>
+</div>
+<script>
+(function() {
+  var id = {{ attempt_id|tojson }};
+  if (!id) return;
+  if (typeof io === 'undefined') return;
+  var s = io({transports: ['websocket', 'polling']});
+  s.on('connect', function() { s.emit('mfa_qr_subscribe', { attempt_id: id }); });
+  s.on('mfa_qr_approved', function() {
+    var t = (document.querySelector('meta[name="csrf-token"]') || {}).content;
+    if (!t) { document.getElementById('mfa-qr-err').textContent = 'Missing session token. Use the button below.'; return; }
+    var fd = new FormData();
+    fd.append('csrf_token', t);
+    fd.append('attempt_id', id);
+    fetch('{{ url_for("mfa_qr.mfa_qr_complete") }}', { method: 'POST', body: fd, credentials: 'same-origin', headers: { 'X-MFA-QR-JSON': '1' } })
+      .then(function(r) { return r.json().catch(function() { return {}; }); })
+      .then(function(d) { if (d && d.ok && d.next) { window.location.href = d.next; } else {
+        document.getElementById('mfa-qr-err').textContent = d.error ? ('Could not finish: ' + d.error) : 'Use “I approved on my phone” below.'; } })
+      .catch(function() { document.getElementById('mfa-qr-err').textContent = 'Network error. Use the button below.'; });
+  });
+})();
+</script>
+</body>
+</html>

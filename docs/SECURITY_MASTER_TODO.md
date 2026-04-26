@@ -39,11 +39,16 @@
 | `/admin/*` (store dashboard, inventory, scans) | **Yes** — same app session; **admin** role or **dealer_staff** with `dealer_id` / `dealership_registry_id` on `users` row | CSRF on POST; inventory rows scoped to dealer match on `cars`; internal notes never exposed on public `/car` JSON; re-scan subprocess **off** unless `ALLOW_STORE_ADMIN_RESCAN=1` and caller is **admin** |
 | `/dealer-uploads/<user_id>/<vehicle_id>/<file>` | **Yes** — path `user_id` must match session | JPEG/PNG/WebP only at upload; filenames are server-generated; `send_from_directory` under upload root |
 | `/logout` | N/A | Clears Flask session (`GET` or `POST`) |
-| `/login`, `/register` | N/A | CSRF on POST; bcrypt passwords; per-IP rate limits on POST |
+| `/mfa/choose` | **Yes** — `mfa_pending_user_id` in session (post-password) | CSRF on **POST**; user selects **email**, **TOTP** (if enabled), or **phone QR** (when `REDIS_URL` or in-memory in non-prod; see **SEC-063**); **POST** sends the email OTP when applicable |
+| `/mfa/qr-wait`, `/mfa/qr-approve-png`, `POST /mfa/qr/complete` | **Yes** — same `mfa_pending_user_id` + `mfa_qr_attempt_id` (desktop) | `POST /mfa/qr/complete` is CSRF-protected; desktop Socket.IO `mfa_qr_subscribe` requires matching session + attempt; PNG only for the session that created the attempt |
+| `GET/POST /mfa/qr-confirm/<token>` | **No** (browser on phone) | **Unguessable** `token` in URL + **per-view** `ap_nonce` in POST (no session CSRF); per-IP rate limit; state in **Redis** (or in-memory in dev; production needs `REDIS_URL`) with short TTL |
+| `/socket.io/*` (Flask-SocketIO) | Same-origin to app | CORS from `SOCKETIO_CORS_ORIGINS` (default `*` in dev; restrict in prod); `mfa_qr_subscribe` is session-bound before `join_room` |
+| `/mfa/qr` (TOTP setup image) | **Yes** during pending TOTP setup | `otpauth://` QR as PNG (**Segno**); no public data beyond what the user’s session already holds |
+| `/login`, `/register` | N/A | CSRF on POST; bcrypt passwords; per-IP rate limits on POST; **general** accounts (no org) use these; **dealership** sign-up with org uses `/dealer/register` + `/dealer/login` |
 | `/dev/login`, `/dev/register` | N/A | CSRF on POST; bcrypt; per-IP rate limits; `/dev/register` gated in production |
 | `/api/search/smart` | No | CSRF header (`X-CSRF-Token`) + per-IP rate limit (see SEC-043) |
 | `/api/car/<id>/chat` | No | CSRF header + per-IP rate limit + max message/body size |
-| `/dev/*` (dashboard, APIs) | **Yes** — `admin_users` in `dev_users.db` | CSRF on forms + `X-CSRF-Token` on API; POST `/dev/logout`; includes `POST /dev/api/cars/<id>/spec-backfill` (optional Google CSE env for search tier) and `POST /dev/api/cars/<id>/kbb-refresh` (optional `KBB_API_KEY` for IDWS) |
+| `/dev/*` (dashboard, APIs) | **Yes** — `admin_users` in `dev_users.db` (password at `/dev/login` only; **no** 2FA on `/dev` currently) | CSRF on forms + `X-CSRF-Token` on API; POST `/dev/logout`; includes `POST /dev/api/cars/<id>/spec-backfill` (optional Google CSE env for search tier) and `POST /dev/api/cars/<id>/kbb-refresh` (optional `KBB_API_KEY` for IDWS) |
 | `/dev/manifest`, `/api/dev/*` | `DEV_CONSOLE` + optional `DEV_CONSOLE_SECRET` | CSRF on mutations; safe `next` under `/dev/manifest` |
 
 **Intent:** Inventory and smart search stay **public** for this product; `/dev` and manifest console stay **operator-only**. Tighten with app-level login or API keys if you expose the app to untrusted networks.
@@ -60,11 +65,27 @@
 | `ALLOW_DEFAULT_APP_USER=1` | Optional in production | Allow seeded `admin`/`password` app user (discouraged) |
 | `SESSION_COOKIE_SECURE=0` | Local HTTPS testing | Allow session cookie without HTTPS |
 | `MIN_PASSWORD_LENGTH` | Optional | Registration (default 8) |
+| `USERS_DB_PATH` | Optional | Default `users.db` (app `users` table) |
+| `USERS_DB_CONNECT_TIMEOUT_S` | Optional | Default `30` (SQLite `connect` wait; reduces `database is locked` under dev reload / concurrency) |
+| `USERS_DB_BUSY_TIMEOUT_MS` | Optional | Default `30000` (SQLite `busy_timeout` per query) |
 | `RATE_LIMIT_SMART_SEARCH_PER_MIN` | Optional | Default 90 |
 | `RATE_LIMIT_CAR_CHAT_PER_MIN` | Optional | Default 40 |
 | `TRUST_PROXY_HEADERS` | Optional (`1` / `true`) | When set, rate limits use first `X-Forwarded-For` hop (use only behind a trusted proxy) |
 | `RATE_LIMIT_LOGIN_PER_MIN` | Optional | Default 30 (`/login` POST) |
 | `RATE_LIMIT_REGISTER_PER_MIN` | Optional | Default 10 (`/register` POST) |
+| `RATE_LIMIT_MFA_VERIFY_PER_MIN` | Optional | Default 20 (`POST /mfa/verify` per IP) |
+| `RATE_LIMIT_MFA_TOTP_ENROLL_PER_MIN` | Optional | Default 10 (`POST` TOTP confirm on `/mfa/setup` per IP) |
+| `MFA_DELIVERY_MODE` | Optional | `smtp` (default for transport fallback label), `log` (log code; dev), or `test` (pytest) — see `backend/utils/mfa_delivery.py` |
+| `MFA_EMAIL_PROVIDER` | Optional | `auto` (default: Resend if `RESEND_API_KEY` set, else SMTP), `resend`, or `smtp` |
+| `RESEND_API_KEY`, `RESEND_FROM` | Resend (recommended) | Transactional email API; `RESEND_FROM` is a verified sender (else `SMTP_FROM`) |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM` | If not using Resend, or as `RESEND_FROM` fallback | Legacy SMTP path for email OTP; non-prod may **fall back to log** if nothing is configured |
+| `MFA_DEV_UI_CODE` | Optional (non-production) | When delivery is `log`/`test`, may surface the last code on `/mfa/verify` to ease local testing |
+| `MFA_ACTION_LOG_PATH` | Optional | Append-only JSONL of MFA **events** (no OTPs); use a **writable** path (e.g. `logs/mfa_actions.jsonl` from the project directory, or `$HOME/...`); not a literal `/path/to/...` |
+| `REDIS_URL` | **Production** phone QR 2FA | e.g. `redis://:password@host:6379/0` — **required** for **SEC-063** QR sign-in in production; dev may omit (in-process store) |
+| `MFA_QR_INMEMORY` | Optional | When `1`/`true`, use in-process attempt store in **production** (intended for tests; not for multi-server) |
+| `MFA_QR_ATTEMPT_TTL_SECONDS` / `MFA_QR_APPROVED_TTL_SECONDS` | Optional | Defaults 120; Redis key TTLs for scan + desktop finalize window |
+| `PUBLIC_BASE_URL` or `MFA_QR_BASE_URL` | **Recommended** behind reverse proxy | Base URL used **inside the QR** for `https://…/mfa/qr-confirm/…` so phones hit the public hostname |
+| `SOCKETIO_CORS_ORIGINS` | Optional | Comma list or `*`; default `*` (same origin in typical deployments) |
 | `DEALER_PORTAL_DB_PATH` | Optional | Default `dealer_portal.db` (dealer-managed inventory) |
 | `DEALER_UPLOAD_ROOT` | Optional | Absolute or cwd-relative root for dealer photo files (default `uploads/dealer`) |
 | `DEALER_UPLOAD_MAX_BYTES` | Optional | Per-file cap (default 8 MiB) |
@@ -110,9 +131,9 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/db/users_db.py` |
-| **Outcome** | Seeded `admin` / `password` row is **not** inserted in production unless `ALLOW_DEFAULT_APP_USER` is truthy. |
-| **Validation** | Production DB init: no new default row without env flag; dev still gets seed for local use. |
-| **Last verified** | 2026-04-18 |
+| **Outcome** | Seeded `admin` / `password` row is **not** inserted unless `ALLOW_DEFAULT_APP_USER` is truthy (dev-only), and any legacy seeded `admin@admin.com` + `password` row is removed at init when the flag is off. |
+| **Validation** | App DB init: default row absent unless explicitly opted-in (and never in production). With an existing legacy `admin/password` row present, init removes it when `ALLOW_DEFAULT_APP_USER` is unset. |
+| **Last verified** | 2026-04-25 |
 
 ### SEC-003 — Admin `/dev` bootstrap password
 
@@ -164,9 +185,49 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | This document — **Authorization model** table; `backend/main.py` + `backend/dealer_portal.py` for `/inventory` and `/dealer-uploads` enforcement. |
-| **Outcome** | Explicit matrix; code matches “public listings + locked-down `/dev`” + dealer **My inventory** when logged in. |
+| **Outcome** | Explicit matrix; code matches “public listings + locked-down `/dev`” + dealer **My inventory** when logged in; general vs dealer auth entry points (`/login` vs `/dealer/login`). |
 | **Validation** | Review table vs `backend/main.py`, `backend/dev_routes.py`, and `backend/dealer_portal.py` route list. |
-| **Last verified** | 2026-04-21 |
+| **Last verified** | 2026-04-25 |
+
+### SEC-014 — Mandatory MFA (TOTP) for all accounts
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/main.py`, `backend/dev_routes.py`, `backend/db/users_db.py`, `backend/db/admin_users_db.py`, templates under `frontend/templates/` |
+| **Outcome** | All accounts except **`role=admin` (app admin)** require a second factor after password **login** on the **app**; admins skip MFA. **Email** is sent from **`/mfa/choose`** (or setup) via **Resend** (preferred) or SMTP; session-stored OTP for email. **SMS 2FA is not supported.** **TOTP** is optional for non-admins. The **`/dev` operator** surface uses **password only** (no 2FA on `/dev` routes). |
+| **Validation** | `python -m pytest tests/test_mfa_totp.py tests/test_billing_gate.py tests/test_mfa_action_log.py -q`; manual: set `RESEND_API_KEY` + `RESEND_FROM` and/or Twilio Verify envs. |
+| **Last verified** | 2026-04-25 |
+
+### SEC-063 — Phone QR sign-in (Segno, Redis, Flask-SocketIO)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/mfa_qr.py`, `backend/utils/mfa_qr_store.py`, `backend/utils/qr_segno.py`, `backend/main.py` (MFA choose/verify, `/mfa/qr` TOTP PNG, Socket.IO init), `run.py`, `frontend/templates/mfa_choose.html`, `frontend/templates/mfa_qr_*.html`, `requirements.txt` |
+| **Outcome** | Optional second factor: user picks **phone QR** on `/mfa/choose`; **Redis** (or in-process in non-prod) stores a short-lived `mfa_qr:attempt:*` with `user_id` + `mfa_intent`; **Segno** renders a PNG of `PUBLIC_BASE_URL`/`MFA_QR_BASE_URL` + `/mfa/qr-confirm/<token>`; phone approves with **per-view `ap_nonce`**; **Flask-SocketIO** `mfa_qr_approved` notifies the browser; `POST /mfa/qr/complete` (CSRF) + `mfa_qr_consume_approved` finalizes the app session. TOTP-enrollment QRs also use **Segno** (no `qrcode` dep). |
+| **Validation** | `python -m pytest tests/test_mfa_qr.py -q`; set `REDIS_URL` in production; run `python run.py` and walk scan + approve. |
+| **Last verified** | 2026-04-25 |
+
+### SEC-062 — Resend (email) for MFA; SMS removed
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/utils/mfa_delivery.py`, `backend/main.py`, `backend/dev_routes.py`, `requirements.txt` |
+| **Outcome** | **Resend** (or SMTP) for email codes only; **no SMS** MFA (Twilio / Verify / Programmable SMS code paths removed; `mfa_phone` column may remain unused in DB). |
+| **Validation** | `python -m pytest -q` |
+| **Last verified** | 2026-04-25 |
+
+### SEC-061 — MFA action audit log (2FA pipeline)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/utils/mfa_action_log.py`, `backend/utils/mfa_delivery.py`, `backend/main.py`, `backend/dev_routes.py` |
+| **Outcome** | Operator can tail JSONL at `MFA_ACTION_LOG_PATH` and/or process logger `mfa_action` (INFO) to see `login.mfa_start`, `mfa_choose.*`, `delivery.email` (e.g. `resend_sent`, `smtp_sent`), and `mfa_verify.*` — **never** the OTP. |
+| **Validation** | `python -m pytest tests/test_mfa_action_log.py tests/test_mfa_totp.py -q` |
+| **Last verified** | 2026-04-25 |
 
 ### SEC-055 — App user session + dealer `/inventory` (separate DB, uploads)
 
@@ -177,6 +238,16 @@
 | **Outcome** | Successful `/login` and `/register` set `session['user_id']` + `session['username']`; `/logout` clears session. Dealer inventory lives in `dealer_portal.db` (path `DEALER_PORTAL_DB_PATH`). Mutating dealer routes validate CSRF form token. VIN add is rate-limited per IP (`RATE_LIMIT_DEALER_VIN_PER_MIN`, default 20/min). Photo uploads: MIME allow-list, max bytes (`DEALER_UPLOAD_MAX_BYTES`), bounded file count; gallery URLs stored as JSON on the vehicle row; files on disk under `DEALER_UPLOAD_ROOT` (default `uploads/dealer/`). |
 | **Validation** | `python -m pytest tests/test_dealer_portal.py`; replay `POST /inventory/add-vin` without `csrf_token` → 403; logged-out `GET /inventory` → redirect to `/login`. |
 | **Last verified** | 2026-04-21 |
+
+### SEC-060 — Stripe org billing (subscription gate, webhook verification, admin bypass)
+
+| Field | Content |
+|-------|---------|
+| **Status** | In progress |
+| **Scope** | `backend/main.py` (register/login gates), `backend/db/users_db.py` (org + role schema), `backend/billing/stripe_billing.py`, `backend/billing/routes.py`, templates (`register.html`, billing screens) |
+| **Outcome** | One Stripe subscription per org (dealership). New registrations either create an org (owner) or join via invite; non-admin users require an active org subscription to access paid surfaces. Stripe webhook is signature-verified and is the only source of truth for subscription activation. Admin users bypass Stripe and gates via env-driven bootstrap (no hard-coded accounts). |
+| **Validation** | (1) With billing enabled, register non-admin → redirected to Stripe Checkout; no access to paid routes until webhook marks subscription active. (2) Replay webhook with invalid signature → 400/403 and no state change. (3) With `APP_ADMIN_EMAILS` containing a user email, that user registers/logs in without Stripe redirect and can access gated routes. (4) Confirm no Stripe secrets are logged or rendered to templates. |
+| **Last verified** | 2026-04-25 |
 
 ---
 
@@ -369,6 +440,21 @@
 | 2026-04-20 | **SEC-056:** KBB IDWS — env-only `KBB_API_KEY`, HTTPS client, dev `kbb-refresh` route, optional `SCANNER_POST_KBB` / `--post-kbb`; env table + **SEC-013** surface list updated. |
 | 2026-04-20 | **SEC-057:** Store admin at `/admin` (session + dealer scope + CSRF); `scan_runs` table; optional `ALLOW_STORE_ADMIN_RESCAN` gated scanner subprocess; **SEC-013** + env quick reference updated. |
 | 2026-04-21 | **SEC-055:** App login/register now establish a signed Flask session; `/logout` clears it. Dealer **My inventory** at `/inventory` uses separate `dealer_portal.db`, CSRF on dealer POSTs, per-IP VIN-add rate limit, and validated image uploads + per-user file access under `/dealer-uploads/...`. **SEC-013** authorization table updated. |
+| 2026-04-25 | **SEC-002:** Removed legacy seeded `admin/password` app user at init unless explicitly opted-in via `ALLOW_DEFAULT_APP_USER` (dev only). |
+| 2026-04-25 | **SEC-060:** Added org-level Stripe billing gate (post-register/login), admin bypass via `APP_ADMIN_EMAILS`, and signature-verified Stripe webhook endpoint. Validated: invalid webhook signature rejected (HTTP 400), billing gate redirects non-admins to `/billing/required`, and no Stripe secrets referenced in frontend templates. |
+| 2026-04-25 | **SEC-014:** Mandatory TOTP 2FA for app + dev accounts (setup + verify flows, DB fields, and route gating); added pytest coverage. |
+| 2026-04-25 | **SEC-014 (follow-up):** TOTP enrollment now calls `set_user_totp` / `set_admin_totp` after QR + code confirm; stable setup secret in session until confirm or regenerate; login uses TOTP path when enabled; per-IP rate limits on verify and TOTP enroll; `tests/test_mfa_totp.py` covers enroll + relogin. |
+| 2026-04-25 | **SEC-014 (follow-up):** App MFA adds **`/mfa/choose`**: email/SMS OTPs are **sent** when the user POSTs the channel; SMS needs E.164 on the form or stored `mfa_phone`. Env table: `MFA_DELIVERY_MODE`, `SMTP_*`, `TWILIO_*`, `MFA_DEV_UI_CODE`. Tests updated: `test_billing_gate.py` + `test_mfa_totp.py`. |
+| 2026-04-25 | **SEC-061:** MFA JSONL + `mfa_action` logger for 2FA debugging; delivery layer logs `smtp_sent` / fallbacks / Twilio errors. Env: `MFA_ACTION_LOG_PATH` (writable path, e.g. `logs/mfa_actions.jsonl`). |
+| 2026-04-25 | **SEC-061 (follow-up):** If `MFA_ACTION_LOG_PATH` is invalid, warn **once** and keep INFO logging without repeated file errors. |
+| 2026-04-25 | **SEC-062:** Resend for email (`RESEND_API_KEY` / `MFA_EMAIL_PROVIDER`); Twilio Verify for SMS (`TWILIO_VERIFY_SERVICE_SID`, `MFA_SMS_MODE`); session+Programmable SMS preserved for `log`/`test` and `MFA_SMS_MODE=session`. |
+| 2026-04-25 | **SEC-062 (follow-up):** Removed all **SMS 2FA** (Verify + messaging); deleted `mfa_twilio_verify.py` and `twilio` dependency. |
+| 2026-04-25 | **SEC-014 (follow-up):** App `role=admin` users **skip 2FA** on login and on new registration when the email is in the admin list; `tests/test_billing_gate.py` updated. |
+| 2026-04-25 | **SEC-013 / auth entry points:** General `/register` no longer requires an organization; `ROLE_GENERAL` for non-admin. Dealership flows use `/dealer/register` and `/dealer/login` (with org for non-admin); `session['mfa_intent']` routes post-2FA to `/listings` (general) or dealer inventory. Stripe gate applies only when `org_id` is set. Added `delete_user_by_email` + `dealer_vehicles` cleanup. |
+| 2026-04-25 | **SQLite (users.db):** Longer default connect/busy timeout; `save_user` hashes password before `connect` and retries on `SQLITE_BUSY`; `check_user` no longer runs bcrypt while the first connection is open. Env: `USERS_DB_CONNECT_TIMEOUT_S`, `USERS_DB_BUSY_TIMEOUT_MS`. |
+| 2026-04-25 | **SEC-063:** Phone **QR 2FA** (Segno PNG, Redis-bounded attempt IDs, Socket.IO to notify the desktop, CSRF on finalize); `REDIS_URL` for production; **SEC-013** + env table updated. |
+| 2026-04-25 | **`/dev` 2FA removed:** `/dev` operator login is password-only; `/dev/mfa/*` and dev MFA templates **removed**; **SEC-013** and env rate-limit rows updated. |
+| 2026-04-25 | **Follow-up:** `GET/POST /dev/mfa/verify|setup` and `GET /dev/mfa/qr` redirect to `/dev/` or `/dev/login?next=/dev/` so old tabs/bookmarks do not 500. |
 
 **Done items** stay in their phase table with **Status: Done** and **Last verified** — do not duplicate into a second list.
 

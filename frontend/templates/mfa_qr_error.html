@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title or "Sign-in" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="page" style="max-width: 560px; margin: 0 auto; padding: 2rem 1.25rem;">
+    <h1>Second factor</h1>
+    <p class="hero-text" style="color: #ffb4b4;">{{ error }}</p>
+    <p><a href="/login" class="primary-button" style="text-decoration: none; display: inline-block;">Back to sign-in</a></p>
+</div>
+</body>
+</html>

@@ -1151,6 +1151,25 @@ async def main(
         except Exception:
             logger.exception("Post-scan pipeline failed (inventory already saved)")
 
+    # --- model_specs dictionary correction (full pass) ---
+    # Per-VIN corrections already run inside upsert_vehicles; this final pass
+    # catches any rows that were updated by post_repair after the initial upsert.
+    try:
+        from backend.database import apply_model_specs_corrections
+        corrected = await asyncio.to_thread(apply_model_specs_corrections)
+        if corrected:
+            logger.info("model_specs final pass: %d rows corrected", corrected)
+    except Exception:
+        logger.exception("model_specs final correction pass failed")
+
+    # --- Resync incomplete_listings.db ---
+    try:
+        from backend.db.incomplete_listings_db import fast_rebuild_incomplete_listings_index
+        n_incomplete = await asyncio.to_thread(fast_rebuild_incomplete_listings_index)
+        logger.info("incomplete_listings resynced: %d incomplete listings", n_incomplete)
+    except Exception:
+        logger.exception("incomplete_listings resync failed")
+
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(

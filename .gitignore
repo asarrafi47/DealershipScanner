@@ -6,6 +6,15 @@ __pycache__/
 .DS_Store
 data/vectors/
 
+# Local SQLite DBs (keep user/admin data off GitHub)
+users.db
+users.db-*
+dev_users.db
+dev_users.db-*
+
+# MFA audit (optional local file)
+logs/mfa*.jsonl
+
 # Local scratch / editor noise
 Untitled
 out.csv

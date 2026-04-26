@@ -13,8 +13,14 @@ sentence-transformers>=2.2
 psycopg[binary]>=3.2
 pgvector>=0.3
 bcrypt>=4.1
+resend>=2.0.0
+pyotp>=2.9
+segno
+flask-socketio
+redis
 ollama>=0.3
 crawl4ai>=0.8,<0.9
+stripe>=8
 
 # Browser binaries (not installed by pip). After pip install, run ONE of:
 #   ./scripts/install_scraper_browsers.sh
