@@ -91,7 +91,10 @@ def tier_a_trim_and_epa(car: dict[str, Any]) -> tuple[dict[str, Any], dict[str, 
     model = car.get("model") or ""
     trim = car.get("trim") or ""
     regex = decode_trim_logic(make, model, trim, _title_for_decode(car))
-    epa = lookup_epa_aggregate(y, make, model)
+    title_ep = (car.get("title") or "").strip()
+    if (make or "").strip().upper() == "BMW" and (car.get("fuel_type") or "").strip():
+        title_ep = f"{title_ep} {car.get('fuel_type')}".strip()
+    epa = lookup_epa_aggregate(y, make, model, title=title_ep, trim=trim)
 
     cyl = regex.get("cylinders")
     src_cyl = "trim_decoder"
@@ -112,13 +115,14 @@ def tier_a_trim_and_epa(car: dict[str, Any]) -> tuple[dict[str, Any], dict[str, 
         or "electric" in (epa.get("fuel_type") or "").lower()
     )
     if is_bev:
-        ce = epa.get("city_e")
-        he = epa.get("highway_e")
-        if ce is not None and he is not None and ce > 0 and he > 0:
-            found["mpg_city"] = int(round(float(ce)))
-            found["mpg_highway"] = int(round(float(he)))
-            prov["mpg_city"] = {"source": "epa_master", "detail": "MPGe city (EPA)"}
-            prov["mpg_highway"] = {"source": "epa_master", "detail": "MPGe hwy (EPA)"}
+        # BEV: MPGe is in city08 / highway08; city_e is kWh/100 mi in this catalog.
+        c8 = epa.get("city08")
+        h8 = epa.get("highway08")
+        if c8 is not None and h8 is not None and c8 > 0 and h8 > 0:
+            found["mpg_city"] = int(round(float(c8)))
+            found["mpg_highway"] = int(round(float(h8)))
+            prov["mpg_city"] = {"source": "epa_master", "detail": "MPGe city (EPA city08)"}
+            prov["mpg_highway"] = {"source": "epa_master", "detail": "MPGe hwy (EPA highway08)"}
     else:
         c8 = epa.get("city08")
         h8 = epa.get("highway08")

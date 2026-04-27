@@ -295,6 +295,55 @@ def parse_engine_displacement_liters(car: dict[str, Any]) -> float | None:
                 return v if v > 0 else None
             except ValueError:
                 return None
+        if _is_displacement_only_engine_text(ed):
+            m2 = _DISP_ONLY_ENGINE_RE.match(ed.strip())
+            if m2:
+                try:
+                    v = float(m2.group(1))
+                    return v if v > 0 else None
+                except ValueError:
+                    pass
+    return None
+
+
+def _format_engine_l_numeric_liters(lit: float) -> str:
+    s = f"{lit:.3f}".rstrip("0").rstrip(".")
+    return s
+
+
+def infer_engine_l_for_db(car: dict[str, Any]) -> str | None:
+    """
+    Suggested value for the ``cars.engine_l`` column (TEXT): short displacement (e.g. ``2.0``),
+    or ``Electric`` / ``PHEV`` for electrified rows. Used at upsert when the scraper set
+    ``engine_description`` / analytics ``engine`` but not ``engine_l``.
+    """
+    raw = car.get("engine_l")
+    if raw is not None and not is_effectively_empty(raw) and not is_spec_overlay_junk(raw):
+        s = str(raw).strip()
+        low = s.lower()
+        if low in ("electric", "phev"):
+            return "Electric" if low == "electric" else "PHEV"
+        if low in ("n/a", "na", "none", "tbd", "---", "0", "0.0"):
+            pass
+        else:
+            return s[:32]
+
+    try:
+        ci = int(car.get("cylinders")) if car.get("cylinders") is not None and str(car.get("cylinders")).strip() != "" else None
+    except (TypeError, ValueError):
+        ci = None
+    if ci == 0:
+        ft = str(car.get("fuel_type") or "").lower()
+        if "plug" in ft or "phev" in ft:
+            return "PHEV"
+        if "electric" in ft and "plug" not in ft:
+            return "Electric"
+        if "hybrid" in ft and "plug" in ft:
+            return "PHEV"
+
+    lit = parse_engine_displacement_liters(car)
+    if lit is not None and lit > 0:
+        return _format_engine_l_numeric_liters(lit)[:32]
     return None
 
 
@@ -412,6 +461,17 @@ def _bmw_series_trim_from_motor_model(model_raw: str) -> tuple[str | None, str |
     return None, None
 
 
+# Strips the series-prefix digit from standard BMW motor trims:
+#   330i -> 30i,  540i xDrive -> 40i xDrive,  M340i -> unchanged,  xDrive30i -> unchanged
+_BMW_MOTOR_TRIM_PREFIX_RE = re.compile(r"^([2-9])(\d{2}[eEiI]\S*(?:\s+.*)?)$")
+
+
+def _strip_bmw_trim_series_prefix(trim: str) -> str:
+    """330i -> 30i; 540i xDrive -> 40i xDrive. Leaves M340i, xDrive30i, 30i untouched."""
+    m = _BMW_MOTOR_TRIM_PREFIX_RE.match(trim.strip())
+    return m.group(2) if m else trim
+
+
 _BMW_MODEL_TAIL = re.compile(
     r"""
     ^(?P<base>
@@ -482,6 +542,10 @@ def apply_bmw_model_trim_display(car: dict[str, Any]) -> tuple[str, str]:
         from_title = _bmw_title_suffix_trim(title, model_base)
         if from_title:
             trim_out = from_title
+
+    # Normalize: 330i → 30i, 540i xDrive → 40i xDrive (strip series prefix digit).
+    if trim_out and not is_effectively_empty(trim_out):
+        trim_out = _strip_bmw_trim_series_prefix(trim_out.strip())
 
     return format_display_value(model_base), format_display_value(trim_out)
 
@@ -814,6 +878,30 @@ def fill_derived_condition_for_display(c: dict[str, Any], out: dict[str, Any]) -
                 out["condition"] = "Certified Pre-Owned"
             else:
                 out["condition"] = "Pre-Owned"
+
+    # 2024+ with no title/mileage signal: inventory SRP / VDP URL often encodes new vs used.
+    _oc4 = out.get("condition")
+    if _oc4 is None or str(_oc4).strip() in ("", DISPLAY_DASH):
+        try:
+            yy4 = int(c.get("year")) if c.get("year") is not None else None
+        except (TypeError, ValueError):
+            yy4 = None
+        if yy4 is not None and yy4 >= 2024:
+            su4 = (c.get("source_url") or "").lower()
+            if (
+                "used-inventory" in su4
+                or "used_inventory" in su4
+                or "pre-owned" in su4
+                or "preowned" in su4
+                or "/used/" in su4
+            ):
+                out["condition"] = "Used"
+            elif (
+                "new-inventory" in su4
+                or "newinventory" in su4.replace("-", "").replace("_", "")
+                or "/new/" in su4
+            ):
+                out["condition"] = "New"
 
 
 def infer_condition_for_storage(car: dict[str, Any]) -> str | None:

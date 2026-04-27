@@ -67,3 +67,19 @@ def test_model_year_2024_not_pre_owned_heuristic() -> None:
     }
     out = serialize_car_for_api(row, include_verified=False)
     assert out.get("condition") in ("—", None) or str(out.get("condition")).strip() in ("", "—")
+
+
+def test_model_year_2024_used_inferred_from_used_inventory_url() -> None:
+    row = {
+        "vin": "1HGBH41JXMN109185",
+        "year": 2024,
+        "make": "Honda",
+        "model": "Accord",
+        "title": "2024 Honda Accord",
+        "condition": None,
+        "mileage": None,
+        "is_cpo": 0,
+        "source_url": "https://dealer.example.com/used-inventory/index.htm",
+    }
+    out = serialize_car_for_api(row, include_verified=False)
+    assert out.get("condition") == "Used"

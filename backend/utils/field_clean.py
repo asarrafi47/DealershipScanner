@@ -73,12 +73,15 @@ def normalize_optional_str(val: Any, *, max_len: int | None = None) -> str | Non
 
 
 def normalize_optional_url(val: Any) -> str | None:
-    """HTTP(S) URLs only; empty or placeholders → None."""
+    """HTTP(S) URLs and local /car-images/ paths; empty or placeholders → None."""
     u = normalize_optional_str(val)
     if not u:
         return None
     low = u.lower()
     if low.startswith("http://") or low.startswith("https://"):
+        return u
+    # Local images served by Flask /car-images/ route (image_downloader.py)
+    if low.startswith("/car-images/"):
         return u
     return None
 

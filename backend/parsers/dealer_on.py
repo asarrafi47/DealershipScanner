@@ -381,7 +381,19 @@ def _parse_json_list(data, base_url: str, dealer_id: str, dealer_name: str, deal
     for obj in items:
         if not isinstance(obj, dict):
             continue
-        if not (obj.get("vin") or obj.get("VIN") or obj.get("price") or obj.get("salePrice") or obj.get("internetPrice")):
+        if not (
+            obj.get("vin")
+            or obj.get("VIN")
+            or obj.get("stockNumber")
+            or obj.get("stock_number")
+            or obj.get("stock")
+            or obj.get("price")
+            or obj.get("salePrice")
+            or obj.get("internetPrice")
+            or obj.get("sellingPrice")
+            or obj.get("internet_Price")
+            or obj.get("internet_price")
+        ):
             continue
         mapped = _map_vehicle(obj, base_url, dealer_id, dealer_name, dealer_url)
         if mapped:

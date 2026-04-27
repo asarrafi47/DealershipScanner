@@ -254,6 +254,103 @@ const INTERIOR_TRACKING_NEEDLES = [
 
 const BODY_TRACKING_NEEDLES = ["bodystyle", "bodytype", "vehiclebody", "vehicletype", "vehbodystyle", "bodyshape"];
 
+/** Match ``backend.parsers.dealer_on._CONDITION_NEEDLES`` (inventory / new–used in tracking arrays). */
+const CONDITION_TRACKING_NEEDLES = [
+  "vehiclecondition",
+  "inventorytype",
+  "newused",
+  "stocktype",
+  "saletype",
+  "vehicletypecode",
+  "neworused",
+  "invtorytype",
+];
+
+/**
+ * Reject boolean-ish junk some feeds place in condition fields (``field_clean`` strips the same in Python).
+ */
+function conditionStringIsJunk(s) {
+  const t = normStr(s).toLowerCase();
+  if (!t) return true;
+  if (t === "0" || t === "false" || t === "no" || t === "off") return true;
+  return false;
+}
+
+/**
+ * Inventory JSON → condition string, aligned with ``dealer_on._pick_condition`` (Dealer.com / similar APIs).
+ */
+function pickConditionFromVehicle(obj, arr) {
+  if (!obj || typeof obj !== "object") return null;
+  for (const k of [
+    "condition",
+    "vehicleCondition",
+    "vehicle_condition",
+    "inventoryType",
+    "inventory_type",
+    "newUsed",
+    "new_used",
+    "stockType",
+    "stock_type",
+    "vehicleSaleType",
+    "vehicle_sale_type",
+    "inventoryStatus",
+    "inventory_status",
+  ]) {
+    if (!(k in obj) || obj[k] == null) continue;
+    if (typeof obj[k] === "boolean") continue;
+    if (conditionStringIsJunk(obj[k])) continue;
+    const s = sqlOptionalStr(String(obj[k]).trim());
+    if (s) return s;
+  }
+  for (const name of ["vehicleCondition", "inventoryType", "newUsed", "stockType", "inventoryTypeCode"]) {
+    const hit = findTrackingAttr(arr, name);
+    if (hit != null && !conditionStringIsJunk(hit)) {
+      const s = sqlOptionalStr(String(hit).trim());
+      if (s) return s;
+    }
+  }
+  const fromLoose = findTrackingAttrLoose(arr, CONDITION_TRACKING_NEEDLES);
+  if (fromLoose && !conditionStringIsJunk(fromLoose)) {
+    const s = sqlOptionalStr(String(fromLoose).trim());
+    if (s) return s;
+  }
+  if (obj.certified === true || obj.isCertified === true) {
+    return "Certified";
+  }
+  return null;
+}
+
+/**
+ * When the payload omits type fields, SRP card titles still often start with New/Used or mention CPO.
+ * Matches ``fill_derived_condition_for_display`` (Python) in spirit for common prefixes.
+ */
+function inferConditionFromTitle(title) {
+  const t = normStr(title);
+  if (!t) return null;
+  const low = t.toLowerCase();
+  if (low.startsWith("new ")) return "New";
+  if (low.startsWith("used ")) return "Used";
+  if (low.includes("certified pre-owned") || low.includes("certified preowned")) return "Certified Pre-Owned";
+  if (/\bcpo\b/.test(t)) return "Certified Pre-Owned";
+  if (low.startsWith("certified ")) return "Certified";
+  return null;
+}
+
+/** 1 = CPO signal from payload or *condition* text; else null (do not clobber existing DB is_cpo with 0). */
+function pickIsCpoFromVehicle(obj, condStr) {
+  if (!obj || typeof obj !== "object") return null;
+  if (obj.is_cpo === 1 || obj.is_cpo === true || obj.isCpo === true || obj.isCPO === true) return 1;
+  const t = (condStr || "").toLowerCase();
+  if (t.includes("certif") || t.includes("cpo")) return 1;
+  if (obj.certified === true && obj.certified !== "False" && obj.certified !== "0") return 1;
+  if (obj.isCertified === true) return 1;
+  const inv = normStr(
+    obj.inventoryType || obj.inventory_type || obj.newUsed || obj.new_used || obj.stockType || obj.stock_type || ""
+  ).toLowerCase();
+  if (inv.includes("cpo") || inv.includes("certif") || inv.includes("certified")) return 1;
+  return null;
+}
+
 function extractInteriorColorFromAttrs(arr, obj) {
   const fromArr = findTrackingAttrLoose(arr, INTERIOR_TRACKING_NEEDLES);
   if (fromArr) return sqlOptionalStr(fromArr);
@@ -353,11 +450,22 @@ function findVehicleList(obj, minVinCount = 1) {
 function hasVehicleIdent(o) {
   if (!o || typeof o !== "object") return false;
   const attrs = o.attributes && typeof o.attributes === "object" ? o.attributes : null;
-  if (o.vin || o.VIN || o.vinNumber || o.stockNumber || (attrs && (attrs.vin || attrs.VIN))) return true;
+  if (
+    o.vin ||
+    o.VIN ||
+    o.vinNumber ||
+    o.stockNumber ||
+    o.stock ||
+    (attrs && (attrs.vin || attrs.VIN))
+  )
+    return true;
   const tp = o.trackingPricing;
   if (tp && typeof tp === "object" && (tp.internetPrice || tp.retailPrice)) return true;
   const p = o.pricing;
   if (p && typeof p === "object" && (p.retailPrice || p.internetPrice || p.salePrice)) return true;
+  // CDK / DealerOn-style list rows (e.g. homenet) may only expose price fields without Dealer.com nesting
+  if (normFloat(o.sellingPrice) > 0 || normFloat(o.internet_Price) > 0 || normFloat(o.internet_price) > 0)
+    return true;
   return false;
 }
 
@@ -628,6 +736,9 @@ function extractPrice(obj) {
   consider(pricing && pricing.msrp);
   consider(pricing && pricing.retailPrice);
   consider(pricing && pricing.retail_price);
+  consider(obj.sellingPrice);
+  consider(obj.internet_Price);
+  consider(obj.internet_price);
   consider(obj.price);
   consider(obj.internetPrice);
   consider(obj.msrp);
@@ -838,7 +949,7 @@ function mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl) {
   let vin = extractVinFromPayload(obj);
   if (!vin) vin = `unknown-${Math.abs(hashCode(JSON.stringify(obj))) % 1e8}`;
 
-  let stockNumber = safeStr(obj.stockNumber, "");
+  let stockNumber = safeStr(obj.stockNumber || obj.stock || obj.stockNo, "");
   if (stockNumber === DEFAULT_STR) stockNumber = "";
 
   const attrs = getAttrs(obj);
@@ -923,6 +1034,13 @@ function mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl) {
 
   const _detail_url = pickVehicleDetailUrl(obj, baseUrl);
 
+  let conditionStr = pickConditionFromVehicle(obj, arr);
+  if (!conditionStr) {
+    const fromTitle = inferConditionFromTitle(title);
+    if (fromTitle) conditionStr = fromTitle;
+  }
+  const cpoN = pickIsCpoFromVehicle(obj, conditionStr);
+
   return {
     vin,
     stock_number: stockNumber,
@@ -949,6 +1067,8 @@ function mapVehicle(obj, baseUrl, dealerId, dealerName, dealerUrl) {
     history_highlights: extractHistoryHighlights(obj),
     cylinders: cylinders || null,
     msrp: msrp > 0 ? msrp : null,
+    condition: sqlOptionalStr(conditionStr),
+    ...(cpoN != null ? { is_cpo: cpoN } : {}),
     ...( _detail_url ? { _detail_url } : {}),
   };
 }

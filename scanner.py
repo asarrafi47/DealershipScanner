@@ -22,9 +22,10 @@ Optional VDP (detail page) enrichment (see scanner_vdp):
   SCANNER_VDP_SETTLE_MS — wait after load for analytics/XHR (default: 2200).
   SCANNER_VDP_GALLERY_MAX_ROUNDS — max carousel-advance iterations per VDP (default: 80).
   SCANNER_VDP_GALLERY_IDLE_ROUNDS — stop gallery loop after this many rounds with no new HTTPS URL (default: 3).
-  SCANNER_VDP_DOWNLOAD_IMAGES — when truthy, persist gallery bytes under SCANNER_VDP_IMAGE_DOWNLOAD_DIR
+  SCANNER_VDP_DOWNLOAD_IMAGES — default on: persist gallery bytes under SCANNER_VDP_IMAGE_DOWNLOAD_DIR
     (default ``vdp_images``) keyed by VIN or stock (``SCANNER_VDP_IMAGE_DOWNLOAD_KEY=vin|stock``); manifest +
-    ``spec_source_json.vdp_gallery_local`` updated on the vehicle row (see backend.database upsert).
+    ``spec_source_json.vdp_gallery_local`` updated on the vehicle row (see backend.database upsert). Set to ``0``
+    to disable.
   VDP price (JSON-LD / dataLayer / DOM) fills ``price`` only when the scraped row has no positive price;
     provenance is stored under ``spec_source_json.vdp_price``.
   SCANNER_GALLERY_MERGE_REPLACE_IF_BELOW — VDP merge replaces whole gallery when existing https
@@ -97,6 +98,10 @@ Vision passes (default **on** for ``python scanner.py``; requires local Ollama, 
 
   **Post-scan interior** — LLaVA cabin inference for touched VINs (see ``SCANNER_POST_INTERIOR_VISION``).
   Default on; opt out: ``SCANNER_POST_INTERIOR_VISION=0`` or ``--no-post-interior-vision``.
+  A cabin-appropriate image is selected via URL heuristics + LLaVA gallery classification
+  (not only the first hero; avoids reading exterior as cabin). Tuning: ``INTERIOR_VISION_MAX_GALLERY_CLASSIFY``,
+  ``INTERIOR_VISION_CONFIDENCE``, ``INTERIOR_VISION_OVERWRITE``, and optional legacy
+  ``INTERIOR_VISION_FALLBACK_HERO=1`` to analyze the first HTTPS image if no cabin shot is found.
 
   **Post-scan KBB (optional)** — licensed Kelley Blue Book IDWS values for touched VINs
   (``--post-kbb`` or ``SCANNER_POST_KBB=1``). Requires ``KBB_API_KEY`` and usually a ZIP

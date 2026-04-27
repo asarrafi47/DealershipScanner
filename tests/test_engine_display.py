@@ -13,6 +13,7 @@ from backend.enrichment_service import ensure_enrichment_columns
 from backend.utils.car_serialize import (
     build_engine_display,
     car_matches_engine_displacement_l_range,
+    infer_engine_l_for_db,
     parse_engine_displacement_liters,
 )
 
@@ -85,6 +86,20 @@ def test_parse_engine_displacement_from_description() -> None:
         )
         == 4.4
     )
+
+
+def test_parse_engine_displacement_displacement_only_no_l_suffix() -> None:
+    assert parse_engine_displacement_liters({"engine_l": None, "engine_description": "2.0"}) == 2.0
+
+
+def test_infer_engine_l_for_db_from_text() -> None:
+    out = infer_engine_l_for_db(
+        {"engine_description": "2.0L I4", "cylinders": 4, "fuel_type": "Gas", "engine_l": None}
+    )
+    assert out is not None and float(out) == 2.0
+    assert infer_engine_l_for_db({"cylinders": 0, "fuel_type": "Electric", "engine_l": None}) == "Electric"
+    assert infer_engine_l_for_db({"cylinders": 0, "fuel_type": "Plug-in Hybrid", "engine_l": None}) == "PHEV"
+    assert infer_engine_l_for_db({"engine_l": "3.0", "engine_description": "ignored"}) == "3.0"
 
 
 def test_car_matches_engine_displacement_l_range() -> None:

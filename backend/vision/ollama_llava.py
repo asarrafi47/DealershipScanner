@@ -10,7 +10,9 @@ Environment (document for operators):
   interior analysis and listing-image classification.
 
 Persistence / merge thresholds live on the merge layer: ``INTERIOR_VISION_CONFIDENCE``,
-``INTERIOR_VISION_OVERWRITE`` (see ``backend.vision.interior_vision_merge``).
+``INTERIOR_VISION_OVERWRITE`` (see ``backend.vision.interior_vision_merge``). When no cabin
+photo exists, ``backend.scanner_post_pipeline`` can still send the hero frame with
+``inference_context=through_windows`` (see ``INTERIOR_VISION_FALLBACK_THROUGH_WINDOWS``).
 
 The chat API returns JSON only (enforced in prompt). Interior buckets must be from the fixed
 allowlist (see ``INTERIOR_BUCKET_ALLOWLIST`` below — keep aligned with
@@ -36,6 +38,21 @@ OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434").rstrip("/"
 OLLAMA_VISION_MODEL = os.environ.get("OLLAMA_VISION_MODEL", "llava:13b")
 OLLAMA_INTERIOR_VISION_TIMEOUT_S = float(os.environ.get("OLLAMA_INTERIOR_VISION_TIMEOUT_S", "120"))
 
+# Last request diagnostics for operator-facing CLIs (best-effort).
+_LAST_OLLAMA_ERROR: str | None = None
+_LAST_OLLAMA_RAW_SNIPPET: str | None = None
+
+
+def last_ollama_diagnostics() -> dict[str, Any]:
+    """Best-effort diagnostics from the last Ollama chat attempt (for CLI output)."""
+    return {
+        "last_error": _LAST_OLLAMA_ERROR,
+        "last_raw_snippet": _LAST_OLLAMA_RAW_SNIPPET,
+        "host": OLLAMA_HOST,
+        "model": OLLAMA_VISION_MODEL,
+        "timeout_s": OLLAMA_INTERIOR_VISION_TIMEOUT_S,
+    }
+
 # Fixed allowlist for model output (subset of lexicon buckets; "other" catches remainder).
 INTERIOR_BUCKET_ALLOWLIST: tuple[str, ...] = (
     "black",
@@ -54,12 +71,62 @@ INTERIOR_BUCKET_ALLOWLIST: tuple[str, ...] = (
 )
 
 _SYSTEM_PROMPT = (
-    "You analyze a vehicle interior/cabin photo. Reply with STRICT JSON only, no markdown, "
+    "You analyze a vehicle interior/cabin photo. Prioritize **seat upholstery color** as the primary "
+    "signal for the interior color (dash/trim can be secondary). Reply with STRICT JSON only, no markdown, "
     "no prose outside JSON. Keys: interior_buckets (array of strings from this fixed set only: "
     + ", ".join(INTERIOR_BUCKET_ALLOWLIST)
-    + "), interior_guess_text (short human label), confidence (0.0-1.0 float), "
-    "evidence (one short phrase). If unsure, use interior_buckets [\"other\"] and low confidence."
+    + "), interior_guess_text (short human label INCLUDING a color, e.g. 'Black leather' or 'Tan/Black'), confidence (0.0-1.0 float), "
+    "evidence (one short phrase; mention the seats if visible). If unsure, use interior_buckets [\"other\"] and low confidence."
 )
+
+_SYSTEM_PROMPT_THROUGH_WINDOWS = (
+    "You infer **passenger cabin** colors from a vehicle listing image that may be an **exterior** "
+    "shot. Use only what is visible **through side or rear windows or windshield** (seats, dash, "
+    "door panels, headliner). Prioritize **seat upholstery color** if seats are visible. "
+    "Do **not** guess from body paint, wheels, or reflections you cannot "
+    "resolve as interior. Reply with STRICT JSON only, no markdown, no prose outside JSON. Keys: "
+    "interior_buckets (array of strings from this fixed set only: "
+    + ", ".join(INTERIOR_BUCKET_ALLOWLIST)
+    + "), interior_guess_text (short human label INCLUDING a color), confidence (0.0-1.0 float), "
+    "evidence (one short phrase; mention the seats if visible). If little or no interior is visible, use interior_buckets "
+    '[\"other\"], low confidence, and evidence stating visibility limits.'
+)
+
+_USER_INTERIOR_CABIN = (
+    "Analyze this vehicle interior/cabin image. Focus on the **seat upholstery color** first."
+)
+
+_USER_INTERIOR_THROUGH_WINDOWS = (
+    "This may be an outside view of the vehicle. Describe **interior upholstery and trim colors** "
+    "visible **only through the glass**. Focus on the **seat upholstery color** if you can see seats. "
+    "If you cannot see inside, say so and use low confidence."
+)
+
+
+def _guess_text_from_buckets(buckets: list[str]) -> str:
+    out = [b for b in buckets if isinstance(b, str) and b and b.lower() != "other"]
+    if not out:
+        return ""
+    # Keep stable order; title-case for display.
+    return " / ".join(str(b).strip().title() for b in out)
+
+
+_GENERIC_GUESS_TOKENS: frozenset[str] = frozenset(
+    {
+        "leather",
+        "cloth",
+        "suede",
+        "alcantara",
+        "vinyl",
+        "upholstery",
+        "seats",
+        "seat",
+        "interior",
+        "trim",
+    }
+)
+
+_MATERIAL_TOKENS: tuple[str, ...] = ("leather", "cloth", "suede", "alcantara", "vinyl")
 
 _LISTING_IMAGE_SYSTEM_PROMPT = (
     "You judge one image from an online vehicle listing gallery. Reply with STRICT JSON only, "
@@ -125,6 +192,7 @@ def _ollama_vision_chat_json(
     image_b64_jpeg: str,
     timeout_s: float | None = None,
 ) -> str | None:
+    global _LAST_OLLAMA_ERROR, _LAST_OLLAMA_RAW_SNIPPET
     payload = {
         "model": OLLAMA_VISION_MODEL,
         "stream": False,
@@ -139,43 +207,105 @@ def _ollama_vision_chat_json(
     }
     t = float(OLLAMA_INTERIOR_VISION_TIMEOUT_S if timeout_s is None else timeout_s)
     url = f"{OLLAMA_HOST}/api/chat"
-    try:
-        resp = requests.post(url, json=payload, timeout=t)
-        resp.raise_for_status()
-        data = resp.json()
-    except Exception as e:
-        logger.warning("Ollama LLaVA request failed: %s", e)
-        return None
+    _LAST_OLLAMA_ERROR = None
+    _LAST_OLLAMA_RAW_SNIPPET = None
+    # One retry helps with transient 5xx / connection churn.
+    for attempt in (1, 2):
+        try:
+            resp = requests.post(url, json=payload, timeout=t)
+            resp.raise_for_status()
+            data = resp.json()
+            break
+        except Exception as e:
+            _LAST_OLLAMA_ERROR = f"{type(e).__name__}: {e}"
+            if attempt >= 2:
+                logger.warning("Ollama LLaVA request failed: %s", e)
+                return None
     msg = (data.get("message") or {}) if isinstance(data, dict) else {}
     content = msg.get("content") if isinstance(msg, dict) else None
     if not isinstance(content, str):
+        _LAST_OLLAMA_ERROR = "Ollama response missing message.content"
         return None
+    _LAST_OLLAMA_RAW_SNIPPET = content[:300]
     return content
 
 
-def analyze_interior_from_image_url(image_url: str) -> dict[str, Any] | None:
+def analyze_interior_from_image_url(
+    image_url: str,
+    *,
+    inference_context: str = "cabin",
+) -> dict[str, Any] | None:
     """
     Call Ollama chat with images for *image_url*. Returns parsed dict or ``None``.
+
+    ``inference_context``: ``\"cabin\"`` (direct interior photo) or ``\"through_windows\"``
+    (exterior / hero shot — model is asked to read cabin only through glass).
 
     On failure logs and returns ``None`` (callers decide whether to persist).
     """
     b64 = _fetch_image_b64_optimized(image_url)
     if not b64:
         return None
-    return analyze_interior_from_image_b64(b64)
+    return analyze_interior_from_image_b64(b64, inference_context=inference_context)
 
 
-def analyze_interior_from_image_b64(image_b64_jpeg: str) -> dict[str, Any] | None:
+def analyze_interior_from_image_b64(
+    image_b64_jpeg: str,
+    *,
+    inference_context: str = "cabin",
+) -> dict[str, Any] | None:
+    ctx = (inference_context or "cabin").strip().lower().replace("-", "_")
+    if ctx == "through_windows":
+        system = _SYSTEM_PROMPT_THROUGH_WINDOWS
+        user_text = _USER_INTERIOR_THROUGH_WINDOWS
+    else:
+        system = _SYSTEM_PROMPT
+        user_text = _USER_INTERIOR_CABIN
     content = _ollama_vision_chat_json(
-        system=_SYSTEM_PROMPT,
-        user_text="Analyze this vehicle interior/cabin image.",
+        system=system,
+        user_text=user_text,
         image_b64_jpeg=image_b64_jpeg,
     )
     if not content:
         return None
     parsed = _extract_json_object(content)
     if not isinstance(parsed, dict):
-        return None
+        # Model sometimes violates the "STRICT JSON only" instruction, especially on
+        # through-windows exterior shots when it cannot see seats. Return a safe low-confidence
+        # payload instead of None so CLIs can show a consistent schema and callers can decide.
+        low = content.strip().lower()
+        allow = set(INTERIOR_BUCKET_ALLOWLIST)
+        found: list[str] = []
+        for b in INTERIOR_BUCKET_ALLOWLIST:
+            if b == "other":
+                continue
+            if re.search(rf"\b{re.escape(b)}\b", low) and b in allow and b not in found:
+                found.append(b)
+        buckets = found if found else ["other"]
+        guess_s = _guess_text_from_buckets(buckets)
+        material: str | None = None
+        for m in _MATERIAL_TOKENS:
+            if re.search(rf"\b{re.escape(m)}\b", low):
+                material = m
+                break
+        if guess_s and material:
+            guess_s = f"{guess_s} {material}".strip()
+        # Keep this low: the model didn't follow the schema, but we can still salvage signal.
+        confidence = 0.12 if buckets != ["other"] else 0.05
+
+        ev = content.strip().replace("\n", " ")[:160]
+        if not ev:
+            ev = "model returned non-JSON output"
+        return {
+            "interior_buckets": buckets,
+            "interior_guess_text": guess_s,
+            "confidence": confidence,
+            "evidence": ev,
+            "model": OLLAMA_VISION_MODEL,
+            "image_b64_len": len(image_b64_jpeg),
+            "inference_context": "through_windows" if ctx == "through_windows" else "cabin",
+            "parse_error": "non_json",
+        }
     raw_buckets = parsed.get("interior_buckets")
     buckets: list[str] = []
     if isinstance(raw_buckets, list):
@@ -194,13 +324,24 @@ def analyze_interior_from_image_b64(image_b64_jpeg: str) -> dict[str, Any] | Non
     except (TypeError, ValueError):
         confidence = 0.0
     confidence = max(0.0, min(1.0, confidence))
+    guess_s = str(guess).strip() if guess is not None else ""
+    # LLaVA sometimes answers material only (e.g. "leather") — force a color label from buckets.
+    if guess_s and guess_s.strip().lower() in _GENERIC_GUESS_TOKENS:
+        label = _guess_text_from_buckets(buckets)
+        if label:
+            guess_s = f"{label} {guess_s}".strip()
+    elif not guess_s:
+        label = _guess_text_from_buckets(buckets)
+        if label:
+            guess_s = label
     return {
         "interior_buckets": buckets,
-        "interior_guess_text": str(guess).strip() if guess is not None else "",
+        "interior_guess_text": guess_s,
         "confidence": confidence,
         "evidence": str(evidence).strip() if evidence is not None else "",
         "model": OLLAMA_VISION_MODEL,
         "image_b64_len": len(image_b64_jpeg),
+        "inference_context": "through_windows" if ctx == "through_windows" else "cabin",
     }
 
 

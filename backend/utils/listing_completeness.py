@@ -55,21 +55,27 @@ _PUBLIC_INCOMPLETE_KEYS = frozenset(
 )
 
 
+def _is_valid_image_url(u: str) -> bool:
+    """True for HTTP(S) URLs and local /car-images/ paths (served by Flask)."""
+    s = u.strip()
+    return s.startswith("http") or s.startswith("/car-images/")
+
+
 def _has_http_image(car: dict[str, Any]) -> bool:
     img = car.get("image_url")
-    if img and str(img).strip().startswith("http"):
+    if img and _is_valid_image_url(str(img)):
         return True
     g = car.get("gallery")
     if isinstance(g, list):
         for u in g:
-            if isinstance(u, str) and u.strip().startswith("http"):
+            if isinstance(u, str) and _is_valid_image_url(u):
                 return True
     if isinstance(g, str) and g.strip().startswith("["):
         try:
             parsed = json.loads(g)
             if isinstance(parsed, list):
                 for u in parsed:
-                    if isinstance(u, str) and u.strip().startswith("http"):
+                    if isinstance(u, str) and _is_valid_image_url(u):
                         return True
         except (TypeError, ValueError):
             pass

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from backend.parsers import dealer_on
+from backend.parsers import dealer_dot_com, dealer_on
 
 
 def _ford_like_inventory(*vehicles: dict) -> dict:
@@ -80,3 +80,45 @@ def test_dealer_on_fuel_economy_nested() -> None:
     r = rows[0]
     assert r.get("mpg_city") == 21
     assert r.get("mpg_highway") == 28
+
+
+def test_dealer_on_homenet_style_selling_internet_price() -> None:
+    """Keffer-style payloads: stock + sellingPrice / internet_Price, not Dealer.com nesting."""
+    base = {
+        "year": 2016,
+        "make": "Jeep",
+        "model": "Cherokee",
+        "stock": "J251107A",
+        "sellingPrice": 12000,
+        "internet_Price": 12000.0,
+        "miles": 111117,
+    }
+    v1 = dict(base, vin="1C4PJMCS4GW131990")
+    v2 = dict(base, vin="1C4PJMCS4GW131991", stock="J251107B")
+    v3 = dict(base, vin="1C4PJMCS4GW131992", stock="J251107C")
+    payload = _ford_like_inventory(v1, v2, v3)
+    rows = dealer_on.parse(payload, "https://www.kefferjeep.com", "k", "Keffer", "https://www.kefferjeep.com")
+    by_vin = {r["vin"]: r for r in rows}
+    assert by_vin["1C4PJMCS4GW131990"]["price"] == 12000.0
+    assert by_vin["1C4PJMCS4GW131990"].get("stock_number") == "J251107A"
+
+
+def test_dealer_dot_com_parse_homenet_top_level_price() -> None:
+    """Mis-tagged CDK inventory parsed as dealer_dot_com should still recover price."""
+    vehicles = [
+        {"vin": "1C4PJMCS4GW131990", "make": "Jeep", "model": "Cherokee", "year": 2016, "sellingPrice": 12000},
+        {"vin": "1C4PJMCS4GW131991", "make": "Jeep", "model": "Cherokee", "year": 2016, "internet_Price": 12100},
+        {"vin": "1C4PJMCS4GW131992", "make": "Jeep", "model": "Cherokee", "year": 2016, "sellingPrice": 12200},
+    ]
+    rows = dealer_dot_com.parse(
+        {"inventory": vehicles},
+        "https://www.kefferjeep.com",
+        "k",
+        "Keffer",
+        "https://www.kefferjeep.com",
+    )
+    assert {r["vin"]: r["price"] for r in rows} == {
+        "1C4PJMCS4GW131990": 12000,
+        "1C4PJMCS4GW131991": 12100,
+        "1C4PJMCS4GW131992": 12200,
+    }

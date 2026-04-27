@@ -94,6 +94,28 @@ def slot_fillable_for_vpic(car: dict[str, Any], key: str, *, allow_overwrite_dea
     return is_effectively_empty(cur)
 
 
+def car_needs_transmission_or_cylinders_backfill(car: dict[str, Any]) -> bool:
+    """
+    True when tier-1 EPA/trim or NHTSA vPIC should run for missing transmission and/or
+    (non-EV) cylinder count.
+
+    Used on hot paths (e.g. upsert, post-repair) so we do not call vPIC for every
+    ``is_car_incomplete`` row (e.g. only missing paint).
+    """
+    if is_effectively_empty(car.get("transmission")):
+        return True
+    cyl = car.get("cylinders")
+    if cyl is None or str(cyl).strip() == "":
+        return True
+    try:
+        c_int = int(cyl)
+        if c_int <= 0 and not _is_ev_fuel_hint(car):
+            return True
+    except (TypeError, ValueError):
+        return True
+    return False
+
+
 def row_candidate_for_structured_spec_backfill(car: dict[str, Any]) -> bool:
     """
     Rows we bother scanning: ``is_car_incomplete`` OR obvious spec placeholders
@@ -117,6 +139,12 @@ def row_candidate_for_structured_spec_backfill(car: dict[str, Any]) -> bool:
             return True
     cyl = car.get("cylinders")
     if cyl is None or str(cyl).strip() == "":
+        return True
+    try:
+        c_int = int(cyl)
+        if c_int <= 0 and not _is_ev_fuel_hint(car):
+            return True
+    except (TypeError, ValueError):
         return True
     y = car.get("year")
     if y is None or str(y).strip() == "":

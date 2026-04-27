@@ -46,6 +46,7 @@ def post_listing_description_env_enabled() -> bool:
 
 
 def post_interior_vision_env_enabled() -> bool:
+    """LLaVA cabin-color inference. Default on; set SCANNER_POST_INTERIOR_VISION=0 to disable."""
     raw = (os.environ.get("SCANNER_POST_INTERIOR_VISION") or "1").strip().lower()
     return raw not in ("0", "false", "no", "off")
 
@@ -56,13 +57,13 @@ def post_kbb_env_enabled() -> bool:
 
 
 def gallery_vision_filter_env_enabled() -> bool:
-    """Default on: LLaVA drops non-vehicle gallery images. Set ``SCANNER_GALLERY_VISION_FILTER=0`` to skip."""
+    """LLaVA gallery-image classification. Default on; set SCANNER_GALLERY_VISION_FILTER=0 to opt out."""
     raw = (os.environ.get("SCANNER_GALLERY_VISION_FILTER") or "1").strip().lower()
     return raw not in ("0", "false", "no", "off")
 
 
 def monroney_vision_env_enabled() -> bool:
-    """Default on: LLaVA reads sticker URLs + VDP Monroney text. Set ``SCANNER_MONRONEY_VISION=0`` to skip."""
+    """LLaVA Monroney/sticker parsing. Default on; set SCANNER_MONRONEY_VISION=0 to opt out."""
     raw = (os.environ.get("SCANNER_MONRONEY_VISION") or "1").strip().lower()
     return raw not in ("0", "false", "no", "off")
 
@@ -84,8 +85,15 @@ def aggregate_vins_from_dealer_results(outcomes: list[Any]) -> list[str]:
 
 
 def run_storage_repair_for_vins(vins: list[str]) -> dict[str, Any]:
-    """Normalize placeholders and merge_verified_specs backfills for given VINs only."""
-    from backend.db.inventory_db import get_car_by_vin, refresh_car_data_quality_score, update_car_row_partial
+    """
+    For each VIN: placeholder cleanup + EPA/trim backfill, then NHTSA vPIC for any remaining
+    spec gaps (transmission, cylinders, and other slots handled by structured backfill).
+    """
+    from backend.db.inventory_db import get_car_by_id, get_car_by_vin, refresh_car_data_quality_score, update_car_row_partial
+    from backend.spec_structured_backfill import (
+        apply_structured_spec_backfill_for_car,
+        car_needs_transmission_or_cylinders_backfill,
+    )
     from backend.utils.inventory_repair import collect_row_storage_repairs
 
     stats: dict[str, Any] = {
@@ -93,8 +101,10 @@ def run_storage_repair_for_vins(vins: list[str]) -> dict[str, Any]:
         "rows_found": 0,
         "rows_patched": 0,
         "fields": {},
+        "structured_mech": {"candidates": 0, "applied": 0},
     }
     fields: dict[str, int] = stats["fields"]
+    s_mech = stats["structured_mech"]
     for vin in vins:
         raw = get_car_by_vin(vin)
         if not raw:
@@ -102,13 +112,20 @@ def run_storage_repair_for_vins(vins: list[str]) -> dict[str, Any]:
         stats["rows_found"] += 1
         cid = int(raw["id"])
         patch = collect_row_storage_repairs(raw)
-        if not patch:
+        if patch:
+            stats["rows_patched"] += 1
+            for k in patch:
+                fields[k] = fields.get(k, 0) + 1
+            update_car_row_partial(cid, patch)
+            refresh_car_data_quality_score(cid)
+
+        car = get_car_by_id(cid, include_inactive=True)
+        if not car or not car_needs_transmission_or_cylinders_backfill(car):
             continue
-        stats["rows_patched"] += 1
-        for k in patch:
-            fields[k] = fields.get(k, 0) + 1
-        update_car_row_partial(cid, patch)
-        refresh_car_data_quality_score(cid)
+        s_mech["candidates"] += 1
+        res = apply_structured_spec_backfill_for_car(cid, use_vpic_cache=True)
+        if res.applied:
+            s_mech["applied"] += 1
     return stats
 
 
@@ -157,7 +174,20 @@ def _car_ids_for_vins(vins: list[str]) -> list[int]:
     return ids
 
 
-def _http_image_urls_for_row(row: dict[str, Any]) -> list[str]:
+def http_listing_urls_deduped(urls: list[str]) -> list[str]:
+    """Stable-unique HTTPS/HTTP listing image URLs in input order."""
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for u in urls:
+        s = (u or "").strip()
+        if not s.lower().startswith("http") or s in seen:
+            continue
+        seen.add(s)
+        ordered.append(s)
+    return ordered
+
+
+def http_listing_image_urls_for_row(row: dict[str, Any]) -> list[str]:
     import json
 
     out: list[str] = []
@@ -185,9 +215,188 @@ def _http_image_urls_for_row(row: dict[str, Any]) -> list[str]:
     return out
 
 
-def run_interior_vision_for_vins(vins: list[str]) -> dict[str, Any]:
-    """Run Ollama LLaVA interior/cabin inference for each VIN (first HTTP gallery or hero image)."""
+# URL / path tokens that often name cabin (not exterior) media on dealer and OEM CDNs
+_INTERIOR_PATH_NEEDLES: tuple[str, ...] = (
+    "interior",
+    "cabin",
+    "cabinview",
+    "incabin",
+    "in-cabin",
+    "inside",
+    "dashboard",
+    "upholstery",
+    "cockpit",
+    "/int/",
+    "/int_",
+    "_int_",
+    "interiorview",
+    "interior_",
+    "_interior",
+    "passenger",
+    "penger",  # truncated paths seen on some hosts
+    "driveseat",
+    "driverseat",
+    "cabin-",
+    "cabin_",
+    "cabin/",
+)
+
+
+def _url_suggests_interior_cabin_image(url: str) -> bool:
+    """Heuristic: CDN paths often name cabin shots (no extra network calls)."""
+    u = (url or "").strip()
+    if not u.lower().startswith("http"):
+        return False
+    low = u.lower()
+    for needle in _INTERIOR_PATH_NEEDLES:
+        if needle in low:
+            return True
+    return False
+
+
+def _classify_category_is_cabin(classify_out: dict[str, Any] | None) -> bool:
+    if not isinstance(classify_out, dict):
+        return False
+    c = str(classify_out.get("category") or "").strip().lower().replace(" ", "_").replace("-", "_")
+    return c in {
+        "interior",
+        "cabin",
+        "cabinview",
+        "cabin_view",
+    }
+
+
+def _interior_vision_max_gallery_classify() -> int:
+    try:
+        v = int((os.environ.get("INTERIOR_VISION_MAX_GALLERY_CLASSIFY") or "12").strip())
+    except (TypeError, ValueError):
+        return 12
+    return max(0, min(48, v))
+
+
+def select_url_for_cabin_vision(urls: list[str]) -> str | None:
+    """
+    Choose one HTTPS URL that is likely a cabin photo before running interior color LLaVA.
+
+    Order: (1) URL path hints indicating interior, (2) first N gallery URLs classified
+    as ``interior``/``cabin`` by :func:`classify_listing_image_from_url`.
+    If neither finds a shot, return ``None``. See :func:`pick_listing_image_for_interior_vision`
+    for the default **through-windows** fallback on exterior/hero frames.
+    """
+    from backend.vision import ollama_llava
+
+    ordered = http_listing_urls_deduped(urls)
+    if not ordered:
+        return None
+    for u in ordered:
+        if _url_suggests_interior_cabin_image(u):
+            return u
+    cap = _interior_vision_max_gallery_classify()
+    for i, u in enumerate(ordered):
+        if i >= cap:
+            break
+        parsed = ollama_llava.classify_listing_image_from_url(u)
+        if _classify_category_is_cabin(parsed):
+            return u
+    return None
+
+
+def _exterior_through_windows_fallback_enabled() -> bool:
+    """
+    When no cabin URL is found, use the first listing image and ask LLaVA to read the cabin
+    **through the glass** (default **on**).
+
+    Disable with ``INTERIOR_VISION_NO_EXTERIOR_FALLBACK=1``. The legacy
+    ``INTERIOR_VISION_FALLBACK_HERO=1`` still forces this path on. Set
+    ``INTERIOR_VISION_FALLBACK_THROUGH_WINDOWS=0`` to restore the old "skip if no cabin" behavior.
+    """
+    if (os.environ.get("INTERIOR_VISION_NO_EXTERIOR_FALLBACK") or "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    ):
+        return False
+    if (os.environ.get("INTERIOR_VISION_FALLBACK_HERO") or "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    ):
+        return True
+    raw = (os.environ.get("INTERIOR_VISION_FALLBACK_THROUGH_WINDOWS") or "1").strip().lower()
+    return raw not in ("0", "false", "no", "off")
+
+
+def pick_listing_image_for_interior_vision(urls: list[str]) -> tuple[str | None, str]:
+    """
+    Pick one image URL and an Ollama ``inference_context`` (``cabin`` or ``through_windows``).
+
+    Prefer a true cabin shot; otherwise, if fallback is enabled, use the first HTTP URL
+    (typically the hero exterior) for through-the-window analysis.
+    """
+    ordered = http_listing_urls_deduped(urls)
+    if not ordered:
+        return None, "cabin"
+    cabin = select_url_for_cabin_vision(urls)
+    if cabin:
+        return cabin, "cabin"
+    if not _exterior_through_windows_fallback_enabled():
+        return None, "through_windows"
+    return ordered[0], "through_windows"
+
+
+def _interior_vision_max_url_tries() -> int:
+    try:
+        v = int((os.environ.get("INTERIOR_VISION_MAX_URL_TRIES") or "3").strip())
+    except (TypeError, ValueError):
+        return 3
+    return max(1, min(10, v))
+
+
+def candidate_urls_for_interior_vision(urls: list[str]) -> list[tuple[str, str]]:
+    """
+    Candidate (url, inference_context) pairs to try in order.
+
+    - If a cabin URL is detectable, try that as ``cabin`` first.
+    - Otherwise try the first few HTTP URLs as ``through_windows`` (best-effort).
+    """
+    ordered = http_listing_urls_deduped(urls)
+    if not ordered:
+        return []
+    out: list[tuple[str, str]] = []
+    cabin = select_url_for_cabin_vision(ordered)
+    if cabin:
+        out.append((cabin, "cabin"))
+    # Through-windows fallback tries: include hero and then a few more frames.
+    if cabin is None and not _exterior_through_windows_fallback_enabled():
+        return out
+    cap = _interior_vision_max_url_tries()
+    for u in ordered:
+        if len(out) >= cap:
+            break
+        if out and out[0][0] == u:
+            continue
+        out.append((u, "through_windows"))
+    return out
+
+
+def run_interior_vision_for_vins(
+    vins: list[str],
+    *,
+    skip_if_interior_present: bool = False,
+) -> dict[str, Any]:
+    """Run Ollama LLaVA interior/cabin inference for each VIN.
+
+    Prefers a classified cabin image; when none exists, uses the first listing image and asks the
+    model to read the cabin **through the windows** (see ``INTERIOR_VISION_FALLBACK_THROUGH_WINDOWS``).
+
+    When ``skip_if_interior_present`` is true, rows with a non-empty dealer ``interior_color`` are
+    skipped (saves GPU time for bulk backfills). Post-scan callers keep the default ``False`` so
+    gallery passes can still refresh buckets / provenance when a listing already had interior text.
+    """
     from backend.db.inventory_db import get_car_by_vin, refresh_car_data_quality_score, update_car_row_partial
+    from backend.utils.field_clean import is_effectively_empty
     from backend.vision import ollama_llava
     from backend.vision.interior_vision_merge import build_updates_from_llava_result
 
@@ -206,13 +415,32 @@ def run_interior_vision_for_vins(vins: list[str]) -> dict[str, Any]:
             reasons["not_in_db"] = reasons.get("not_in_db", 0) + 1
             continue
         stats["rows_found"] += 1
-        urls = _http_image_urls_for_row(row)
-        primary = urls[0] if urls else None
-        if not primary:
+        if skip_if_interior_present:
+            ic = row.get("interior_color")
+            if ic is not None and not is_effectively_empty(str(ic)):
+                stats["rows_skipped"] += 1
+                reasons["interior_already_set"] = reasons.get("interior_already_set", 0) + 1
+                continue
+        urls = http_listing_image_urls_for_row(row)
+        if not urls:
             stats["rows_skipped"] += 1
             reasons["no_http_image"] = reasons.get("no_http_image", 0) + 1
             continue
-        llava = ollama_llava.analyze_interior_from_image_url(primary)
+        candidates = candidate_urls_for_interior_vision(urls)
+        if not candidates:
+            stats["rows_skipped"] += 1
+            reasons["no_cabin_image_in_gallery"] = (
+                reasons.get("no_cabin_image_in_gallery", 0) + 1
+            )
+            continue
+        llava = None
+        for primary, inference_ctx in candidates:
+            llava = ollama_llava.analyze_interior_from_image_url(
+                primary,
+                inference_context=inference_ctx,
+            )
+            if llava:
+                break
         if not llava:
             stats["rows_skipped"] += 1
             reasons["llava_failed"] = reasons.get("llava_failed", 0) + 1

@@ -481,14 +481,13 @@ def build_master_engine_string(
 
 
 def format_fuel_economy_display(epa: dict[str, Any], is_bev: bool) -> str | None:
-    if is_bev:
-        ce = epa.get("city_e")
-        he = epa.get("highway_e")
-        if ce is not None and he is not None and (ce > 0 or he > 0):
-            return f"{round(ce)} MPGe City / {round(he)} MPGe Hwy"
-        return None
     c = epa.get("city08")
     h = epa.get("highway08")
+    # BEV MPGe lives in city08 / highway08 in epa_master; city_e is kWh/100 mi.
+    if is_bev and c is not None and h is not None and c > 0 and h > 0:
+        return f"{round(c)} MPGe City / {round(h)} MPGe Hwy"
+    if is_bev:
+        return None
     if c is not None and h is not None and (c > 0 or h > 0):
         return f"{round(c)} City / {round(h)} Hwy"
     return None
@@ -517,13 +516,42 @@ def _bmw_epa_model_like_pattern(model: str | None) -> str | None:
     Dealer DB stores short model names ('X3', 'X5', 'X1') but EPA uses full trim strings
     like 'X3 xDrive30i'. Return a LIKE pattern so lookup_epa_aggregate can fall back to
     a fuzzy match when exact lookup returns nothing.
+    I-series BEV/short (``i4``, ``i5``, ``i7``, ``iX``) map to epa model strings
+    like ``i4 eDrive40 Gran Coupe ...``.
     """
     m = (model or "").strip().upper()
     if not m:
         return None
+    # I3 / I4 / I5 / I7 / I8 / iX: dealer "i4" + trim "eDrive40" in lookup_epa_aggregate
+    if " " not in m and re.match(r"^I[34578]\b", m):
+        return f"{(model or '').strip()}%"
+    if " " not in m and m.startswith("IX"):
+        return f"{(model or '').strip()}%"
     # Only applies to short SAV/sedan codes without spaces (X3, X5, X1, 530e, M340, etc.)
     if " " not in m and re.match(r"^(X[1-9]|[0-9]|M[0-9]|Z[0-9])", m):
         return f"{model.strip()}%"
+    return None
+
+
+def _bmw_bev_epa_model_narrow_substring(title: str | None, trim: str | None) -> str | None:
+    """
+    For BMW BEV, EPA model strings include ``eDrive40``, ``M50``, etc.
+    When title/trim name the variant, add ``AND lower(model) LIKE %token%`` to the SQL.
+    """
+    t = f"{title or ''} {trim or ''}"
+    c = re.sub(r"[^a-z0-9]", "", t.lower())
+    if re.search(r"e-?\s*drive\s*50|edrive50", t, re.I) or "edrive50" in c:
+        return "edrive50"
+    if re.search(r"e-?\s*drive\s*40|edrive40", t, re.I) or "edrive40" in c:
+        return "edrive40"
+    if re.search(r"e-?\s*drive\s*35|edrive35", t, re.I) or "edrive35" in c:
+        return "edrive35"
+    if re.search(r"e-?\s*drive\s*30|edrive30", t, re.I) or "edrive30" in c:
+        return "edrive30"
+    if re.search(r"(?<![0-9a-z/])m50(?![0-9a-z])", t, re.I):
+        return "m50"
+    if re.search(r"(?<![0-9a-z/])m60(?![0-9a-z])", t, re.I):
+        return "m60"
     return None
 
 
@@ -542,9 +570,18 @@ def _ford_epa_pickup_like_pattern(make: str | None, model: str | None) -> str | 
     return f"F{m.group(1)} Pickup%"
 
 
-def lookup_epa_aggregate(year: int | None, make: str | None, model: str | None) -> dict[str, Any]:
+def lookup_epa_aggregate(
+    year: int | None,
+    make: str | None,
+    model: str | None,
+    *,
+    title: str | None = None,
+    trim: str | None = None,
+) -> dict[str, Any]:
     """
     Mode row from epa_master: cylinders, drive, transmission, MPG, displacement, atv_type.
+
+    *title* / *trim* refine BMW I-series and similar short-model EPA matches (e.g. eDrive40).
     """
     out: dict[str, Any] = {
         "cylinders": None,
@@ -593,15 +630,26 @@ def lookup_epa_aggregate(year: int | None, make: str | None, model: str | None) 
                     (year, make.strip(), like_pat),
                 )
                 row = cur.fetchone()
-        # BMW fuzzy fallback: dealer stores 'X3' but EPA has 'X3 xDrive30i'
+        # BMW fuzzy fallback: dealer stores 'X3' but EPA has 'X3 xDrive30i'; I-series
+        # short codes need optional trim/title (e.g. eDrive40 on ``i4``).
         if not row and (make or "").strip().upper() == "BMW":
             bmw_pat = _bmw_epa_model_like_pattern(model)
             if bmw_pat:
-                cur.execute(
-                    sql_mode.format(model_clause="model LIKE ?"),
-                    (year, make.strip(), bmw_pat),
-                )
-                row = cur.fetchone()
+                extra = _bmw_bev_epa_model_narrow_substring(title, trim)
+                if extra:
+                    cur.execute(
+                        sql_mode.format(
+                            model_clause="model LIKE ? AND lower(model) LIKE ?"
+                        ),
+                        (year, make.strip(), bmw_pat, f"%{extra}%"),
+                    )
+                    row = cur.fetchone()
+                if not row:
+                    cur.execute(
+                        sql_mode.format(model_clause="model LIKE ?"),
+                        (year, make.strip(), bmw_pat),
+                    )
+                    row = cur.fetchone()
         conn.close()
         if not row:
             return out
@@ -719,7 +767,7 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
     if (make or "").strip().upper() == "BMW" and dealer_ft:
         title_for_decode = f"{title_for_decode} {dealer_ft}".strip()
     regex = decode_trim_logic(make, model, trim, title_for_decode)
-    epa = lookup_epa_aggregate(y, make, model)
+    epa = lookup_epa_aggregate(y, make, model, title=title_for_decode, trim=trim)
 
     cyl_ver = regex.get("cylinders")
     if cyl_ver is None:

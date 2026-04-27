@@ -7,6 +7,10 @@ Environment:
   default ``0.55``.
 - ``INTERIOR_VISION_OVERWRITE`` — when ``1``, allow overwriting non-placeholder
   ``interior_color`` with the vision guess text (use with care).
+- ``INTERIOR_VISION_FALLBACK_THROUGH_WINDOWS`` — default ``1``: when no cabin photo is found,
+  analyze the first listing image (often exterior) and ask the model to read the cabin **through
+  windows**. Set ``0`` to skip instead. ``INTERIOR_VISION_NO_EXTERIOR_FALLBACK=1`` disables this.
+  ``INTERIOR_VISION_FALLBACK_HERO=1`` still forces the fallback on (legacy alias).
 
 Provenance: ``spec_source_json`` gains ``interior_cabin_vision`` on every qualifying pass.
 The ``interior_color`` provenance key is updated only when this module also sets the
@@ -87,6 +91,9 @@ def build_updates_from_llava_result(
     lex_buckets = infer_interior_color_buckets(base_text if base_text else None, row.get("make"))
     merged_buckets = merge_bucket_lists(lex_buckets, vision_buckets)
 
+    inf_ctx = str(llava.get("inference_context") or "cabin").strip().lower()
+    if inf_ctx not in ("cabin", "through_windows"):
+        inf_ctx = "cabin"
     cabin_dict: dict[str, Any] = {
         "source": "llava_vision",
         "confidence": conf,
@@ -94,6 +101,7 @@ def build_updates_from_llava_result(
         "model": str(llava.get("model") or ""),
         "interior_buckets": vision_buckets,
         "interior_guess_text": guess,
+        "inference_context": inf_ctx,
     }
     prov_patch: dict[str, Any] = {"interior_cabin_vision": cabin_dict}
     if new_interior is not None:
@@ -114,6 +122,7 @@ def build_updates_from_llava_result(
         "confidence": conf,
         "evidence": str(llava.get("evidence") or ""),
         "model": str(llava.get("model") or ""),
+        "inference_context": inf_ctx,
     }
     packages_out = json.dumps(pkgs, separators=(",", ":"))
 

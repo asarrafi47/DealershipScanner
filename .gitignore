@@ -11,6 +11,19 @@ users.db
 users.db-*
 dev_users.db
 dev_users.db-*
+inventory.db
+inventory.db-*
+incomplete_listings.db
+incomplete_listings.db-*
+dealer_portal.db
+dealer_portal.db-*
+backend/database.db
+scripts/inventory.db
+
+# Generic SQLite artifacts (safety net)
+*.db
+*.db-wal
+*.db-shm
 
 # MFA audit (optional local file)
 logs/mfa*.jsonl
@@ -21,6 +34,14 @@ out.csv
 out.json
 copyright_out.csv
 .tmp_epa/
+
+# macOS / FUSE filesystem artifacts (can explode repo size if committed)
+.fuse_hidden*
+.fuse*
+
+# Local image caches / downloads
+car_images/
+vdp_images/
 
 # Ephemeral exports (keep artifacts/README.md and .gitkeep tracked)
 artifacts/scratch/*

@@ -19,6 +19,15 @@ DB_PATH = os.environ.get("INVENTORY_DB_PATH", "inventory.db")
 _log = logging.getLogger(__name__)
 
 
+def _inventory_sqlite_lock_wait_sec() -> float:
+    """Connect ``timeout=`` and basis for ``busy_timeout``; default 60s, min 5s."""
+    raw = (os.environ.get("INVENTORY_SQLITE_LOCK_TIMEOUT_SEC") or "60").strip() or "60"
+    try:
+        return max(5.0, float(raw.split()[0]))
+    except (ValueError, IndexError):
+        return 60.0
+
+
 def is_dummy_placeholder_vin(vin: str | None) -> bool:
     """
     True for legacy dev / seed rows such as ``VIN001``, ``VINXXX``, ``VINXXXX`` (not real VINs).
@@ -96,6 +105,7 @@ def ensure_cars_table_columns(cursor) -> None:
         ("model_full_raw", "TEXT"),
         ("mpg_city", "INTEGER"),
         ("mpg_highway", "INTEGER"),
+        ("engine_l", "TEXT"),
         ("recovery_status", "TEXT"),
         ("recovery_attempted_at", "TEXT"),
         ("recovery_source", "TEXT"),
@@ -309,8 +319,15 @@ MAKE_TO_COUNTRY = {
 
 
 def get_conn():
-    conn = sqlite3.connect(DB_PATH)
+    """
+    New connection with WAL, extended lock wait (``INVENTORY_SQLITE_LOCK_TIMEOUT_SEC``, default 60s)
+    to avoid spurious ``database is locked`` when the scraper, Flask, or a CLI tool overlaps
+    the same ``inventory.db``.
+    """
+    lock_s = _inventory_sqlite_lock_wait_sec()
+    conn = sqlite3.connect(DB_PATH, timeout=lock_s)
     try:
+        conn.execute("PRAGMA busy_timeout=?", (int(max(5000, round(lock_s * 1000))),))
         conn.execute("PRAGMA journal_mode=WAL")
         conn.execute("PRAGMA synchronous=NORMAL")
     except sqlite3.Error:
@@ -971,6 +988,7 @@ _UPDATABLE_CAR_COLUMNS = frozenset(
         "source_url",
         "body_style",
         "engine_description",
+        "engine_l",
         "condition",
         "description",
         "data_quality_score",

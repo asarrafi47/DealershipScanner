@@ -137,3 +137,37 @@ def test_prepare_car_detail_packages_empty_state() -> None:
     car = {"gallery": [], "packages": None, "spec_source_json": None}
     ctx = prepare_car_detail_context(car)
     assert ctx.get("packages_panel_has_content") is False
+
+
+def test_lookup_epa_bmw_i4_short_model_and_edrive40_narrowing() -> None:
+    """Dealer model ``i4`` + eDrive40 trim must resolve to EPA city08/08 (MPGe), not kWh/100mi."""
+    epa = lookup_epa_aggregate(
+        2023,
+        "BMW",
+        "i4",
+        title="2023 BMW i4 eDrive40",
+        trim="eDrive40",
+    )
+    c8, h8 = epa.get("city08"), epa.get("highway08")
+    if c8 is None or h8 is None:
+        pytest.skip("epa_master has no 2023 BMW i4 eDrive40 rows in this environment")
+    assert c8 > 50 and h8 > 50
+    assert c8 < 200 and h8 < 200
+    vs = merge_verified_specs(
+        {
+            "make": "BMW",
+            "model": "i4",
+            "year": 2023,
+            "trim": "eDrive40",
+            "title": "2023 BMW i4 eDrive40",
+            "fuel_type": "Electric",
+            "cylinders": 0,
+            "drivetrain": "RWD",
+            "transmission": "Single-speed automatic",
+            "mpg_city": None,
+            "mpg_highway": None,
+        }
+    )
+    fe = vs.get("fuel_economy_display") or ""
+    assert "MPGe" in fe
+    assert "33" not in fe  # not kWh/100mi masquerading as MPGe

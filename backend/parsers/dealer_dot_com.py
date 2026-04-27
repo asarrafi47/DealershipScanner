@@ -82,6 +82,9 @@ def _extract_price_dealer_com(obj: dict) -> int:
         pricing and pricing.get("final_price"),
         pricing and pricing.get("salePrice"),
         pricing and pricing.get("sale_price"),
+        obj.get("sellingPrice"),
+        obj.get("internet_Price"),
+        obj.get("internet_price"),
         pricing and pricing.get("msrp"),
         pricing and pricing.get("MSRP"),
         obj.get("price"),
@@ -481,13 +484,15 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
 
 def _has_vehicle_ident(obj: dict) -> bool:
     """True if object looks like a vehicle (vin, VIN, stockNumber, or trackingPricing)."""
-    if obj.get("vin") or obj.get("VIN") or obj.get("stockNumber"):
+    if obj.get("vin") or obj.get("VIN") or obj.get("stockNumber") or obj.get("stock"):
         return True
     tp = obj.get("trackingPricing") if isinstance(obj.get("trackingPricing"), dict) else None
     if tp and (tp.get("internetPrice") or tp.get("retailPrice")):
         return True
     p = obj.get("pricing") if isinstance(obj.get("pricing"), dict) else None
     if p and (p.get("retailPrice") or p.get("internetPrice") or p.get("salePrice")):
+        return True
+    if norm_float(obj.get("sellingPrice")) > 0 or norm_float(obj.get("internet_Price")) > 0:
         return True
     return False
 

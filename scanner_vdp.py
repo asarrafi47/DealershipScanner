@@ -20,12 +20,12 @@ to nudge React/lazy clients. Network image URLs use ``Content-Type`` (e.g. ``ima
 URL extensions; JSON bodies are parsed when ``Content-Type`` is JSON-like or ``text/plain`` (e.g. GraphQL).
 Image ``response`` URLs merge with DOM harvest.
 
-Optional local image download (default off): set ``SCANNER_VDP_DOWNLOAD_IMAGES=1`` to save bytes under
+Local VDP image download (default **on**): gallery bytes are saved under
 ``SCANNER_VDP_IMAGE_DOWNLOAD_DIR`` (default ``vdp_images`` in the process cwd), keyed by VIN with
 optional ``SCANNER_VDP_IMAGE_DOWNLOAD_KEY=vin|stock`` (default ``vin``). A ``manifest.json`` is
-written per vehicle folder; a compact summary is merged into ``spec_source_json`` (``vdp_gallery_local``)
-when downloads run. Reuses ``SCANNER_VDP_NAV_TIMEOUT_MS``, ``SCANNER_VDP_SETTLE_MS``,
-``SCANNER_MAX_VDP_CONCURRENCY``.
+written per vehicle folder; a compact summary is merged into ``spec_source_json`` (``vdp_gallery_local``).
+Set ``SCANNER_VDP_DOWNLOAD_IMAGES=0`` to disable. Reuses ``SCANNER_VDP_NAV_TIMEOUT_MS``,
+``SCANNER_VDP_SETTLE_MS``, ``SCANNER_MAX_VDP_CONCURRENCY``.
 
 VDP price hints (JSON-LD ``offers``, ``dataLayer`` keys like ``internetPrice`` / ``salePrice``, light
 DOM) merge into ``price`` only when the listing has no positive price; provenance is stored under
@@ -287,12 +287,9 @@ def _gallery_idle_rounds() -> int:
 
 
 def _vdp_download_images_enabled() -> bool:
-    return (os.environ.get("SCANNER_VDP_DOWNLOAD_IMAGES") or "0").strip().lower() in (
-        "1",
-        "true",
-        "yes",
-        "on",
-    )
+    """Default: download VDP gallery images to disk; set ``SCANNER_VDP_DOWNLOAD_IMAGES=0`` to skip."""
+    raw = (os.environ.get("SCANNER_VDP_DOWNLOAD_IMAGES") or "1").strip().lower()
+    return raw not in ("0", "false", "no", "off", "")
 
 
 def _vdp_image_download_dir() -> Path:

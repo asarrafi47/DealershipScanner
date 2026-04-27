@@ -11,7 +11,8 @@ from pathlib import Path
 
 from backend.db.inventory_db import ensure_cars_table_columns
 from backend.utils.analytics_ep import apply_ep_from_scanner_dict
-from backend.utils.field_clean import clean_car_row_dict, compute_data_quality_score
+from backend.utils.car_serialize import infer_engine_l_for_db
+from backend.utils.field_clean import clean_car_row_dict, compute_data_quality_score, is_effectively_empty
 from backend.utils.interior_color_buckets import interior_color_buckets_json
 
 # Use same DB path as inventory_db / dealerships_db when running from project root
@@ -20,13 +21,10 @@ logger = logging.getLogger(__name__)
 
 
 def get_conn():
-    conn = sqlite3.connect(DB_PATH)
-    try:
-        conn.execute("PRAGMA journal_mode=WAL")
-        conn.execute("PRAGMA synchronous=NORMAL")
-    except sqlite3.Error:
-        pass
-    return conn
+    """Use inventory connection settings (WAL + lock wait) so scanner and app agree on ``inventory.db``."""
+    from backend.db.inventory_db import get_conn as inventory_get_conn
+
+    return inventory_get_conn()
 
 
 def _ensure_schema(conn):
@@ -143,6 +141,10 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
     for raw in vehicles:
         merged = apply_ep_from_scanner_dict(dict(raw))
         v = clean_car_row_dict(merged)
+        if is_effectively_empty(v.get("engine_l")):
+            _eng = infer_engine_l_for_db(v)
+            if _eng is not None:
+                v["engine_l"] = _eng
         vin = (v.get("vin") or "").strip()
         if not vin:
             continue
@@ -217,12 +219,12 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 zip_code, fuel_type, cylinders, transmission, drivetrain,
                 exterior_color, interior_color, interior_color_buckets, stock_number, gallery, carfax_url, history_highlights, msrp,
                 dealership_registry_id,
-                source_url, body_style, engine_description, condition, description, data_quality_score,
+                source_url, body_style, engine_description, engine_l, condition, description, data_quality_score,
                 mpg_city, mpg_highway, is_cpo, model_full_raw,
                 packages,
                 listing_active, listing_removed_at, spec_source_json,
                 first_seen_at, last_price_change_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(vin) DO UPDATE SET
                 title=excluded.title, year=excluded.year, make=excluded.make,
                 model=excluded.model, trim=COALESCE(excluded.trim, trim), price=excluded.price,
@@ -256,6 +258,7 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 source_url=COALESCE(excluded.source_url, source_url),
                 body_style=COALESCE(excluded.body_style, body_style),
                 engine_description=COALESCE(excluded.engine_description, engine_description),
+                engine_l=COALESCE(NULLIF(TRIM(excluded.engine_l), ''), engine_l),
                 condition=COALESCE(NULLIF(TRIM(excluded.condition), ''), condition),
                 description=COALESCE(excluded.description, description),
                 data_quality_score=excluded.data_quality_score,
@@ -310,6 +313,7 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 v.get("source_url"),
                 v.get("body_style"),
                 v.get("engine_description"),
+                v.get("engine_l"),
                 v.get("condition"),
                 v.get("description"),
                 dq,
@@ -351,11 +355,11 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
     if count > 0:
         try:
             from backend.db import incomplete_listings_db as ild
-            from backend.db.inventory_db import get_car_by_id, refresh_car_data_quality_score, update_car_row_partial
-            from backend.nhtsa_vpic import looks_like_decode_vin
-            from backend.spec_structured_backfill import apply_structured_spec_backfill_for_car
-            from backend.utils.field_clean import is_effectively_empty
-            from backend.utils.inventory_repair import collect_row_storage_repairs
+            from backend.db.inventory_db import get_car_by_id
+            from backend.spec_structured_backfill import (
+                apply_structured_spec_backfill_for_car,
+                car_needs_transmission_or_cylinders_backfill,
+            )
 
             conn2 = get_conn()
             cur2 = conn2.cursor()
@@ -367,20 +371,14 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 cid = int(row_id[0])
                 ild.sync_incomplete_listing_for_car_id(cid)
                 car = get_car_by_id(cid, include_inactive=True)
-                if not car or not is_effectively_empty(car.get("transmission")):
+                if not car or not car_needs_transmission_or_cylinders_backfill(car):
                     continue
-                if not looks_like_decode_vin(vin_key):
-                    continue
-                tier1 = collect_row_storage_repairs(car)
-                if tier1.get("transmission"):
-                    update_car_row_partial(cid, tier1)
-                    refresh_car_data_quality_score(cid)
-                    ild.sync_incomplete_listing_for_car_id(cid)
-                else:
-                    apply_structured_spec_backfill_for_car(cid, use_vpic_cache=True)
+                # EPA/trim merge (tier 1) + NHTSA vPIC (tier 2) for transmission/cylinders
+                # (and other vPIC fillable fields still open on the row).
+                apply_structured_spec_backfill_for_car(cid, use_vpic_cache=True)
             conn2.close()
         except Exception:
-            logger.exception("incomplete_listings / transmission backfill after upsert failed")
+            logger.exception("incomplete_listings / spec backfill after upsert failed")
 
         # --- model_specs dictionary correction (cylinders + transmission) ---
         try:

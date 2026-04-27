@@ -7,6 +7,7 @@ load_project_dotenv()
 import os
 import sqlite3
 import time
+from pathlib import Path
 
 from flask import Flask, abort, jsonify, redirect, render_template, request, send_from_directory, session, url_for
 
@@ -267,6 +268,16 @@ def _jinja_fmt_spec(value):
 @app.route("/favicon.ico")
 def favicon():
     return send_from_directory(app.static_folder, "favicon.svg", mimetype="image/svg+xml")
+
+
+# Serve locally-downloaded car images (written by image_downloader.py).
+# Stored under <project_root>/car_images/<dealer_id>/<vin>/<file>.
+_CAR_IMAGES_DIR = Path(__file__).resolve().parent.parent / "car_images"
+
+
+@app.route("/car-images/<path:filename>")
+def serve_car_image(filename):
+    return send_from_directory(str(_CAR_IMAGES_DIR), filename)
 
 
 @app.route("/")
