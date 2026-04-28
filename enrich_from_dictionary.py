@@ -75,6 +75,18 @@ def _load_epa_csv(year: int, make: str, model: str) -> list[dict]:
     if fname.exists():
         with open(fname, newline="", encoding="utf-8") as f:
             rows = list(csv.DictReader(f))
+    else:
+        # Try fuzzy matching: if model has variants (e.g. "Grand Cherokee L"),
+        # try base model names by removing variant suffixes
+        for variant_sep in [" L", " XL", " LS", " LT", " Limited", " Pro", " Sport"]:
+            if variant_sep in model:
+                base_model = model.replace(variant_sep, "").strip()
+                base_model_safe = re.sub(r"[^\w\-. ]", "_", base_model)
+                base_fname = DICTIONARY / f"{year}_{make_safe}_{base_model_safe}_EPA.csv"
+                if base_fname.exists():
+                    with open(base_fname, newline="", encoding="utf-8") as f:
+                        rows = list(csv.DictReader(f))
+                    break
     _epa_cache[key] = rows
     return rows
 
