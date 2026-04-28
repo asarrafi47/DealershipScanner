@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2022,Porsche,Taycan,4S Perf Battery,EV Electricity,Automatic (A2),All-Wheel Drive,Electricity,Compact Cars,,,79,80,79,,,,,
+2022,Porsche,Taycan,4S Perf Battery Plus,EV Electricity,Automatic (A2),All-Wheel Drive,Electricity,Compact Cars,,,75,81,77,,,,,
+2022,Porsche,Taycan,Perf Battery,EV Electricity,Automatic (A2),Rear-Wheel Drive,Electricity,Compact Cars,,,76,84,79,,,,,
+2022,Porsche,Taycan,Perf Battery Plus,EV Electricity,Automatic (A2),Rear-Wheel Drive,Electricity,Compact Cars,,,71,80,75,,,,,
+2022,Porsche,Taycan,Turbo,EV Electricity,Automatic (A2),All-Wheel Drive,Electricity,Compact Cars,,,71,75,73,,,,,
+2022,Porsche,Taycan,Turbo S,EV Electricity,Automatic (A2),All-Wheel Drive,Electricity,Compact Cars,,,69,71,70,,,,,
+2022,Porsche,Taycan,4 Cross Turismo,EV Electricity,Automatic (A2),All-Wheel Drive,Electricity,Midsize Cars,,,76,77,76,,,,,
+2022,Porsche,Taycan,4S Cross Turismo,EV Electricity,Automatic (A2),All-Wheel Drive,Electricity,Midsize Cars,,,75,75,75,,,,,
+2022,Porsche,Taycan,Turbo Cross Turismo,EV Electricity,Automatic (A2),All-Wheel Drive,Electricity,Midsize Cars,,,72,72,72,,,,,
+2022,Porsche,Taycan,Turbo S Cross Turismo,EV Electricity,Automatic (A2),All-Wheel Drive,Electricity,Midsize Cars,,,74,73,73,,,,,
+2022,Porsche,Taycan,GTS,EV Electricity,Automatic (A2),All-Wheel Drive,Electricity,Compact Cars,,,83,82,83,,,,,
+2022,Porsche,Taycan,GTS ST,EV Electricity,Automatic (A2),All-Wheel Drive,Electricity,Compact Cars,,,80,80,80,,,,,

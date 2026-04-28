@@ -1,0 +1,10 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2009,Chevrolet,Tahoe,1500 2WD,5.3L V8,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,5.3,14,20,16,,,,,
+2009,Chevrolet,Tahoe,Hybrid 2WD,Hybrid 6.0L V8,Automatic (variable gear ratios),Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,6.0,21,22,21,,,,,
+2009,Chevrolet,Tahoe,Hybrid 4WD,Hybrid 6.0L V8,Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,8,6.0,20,20,20,,,,,
+2009,Chevrolet,Tahoe,1500 2WD,FFV 5.3L V8,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,8,5.3,14,20,16,,,,,
+2009,Chevrolet,Tahoe,1500 2WD,FFV 6.2L V8,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,8,6.2,12,19,15,,,,,
+2009,Chevrolet,Tahoe,1500 4WD,FFV 5.3L V8,Automatic 6-spd,All-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 4WD,8,5.3,14,20,16,,,,,
+2009,Chevrolet,Tahoe,1500 4WD,FFV 6.2L V8,Automatic 6-spd,All-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 4WD,8,6.2,12,19,14,,,,,
+2009,Chevrolet,Tahoe,1500 2WD,4.8L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,4.8,14,19,16,,,,,
+2009,Chevrolet,Tahoe,1500 XFE 2WD,FFV 5.3L V8 (430),Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,8,5.3,15,21,17,,,,,

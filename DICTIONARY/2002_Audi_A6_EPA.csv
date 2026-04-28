@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2002,Audi,A6,A6,3.0L V6,Automatic (variable gear ratios),Front-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,17,23,19,,,,,
+2002,Audi,A6,quattro,2.7L V6,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,6,2.7,15,22,18,,,,,
+2002,Audi,A6,quattro,2.7L V6,Automatic (S5),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,2.7,16,23,18,,,,,
+2002,Audi,A6,quattro,3.0L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,15,23,18,,,,,
+2002,Audi,A6,quattro,4.2L V8,Automatic (S5),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.2,15,23,18,,,,,
+2002,Audi,A6,Avant quattro,3.0L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,6,3.0,15,23,18,,,,,

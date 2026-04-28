@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2013,Buick,Verano,Verano,FFV 2.4L I4 (SIDI; FFV),Automatic (S6),Front-Wheel Drive,Regular Gasoline / E85,Compact Cars,4,2.4,21,31,24,,,,,
+2013,Buick,Verano,Verano,2.0L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,20,31,24,,,,,
+2013,Buick,Verano,Verano,2.0L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,21,29,24,,,,,

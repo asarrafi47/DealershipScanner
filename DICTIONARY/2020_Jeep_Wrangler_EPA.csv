@@ -1,0 +1,11 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2020,Jeep,Wrangler,4WD,3.6L V6,Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.6,18,23,20,,,,,
+2020,Jeep,Wrangler,Unlimited 4WD,Hybrid 3.6L V6 (Mild Hybrid),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.6,19,22,20,,,,,
+2020,Jeep,Wrangler,Unlimited 4WD,3.6L V6,Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.6,18,22,20,,,,,
+2020,Jeep,Wrangler,4WD,2.0L I4 (SIDI),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,22,24,23,,,,,
+2020,Jeep,Wrangler,4WD,3.6L V6,Manual 6-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.6,17,25,20,,,,,
+2020,Jeep,Wrangler,Unlimited 4WD,Hybrid 2.0L I4 (SIDI; Mild Hybrid),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,21,22,21,,,,,
+2020,Jeep,Wrangler,Unlimited 4WD,2.0L I4 (SIDI),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,21,22,21,,,,,
+2020,Jeep,Wrangler,Unlimited 4WD,3.6L V6,Manual 6-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.6,17,23,19,,,,,
+2020,Jeep,Wrangler,Unlimited 4WD,Diesel 3.0L V6 Diesel,Automatic 8-spd,Four-Wheel Drive,Diesel,Small Sport Utility Vehicle 4WD,6,3.0,22,29,25,,,,,
+2020,Jeep,Wrangler,4WD,Hybrid 2.0L I4 (SIDI; Mild Hybrid),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,21,22,21,,,,,

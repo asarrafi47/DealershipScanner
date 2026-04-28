@@ -1,0 +1,10 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2002,Ford,Focus,Focus,2.0L I4 (4-Valve),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,23,29,25,,,,,
+2002,Ford,Focus,Focus,2.0L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,23,29,25,,,,,
+2002,Ford,Focus,Focus,2.0L I4 (2.0Z),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,18,23,20,,,,,
+2002,Ford,Focus,Focus,2.0L I4 (2-Valve),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,25,32,28,,,,,
+2002,Ford,Focus,Focus,2.0L I4 (4-Valve),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,31,25,,,,,
+2002,Ford,Focus,Station Wagon,2.0L I4 (4-Valve),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,23,29,25,,,,,
+2002,Ford,Focus,Station Wagon,2.0L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,23,29,25,,,,,
+2002,Ford,Focus,Station Wagon,2.0L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,25,32,28,,,,,
+2002,Ford,Focus,Station Wagon,2.0L I4 (4-Valve),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,22,31,25,,,,,

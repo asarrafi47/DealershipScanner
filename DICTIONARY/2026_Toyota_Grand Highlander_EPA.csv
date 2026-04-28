@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Toyota,Grand Highlander,Hybrid,Hybrid 2.5L I4 (SIDI & PFI; Hybrid),Automatic (AV-S6),Front-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.5,37,34,36,,,,,
+2026,Toyota,Grand Highlander,LE/XLE,2.4L I4 (SIDI & PFI),Automatic (S8),Front-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.4,21,28,24,,,,,
+2026,Toyota,Grand Highlander,Limited,2.4L I4 (SIDI & PFI),Automatic (S8),Front-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.4,21,28,24,,,,,
+2026,Toyota,Grand Highlander,Hybrid AWD,Hybrid 2.5L I4 (SIDI & PFI; Hybrid),Automatic (AV-S6),All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.5,36,32,34,,,,,
+2026,Toyota,Grand Highlander,Hybrid AWD,Hybrid 2.4L I4 (SIDI & PFI; Hybrid),Automatic (S6),All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.4,26,27,27,,,,,
+2026,Toyota,Grand Highlander,AWD LE/XLE,2.4L I4 (SIDI & PFI),Automatic (S8),All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.4,21,27,23,,,,,
+2026,Toyota,Grand Highlander,AWD Limited/Platinum,2.4L I4 (SIDI & PFI),Automatic (S8),All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.4,20,26,22,,,,,

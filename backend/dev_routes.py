@@ -431,6 +431,7 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
         try:
             body = DealerCreate.model_validate(resolved_result)
             rd = body.row_dict()
+            manifest_id = ""
             try:
                 action, manifest_id = upsert_dealer_manifest_row(
                     name=str(rd.get("name") or ""),
@@ -445,7 +446,9 @@ def _run_smart_import_job(job_id: str, url: str, headed: bool = False) -> None:
             except ValueError as e:
                 append(f"[dev] dealers.json upsert skipped (registry path): {e}\n")
             insert_id = insert_dealership(rd)
-            cars_linked = link_cars_to_dealership_registry(insert_id, str(body.website_url))
+            cars_linked = link_cars_to_dealership_registry(
+                insert_id, str(body.website_url), dealer_id_slug=manifest_id
+            )
         except ValidationError as e:
             insert_error = e.errors()
 

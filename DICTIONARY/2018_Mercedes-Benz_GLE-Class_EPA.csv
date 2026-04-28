@@ -1,0 +1,10 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2018,Mercedes-Benz,GLE-Class,AMG GLE43 4matic,3.0L V6 (SIDI),Automatic 9-spd,Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,17,23,19,,,,,
+2018,Mercedes-Benz,GLE-Class,AMG GLE63 S,5.5L V8 (SIDI),Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,5.5,14,18,15,,,,,
+2018,Mercedes-Benz,GLE-Class,AMG GLE63,5.5L V8 (SIDI),Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,5.5,14,18,15,,,,,
+2018,Mercedes-Benz,GLE-Class,GLE350,3.5L V6 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 2WD,6,3.5,18,23,20,,,,,
+2018,Mercedes-Benz,GLE-Class,AMG GLE43 4matic Coupe,3.0L V6 (SIDI),Automatic 9-spd,Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,17,22,19,,,,,
+2018,Mercedes-Benz,GLE-Class,AMG GLE63 S Coupe,5.5L V8 (SIDI),Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,5.5,14,18,15,,,,,
+2018,Mercedes-Benz,GLE-Class,GLE350 4matic,3.5L V6 (SIDI),Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,6,3.5,18,22,19,,,,,
+2018,Mercedes-Benz,GLE-Class,GLE350 4matic,FFV 3.5L V6 (SIDI; FFV),Automatic 7-spd,Four-Wheel Drive,Premium Gasoline / E85,Standard Sport Utility Vehicle 4WD,6,3.5,18,22,19,,,,,
+2018,Mercedes-Benz,GLE-Class,GLE550e 4matic,Plug-in Hybrid 3.0L V6 (SIDI; PHEV),Automatic 7-spd,Four-Wheel Drive,Premium Gasoline / Electricity,Standard Sport Utility Vehicle 4WD,6,3.0,20,23,21,,,,,

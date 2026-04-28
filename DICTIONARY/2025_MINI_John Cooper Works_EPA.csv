@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2025,MINI,John Cooper Works,JCW Countryman All4,2.0L I4 (SIDI & PFI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,23,30,26,,,,,
+2025,MINI,John Cooper Works,JCW Convertible,2.0L I4 (SIDI & PFI),Automatic (AM-S7),Front-Wheel Drive,Premium Gasoline,Minicompact Cars,4,2.0,26,35,30,,,,,
+2025,MINI,John Cooper Works,JCW Hardtop 2 Door,2.0L I4 (SIDI & PFI),Automatic (AM-S7),Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,27,37,30,,,,,

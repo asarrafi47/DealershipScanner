@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2025,MINI,Countryman,S All4,2.0L I4 (SIDI & PFI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,24,32,27,,,,,
+2025,MINI,Countryman,SE ALL4 (18 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,99,94,96,,,,,
+2025,MINI,Countryman,SE ALL4 (19 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,94,88,91,,,,,

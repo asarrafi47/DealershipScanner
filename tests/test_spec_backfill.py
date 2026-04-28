@@ -85,6 +85,15 @@ def test_car_needs_spec_backfill() -> None:
     )
 
 
+def test_should_run_spec_backfill_fills_listing_gaps() -> None:
+    """A row with valid MPG/cyl can still need EPA/VDP to fill empty transmission, etc."""
+    good_mpg = {"id": 1, "cylinders": 4, "mpg_city": 20, "mpg_highway": 28, "engine_l": "2.0"}
+    assert not sb.car_needs_spec_backfill(good_mpg)
+    with_gap = {**good_mpg, "transmission": None}
+    assert not sb.car_needs_spec_backfill(with_gap)
+    assert sb.should_run_spec_backfill(with_gap)
+
+
 @pytest.mark.parametrize(
     "car,found,expected_keys",
     [

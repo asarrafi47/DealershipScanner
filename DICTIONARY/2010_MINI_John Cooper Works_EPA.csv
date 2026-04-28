@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2010,MINI,John Cooper Works,John Cooper Works,1.6L I4,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.6,25,33,28,,,,,
+2010,MINI,John Cooper Works,Convertible,1.6L I4,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.6,25,33,28,,,,,

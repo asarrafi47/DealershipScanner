@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2008,Audi,S4,Cabriolet,4.2L V8,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.2,13,19,15,,,,,
+2008,Audi,S4,Cabriolet,4.2L V8,Automatic (S6),All-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.2,14,21,16,,,,,
+2008,Audi,S4,S4,4.2L V8,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Compact Cars,8,4.2,13,20,15,,,,,
+2008,Audi,S4,S4,4.2L V8,Automatic (S6),All-Wheel Drive,Premium Gasoline,Compact Cars,8,4.2,14,21,16,,,,,
+2008,Audi,S4,Avant,4.2L V8,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Small Station Wagons,8,4.2,13,20,15,,,,,
+2008,Audi,S4,Avant,4.2L V8,Automatic (S6),All-Wheel Drive,Premium Gasoline,Small Station Wagons,8,4.2,14,21,16,,,,,

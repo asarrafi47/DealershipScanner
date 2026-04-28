@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2001,Volkswagen,Beetle,New Beetle,1.8L I4,Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.8,20,26,22,,,,,
+2001,Volkswagen,Beetle,New Beetle,1.8L I4,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.8,22,28,24,,,,,
+2001,Volkswagen,Beetle,New Beetle,Diesel 1.9L I4 Diesel,Automatic 4-spd,Front-Wheel Drive,Diesel,Subcompact Cars,4,1.9,29,40,33,,,,,
+2001,Volkswagen,Beetle,New Beetle,Diesel 1.9L I4 Diesel,Manual 5-spd,Front-Wheel Drive,Diesel,Subcompact Cars,4,1.9,35,44,38,,,,,
+2001,Volkswagen,Beetle,New Beetle,2.0L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,20,26,22,,,,,
+2001,Volkswagen,Beetle,New Beetle,2.0L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,21,28,24,,,,,

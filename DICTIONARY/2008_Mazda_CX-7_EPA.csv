@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2008,Mazda,CX-7,2WD,2.3L I4,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 2WD,4,2.3,17,23,19,,,,,
+2008,Mazda,CX-7,4WD,2.3L I4,Automatic (S6),All-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,4,2.3,16,22,18,,,,,

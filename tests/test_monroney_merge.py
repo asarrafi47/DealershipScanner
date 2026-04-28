@@ -28,6 +28,26 @@ def test_merge_vdp_vehicle_history_url_replaces_generic() -> None:
     assert "carfax.com/vehicle-history" in (v.get("carfax_url") or "")
 
 
+def test_merge_monroney_replaces_schema_drivetrain() -> None:
+    v: dict = {
+        "drivetrain": "https://schema.org/AllWheelDriveConfiguration",
+        "packages": None,
+    }
+    parsed = {"drivetrain": "All Wheel Drive", "confidence": 0.8}
+    mm.merge_monroney_parsed_into_vehicle(v, parsed)
+    assert v.get("drivetrain") == "All Wheel Drive"
+
+
+def test_merge_monroney_fills_engine_when_key_absent() -> None:
+    """Destination must not require the column key to be present (partial vehicle dicts)."""
+    v: dict = {"packages": None}
+    filled = mm.merge_monroney_parsed_into_vehicle(
+        v, {"engine_description": "2.0L I4", "confidence": 0.5}
+    )
+    assert v.get("engine_description") == "2.0L I4"
+    assert "engine_description" in filled
+
+
 def test_merge_monroney_fills_empty_engine() -> None:
     v: dict = {"engine_description": None, "packages": None}
     parsed = {

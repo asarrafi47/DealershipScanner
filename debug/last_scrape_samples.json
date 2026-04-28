@@ -1,123 +1,2902 @@
 {
-  "generated_at": "2026-04-19T15:47:22.166Z",
+  "generated_at": "2026-04-27T17:07:47.467Z",
   "samples": [
     {
-      "vin": "unknown-62487071",
+      "vin": "3C4NJDBB0NT107424",
       "raw_json_sample": {
-        "model": null,
-        "seoUrl": null,
-        "value": "",
-        "text": "All",
-        "selected": true,
-        "count": 97,
-        "url": "https://www.kefferjeep.com/inventory/used?paymenttype=cash&intransit=true&instock=true&inproduction=true"
+        "inventoryButtons": [
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "javascript:+void(0)",
+            "btnStyle": "unstyled",
+            "btnTarget": "_self",
+            "btnClasses": "font-weight-bold pointer-events-none btn-block btn-unstyled btn-sm btn",
+            "btnLabel": "Fully transparent pricing. No hidden fees.",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "used",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "#?",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "p-0 btn-no-decoration opacity-100 btn-default btn-block font-weight-normal disabled btn-sm text-muted btn bg-transparent border-0",
+            "btnLabel": "<span>Hendrick Finance Cash*</span><span class=\"text-success float-right\">-$500</span>",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL",
+            "matches": "accountId:hendrickcdjramcllc:true"
+          },
+          {
+            "inventoryType": "used",
+            "inventoryClassification": "all",
+            "device": "desktop",
+            "btnHref": "/eprice-form.htm?itemId=b45ba02fac180e13b403183b775b5172&vehicleId=b45ba02fac180e13b403183b775b5172",
+            "btnStyle": "default",
+            "btnTarget": "dialog",
+            "btnClasses": "dialog btn-default btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-width": "375"
+            },
+            "btnLabel": "Lock In Today’s Price",
+            "btnDisabled": false,
+            "backgroundColor": "d0021b",
+            "backgroundHoverColor": "d0021b",
+            "textColor": "ffffff",
+            "textHoverColor": "ffffff",
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "/certified/Jeep/2022-Jeep-Compass-concord-nc-b45ba02fac180e13b403183b775b5172.htm#mmd-widget",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-link-to-vdp-button"
+            },
+            "btnLabel": "What&#x27;s My Payment?",
+            "btnDisabled": false,
+            "backgroundColor": "#000000",
+            "backgroundHoverColor": "#0d65bf",
+            "textColor": "#ffffff",
+            "textHoverColor": "#ffffff",
+            "showOnListings": true,
+            "showOnDetails": false,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default hidden btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-value-a-trade-button"
+            },
+            "btnLabel": "Tradepending ",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default hidden btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-chat-button"
+            },
+            "btnLabel": "Gubagoo Ask",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          }
+        ],
+        "trackingAttributes": [
+          {
+            "name": "driveLine",
+            "value": "4WD"
+          },
+          {
+            "name": "odometer",
+            "value": "46726"
+          },
+          {
+            "name": "autodataCaId",
+            "value": "CAD20JES151B0"
+          },
+          {
+            "name": "fuelType",
+            "value": "Gasoline Fuel"
+          },
+          {
+            "name": "normalFuelType",
+            "value": "Gasoline"
+          },
+          {
+            "name": "exteriorColor",
+            "value": "Granite Crystal Metallic Clearcoat",
+            "normalizedValue": "Gray"
+          },
+          {
+            "name": "interiorColor",
+            "value": "Black",
+            "normalizedValue": "Black"
+          },
+          {
+            "name": "transmission",
+            "value": "Automatic"
+          },
+          {
+            "name": "engine",
+            "value": "4"
+          },
+          {
+            "name": "cityFuelEconomy",
+            "value": "22.0"
+          },
+          {
+            "name": "engineSize",
+            "value": "2.4L"
+          }
+        ],
+        "trackingPricing": {
+          "internetPrice": "$19,750",
+          "salePrice": "$20,549",
+          "retailValue": "0",
+          "msrp": "0",
+          "askingPrice": "19750"
+        },
+        "newCarBoost": false,
+        "certified": true,
+        "condition": "Certified Pre-Owned",
+        "year": 2022,
+        "attributes": [
+          {
+            "name": "odometer",
+            "label": "Mileage",
+            "value": "46,726 miles",
+            "labeledValue": "Mileage: 46,726 miles "
+          },
+          {
+            "name": "fuelEconomy",
+            "label": "MPG Range",
+            "value": "22/",
+            "labeledValue": "22/ MPG City/Hwy"
+          },
+          {
+            "name": "interiorColor",
+            "label": "Interior Color",
+            "value": "Black",
+            "normalizedValue": "Black",
+            "labeledValue": "Black Interior"
+          },
+          {
+            "name": "stockNumber",
+            "label": "Stock Number",
+            "value": "P47424",
+            "labeledValue": "Stock # P47424 "
+          }
+        ],
+        "highlightedAttributes": [
+          {
+            "name": "type",
+            "label": "Condition",
+            "value": "Used",
+            "labeledValue": "Used"
+          },
+          {
+            "name": "normalFuelType",
+            "label": "Fuel Type",
+            "value": "Gasoline",
+            "labeledValue": "Fuel Type: Gasoline "
+          },
+          {
+            "name": "odometer",
+            "label": "Odometer (SRP only) ",
+            "value": "46,726 miles",
+            "labeledValue": "Mileage: 46,726 miles "
+          }
+        ],
+        "callout": [
+          {
+            "badgeClasses": [
+              "certified"
+            ],
+            "imageAlt": "This Vehicle is Jeep OEM Certified",
+            "imageSrc": "/static/v8/global/images/franchise/white/en_US/logo-certified-jeep.gif",
+            "imageTitle": "Jeep Certified",
+            "tagName": "div",
+            "target": "_self"
+          },
+          {
+            "badgeClasses": [
+              "carfax"
+            ],
+            "href": "https://www.carfax.com/vehiclehistory/ar20/ta19LRUrb2w8KLHcjnfnuU6YUbSTQcSR86OutZtp1JmLHEMO9nbg7acDeydBxJVyCr3uSOg1u01jf9Ij09CT88suR1-6Xb6Fq4M",
+            "imageAlt": "Show Me the CARFAX Badge",
+            "imageSrc": "https://partnerstatic.carfax.com/img/valuebadge/showme.svg",
+            "imageTitle": "Show Me the CARFAX Badge",
+            "target": "_blank"
+          }
+        ],
+        "images": [
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "0",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1576/0abb056b5a46eb5a57cd8dc4bbc2bd03x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "1",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0792/17e3fe2f80f54feb8bff243f29e8fdb3x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "2",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0167/6e5d1517c121e23363054a751c4b9a8ax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "3",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1036/b220890a8534461c1fd3f8be6cd25452x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "4",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0519/1e34465bda76d63160b694e08bd26b75x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "5",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0897/1006ca79abd7daddf5840146557b72a2x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "6",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0538/6c4dfdad9ab614a944f10f83104bd80bx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "7",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1637/86315bebb573bb7e0ef35eea8ef53c8dx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "8",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0768/681d834fbf05bd92daafaa85656846fdx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "9",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0412/c39c3aad45a730a877c6570eadda334bx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "10",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1708/d5642bebf05aa99dc44d50b892bc034fx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "11",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0661/00b5f3d3160497b1a97b4d3c3a648fa4x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "12",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1998/122c02f7f4cce6faea118af6aa675781x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "13",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1114/3b1cc5fbaf08794019e23967585a177fx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "14",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1267/793fc4b4dd523e9d8c8e087f044a4922x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "15",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0338/a65d45170a3dfc6a942ceef221b40f24x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "16",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0788/ca39046bfbf67f14d920dd61392ea7f1x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "17",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1380/72b24a0f2f5da04ba9c91dd49c5d38f7x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "18",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1667/e9d9070686a42d00ed269e9746ab4b9bx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "19",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0365/30f8e08e1b7df38ca052908919156684x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "20",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1795/4cad1d9c95101dca67c0b0d8b257d8e5x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "21",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0412/280e5de5c359c190456eec7c4d327aa4x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "22",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1246/94164a15746b7c6dfd704144c14f5cf5x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "23",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1664/630199011c7a8ed095a35d20fc4600b9x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "24",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0687/9f844ffa4dfc4f1243423dc37ed987aex.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "25",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1301/576bedc9b128e8bd59bbf19ce16dfcc8x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "26",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1547/d68477c1d4f396183e74012c3fad2aecx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "27",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1808/862b1c3bb6e12248b48146254a00eee3x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "28",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1064/8ec5fc3365bf0d184a34c44c12ca314ex.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "29",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1136/ae9cee293b19de911df3fd49e84caec7x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "30",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0948/5113263eb750e7288164e26e77cc148cx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "31",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1060/74c346c88a681749c652b078d2aceccdx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "32",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1616/92e8a56b2bf59e6a7d8b7d14daf1d73fx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "33",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1554/e512110f580d5149279e4c1539b7529ax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "34",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0014/e91ee253209925445614d9c40a431482x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Compass Latitude SUV P47424",
+            "id": "35",
+            "title": "2022 Jeep Compass Latitude SUV 3C4NJDBB0NT107424",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0518/a72d6868572264bf471565eacba38502x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          }
+        ],
+        "title": [
+          "2022 Jeep Compass Latitude SUV"
+        ],
+        "pricing": {
+          "retailPrice": "$19,750",
+          "dprice": [
+            {
+              "label": "Market Price",
+              "type": "MIDDLE",
+              "typeClass": "internetPrice",
+              "value": "$19,750"
+            },
+            {
+              "label": "Dealer Admin Fee",
+              "type": "MIDDLE",
+              "typeClass": "wholesalePrice",
+              "value": "$799"
+            },
+            {
+              "label": "Advertised Price",
+              "type": "TOTAL",
+              "typeClass": "salePrice",
+              "value": "$20,549",
+              "isFinalPrice": true
+            }
+          ],
+          "vehicle": {
+            "category": "AUTO"
+          },
+          "ePriceStatus": "NON_APPLICABLE"
+        },
+        "accountId": "hendrickcdjramcllc",
+        "bodyStyle": "SUV",
+        "chromeId": "420647",
+        "link": "/certified/Jeep/2022-Jeep-Compass-concord-nc-b45ba02fac180e13b403183b775b5172.htm",
+        "make": "Jeep",
+        "model": "Compass",
+        "modelCode": "MPJM74",
+        "stockNumber": "P47424",
+        "trim": "Latitude",
+        "uuid": "b45ba02fac180e13b403183b775b5172",
+        "vin": "3C4NJDBB0NT107424",
+        "inventoryDate": "03/03/2026",
+        "offSite": false,
+        "fuelType": "Gasoline",
+        "optionCodes": [
+          "G7X9",
+          "UBE-R",
+          "2GJ",
+          "PAU",
+          "AHM",
+          "DFH",
+          "EDE",
+          "UBE",
+          "JVG",
+          "N"
+        ],
+        "classification": "primary",
+        "featuredPromotion": false,
+        "spotlightedVehicle": false,
+        "status": "live",
+        "statusInt": 1,
+        "type": "used",
+        "typeInt": 1,
+        "isNewCarBoost": false
       },
       "parsed_snapshot": {
-        "vin": "unknown-62487071",
-        "year": 0,
-        "make": "",
-        "model": "",
-        "trim": null,
-        "price": 0,
-        "image_url": "/static/placeholder.svg",
+        "vin": "3C4NJDBB0NT107424",
+        "year": 2022,
+        "make": "Jeep",
+        "model": "Compass",
+        "trim": "Latitude",
+        "price": 19750,
+        "image_url": "https://pictures.dealer.com/h/hendrickcdjramcllc/1576/0abb056b5a46eb5a57cd8dc4bbc2bd03x.jpg",
         "gallery_preview": [
-          "/static/placeholder.svg"
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/1576/0abb056b5a46eb5a57cd8dc4bbc2bd03x.jpg",
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/0792/17e3fe2f80f54feb8bff243f29e8fdb3x.jpg",
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/0167/6e5d1517c121e23363054a751c4b9a8ax.jpg"
         ]
       }
     },
     {
-      "vin": "unknown-62196788",
+      "vin": "1C4RJXSJ5RW164521",
       "raw_json_sample": {
-        "model": "Camaro",
-        "seoUrl": null,
-        "value": "1LT",
-        "text": "1LT",
-        "selected": false,
-        "count": 1,
-        "url": "https://www.kefferjeep.com/inventory/used?trim=1lt&paymenttype=cash&intransit=true&instock=true&inproduction=true"
+        "inventoryButtons": [
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "javascript:+void(0)",
+            "btnStyle": "unstyled",
+            "btnTarget": "_self",
+            "btnClasses": "font-weight-bold pointer-events-none btn-block btn-unstyled btn-sm btn",
+            "btnLabel": "Fully transparent pricing. No hidden fees.",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "used",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "#?",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "p-0 btn-no-decoration opacity-100 btn-default btn-block font-weight-normal disabled btn-sm text-muted btn bg-transparent border-0",
+            "btnLabel": "<span>Hendrick Finance Cash*</span><span class=\"text-success float-right\">-$500</span>",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL",
+            "matches": "accountId:hendrickcdjramcllc:true"
+          },
+          {
+            "inventoryType": "used",
+            "inventoryClassification": "all",
+            "device": "desktop",
+            "btnHref": "/eprice-form.htm?itemId=bf5b5379ac1833326061e30c1373702e&vehicleId=bf5b5379ac1833326061e30c1373702e",
+            "btnStyle": "default",
+            "btnTarget": "dialog",
+            "btnClasses": "dialog btn-default btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-width": "375"
+            },
+            "btnLabel": "Lock In Today’s Price",
+            "btnDisabled": false,
+            "backgroundColor": "d0021b",
+            "backgroundHoverColor": "d0021b",
+            "textColor": "ffffff",
+            "textHoverColor": "ffffff",
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "/certified/Jeep/2024-Jeep-Wrangler-concord-nc-bf5b5379ac1833326061e30c1373702e.htm#mmd-widget",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-link-to-vdp-button"
+            },
+            "btnLabel": "What&#x27;s My Payment?",
+            "btnDisabled": false,
+            "backgroundColor": "#000000",
+            "backgroundHoverColor": "#0d65bf",
+            "textColor": "#ffffff",
+            "textHoverColor": "#ffffff",
+            "showOnListings": true,
+            "showOnDetails": false,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default hidden btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-value-a-trade-button"
+            },
+            "btnLabel": "Tradepending ",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default hidden btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-chat-button"
+            },
+            "btnLabel": "Gubagoo Ask",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          }
+        ],
+        "trackingAttributes": [
+          {
+            "name": "engineSize",
+            "value": "6.4L"
+          },
+          {
+            "name": "driveLine",
+            "value": "4WD"
+          },
+          {
+            "name": "exteriorColor",
+            "value": "Anvil Clear Coat",
+            "normalizedValue": "Gray"
+          },
+          {
+            "name": "normalFuelType",
+            "value": "Gasoline"
+          },
+          {
+            "name": "engine",
+            "value": "8"
+          },
+          {
+            "name": "fuelType",
+            "value": "Gasoline Fuel"
+          },
+          {
+            "name": "autodataCaId",
+            "value": "CAD40JES012D0"
+          },
+          {
+            "name": "cityFuelEconomy",
+            "value": "13.0"
+          },
+          {
+            "name": "interiorColor",
+            "value": "Red Black",
+            "normalizedValue": "Black"
+          },
+          {
+            "name": "odometer",
+            "value": "5622"
+          },
+          {
+            "name": "transmission",
+            "value": "Automatic"
+          },
+          {
+            "name": "doors",
+            "value": "4 door"
+          }
+        ],
+        "trackingPricing": {
+          "internetPrice": "$71,976",
+          "salePrice": "$72,775",
+          "retailValue": "0",
+          "msrp": "0",
+          "askingPrice": "71976"
+        },
+        "newCarBoost": false,
+        "certified": true,
+        "condition": "Certified Pre-Owned",
+        "year": 2024,
+        "attributes": [
+          {
+            "name": "odometer",
+            "label": "Mileage",
+            "value": "5,622 miles",
+            "labeledValue": "Mileage: 5,622 miles "
+          },
+          {
+            "name": "fuelEconomy",
+            "label": "MPG Range",
+            "value": "13/",
+            "labeledValue": "13/ MPG City/Hwy"
+          },
+          {
+            "name": "interiorColor",
+            "label": "Interior Color",
+            "value": "Red Black",
+            "normalizedValue": "Black",
+            "labeledValue": "Red Black Interior"
+          },
+          {
+            "name": "stockNumber",
+            "label": "Stock Number",
+            "value": "SA44521",
+            "labeledValue": "Stock # SA44521 "
+          }
+        ],
+        "highlightedAttributes": [
+          {
+            "name": "type",
+            "label": "Condition",
+            "value": "Used",
+            "labeledValue": "Used"
+          },
+          {
+            "name": "normalFuelType",
+            "label": "Fuel Type",
+            "value": "Gasoline",
+            "labeledValue": "Fuel Type: Gasoline "
+          },
+          {
+            "name": "odometer",
+            "label": "Odometer (SRP only) ",
+            "value": "5,622 miles",
+            "labeledValue": "Mileage: 5,622 miles "
+          }
+        ],
+        "callout": [
+          {
+            "badgeClasses": [
+              "certified"
+            ],
+            "imageAlt": "This Vehicle is Jeep OEM Certified",
+            "imageSrc": "/static/v8/global/images/franchise/white/en_US/logo-certified-jeep.gif",
+            "imageTitle": "Jeep Certified",
+            "tagName": "div",
+            "target": "_self"
+          },
+          {
+            "badgeClasses": [
+              "carfax"
+            ],
+            "href": "https://www.carfax.com/vehiclehistory/ar20/ffdQnl8lpzUozA8KID7gDIdadv_-6hoAujRNhEMomwNDQ5bGQGQYMa-2K4OEpApRDu2lzaeI2WmdIyMghClTqx_bUFJshDrCRn0",
+            "imageAlt": "Show Me the CARFAX 1-Owner Badge",
+            "imageSrc": "https://partnerstatic.carfax.com/img/valuebadge/1own.svg",
+            "imageTitle": "Show Me the CARFAX 1-Owner Badge",
+            "target": "_blank"
+          }
+        ],
+        "images": [
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "0",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1116/1a490860f7073546a1ab52c57465e03cx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "1",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1627/84fed4ec4ef285eab94d3e565c314295x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "2",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0608/a2b56a9845d1f6fbae94263b3deeb765x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "3",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1036/b220890a8534461c1fd3f8be6cd25452x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "4",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1571/8e37b8a64a723e7a00be0f5d7e3e5368x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "5",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1645/8c778124c876228b57173456d5cdf83ex.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "6",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0194/1293b836bd5ecbf1d13c89f3882c78bax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "7",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1475/d3d84f9b47abd7a3bf498d102ef850e1x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "8",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1734/9a507e55e2072086e8479ffdc1820feax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "9",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1912/dea7778d19ac3a89fbf5cd028ab2eaf2x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "10",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0290/006fcfb52151bfd5452b456ca7503a8bx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "11",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0833/e51ef0d6e116985cbb739672bf15bbd3x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "12",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1027/149c936eb298c4bd44bd72a736915321x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "13",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1727/6405c2347a8f6697b55c83a3cb4e5430x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "14",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0068/e13be627ab2650fd6d864ac28c582f66x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "15",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1473/ae0186ca8252ca726546337906e2baf3x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "16",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0853/b7023ebb8ff8bb458232587007c24b0ax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "17",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1348/94c651af1d7158f4134b5b9e401919bdx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "18",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1659/2b231d809ba055793b162eaa72860450x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "19",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1048/a6926d52afc9f1efdb2a003b9d51a5c8x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "20",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0646/11cdd99e9fc9abf5aeeb0c9d707e8c3cx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "21",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0793/e31de4c66ca2f3485715563a0d9c2e93x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "22",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1306/76552e1c30d28dc241b6ce479915d6cax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "23",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0532/6b3a29fdd034156a2504c20e3e477ad4x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "24",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0877/66d5f792c61a9833bcc4a3429ce4d085x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "25",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0950/205f2842ead3f6d1ced49b960f3a6d88x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "26",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0769/5a576bb672ccce933f8b0e98a8c15769x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "27",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0391/1c606da46148a42dfd0c6427f3a9b168x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "28",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1964/79e04baefbfa2297befa991e61e5d5a7x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "29",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1356/0466bc4714ad14ed0a196782e6c98bd6x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "30",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0015/7f59974721d74251f25add5c7ac66d3cx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "31",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0575/ee2b606defa2abc5dffa052fe2bdc25ax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "32",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0612/91035ca5a7c17cf4eabcef4b3badf339x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "33",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1841/a66dff9aec8657c0ce1809497d27926cx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "34",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1922/49f8189e1d7c6a6614c76b3495bb9230x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "35",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0978/f805fc2856bc31e1f91d7f3cde958136x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2024 Jeep Wrangler Rubicon 392 Convertible SA44521",
+            "id": "36",
+            "title": "2024 Jeep Wrangler Rubicon 392 Convertible 1C4RJXSJ5RW164521",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0509/93713f0698ce7796c8b84c2d04fd19bax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          }
+        ],
+        "title": [
+          "2024 Jeep Wrangler Rubicon 392 Convertible"
+        ],
+        "pricing": {
+          "retailPrice": "$71,976",
+          "dprice": [
+            {
+              "label": "Market Price",
+              "type": "MIDDLE",
+              "typeClass": "internetPrice",
+              "value": "$71,976"
+            },
+            {
+              "label": "Dealer Admin Fee",
+              "type": "MIDDLE",
+              "typeClass": "wholesalePrice",
+              "value": "$799"
+            },
+            {
+              "label": "Advertised Price",
+              "type": "TOTAL",
+              "typeClass": "salePrice",
+              "value": "$72,775",
+              "isFinalPrice": true
+            }
+          ],
+          "vehicle": {
+            "category": "AUTO"
+          },
+          "ePriceStatus": "NON_APPLICABLE"
+        },
+        "accountId": "hendrickcdjramcllc",
+        "bodyStyle": "Convertible",
+        "chromeId": "435417",
+        "link": "/certified/Jeep/2024-Jeep-Wrangler-concord-nc-bf5b5379ac1833326061e30c1373702e.htm",
+        "make": "Jeep",
+        "model": "Wrangler",
+        "modelCode": "JLJX74",
+        "stockNumber": "SA44521",
+        "trim": "Rubicon 392",
+        "uuid": "bf5b5379ac1833326061e30c1373702e",
+        "vin": "1C4RJXSJ5RW164521",
+        "inventoryDate": "03/05/2026",
+        "offSite": false,
+        "fuelType": "Gasoline",
+        "optionCodes": [
+          "27X",
+          "DFV",
+          "WLXR",
+          "ESG",
+          "XE5",
+          "AEN",
+          "Z1T",
+          "CWA",
+          "PDS",
+          "N"
+        ],
+        "classification": "primary",
+        "featuredPromotion": false,
+        "spotlightedVehicle": false,
+        "status": "live",
+        "statusInt": 1,
+        "type": "used",
+        "typeInt": 1,
+        "isNewCarBoost": false
       },
       "parsed_snapshot": {
-        "vin": "unknown-62196788",
-        "year": 0,
-        "make": "Camaro",
-        "model": "Camaro",
-        "trim": null,
-        "price": 0,
-        "image_url": "/static/placeholder.svg",
+        "vin": "1C4RJXSJ5RW164521",
+        "year": 2024,
+        "make": "Jeep",
+        "model": "Wrangler",
+        "trim": "Rubicon 392",
+        "price": 71976,
+        "image_url": "https://pictures.dealer.com/h/hendrickcdjramcllc/1116/1a490860f7073546a1ab52c57465e03cx.jpg",
         "gallery_preview": [
-          "/static/placeholder.svg"
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/1116/1a490860f7073546a1ab52c57465e03cx.jpg",
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/1627/84fed4ec4ef285eab94d3e565c314295x.jpg",
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/0608/a2b56a9845d1f6fbae94263b3deeb765x.jpg"
         ]
       }
     },
     {
-      "vin": "unknown-53529777",
+      "vin": "1C4HJXDN2NW111779",
       "raw_json_sample": {
-        "model": "Tiguan",
-        "seoUrl": null,
-        "value": "2.0T SE",
-        "text": "2.0T SE",
-        "selected": false,
-        "count": 1,
-        "url": "https://www.kefferjeep.com/inventory/used?trim=2-d-0t-se&paymenttype=cash&intransit=true&instock=true&inproduction=true"
+        "inventoryButtons": [
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "javascript:+void(0)",
+            "btnStyle": "unstyled",
+            "btnTarget": "_self",
+            "btnClasses": "font-weight-bold pointer-events-none btn-block btn-unstyled btn-sm btn",
+            "btnLabel": "Fully transparent pricing. No hidden fees.",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "used",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "#?",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "p-0 btn-no-decoration opacity-100 btn-default btn-block font-weight-normal disabled btn-sm text-muted btn bg-transparent border-0",
+            "btnLabel": "<span>Hendrick Finance Cash*</span><span class=\"text-success float-right\">-$500</span>",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL",
+            "matches": "accountId:hendrickcdjramcllc:true"
+          },
+          {
+            "inventoryType": "used",
+            "inventoryClassification": "all",
+            "device": "desktop",
+            "btnHref": "/eprice-form.htm?itemId=dd16bd23ac18437cdf4a076d0468f25b&vehicleId=dd16bd23ac18437cdf4a076d0468f25b",
+            "btnStyle": "default",
+            "btnTarget": "dialog",
+            "btnClasses": "dialog btn-default btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-width": "375"
+            },
+            "btnLabel": "Lock In Today’s Price",
+            "btnDisabled": false,
+            "backgroundColor": "d0021b",
+            "backgroundHoverColor": "d0021b",
+            "textColor": "ffffff",
+            "textHoverColor": "ffffff",
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "/certified/Jeep/2022-Jeep-Wrangler-concord-nc-dd16bd23ac18437cdf4a076d0468f25b.htm#mmd-widget",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-link-to-vdp-button"
+            },
+            "btnLabel": "What&#x27;s My Payment?",
+            "btnDisabled": false,
+            "backgroundColor": "#000000",
+            "backgroundHoverColor": "#0d65bf",
+            "textColor": "#ffffff",
+            "textHoverColor": "#ffffff",
+            "showOnListings": true,
+            "showOnDetails": false,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default hidden btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-value-a-trade-button"
+            },
+            "btnLabel": "Tradepending ",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default hidden btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-chat-button"
+            },
+            "btnLabel": "Gubagoo Ask",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          }
+        ],
+        "trackingAttributes": [
+          {
+            "name": "engineSize",
+            "value": "2.0L"
+          },
+          {
+            "name": "driveLine",
+            "value": "4WD"
+          },
+          {
+            "name": "interiorColor",
+            "value": "Black",
+            "normalizedValue": "Black"
+          },
+          {
+            "name": "engine",
+            "value": "4"
+          },
+          {
+            "name": "exteriorColor",
+            "value": "Sarge Green Clearcoat",
+            "normalizedValue": "Green"
+          },
+          {
+            "name": "transmission",
+            "value": "Automatic"
+          },
+          {
+            "name": "odometer",
+            "value": "35906"
+          },
+          {
+            "name": "normalFuelType",
+            "value": "Gasoline"
+          },
+          {
+            "name": "cityFuelEconomy",
+            "value": "21.0"
+          },
+          {
+            "name": "fuelType",
+            "value": "Gasoline Fuel"
+          },
+          {
+            "name": "autodataCaId",
+            "value": "CAD20JES161A0"
+          }
+        ],
+        "trackingPricing": {
+          "internetPrice": "$29,968",
+          "salePrice": "$30,767",
+          "retailValue": "0",
+          "msrp": "0",
+          "askingPrice": "29968"
+        },
+        "newCarBoost": false,
+        "certified": true,
+        "condition": "Certified Pre-Owned",
+        "year": 2022,
+        "attributes": [
+          {
+            "name": "odometer",
+            "label": "Mileage",
+            "value": "35,906 miles",
+            "labeledValue": "Mileage: 35,906 miles "
+          },
+          {
+            "name": "fuelEconomy",
+            "label": "MPG Range",
+            "value": "21/",
+            "labeledValue": "21/ MPG City/Hwy"
+          },
+          {
+            "name": "interiorColor",
+            "label": "Interior Color",
+            "value": "Black",
+            "normalizedValue": "Black",
+            "labeledValue": "Black Interior"
+          },
+          {
+            "name": "stockNumber",
+            "label": "Stock Number",
+            "value": "P41779",
+            "labeledValue": "Stock # P41779 "
+          }
+        ],
+        "highlightedAttributes": [
+          {
+            "name": "type",
+            "label": "Condition",
+            "value": "Used",
+            "labeledValue": "Used"
+          },
+          {
+            "name": "normalFuelType",
+            "label": "Fuel Type",
+            "value": "Gasoline",
+            "labeledValue": "Fuel Type: Gasoline "
+          },
+          {
+            "name": "odometer",
+            "label": "Odometer (SRP only) ",
+            "value": "35,906 miles",
+            "labeledValue": "Mileage: 35,906 miles "
+          }
+        ],
+        "callout": [
+          {
+            "badgeClasses": [
+              "certified"
+            ],
+            "imageAlt": "This Vehicle is Jeep OEM Certified",
+            "imageSrc": "/static/v8/global/images/franchise/white/en_US/logo-certified-jeep.gif",
+            "imageTitle": "Jeep Certified",
+            "tagName": "div",
+            "target": "_self"
+          },
+          {
+            "badgeClasses": [
+              "carfax"
+            ],
+            "href": "https://www.carfax.com/vehiclehistory/ar20/VgBo8xCrHTxTDpqor7SrSX0zgca-6g8HtoePI4d8Ogc51-H0JKlT8FmRLwL1i65qcB84ZzVyOVIUqbpBfXlD9tj3Isn39QuZgsc",
+            "imageAlt": "Show Me the CARFAX Badge",
+            "imageSrc": "https://partnerstatic.carfax.com/img/valuebadge/showme.svg",
+            "imageTitle": "Show Me the CARFAX Badge",
+            "target": "_blank"
+          }
+        ],
+        "images": [
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "0",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1270/e9d62444ed7e53d16b2f931d7503ef0ex.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "1",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0417/b46b31e5879a7aa6d2f8c12840c1d882x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "2",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1973/c3d2adff31d5cf3cfb6a041cb74b4cdcx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "3",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1036/b220890a8534461c1fd3f8be6cd25452x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "4",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0805/e4581f65315a9342fd80d637f1d56228x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "5",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1807/c16e189c875490df58f1065f5319f869x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "6",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0818/73abcdbaf12e428892dfce95acd16c0dx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "7",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1046/f838b87d8acb9558b143a3303e616b75x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "8",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1976/f27df558846b01ea6f3467bf0c5990a0x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "9",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1910/c197505e748f2a5d5f9cfc96f90e9eb2x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "10",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1382/6a344aee4c86ff04b144f6345949132ax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "11",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1484/d12036e49c5b17f0de50c26d72bf644ax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "12",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0844/6b7e6694c93b408fd9a15b83754da3c1x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "13",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1638/c58b0911249cb37b9507179092101071x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "14",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0111/4e25507eed83536a01d3b7ce6439c8e3x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "15",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0159/03d1c78556b90941d208e71531a24493x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "16",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1766/3ed6e74e37d1dc493795fa1bab06b631x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "17",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0372/67222a3d9323db26709fe053fdc8f737x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "18",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1093/8f05490a164471273d96ea144a299cb1x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "19",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0142/71369d93154e47cbd56bec3b71ce41b6x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "20",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0126/b395882d96f7f6654889f20a6294c84ex.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "21",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1095/de7241cd935cc041c2aa91641c12cf74x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "22",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1328/13a08bcf57fc8cb0f337c46e0c64225ax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "23",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1797/3409683b29e3a1cb27d69c957a30c4f7x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "24",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0063/7a57c81a42629743f4bd2b3f9e983766x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "25",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0143/98f15729b69fa321e01db76343cb210cx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "26",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1471/5c5b849f6a8ef89c9c67bf52958f217cx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "27",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0472/09cf2d61cee0947acf8934fe1ef1cf9ax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "28",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1275/24797865b0e442a838665ca0ff2321e9x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "29",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1249/2f9e3069640c644d22594f8cdf2e1961x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "30",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0125/a0b7436e042900255ccf62791f12620bx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "31",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0151/1f3c2bca83216101a4a9b9e6f1772d31x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "32",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0469/a12f6d913bf76f8725f18c3bc5281d09x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "33",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1279/1c0eb5e1930c935a580dafaf2690a30bx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "34",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0405/3513374bc1ae8254c2051ac4c5fbf075x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible P41779",
+            "id": "35",
+            "title": "2022 Jeep Wrangler Unlimited Sport Altitude Convertible 1C4HJXDN2NW111779",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0082/3fca80c092cdddd63af9e9f786abb86bx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          }
+        ],
+        "title": [
+          "2022 Jeep Wrangler Unlimited Sport Altitude Convertible"
+        ],
+        "pricing": {
+          "retailPrice": "$29,968",
+          "dprice": [
+            {
+              "label": "Market Price",
+              "type": "MIDDLE",
+              "typeClass": "internetPrice",
+              "value": "$29,968"
+            },
+            {
+              "label": "Dealer Admin Fee",
+              "type": "MIDDLE",
+              "typeClass": "wholesalePrice",
+              "value": "$799"
+            },
+            {
+              "label": "Advertised Price",
+              "type": "TOTAL",
+              "typeClass": "salePrice",
+              "value": "$30,767",
+              "isFinalPrice": true
+            }
+          ],
+          "vehicle": {
+            "category": "AUTO"
+          },
+          "ePriceStatus": "NON_APPLICABLE"
+        },
+        "accountId": "hendrickcdjramcllc",
+        "bodyStyle": "Convertible",
+        "chromeId": "425332",
+        "link": "/certified/Jeep/2022-Jeep-Wrangler-concord-nc-dd16bd23ac18437cdf4a076d0468f25b.htm",
+        "make": "Jeep",
+        "model": "Wrangler",
+        "modelCode": "JLJL74",
+        "stockNumber": "P41779",
+        "trim": "Unlimited Sport Altitude",
+        "uuid": "dd16bd23ac18437cdf4a076d0468f25b",
+        "vin": "1C4HJXDN2NW111779",
+        "inventoryDate": "03/11/2026",
+        "offSite": false,
+        "fuelType": "Gasoline",
+        "optionCodes": [
+          "PGG",
+          "EC1",
+          "DLK",
+          "DFT",
+          "Z1K",
+          "A7X9",
+          "22L",
+          "N"
+        ],
+        "classification": "primary",
+        "featuredPromotion": false,
+        "spotlightedVehicle": false,
+        "status": "live",
+        "statusInt": 1,
+        "type": "used",
+        "typeInt": 1,
+        "isNewCarBoost": false
       },
       "parsed_snapshot": {
-        "vin": "unknown-53529777",
-        "year": 0,
-        "make": "Tiguan",
-        "model": "Tiguan",
-        "trim": null,
-        "price": 0,
-        "image_url": "/static/placeholder.svg",
+        "vin": "1C4HJXDN2NW111779",
+        "year": 2022,
+        "make": "Jeep",
+        "model": "Wrangler",
+        "trim": "Unlimited Sport Altitude",
+        "price": 29968,
+        "image_url": "https://pictures.dealer.com/h/hendrickcdjramcllc/1270/e9d62444ed7e53d16b2f931d7503ef0ex.jpg",
         "gallery_preview": [
-          "/static/placeholder.svg"
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/1270/e9d62444ed7e53d16b2f931d7503ef0ex.jpg",
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/0417/b46b31e5879a7aa6d2f8c12840c1d882x.jpg",
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/1973/c3d2adff31d5cf3cfb6a041cb74b4cdcx.jpg"
         ]
       }
     },
     {
-      "vin": "unknown-86244676",
+      "vin": "1C4JJXSJ1PW501597",
       "raw_json_sample": {
-        "model": "Santa Fe Sport",
-        "seoUrl": null,
-        "value": "2.4 Base",
-        "text": "2.4 Base",
-        "selected": false,
-        "count": 1,
-        "url": "https://www.kefferjeep.com/inventory/used?trim=2-d-4-base&paymenttype=cash&intransit=true&instock=true&inproduction=true"
+        "inventoryButtons": [
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "javascript:+void(0)",
+            "btnStyle": "unstyled",
+            "btnTarget": "_self",
+            "btnClasses": "font-weight-bold pointer-events-none btn-block btn-unstyled btn-sm btn",
+            "btnLabel": "Fully transparent pricing. No hidden fees.",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "used",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "#?",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "p-0 btn-no-decoration opacity-100 btn-default btn-block font-weight-normal disabled btn-sm text-muted btn bg-transparent border-0",
+            "btnLabel": "<span>Hendrick Finance Cash*</span><span class=\"text-success float-right\">-$500</span>",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL",
+            "matches": "accountId:hendrickcdjramcllc:true"
+          },
+          {
+            "inventoryType": "used",
+            "inventoryClassification": "all",
+            "device": "desktop",
+            "btnHref": "/eprice-form.htm?itemId=dd16bf3aac1807bdc0458511cfa47320&vehicleId=dd16bf3aac1807bdc0458511cfa47320",
+            "btnStyle": "default",
+            "btnTarget": "dialog",
+            "btnClasses": "dialog btn-default btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-width": "375"
+            },
+            "btnLabel": "Lock In Today’s Price",
+            "btnDisabled": false,
+            "backgroundColor": "d0021b",
+            "backgroundHoverColor": "d0021b",
+            "textColor": "ffffff",
+            "textHoverColor": "ffffff",
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "/certified/Jeep/2023-Jeep-Wrangler-concord-nc-dd16bf3aac1807bdc0458511cfa47320.htm#mmd-widget",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-link-to-vdp-button"
+            },
+            "btnLabel": "What&#x27;s My Payment?",
+            "btnDisabled": false,
+            "backgroundColor": "#000000",
+            "backgroundHoverColor": "#0d65bf",
+            "textColor": "#ffffff",
+            "textHoverColor": "#ffffff",
+            "showOnListings": true,
+            "showOnDetails": false,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default hidden btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-value-a-trade-button"
+            },
+            "btnLabel": "Tradepending ",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default hidden btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-chat-button"
+            },
+            "btnLabel": "Gubagoo Ask",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          }
+        ],
+        "trackingAttributes": [
+          {
+            "name": "driveLine",
+            "value": "4WD"
+          },
+          {
+            "name": "engineSize",
+            "value": "6.4L"
+          },
+          {
+            "name": "transmission",
+            "value": "Automatic"
+          },
+          {
+            "name": "autodataCaId",
+            "value": "CAD30JES012D0"
+          },
+          {
+            "name": "interiorColor",
+            "value": "Black",
+            "normalizedValue": "Black"
+          },
+          {
+            "name": "normalFuelType",
+            "value": "Gasoline"
+          },
+          {
+            "name": "fuelType",
+            "value": "Gasoline Fuel"
+          },
+          {
+            "name": "engine",
+            "value": "8"
+          },
+          {
+            "name": "odometer",
+            "value": "12496"
+          },
+          {
+            "name": "cityFuelEconomy",
+            "value": "13.0"
+          },
+          {
+            "name": "doors",
+            "value": "4 door"
+          },
+          {
+            "name": "exteriorColor",
+            "value": "Bright White Clearcoat",
+            "normalizedValue": "White"
+          }
+        ],
+        "trackingPricing": {
+          "internetPrice": "$70,776",
+          "salePrice": "$71,575",
+          "retailValue": "0",
+          "msrp": "0",
+          "askingPrice": "70777"
+        },
+        "newCarBoost": false,
+        "certified": true,
+        "condition": "Certified Pre-Owned",
+        "year": 2023,
+        "attributes": [
+          {
+            "name": "odometer",
+            "label": "Mileage",
+            "value": "12,496 miles",
+            "labeledValue": "Mileage: 12,496 miles "
+          },
+          {
+            "name": "fuelEconomy",
+            "label": "MPG Range",
+            "value": "13/",
+            "labeledValue": "13/ MPG City/Hwy"
+          },
+          {
+            "name": "interiorColor",
+            "label": "Interior Color",
+            "value": "Black",
+            "normalizedValue": "Black",
+            "labeledValue": "Black Interior"
+          },
+          {
+            "name": "stockNumber",
+            "label": "Stock Number",
+            "value": "P41597",
+            "labeledValue": "Stock # P41597 "
+          }
+        ],
+        "highlightedAttributes": [
+          {
+            "name": "type",
+            "label": "Condition",
+            "value": "Used",
+            "labeledValue": "Used"
+          },
+          {
+            "name": "normalFuelType",
+            "label": "Fuel Type",
+            "value": "Gasoline",
+            "labeledValue": "Fuel Type: Gasoline "
+          },
+          {
+            "name": "odometer",
+            "label": "Odometer (SRP only) ",
+            "value": "12,496 miles",
+            "labeledValue": "Mileage: 12,496 miles "
+          }
+        ],
+        "callout": [
+          {
+            "badgeClasses": [
+              "certified"
+            ],
+            "imageAlt": "This Vehicle is Jeep OEM Certified",
+            "imageSrc": "/static/v8/global/images/franchise/white/en_US/logo-certified-jeep.gif",
+            "imageTitle": "Jeep Certified",
+            "tagName": "div",
+            "target": "_self"
+          },
+          {
+            "badgeClasses": [
+              "carfax"
+            ],
+            "href": "https://www.carfax.com/vehiclehistory/ar20/j0U4a7MF2yMiRQx2VV-sojdvIkMWDOgMSgPneOVzNnDRM2yFoOjbdLtoMqCjFDfKnBvXruvgSvGU7UUqBb1O04_FlVUevfGwHy0",
+            "imageAlt": "Show Me the CARFAX Badge",
+            "imageSrc": "https://partnerstatic.carfax.com/img/valuebadge/showme.svg",
+            "imageTitle": "Show Me the CARFAX Badge",
+            "target": "_blank"
+          }
+        ],
+        "images": [
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "0",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0386/31e392e900c72c53e82fb6dff5d4e90ex.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "1",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1864/eebe76f932f5258e3f607893eb038acbx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "2",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0321/fea505423dd0762fcb1b0af2cda03e3cx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "3",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1036/b220890a8534461c1fd3f8be6cd25452x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "4",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0456/a07d6ca6e3df1e6f5c72cca1d96641e9x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "5",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1493/e1135e06c0f9571eb460a03d6401f429x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "6",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1456/cde6bc3566fa87b28e453bf4466639e7x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "7",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0983/5a701c127c4600763d5da64ae3e6e812x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "8",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0299/fcfb83e37528f51ee0fde28f6de97c31x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "9",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1780/ee8da17d2c666e9ee8e7d4830815da41x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "10",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1506/2f964ffab30f7fa71ed08e43145a9113x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "11",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1377/67c933a82845b726e653f6297f238dbex.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "12",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0959/3b42dd30db5834b5b1c9fff3bc5d9f88x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "13",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1227/13002150d0bbc48d4dc761e14a2b9a79x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "14",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1114/3f04739ac9bb3ec58e6003e59eb46feex.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "15",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1097/a7d85243b40e8c7f1d69d88b11e1b0dex.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "16",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0829/2b5011ea0c40be3fa0c7600aaf229ffex.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "17",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0702/694a5c4339c3c485ccc8120f64bb0aedx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "18",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0698/ea183139a7e2811a33cad2dbe0fc6d60x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "19",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1861/f90fab68d542a7739b6fb3df6b2109bax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "20",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0903/c1879ba496b8e6b32421e7f3e50197f4x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "21",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1063/953d5a010c0ebbcedf872752e20a2d87x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "22",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1397/1dc112f0bd3defb574c81822f51e76bax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "23",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1654/13427423ba109508d4efd83afec9e216x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "24",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0305/24e7bd842fe41f792424c5d5a8d328f9x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "25",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0869/ac513543056d7b3b7ec49a48abbd7eddx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "26",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0976/1276335b9eef662377f3496de1aacd35x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "27",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0512/d52e4243f25ef828834745453a515030x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "28",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1049/b78bbdcaa58e68a8d2ca40e91ec84da9x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "29",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0880/c31f63cc0f0a8f0ff53bd0690c23a099x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "30",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1842/f10a759145e76b54066c12d716cc99cdx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "31",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1496/1d9bc6a5096dafb33c0e88458b5d7f02x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "32",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0278/7c02dd908e4196656cb705eebf16cd76x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "33",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1426/164c5ba91542840327eab7ffb9e817c8x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "34",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0216/7dec1da250e34eaf067b60f670c31d3ax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "35",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0032/2fb9b280a522a1f64c6c2a291f9e6273x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "36",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1159/f8139c6c4f0de4af9e7055d3ed541424x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Rubicon 392 Convertible P41597",
+            "id": "37",
+            "title": "2023 Jeep Wrangler Rubicon 392 Convertible 1C4JJXSJ1PW501597",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1338/cd3a7a1d4c84ee23b52837c48f041617x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          }
+        ],
+        "title": [
+          "2023 Jeep Wrangler Rubicon 392 Convertible"
+        ],
+        "pricing": {
+          "retailPrice": "$70,776",
+          "dprice": [
+            {
+              "label": "Market Price",
+              "type": "MIDDLE",
+              "typeClass": "internetPrice",
+              "value": "$70,776"
+            },
+            {
+              "label": "Dealer Admin Fee",
+              "type": "MIDDLE",
+              "typeClass": "wholesalePrice",
+              "value": "$799"
+            },
+            {
+              "label": "Advertised Price",
+              "type": "TOTAL",
+              "typeClass": "salePrice",
+              "value": "$71,575",
+              "isFinalPrice": true
+            }
+          ],
+          "vehicle": {
+            "category": "AUTO"
+          },
+          "ePriceStatus": "NON_APPLICABLE"
+        },
+        "accountId": "hendrickcdjramcllc",
+        "bodyStyle": "Convertible",
+        "chromeId": "428504",
+        "link": "/certified/Jeep/2023-Jeep-Wrangler-concord-nc-dd16bf3aac1807bdc0458511cfa47320.htm",
+        "make": "Jeep",
+        "model": "Wrangler",
+        "modelCode": "JLJX74",
+        "stockNumber": "P41597",
+        "trim": "Rubicon 392",
+        "uuid": "dd16bf3aac1807bdc0458511cfa47320",
+        "vin": "1C4JJXSJ1PW501597",
+        "inventoryDate": "03/11/2026",
+        "offSite": false,
+        "fuelType": "Gasoline",
+        "optionCodes": [
+          "TVC",
+          "CHD-A",
+          "XNY",
+          "WF2",
+          "MDA",
+          "DMU",
+          "N",
+          "PW7",
+          "27X",
+          "SDF",
+          "DFV",
+          "XDB",
+          "ESG",
+          "GMA",
+          "AGB",
+          "HDX9"
+        ],
+        "classification": "primary",
+        "featuredPromotion": false,
+        "spotlightedVehicle": false,
+        "status": "live",
+        "statusInt": 1,
+        "type": "used",
+        "typeInt": 1,
+        "isNewCarBoost": false
       },
       "parsed_snapshot": {
-        "vin": "unknown-86244676",
-        "year": 0,
-        "make": "Santa",
-        "model": "Santa Fe Sport",
-        "trim": null,
-        "price": 0,
-        "image_url": "/static/placeholder.svg",
+        "vin": "1C4JJXSJ1PW501597",
+        "year": 2023,
+        "make": "Jeep",
+        "model": "Wrangler",
+        "trim": "Rubicon 392",
+        "price": 70776,
+        "image_url": "https://pictures.dealer.com/h/hendrickcdjramcllc/0386/31e392e900c72c53e82fb6dff5d4e90ex.jpg",
         "gallery_preview": [
-          "/static/placeholder.svg"
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/0386/31e392e900c72c53e82fb6dff5d4e90ex.jpg",
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/1864/eebe76f932f5258e3f607893eb038acbx.jpg",
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/0321/fea505423dd0762fcb1b0af2cda03e3cx.jpg"
         ]
       }
     },
     {
-      "vin": "unknown-15009686",
+      "vin": "1C4HJXAG2PW575731",
       "raw_json_sample": {
-        "model": "CX-50",
-        "seoUrl": null,
-        "value": "2.5 S Premium Plus Package",
-        "text": "2.5 S Premium Plus Package",
-        "selected": false,
-        "count": 1,
-        "url": "https://www.kefferjeep.com/inventory/used?trim=2-d-5-s-premium-plus-package&paymenttype=cash&intransit=true&instock=true&inproduction=true"
+        "inventoryButtons": [
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "javascript:+void(0)",
+            "btnStyle": "unstyled",
+            "btnTarget": "_self",
+            "btnClasses": "font-weight-bold pointer-events-none btn-block btn-unstyled btn-sm btn",
+            "btnLabel": "Fully transparent pricing. No hidden fees.",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "used",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "#?",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "p-0 btn-no-decoration opacity-100 btn-default btn-block font-weight-normal disabled btn-sm text-muted btn bg-transparent border-0",
+            "btnLabel": "<span>Hendrick Finance Cash*</span><span class=\"text-success float-right\">-$500</span>",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL",
+            "matches": "accountId:hendrickcdjramcllc:true"
+          },
+          {
+            "inventoryType": "used",
+            "inventoryClassification": "all",
+            "device": "desktop",
+            "btnHref": "/eprice-form.htm?itemId=018d9c5cac183c20f46ddc47e2c58101&vehicleId=018d9c5cac183c20f46ddc47e2c58101",
+            "btnStyle": "default",
+            "btnTarget": "dialog",
+            "btnClasses": "dialog btn-default btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-width": "375"
+            },
+            "btnLabel": "Lock In Today’s Price",
+            "btnDisabled": false,
+            "backgroundColor": "d0021b",
+            "backgroundHoverColor": "d0021b",
+            "textColor": "ffffff",
+            "textHoverColor": "ffffff",
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnHref": "/certified/Jeep/2023-Jeep-Wrangler-concord-nc-018d9c5cac183c20f46ddc47e2c58101.htm#mmd-widget",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-link-to-vdp-button"
+            },
+            "btnLabel": "What&#x27;s My Payment?",
+            "btnDisabled": false,
+            "backgroundColor": "#000000",
+            "backgroundHoverColor": "#0d65bf",
+            "textColor": "#ffffff",
+            "textHoverColor": "#ffffff",
+            "showOnListings": true,
+            "showOnDetails": false,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default hidden btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-value-a-trade-button"
+            },
+            "btnLabel": "Tradepending ",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          },
+          {
+            "inventoryType": "both",
+            "inventoryClassification": "all",
+            "device": "both",
+            "btnStyle": "default",
+            "btnTarget": "_self",
+            "btnClasses": "btn-default hidden btn-block btn-sm btn",
+            "btnAttributes": {
+              "data-location": "vehicle-chat-button"
+            },
+            "btnLabel": "Gubagoo Ask",
+            "btnDisabled": false,
+            "showOnListings": true,
+            "showOnDetails": true,
+            "inventoryStatus": "ALL"
+          }
+        ],
+        "trackingAttributes": [
+          {
+            "name": "driveLine",
+            "value": "4WD"
+          },
+          {
+            "name": "normalFuelType",
+            "value": "Hybrid"
+          },
+          {
+            "name": "interiorColor",
+            "value": "Black",
+            "normalizedValue": "Black"
+          },
+          {
+            "name": "transmission",
+            "value": "Automatic"
+          },
+          {
+            "name": "engine",
+            "value": "6"
+          },
+          {
+            "name": "engineSize",
+            "value": "3.6L"
+          },
+          {
+            "name": "autodataCaId",
+            "value": "CAD30JES011A0"
+          },
+          {
+            "name": "fuelType",
+            "value": "Hybrid Fuel"
+          },
+          {
+            "name": "cityFuelEconomy",
+            "value": "20.0"
+          },
+          {
+            "name": "exteriorColor",
+            "value": "Black Clearcoat",
+            "normalizedValue": "Black"
+          },
+          {
+            "name": "odometer",
+            "value": "37600"
+          },
+          {
+            "name": "doors",
+            "value": "2 door"
+          }
+        ],
+        "trackingPricing": {
+          "internetPrice": "$27,495",
+          "salePrice": "$28,294",
+          "retailValue": "0",
+          "msrp": "0",
+          "askingPrice": "27495"
+        },
+        "newCarBoost": false,
+        "certified": true,
+        "condition": "Certified Pre-Owned",
+        "year": 2023,
+        "attributes": [
+          {
+            "name": "odometer",
+            "label": "Mileage",
+            "value": "37,600 miles",
+            "labeledValue": "Mileage: 37,600 miles "
+          },
+          {
+            "name": "fuelEconomy",
+            "label": "MPG Range",
+            "value": "20/",
+            "labeledValue": "20/ MPG City/Hwy"
+          },
+          {
+            "name": "interiorColor",
+            "label": "Interior Color",
+            "value": "Black",
+            "normalizedValue": "Black",
+            "labeledValue": "Black Interior"
+          },
+          {
+            "name": "stockNumber",
+            "label": "Stock Number",
+            "value": "P45731",
+            "labeledValue": "Stock # P45731 "
+          }
+        ],
+        "highlightedAttributes": [
+          {
+            "name": "type",
+            "label": "Condition",
+            "value": "Used",
+            "labeledValue": "Used"
+          },
+          {
+            "name": "normalFuelType",
+            "label": "Fuel Type",
+            "value": "Hybrid",
+            "labeledValue": "Fuel Type: Hybrid "
+          },
+          {
+            "name": "odometer",
+            "label": "Odometer (SRP only) ",
+            "value": "37,600 miles",
+            "labeledValue": "Mileage: 37,600 miles "
+          }
+        ],
+        "callout": [
+          {
+            "badgeClasses": [
+              "certified"
+            ],
+            "imageAlt": "This Vehicle is Jeep OEM Certified",
+            "imageSrc": "/static/v8/global/images/franchise/white/en_US/logo-certified-jeep.gif",
+            "imageTitle": "Jeep Certified",
+            "tagName": "div",
+            "target": "_self"
+          },
+          {
+            "badgeClasses": [
+              "carfax"
+            ],
+            "href": "https://www.carfax.com/vehiclehistory/ar20/zu8vwhP9PiV3VwnkjgJQQV0BRAHZuOVPbiGenSkdHsC3hWV5_3fT26IoYQrFC9uSDl3HCmcB4e6RRqQN0GQ-krCPVu-81dg_plo",
+            "imageAlt": "Show Me the CARFAX Badge",
+            "imageSrc": "https://partnerstatic.carfax.com/img/valuebadge/showme.svg",
+            "imageTitle": "Show Me the CARFAX Badge",
+            "target": "_blank"
+          }
+        ],
+        "images": [
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "0",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1063/0b9eda96a261430a961c6e19a161da58x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "1",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1570/2bcb9d331f7fd98dd068b22c32819ccfx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "2",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1672/9c9d2f128057183d9227f91de211a920x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "3",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1036/b220890a8534461c1fd3f8be6cd25452x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "4",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0227/d8b04f63207f90b90f9436356b87090ex.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "5",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0370/a01f85a882f24731b171eec7cf28fd71x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "6",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1736/fc184c8f318d91e6ef9121bdde106bf3x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "7",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0125/002266f1799a2b9740c40b9a2c3ae137x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "8",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0303/e953261bc26f3069b41cff17ba3db7a4x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "9",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0772/4be07cf4d7e6ff75ca67ec96e3796445x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "10",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0215/40c6f594db52021ddefa20b76332d8d6x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "11",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0455/355f5ef12a09d25f6046dcf2af09a816x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "12",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0652/465387f03c257cdd69d880c4c14fba8cx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "13",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1082/48b603f04ac1ed917c5912aa27df758bx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "14",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1419/51a62c5c8d4000c3c16e5c9ad7ebb423x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "15",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0684/4f151b0236b4158b21aa00e6d1ba954fx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "16",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0264/92af13f1da4c068ceaa042b707287bcfx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "17",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0785/ab0b74cdd4ed570d72b6041a68aec8b9x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "18",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0608/7aae2317b00b6b3fc77d373550ebce9cx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "19",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1857/59e2f94fff298bb84fac1ea4f897dbe3x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "20",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0729/2a36a429bcdf496b3c9ccb2737b67a9dx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "21",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0040/72968eecd4190e4e0671848f77756c48x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "22",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0728/491a7f44a8fcf19a7206feeb45968d14x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "23",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0322/16b79432f0f32471128394f8a31acb79x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "24",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1371/0e701ada09980cfe0088926c6143c9bex.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "25",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0025/ffa035df2aa7e860533aa6404163cf3ax.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "26",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1269/36d81c89ced77900fb414d4dc32b2a84x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "27",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0229/ad9e9f77841adfa6af0d9fa6c1247db6x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "28",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0981/ef543a368d0343517ec311d7219d94b3x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "29",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0691/beff21022f6bb7e202d8f1226bee9c9dx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "30",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1106/588016c54661e54b2b33a23150fa3d0dx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "31",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1718/587409d9a545549c1c15d404388bf016x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "32",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0153/75d5fc43ce7cc912e57afe32dcd8dabfx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "33",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1968/050dc192424bfbc6279e80ece6858a65x.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "34",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/1504/0f1af61b7df888df8bb5728b6928ce9cx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          },
+          {
+            "alt": "2023 Jeep Wrangler Sport S Convertible P45731",
+            "id": "35",
+            "title": "2023 Jeep Wrangler Sport S Convertible 1C4HJXAG2PW575731",
+            "uri": "https://pictures.dealer.com/h/hendrickcdjramcllc/0612/724c8c5ed30bf14de2d65e33c1b16aedx.jpg",
+            "provider": "ACTUAL_PHOTO"
+          }
+        ],
+        "title": [
+          "2023 Jeep Wrangler Sport S Convertible"
+        ],
+        "pricing": {
+          "retailPrice": "$27,495",
+          "dprice": [
+            {
+              "label": "Market Price",
+              "type": "MIDDLE",
+              "typeClass": "internetPrice",
+              "value": "$27,495"
+            },
+            {
+              "label": "Dealer Admin Fee",
+              "type": "MIDDLE",
+              "typeClass": "wholesalePrice",
+              "value": "$799"
+            },
+            {
+              "label": "Advertised Price",
+              "type": "TOTAL",
+              "typeClass": "salePrice",
+              "value": "$28,294",
+              "isFinalPrice": true
+            }
+          ],
+          "vehicle": {
+            "category": "AUTO"
+          },
+          "ePriceStatus": "NON_APPLICABLE"
+        },
+        "accountId": "hendrickcdjramcllc",
+        "bodyStyle": "Convertible",
+        "chromeId": "428289",
+        "link": "/certified/Jeep/2023-Jeep-Wrangler-concord-nc-018d9c5cac183c20f46ddc47e2c58101.htm",
+        "make": "Jeep",
+        "model": "Wrangler",
+        "modelCode": "JLJL72",
+        "stockNumber": "P45731",
+        "trim": "Sport S",
+        "uuid": "018d9c5cac183c20f46ddc47e2c58101",
+        "vin": "1C4HJXAG2PW575731",
+        "inventoryDate": "03/18/2026",
+        "offSite": false,
+        "fuelType": "Hybrid",
+        "optionCodes": [
+          "STB",
+          "RSD",
+          "RC4",
+          "UAQ",
+          "AEK",
+          "A7X9",
+          "WF9",
+          "TQJ",
+          "DHP",
+          "AAN",
+          "N",
+          "25S",
+          "PX8",
+          "Z5N",
+          "DFT",
+          "DSA",
+          "ERG"
+        ],
+        "classification": "primary",
+        "featuredPromotion": false,
+        "spotlightedVehicle": false,
+        "status": "live",
+        "statusInt": 1,
+        "type": "used",
+        "typeInt": 1,
+        "isNewCarBoost": false
       },
       "parsed_snapshot": {
-        "vin": "unknown-15009686",
-        "year": 0,
-        "make": "Cx-50",
-        "model": "CX-50",
-        "trim": null,
-        "price": 0,
-        "image_url": "/static/placeholder.svg",
+        "vin": "1C4HJXAG2PW575731",
+        "year": 2023,
+        "make": "Jeep",
+        "model": "Wrangler",
+        "trim": "Sport S",
+        "price": 27495,
+        "image_url": "https://pictures.dealer.com/h/hendrickcdjramcllc/1063/0b9eda96a261430a961c6e19a161da58x.jpg",
         "gallery_preview": [
-          "/static/placeholder.svg"
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/1063/0b9eda96a261430a961c6e19a161da58x.jpg",
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/1570/2bcb9d331f7fd98dd068b22c32819ccfx.jpg",
+          "https://pictures.dealer.com/h/hendrickcdjramcllc/1672/9c9d2f128057183d9227f91de211a920x.jpg"
         ]
       }
     }

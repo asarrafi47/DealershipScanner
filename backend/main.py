@@ -5,11 +5,12 @@ from backend.utils.project_env import load_project_dotenv
 load_project_dotenv()
 
 import os
+import secrets
 import sqlite3
 import time
 from pathlib import Path
 
-from flask import Flask, abort, jsonify, redirect, render_template, request, send_from_directory, session, url_for
+from flask import Flask, abort, g, jsonify, redirect, render_template, request, send_from_directory, session, url_for
 
 from backend.ai_agent import run_car_page_chat
 from backend.billing.routes import bp as billing_bp
@@ -25,7 +26,9 @@ from backend.db.inventory_db import (
     get_car_by_id,
     get_filter_options,
     init_inventory_db,
+    listings_grid_serialized_cars,
     search_cars,
+    serialize_car_for_listings_grid,
 )
 from backend.db.users_db import (
     check_user,
@@ -67,8 +70,20 @@ from backend.utils.roles import (
 )
 
 _MIN_PASSWORD_LEN = max(8, int(os.environ.get("MIN_PASSWORD_LENGTH", "8")))
+
+
+def _listings_client_poll_ms() -> int:
+    """Optional client refresh of ``/api/listings/cars`` (0 = off)."""
+    raw = (os.environ.get("LISTINGS_CLIENT_POLL_MS") or "0").strip() or "0"
+    try:
+        return max(0, int(raw.split()[0]))
+    except (TypeError, ValueError, IndexError):
+        return 0
 _CHAT_MAX_MESSAGE = int(os.environ.get("CHAT_MAX_MESSAGE_CHARS", "4000"))
 _CHAT_MAX_BODY = int(os.environ.get("CHAT_MAX_BODY_BYTES", "65536"))
+# Cap JSON POST bodies (smart search, chat) and allow dealer multipart uploads (8 MiB+).
+_DEFAULT_MAX_CONTENT = max(9 * 1024 * 1024, _CHAT_MAX_BODY * 2)
+_MAX_REQUEST_BODY = int(os.environ.get("MAX_REQUEST_BODY_BYTES", str(_DEFAULT_MAX_CONTENT)))
 _SMART_SEARCH_RPM = int(os.environ.get("RATE_LIMIT_SMART_SEARCH_PER_MIN", "90"))
 _CHAT_RPM = int(os.environ.get("RATE_LIMIT_CAR_CHAT_PER_MIN", "40"))
 _LOGIN_RPM = int(os.environ.get("RATE_LIMIT_LOGIN_PER_MIN", "30"))
@@ -138,6 +153,8 @@ if is_production_env():
 else:
     app.secret_key = _raw_secret or "dealership-scanner-dev-insecure"
 
+app.config["MAX_CONTENT_LENGTH"] = _MAX_REQUEST_BODY
+
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = session_cookie_secure_default()
@@ -163,6 +180,7 @@ def inject_csrf_and_flags():
     nav_store_admin = bool(session.get("user_id")) and (role == "admin" or has_scope)
     return {
         "csrf_token": ensure_csrf_token(),
+        "csp_nonce": getattr(g, "csp_nonce", "") or "",
         "is_production": is_production_env(),
         "logged_in_user": session.get("username"),
         "nav_store_admin": nav_store_admin,
@@ -190,6 +208,11 @@ def _require_paid_org_session() -> bool:
 
 
 @app.before_request
+def _per_request_csp_nonce() -> None:
+    g.csp_nonce = secrets.token_urlsafe(16)
+
+
+@app.before_request
 def _csrf_mutating_requests():
     if request.method != "POST":
         return
@@ -197,6 +220,7 @@ def _csrf_mutating_requests():
     if ep in (
         "login_page",
         "register_page",
+        "logout_page",
         "mfa_choose",
         "mfa_setup",
         "mfa_verify",
@@ -234,7 +258,33 @@ def _billing_gate_paid_routes():
     return None
 
 
-# Report-only CSP (SEC-032): opt-in via CSP_REPORT_ONLY=1 after public pages avoid inline script/style.
+def _csp_enforce_wanted() -> bool:
+    v = (os.environ.get("CSP_ENFORCE") or "").strip().lower()
+    if v in ("0", "false", "no", "off"):
+        return False
+    if v in ("1", "true", "yes", "on"):
+        return True
+    return is_production_env()
+
+
+def _csp_header_value_enforced(nonce: str) -> str:
+    # style-src: 'unsafe-inline' for existing inline style="" attributes; script nonces for all script elements.
+    return (
+        "default-src 'self'; "
+        "base-uri 'self'; "
+        "form-action 'self'; "
+        "frame-ancestors 'none'; "
+        "object-src 'none'; "
+        "img-src 'self' data: https: http: blob:; "
+        "font-src 'self' https://fonts.gstatic.com data:; "
+        "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
+        f"script-src 'self' 'nonce-{nonce}' https://esm.sh; "
+        "connect-src 'self' https://esm.sh https://fonts.googleapis.com; "
+        "worker-src 'self'; "
+    )
+
+
+# Report-only CSP (SEC-032): opt-in via CSP_REPORT_ONLY=1; use for violation collection when not enforcing.
 _CSP_REPORT_ONLY = (
     "default-src 'self'; "
     "base-uri 'self'; "
@@ -243,7 +293,7 @@ _CSP_REPORT_ONLY = (
     "object-src 'none'; "
     "img-src 'self' data: https: http: blob:; "
     "font-src 'self' https://fonts.gstatic.com data:; "
-    "style-src 'self' https://fonts.googleapis.com; "
+    "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; "
     "script-src 'self' https://esm.sh; "
     "connect-src 'self' https://esm.sh https://fonts.googleapis.com; "
     "worker-src 'self'; "
@@ -251,12 +301,15 @@ _CSP_REPORT_ONLY = (
 
 
 @app.after_request
-def _csp_report_only_header(response):
-    if (os.environ.get("CSP_REPORT_ONLY") or "").strip().lower() not in ("1", "true", "yes", "on"):
+def _csp_headers(response):
+    if _csp_enforce_wanted():
+        nonce = (getattr(g, "csp_nonce", None) or "") or ""
+        if nonce and not response.headers.get("Content-Security-Policy"):
+            response.headers["Content-Security-Policy"] = _csp_header_value_enforced(nonce)
         return response
-    if response.headers.get("Content-Security-Policy-Report-Only"):
-        return response
-    response.headers["Content-Security-Policy-Report-Only"] = _CSP_REPORT_ONLY
+    if (os.environ.get("CSP_REPORT_ONLY") or "").strip().lower() in ("1", "true", "yes", "on"):
+        if not response.headers.get("Content-Security-Policy-Report-Only"):
+            response.headers["Content-Security-Policy-Report-Only"] = _CSP_REPORT_ONLY
     return response
 
 
@@ -401,7 +454,7 @@ def register_page():
     return render_template("register.html")
 
 
-@app.route("/logout", methods=["GET", "POST"])
+@app.route("/logout", methods=["POST"])
 def logout_page():
     session.clear()
     return redirect(url_for("login_page"))
@@ -951,9 +1004,7 @@ def search():
 
     initial_grid_cars = []
     if q_text:
-        initial_grid_cars = [
-            serialize_car_for_api(c, include_verified=False) for c in results
-        ]
+        initial_grid_cars = [serialize_car_for_listings_grid(c) for c in results]
 
     active = {
         "make": g("make"),
@@ -982,7 +1033,14 @@ def search():
         active=active,
         options=get_filter_options(),
         initial_grid_cars=initial_grid_cars,
+        listings_poll_ms=_listings_client_poll_ms(),
     )
+
+
+@app.route("/api/listings/cars")
+def api_listings_cars():
+    """Read-only JSON for the listings grid; supports client refresh while a scan is running."""
+    return jsonify({"ok": True, "cars": listings_grid_serialized_cars()})
 
 
 @app.route("/car/<int:car_id>")
@@ -1004,6 +1062,8 @@ def car_detail(car_id):
         listing_packages_sections=ctx.get("listing_packages_sections") or [],
         listing_standalone_features=ctx.get("listing_standalone_features") or [],
         listing_observed_features=ctx.get("listing_observed_features") or [],
+        listing_monroney_options=ctx.get("listing_monroney_options") or [],
+        listing_monroney_standard=ctx.get("listing_monroney_standard") or [],
         interior_from_listing_description=bool(ctx.get("interior_from_listing_description")),
         interior_from_llava_vision=bool(ctx.get("interior_from_llava_vision")),
         packages_panel_has_content=bool(ctx.get("packages_panel_has_content")),
@@ -1014,7 +1074,7 @@ def car_detail(car_id):
 
 @app.route("/listings")
 def listings():
-    return listings_page()
+    return listings_page(listings_poll_ms=_listings_client_poll_ms())
 
 
 def _highlight_params_from_filters(filters: dict) -> list[str]:
@@ -1052,13 +1112,16 @@ def api_search_smart():
     if not allow_request(f"smart:{ip}", max_events=_SMART_SEARCH_RPM, window_seconds=60.0):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
 
+    if request.content_length is not None and request.content_length > _CHAT_MAX_BODY:
+        return jsonify({"ok": False, "error": "payload_too_large"}), 413
+
     data = request.get_json() or {}
     q = (data.get("query") or data.get("q") or "").strip()
     filters = parse_natural_query(q)
     from backend.hybrid_inventory_search import hybrid_smart_search
 
     results, search_meta = hybrid_smart_search(q, filters, vector_top_k=100)
-    safe_results = [serialize_car_for_api(c, include_verified=False) for c in results]
+    safe_results = [serialize_car_for_listings_grid(c) for c in results]
     return jsonify(
         {
             "filters": filters,

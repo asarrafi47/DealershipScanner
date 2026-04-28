@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2003,Mercedes-Benz,SL-Class,SL500,5.0L V8 (GUZZLER),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,5.0,14,20,16,,,,,
+2003,Mercedes-Benz,SL-Class,SL55 AMG,5.5L V8 (GUZZLER),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,5.5,12,18,14,,,,,

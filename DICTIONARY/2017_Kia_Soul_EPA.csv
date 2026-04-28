@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2017,Kia,Soul,Soul,1.6L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.6,25,30,27,,,,,
+2017,Kia,Soul,Soul,2.0L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,25,30,27,,,,,
+2017,Kia,Soul,Soul,1.6L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.6,24,30,27,,,,,
+2017,Kia,Soul,Electric,EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Small Station Wagons,,,120,92,105,,,,,
+2017,Kia,Soul,Soul,1.6L I4 (SIDI),Automatic (AM7),Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.6,26,31,28,,,,,

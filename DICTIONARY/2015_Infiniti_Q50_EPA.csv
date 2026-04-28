@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Infiniti,Q50,Hybrid,Hybrid 3.5L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,29,36,31,,,,,
+2015,Infiniti,Q50,S Hybrid,Hybrid 3.5L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,28,33,30,,,,,
+2015,Infiniti,Q50,Hybrid AWD,Hybrid 3.5L V6,Automatic (S7),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,28,34,30,,,,,
+2015,Infiniti,Q50,S Hybrid AWD,Hybrid 3.5L V6,Automatic (S7),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,27,30,28,,,,,
+2015,Infiniti,Q50,a,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.7,20,29,23,,,,,
+2015,Infiniti,Q50,Q50,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.7,20,29,23,,,,,
+2015,Infiniti,Q50,a AWD,3.7L V6,Automatic (S7),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.7,19,27,22,,,,,
+2015,Infiniti,Q50,AWD,3.7L V6,Automatic (S7),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.7,19,27,22,,,,,

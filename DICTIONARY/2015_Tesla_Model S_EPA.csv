@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Tesla,Model S,(85 kW-hr battery pack),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Large Cars,,,88,90,89,,,,,
+2015,Tesla,Model S,AWD - P85D,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,89,98,93,,,,,
+2015,Tesla,Model S,AWD - 85D,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,95,106,100,,,,,
+2015,Tesla,Model S,(60 kW-hr battery pack),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Large Cars,,,94,97,95,,,,,
+2015,Tesla,Model S,AWD - 70D,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,101,102,101,,,,,
+2015,Tesla,Model S,AWD - 90D,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,95,106,100,,,,,
+2015,Tesla,Model S,AWD - P90D,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,89,98,93,,,,,
+2015,Tesla,Model S,(90 kW-hr battery pack),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Large Cars,,,88,90,89,,,,,

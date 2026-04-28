@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2019,Porsche,Cayman,Cayman,2.0L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,21,28,24,,,,,
+2019,Porsche,Cayman,Cayman,2.0L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,22,29,25,,,,,
+2019,Porsche,Cayman,S,2.5L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.5,20,26,22,,,,,
+2019,Porsche,Cayman,S,2.5L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.5,21,28,24,,,,,
+2019,Porsche,Cayman,GTS,2.5L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.5,19,25,21,,,,,
+2019,Porsche,Cayman,GTS,2.5L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.5,20,26,22,,,,,

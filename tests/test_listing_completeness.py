@@ -50,6 +50,18 @@ def test_public_complete_when_optional_engine_gap_only() -> None:
     assert is_car_incomplete_for_public_listings(row) is False
 
 
+def test_public_price_set_when_list_price_is_explicit_zero() -> None:
+    """``price=0`` in the row is a stored value (not the same as NULL) for public completeness."""
+    row = _minimal_row(price=0, msrp=None)
+    assert "price" not in listing_missing_field_codes(row, for_public_filter=True)
+    assert is_car_incomplete_for_public_listings(row) is False
+
+
+def test_public_price_only_msrp() -> None:
+    row = _minimal_row(price=None, msrp=45_000)
+    assert "price" not in listing_missing_field_codes(row, for_public_filter=True)
+
+
 def test_queue_includes_engine_when_absent() -> None:
     row = _minimal_row(engine_description=None, cylinders=None)
     q = listing_missing_field_codes(row, for_public_filter=False)

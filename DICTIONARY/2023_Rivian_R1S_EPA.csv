@@ -1,0 +1,11 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2023,Rivian,R1S,(20 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,69,60,64,,,,,
+2023,Rivian,R1S,(21 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,75,66,71,,,,,
+2023,Rivian,R1S,(22 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,73,63,68,,,,,
+2023,Rivian,R1S,20 inch All-Terrain,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,65,60,63,,,,,
+2023,Rivian,R1S,20 inch All-Terrain Dual Large,EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,72,64,68,,,,,
+2023,Rivian,R1S,20 inch All-Terrain Performance Dual Large,EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,72,64,68,,,,,
+2023,Rivian,R1S,21 inch Dual Large,EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,82,74,78,,,,,
+2023,Rivian,R1S,21 inch Performance Dual Large,EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,82,74,78,,,,,
+2023,Rivian,R1S,22 inch Dual Large,EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,80,71,75,,,,,
+2023,Rivian,R1S,22 inch Performance Dual Large,EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,80,71,75,,,,,

@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2009,Chevrolet,HHR,FWD,2.0L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.0,21,29,24,,,,,
+2009,Chevrolet,HHR,FWD,2.0L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.0,19,29,23,,,,,
+2009,Chevrolet,HHR,FWD,FFV 2.2L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,4,2.2,22,30,25,,,,,
+2009,Chevrolet,HHR,Panel FWD,2.0L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.0,21,29,24,,,,,
+2009,Chevrolet,HHR,Panel FWD,2.0L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.0,19,29,23,,,,,
+2009,Chevrolet,HHR,Panel FWD,FFV 2.2L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,4,2.2,22,30,25,,,,,
+2009,Chevrolet,HHR,FWD,FFV 2.2L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,4,2.2,22,32,26,,,,,
+2009,Chevrolet,HHR,FWD,FFV 2.4L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,4,2.4,21,30,24,,,,,
+2009,Chevrolet,HHR,FWD,FFV 2.4L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,4,2.4,22,29,24,,,,,
+2009,Chevrolet,HHR,Panel FWD,FFV 2.2L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,4,2.2,22,32,26,,,,,
+2009,Chevrolet,HHR,Panel FWD,FFV 2.4L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,4,2.4,21,30,24,,,,,
+2009,Chevrolet,HHR,Panel FWD,FFV 2.4L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,4,2.4,22,29,24,,,,,

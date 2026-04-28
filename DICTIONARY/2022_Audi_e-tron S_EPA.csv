@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2022,Audi,e-tron S,(20in wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,72,75,73,,,,,
+2022,Audi,e-tron S,(21/22 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,62,64,63,,,,,
+2022,Audi,e-tron S,Sportback (20 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,73,78,75,,,,,
+2022,Audi,e-tron S,Sportback (21/22 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,64,66,65,,,,,

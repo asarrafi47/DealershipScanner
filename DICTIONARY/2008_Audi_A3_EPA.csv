@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2008,Audi,A3,A3,2.0L I4,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,22,29,25,,,,,
+2008,Audi,A3,quattro,3.2L V6,Automatic (S6),All-Wheel Drive,Premium Gasoline,Small Station Wagons,6,3.2,18,25,21,,,,,
+2008,Audi,A3,A3,2.0L I4,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,20,29,24,,,,,

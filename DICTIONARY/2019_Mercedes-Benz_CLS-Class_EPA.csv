@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2019,Mercedes-Benz,CLS-Class,AMG CLS53 4matic Plus,Hybrid 3.0L V6 (SIDI; Mild Hybrid),Automatic 9-spd,Four-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,21,27,23,,,,,
+2019,Mercedes-Benz,CLS-Class,CLS450,Hybrid 3.0L V6 (SIDI; Mild Hybrid),Automatic 9-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,24,31,26,,,,,
+2019,Mercedes-Benz,CLS-Class,CLS450 4matic,Hybrid 3.0L V6 (SIDI; Mild Hybrid),Automatic 9-spd,Four-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,23,30,26,,,,,

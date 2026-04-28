@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Mercedes-Benz,EQE,AMG EQE 4matic Plus,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,69,71,70,,,,,
+2026,Mercedes-Benz,EQE,320 Plus,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Midsize Cars,,,94,94,94,,,,,
+2026,Mercedes-Benz,EQE,320 4matic,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Midsize Cars,,,87,85,86,,,,,
+2026,Mercedes-Benz,EQE,320 Plus (SUV),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Midsize Station Wagons,,,98,87,93,,,,,
+2026,Mercedes-Benz,EQE,320 4matic (SUV),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Midsize Station Wagons,,,84,78,81,,,,,
+2026,Mercedes-Benz,EQE,AMG EQE 4matic Plus (SUV),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Midsize Station Wagons,,,76,72,74,,,,,

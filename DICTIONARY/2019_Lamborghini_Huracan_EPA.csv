@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2019,Lamborghini,Huracan,Spyder,5.2L V10 (SIDI & PFI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Two Seaters,10,5.2,13,18,15,,,,,
+2019,Lamborghini,Huracan,Huracan,5.2L V10 (SIDI & PFI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Two Seaters,10,5.2,13,18,15,,,,,
+2019,Lamborghini,Huracan,Spyder 2WD,5.2L V10 (SIDI & PFI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,10,5.2,13,18,15,,,,,
+2019,Lamborghini,Huracan,2WD,5.2L V10 (SIDI & PFI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,10,5.2,13,18,15,,,,,

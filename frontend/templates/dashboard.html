@@ -19,7 +19,7 @@
             {% if nav_store_admin %}
             <a href="/admin/">Store admin</a>
             {% endif %}
-            <a href="/logout">Logout</a>
+            {% include "_app_logout.html" %}
         </div>
     </nav>
 
@@ -88,6 +88,6 @@
 
 </div>
 
-<script src="{{ url_for('static', filename='main.js') }}"></script>
+<script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
 </body>
 </html>

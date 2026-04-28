@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Maserati,Grecale,Trofeo,3.0L V6 (SIDI & PFI),Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,6,3.0,18,25,20,,,,,
+2026,Maserati,Grecale,Modena V6,3.0L V6 (SIDI & PFI),Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,6,3.0,18,25,20,,,,,
+2026,Maserati,Grecale,Folgore (19 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,83,78,81,,,,,
+2026,Maserati,Grecale,Folgore (21 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,75,69,72,,,,,

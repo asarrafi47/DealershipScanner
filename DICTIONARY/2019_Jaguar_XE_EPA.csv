@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2019,Jaguar,XE,XE,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,25,34,28,,,,,
+2019,Jaguar,XE,AWD,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,34,28,,,,,
+2019,Jaguar,XE,XE,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,21,30,24,,,,,
+2019,Jaguar,XE,AWD,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,20,29,23,,,,,
+2019,Jaguar,XE,XE,Diesel 2.0L I4 Diesel,Automatic (S8),Rear-Wheel Drive,Diesel,Compact Cars,4,2.0,32,42,36,,,,,
+2019,Jaguar,XE,AWD,Diesel 2.0L I4 Diesel,Automatic (S8),All-Wheel Drive,Diesel,Compact Cars,4,2.0,30,40,34,,,,,
+2019,Jaguar,XE,AWD,5.0L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,8,5.0,16,22,18,,,,,

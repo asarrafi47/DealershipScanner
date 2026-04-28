@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2009,Porsche,Cayenne,Cayenne,3.6L V6,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,6,3.6,14,20,16,,,,,
+2009,Porsche,Cayenne,Cayenne,3.6L V6,Automatic 6-spd,All-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,6,3.6,14,20,16,,,,,
+2009,Porsche,Cayenne,GTS,4.8L V8,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,8,4.8,11,17,13,,,,,
+2009,Porsche,Cayenne,GTS,4.8L V8,Automatic 6-spd,All-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,8,4.8,13,18,15,,,,,
+2009,Porsche,Cayenne,S,4.8L V8,Automatic 6-spd,All-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,8,4.8,13,19,15,,,,,
+2009,Porsche,Cayenne,Turbo,4.8L V8,Automatic 6-spd,All-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,8,4.8,12,19,14,,,,,
+2009,Porsche,Cayenne,Turbo S,4.8L V8,Automatic 6-spd,All-Wheel Drive,Premium Gasoline,Sport Utility Vehicle - 4WD,8,4.8,12,19,14,,,,,

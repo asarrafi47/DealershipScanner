@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2019,Infiniti,Q60,Q60,3.0L V6 (SIDI),Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,19,28,22,,,,,
+2019,Infiniti,Q60,Red Sport,3.0L V6 (SIDI),Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,20,27,22,,,,,
+2019,Infiniti,Q60,Q60,2.0L I4 (SIDI),Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,22,30,25,,,,,
+2019,Infiniti,Q60,AWD,2.0L I4 (SIDI),Automatic (S7),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,21,28,24,,,,,
+2019,Infiniti,Q60,Red Sport AWD,3.0L V6 (SIDI),Automatic (S7),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,19,26,21,,,,,
+2019,Infiniti,Q60,AWD,3.0L V6 (SIDI),Automatic (S7),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,19,27,22,,,,,

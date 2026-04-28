@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2002,Isuzu,Hombre Pickup,2WD (FFV),FFV 2.2L I4 (FLEX-FUEL),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline / E85,Small Pickup Trucks 2WD,4,2.2,17,23,19,,,,,
+2002,Isuzu,Hombre Pickup,2WD (FFV),FFV 2.2L I4 (FLEX-FUEL),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline / E85,Small Pickup Trucks 2WD,4,2.2,19,25,22,,,,,

@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2014,Toyota,Corolla,Corolla,1.8L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,27,35,30,,,,,
+2014,Toyota,Corolla,Corolla,1.8L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,29,37,32,,,,,
+2014,Toyota,Corolla,Corolla,1.8L I4,Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,29,36,32,,,,,
+2014,Toyota,Corolla,Corolla,1.8L I4,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,28,36,31,,,,,
+2014,Toyota,Corolla,LE Eco,1.8L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,30,40,34,,,,,
+2014,Toyota,Corolla,LE Eco,1.8L I4 (2-mode (Normal/Eco) Transmission),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,30,38,33,,,,,

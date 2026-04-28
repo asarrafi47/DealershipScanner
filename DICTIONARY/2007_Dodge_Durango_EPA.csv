@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2007,Dodge,Durango,2WD,3.7L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.7,14,19,16,,,,,
+2007,Dodge,Durango,2WD,5.7L V8,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,5.7,13,19,15,,,,,
+2007,Dodge,Durango,4WD,5.7L V8,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,8,5.7,13,18,15,,,,,
+2007,Dodge,Durango,2WD,FFV 4.7L V8,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,8,4.7,13,17,14,,,,,
+2007,Dodge,Durango,4WD,FFV 4.7L V8,Automatic 5-spd,All-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 4WD,8,4.7,12,17,14,,,,,

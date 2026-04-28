@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Volkswagen,Passat,Passat,3.6L V6 (SIDI),Automatic (AM-S6),Front-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.6,20,28,23,,,,,
+2015,Volkswagen,Passat,Passat,1.8L I4 (SIDI),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,24,34,28,,,,,
+2015,Volkswagen,Passat,Passat,Diesel 2.0L I4 Diesel,Automatic (AM-S6),Front-Wheel Drive,Diesel,Midsize Cars,4,2.0,29,40,33,,,,,
+2015,Volkswagen,Passat,Passat,1.8L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.8,24,35,28,,,,,
+2015,Volkswagen,Passat,Passat,Diesel 2.0L I4 Diesel,Manual 6-spd,Front-Wheel Drive,Diesel,Midsize Cars,4,2.0,30,42,34,,,,,

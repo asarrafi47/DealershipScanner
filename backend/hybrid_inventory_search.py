@@ -9,12 +9,19 @@ Flow when ``query_text`` is non-empty:
 ``query_cars`` is implemented in ``backend.vector.pgvector_service`` (requires ``PGVECTOR_URL``
 or ``DATABASE_URL``).
 
-When ``query_text`` is empty: SQL-only (facets, sorting by quality/price as before).
+When ``query_text`` is empty: SQL-only (facets, sorting by quality/price as before). Rows that fail
+public completeness are omitted unless :func:`backend.db.inventory_db.listings_include_incomplete_cars`
+is true (default: on in non-production, off in production; override with ``LISTINGS_INCLUDE_INCOMPLETE_CARS``).
+
+If ``query_text`` is a full 17-character VIN, or a listing id (``#42``, ``id: 42``, or digits only
+up to 10 characters), **semantic search is skipped** and ``search_cars`` is used with ``vin=`` or
+``candidate_ids=`` when a matching row exists; otherwise the query falls back to normal behavior.
 """
 from __future__ import annotations
 
 import logging
 import os
+import re
 from typing import Any
 
 from backend.db.inventory_db import search_cars
@@ -22,6 +29,29 @@ from backend.utils.field_clean import compute_data_quality_score
 
 logger = logging.getLogger(__name__)
 _HYBRID_DEBUG = os.environ.get("HYBRID_SEARCH_DEBUG", "").strip().lower() in ("1", "true", "yes")
+
+# Full VIN: no I, O, Q; spaces ignored (NHTSA 17 character standard).
+_LISTING_VIN_FULL_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$", re.I)
+_LISTING_ID_PREFIX_RE = re.compile(r"^(?:#|(?:id|car|carid)\s*:\s*)(\d{1,10})\s*$", re.I)
+
+
+def _normalize_listings_vin_query(q: str) -> str | None:
+    s = re.sub(r"\s+", "", (q or "").strip().upper())
+    if _LISTING_VIN_FULL_RE.match(s):
+        return s
+    return None
+
+
+def _parse_listings_car_id_query(q: str) -> list[int] | None:
+    s = (q or "").strip()
+    m = _LISTING_ID_PREFIX_RE.match(s)
+    if m:
+        n = int(m.group(1))
+        return [n] if n > 0 else None
+    if s.isdigit() and 1 <= len(s) <= 10:
+        n = int(s)
+        return [n] if n > 0 else None
+    return None
 
 
 def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any]:
@@ -156,7 +186,9 @@ def hybrid_search_with_kwargs(
     vector_top_k: int = 100,
 ) -> tuple[list[dict], dict[str, Any]]:
     """
-    Vector recall first when ``query_text`` is set: restrict SQL to semantic candidates, then exact filters.
+    When ``query_text`` is a 17-char VIN or a listing id (see module doc), resolve with SQL only.
+
+    Otherwise, vector recall first: restrict SQL to semantic candidates, then exact filters.
     """
     q = (query_text or "").strip()
     meta: dict[str, Any] = {
@@ -171,6 +203,24 @@ def hybrid_search_with_kwargs(
         rows = search_cars(**sql_kwargs)
         meta["sql_count"] = len(rows)
         return _sort_sql_rows(rows), meta
+
+    vnorm = _normalize_listings_vin_query(q)
+    if vnorm is not None:
+        merged = {**sql_kwargs, "vin": vnorm}
+        rows = search_cars(**merged)
+        if rows:
+            meta["mode"] = "vin_exact"
+            meta["sql_count"] = len(rows)
+            return _sort_sql_rows(rows), meta
+
+    id_list = _parse_listings_car_id_query(q)
+    if id_list is not None:
+        merged = {**sql_kwargs, "candidate_ids": id_list}
+        rows = search_cars(**merged)
+        if rows:
+            meta["mode"] = "car_id"
+            meta["sql_count"] = len(rows)
+            return _sort_sql_rows(rows), meta
 
     candidate_ids: list[int] = []
     try:

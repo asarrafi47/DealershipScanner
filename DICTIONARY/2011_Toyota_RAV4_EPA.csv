@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2011,Toyota,RAV4,2WD,2.5L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.5,21,28,24,,,,,
+2011,Toyota,RAV4,2WD,3.5L V6,Automatic 5-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.5,19,26,22,,,,,
+2011,Toyota,RAV4,4WD,2.5L I4,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.5,21,27,23,,,,,
+2011,Toyota,RAV4,4WD,3.5L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.5,19,25,21,,,,,

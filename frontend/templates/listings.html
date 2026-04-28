@@ -5,12 +5,12 @@
     <meta name="csrf-token" content="{{ csrf_token }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body data-listings-poll-ms="{{ listings_poll_ms | default(0) | int }}">
 
-<script type="application/json" id="ds-listings-car-rows">{{ options.car_rows | tojson }}</script>
-<script type="application/json" id="ds-listings-all-cars">{{ options.all_cars | tojson }}</script>
-<script type="application/json" id="ds-listings-country-to-makes">{{ options.country_to_makes | tojson }}</script>
-<script type="application/json" id="ds-listings-initial-grid">{{ (initial_grid_cars or []) | tojson }}</script>
+<script type="application/json" id="ds-listings-car-rows" nonce="{{ csp_nonce }}">{{ options.car_rows | tojson }}</script>
+<script type="application/json" id="ds-listings-all-cars" nonce="{{ csp_nonce }}">{{ options.all_cars | tojson }}</script>
+<script type="application/json" id="ds-listings-country-to-makes" nonce="{{ csp_nonce }}">{{ options.country_to_makes | tojson }}</script>
+<script type="application/json" id="ds-listings-initial-grid" nonce="{{ csp_nonce }}">{{ (initial_grid_cars or []) | tojson }}</script>
 
 <div class="page">
 
@@ -22,7 +22,7 @@
             {% if logged_in_user %}
             <a href="/inventory">My inventory</a>
             {% endif %}
-            <a href="/logout">Logout</a>
+            {% include "_app_logout.html" %}
         </div>
     </nav>
 
@@ -39,7 +39,7 @@
                     <div class="smart-search-wrap">
                         <label class="smart-search-label" for="smart-search-input">Smart search</label>
                         <input type="search" id="smart-search-input" class="smart-search-input"
-                            placeholder="Search by anything (e.g., White X5 under 70k)"
+                            placeholder="VIN, listing #, or natural language (e.g. white X5 under 70k)"
                             value="{{ active.get('q', '') if active else '' }}"
                             autocomplete="off" spellcheck="false">
                         <div id="smart-parse-chips" class="smart-parse-chips" aria-live="polite"></div>
@@ -494,7 +494,7 @@
 
 </div>
 
-<script src="{{ url_for('static', filename='main.js') }}"></script>
-<script src="{{ url_for('static', filename='listings.js') }}"></script>
+<script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='listings.js') }}" nonce="{{ csp_nonce }}"></script>
 </body>
 </html>

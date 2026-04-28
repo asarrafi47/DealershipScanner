@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2003,GMC,Savana Cargo,Savana 15/25 2WD Conversion (cargo),4.3L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",6,4.3,13,17,15,,,,,
+2003,GMC,Savana Cargo,Savana 15/25 2WD Conversion (cargo),5.3L V8 (LM7),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",8,5.3,12,17,14,,,,,
+2003,GMC,Savana Cargo,Savana 1500/2500 2WD (cargo),4.3L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",6,4.3,13,18,15,,,,,
+2003,GMC,Savana Cargo,Savana 1500/2500 2WD (cargo),5.3L V8 (LM7),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",8,5.3,13,17,15,,,,,
+2003,GMC,Savana Cargo,Savana 15/25 AWD Conversion (cargo),5.3L V8 (LM7),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",8,5.3,12,16,13,,,,,
+2003,GMC,Savana Cargo,Savana 1500/2500 AWD (cargo),5.3L V8 (LM7),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",8,5.3,12,16,14,,,,,

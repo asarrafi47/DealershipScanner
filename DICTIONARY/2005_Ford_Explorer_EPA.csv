@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2005,Ford,Explorer,2WD,4.0L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.0,14,19,16,,,,,
+2005,Ford,Explorer,2WD,4.6L V8,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,4.6,13,18,15,,,,,
+2005,Ford,Explorer,4WD,4.0L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.0,13,18,15,,,,,
+2005,Ford,Explorer,4WD,4.6L V8,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,8,4.6,13,17,14,,,,,
+2005,Ford,Explorer,Sport Trac 2WD FFV,FFV 4.0L V6 (FLEX-FUEL),Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 2WD,6,4.0,13,19,15,,,,,
+2005,Ford,Explorer,Sport Trac 4WD FFV,FFV 4.0L V6 (FLEX-FUEL),Automatic 5-spd,All-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,6,4.0,13,18,15,,,,,
+2005,Ford,Explorer,4WD FFV,FFV 4.0L V6 (FLEX-FUEL),Automatic 5-spd,All-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 4WD,6,4.0,13,18,15,,,,,
+2005,Ford,Explorer,2WD FFV,FFV 4.0L V6 (FLEX-FUEL),Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,6,4.0,13,19,15,,,,,

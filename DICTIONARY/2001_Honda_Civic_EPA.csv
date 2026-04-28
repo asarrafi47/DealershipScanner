@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2001,Honda,Civic,HX,1.7L I4 (VTEC),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.7,30,36,32,,,,,
+2001,Honda,Civic,HX,1.7L I4 (VTEC),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.7,31,39,34,,,,,
+2001,Honda,Civic,Civic,1.7L I4 (SOHC-VTEC),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.7,26,34,29,,,,,
+2001,Honda,Civic,Civic,1.7L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.7,26,34,29,,,,,
+2001,Honda,Civic,Civic,1.7L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.7,28,35,31,,,,,
+2001,Honda,Civic,Civic,1.7L I4 (SOHC-VTEC),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.7,27,33,30,,,,,
+2001,Honda,Civic,CNG,CNG 1.7L I4 (CNG) Natural Gas,Automatic (variable gear ratios),Front-Wheel Drive,Natural Gas,Compact Cars,4,1.7,26,31,28,,,,,

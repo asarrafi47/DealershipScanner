@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from backend.utils.field_clean import is_effectively_empty
+from backend.utils.field_clean import coerce_drivetrain_stored, is_effectively_empty
 
 
 def _parse_existing_packages(raw: Any) -> dict[str, Any]:
@@ -32,7 +32,8 @@ def merge_monroney_parsed_into_vehicle(vehicle: dict[str, Any], parsed: dict[str
     touched: list[str] = []
 
     def fill_text(key: str, val: Any) -> None:
-        if key not in vehicle or not is_effectively_empty(vehicle.get(key)):
+        # Fill when missing or empty; do not clobber a real existing value.
+        if key in vehicle and not is_effectively_empty(vehicle.get(key)):
             return
         s = str(val).strip() if val is not None else ""
         if not s or is_effectively_empty(s):
@@ -40,9 +41,25 @@ def merge_monroney_parsed_into_vehicle(vehicle: dict[str, Any], parsed: dict[str
         vehicle[key] = s[:500]
         touched.append(key)
 
+    def _replace_junk_drivetrain(vehicle: dict[str, Any], new_raw: Any) -> bool:
+        cur = vehicle.get("drivetrain")
+        s = str(new_raw).strip() if new_raw is not None else ""
+        if not s or is_effectively_empty(s):
+            return False
+        s = coerce_drivetrain_stored(s) or s
+        s = s[:80]
+        if is_effectively_empty(cur):
+            vehicle["drivetrain"] = s
+            return True
+        if isinstance(cur, str) and "schema.org" in cur.lower():
+            vehicle["drivetrain"] = s
+            return True
+        return False
+
     fill_text("engine_description", parsed.get("engine_description") or parsed.get("engine"))
     fill_text("transmission", parsed.get("transmission"))
-    fill_text("drivetrain", parsed.get("drivetrain") or parsed.get("drive_type"))
+    if _replace_junk_drivetrain(vehicle, parsed.get("drivetrain") or parsed.get("drive_type")):
+        touched.append("drivetrain")
     fill_text("fuel_type", parsed.get("fuel_type"))
 
     cyl = parsed.get("cylinders")

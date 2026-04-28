@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,Honda,Prologue,FWD,EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,107,91,99,,,,,
+2024,Honda,Prologue,AWD Elite,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,99,84,92,,,,,
+2024,Honda,Prologue,AWD Touring,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,101,88,95,,,,,

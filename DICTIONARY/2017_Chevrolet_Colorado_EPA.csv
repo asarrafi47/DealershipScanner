@@ -1,0 +1,11 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2017,Chevrolet,Colorado,2WD,2.5L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.5,19,26,22,,,,,
+2017,Chevrolet,Colorado,2WD,2.5L I4 (SIDI),Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.5,20,26,22,,,,,
+2017,Chevrolet,Colorado,2WD,Diesel 2.8L I4 Diesel,Automatic 6-spd,Rear-Wheel Drive,Diesel,Small Pickup Trucks 2WD,4,2.8,22,30,25,,,,,
+2017,Chevrolet,Colorado,2WD,3.6L V6 (SIDI),Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,3.6,18,25,20,,,,,
+2017,Chevrolet,Colorado,4WD,2.5L I4 (SIDI),Automatic 6-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,4,2.5,19,24,21,,,,,
+2017,Chevrolet,Colorado,4WD,3.6L V6 (SIDI),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,3.6,17,24,19,,,,,
+2017,Chevrolet,Colorado,4WD,Diesel 2.8L I4 Diesel,Automatic 6-spd,Four-Wheel Drive,Diesel,Small Pickup Trucks 4WD,4,2.8,20,28,23,,,,,
+2017,Chevrolet,Colorado,Cab Chassis 2WD,3.6L V6 (SIDI),Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,6,3.6,15,15,15,,,,,
+2017,Chevrolet,Colorado,ZR2 4WD,3.6L V6 (SIDI),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,3.6,16,18,17,,,,,
+2017,Chevrolet,Colorado,ZR2 4WD,Diesel 2.8L I4 Diesel,Automatic 6-spd,Four-Wheel Drive,Diesel,Small Pickup Trucks 4WD,4,2.8,19,22,20,,,,,

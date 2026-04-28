@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2018,Acura,TLX,FWD,2.4L I4 (SIDI),Automatic (AM-S8),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.4,23,33,27,,,,,
+2018,Acura,TLX,FWD,3.5L V6 (SIDI),Automatic (S9),Front-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,20,32,24,,,,,
+2018,Acura,TLX,FWD A-SPEC,3.5L V6 (SIDI),Automatic (S9),Front-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,20,30,23,,,,,
+2018,Acura,TLX,AWD,3.5L V6 (SIDI),Automatic (S9),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,21,30,24,,,,,
+2018,Acura,TLX,AWD A-SPEC,3.5L V6 (SIDI),Automatic (S9),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,20,29,23,,,,,

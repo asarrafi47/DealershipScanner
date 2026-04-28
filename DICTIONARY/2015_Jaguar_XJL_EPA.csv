@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Jaguar,XJL,XJL,5.0L V8 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,15,23,18,,,,,
+2015,Jaguar,XJL,AWD,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,6,3.0,16,24,19,,,,,
+2015,Jaguar,XJL,FFV,FFV 5.0L V8 (SIDI; FFV),Automatic (S8),Rear-Wheel Drive,Premium Gasoline / E85,Large Cars,8,5.0,15,23,18,,,,,
+2015,Jaguar,XJL,FFV,FFV 3.0L V6 (SIDI; FFV),Automatic (S8),Rear-Wheel Drive,Premium Gasoline / E85,Large Cars,6,3.0,17,27,20,,,,,

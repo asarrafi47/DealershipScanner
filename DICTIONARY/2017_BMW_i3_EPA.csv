@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2017,BMW,i3,BEV (60  Amp-hour battery),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Subcompact Cars,,,137,111,124,,,,,
+2017,BMW,i3,BEV (94 Amp-hour battery),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Subcompact Cars,,,129,106,118,,,,,
+2017,BMW,i3,REX  (94 Amp-hour battery),Plug-in Hybrid 0.6L I2 (PHEV; 94 Amp-hour battery),Automatic (A1),Rear-Wheel Drive,Premium Gasoline / Electricity,Subcompact Cars,2,0.6,36,33,35,,,,,

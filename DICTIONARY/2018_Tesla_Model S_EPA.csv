@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2018,Tesla,Model S,75kWh,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Large Cars,,,97,100,98,,,,,
+2018,Tesla,Model S,75D,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,102,105,103,,,,,
+2018,Tesla,Model S,100D,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,101,102,102,,,,,
+2018,Tesla,Model S,P100D,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,92,105,98,,,,,

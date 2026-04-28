@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2007,Chrysler,300 SRT8,300/SRT-8,2.7L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Large Cars,6,2.7,18,26,21,,,,,
+2007,Chrysler,300 SRT8,300/SRT-8,3.5L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Large Cars,6,3.5,17,24,20,,,,,
+2007,Chrysler,300 SRT8,300/SRT-8,5.7L V8,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Large Cars,8,5.7,15,23,18,,,,,
+2007,Chrysler,300 SRT8,300/SRT-8,6.1L V8,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,6.1,13,18,15,,,,,

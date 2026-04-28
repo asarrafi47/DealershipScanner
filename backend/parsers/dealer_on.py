@@ -401,6 +401,39 @@ def _parse_json_list(data, base_url: str, dealer_id: str, dealer_name: str, deal
     return out
 
 
+def _asc_to_dealer_on(item: dict) -> dict:
+    """Convert ASC/GA4 format (item_price, item_id, etc.) to dealer_on format."""
+    result = {}
+    # Map ASC field names to dealer_on equivalents
+    if "item_id" in item:
+        result["vin"] = item["item_id"]
+    if "item_price" in item:
+        result["price"] = item["item_price"]
+    if "item_make" in item:
+        result["make"] = item["item_make"]
+    if "item_model" in item:
+        result["model"] = item["item_model"]
+    if "item_variant" in item:
+        result["trim"] = item["item_variant"]
+    if "item_year" in item:
+        result["year"] = item["item_year"]
+    if "item_color" in item:
+        result["exteriorColor"] = item["item_color"]
+    if "item_number" in item:
+        result["stockNumber"] = item["item_number"]
+    if "item_condition" in item:
+        result["condition"] = item["item_condition"]
+    if "item_fuel_type" in item:
+        result["fuelType"] = item["item_fuel_type"]
+    if "item_type" in item:
+        result["bodyStyle"] = item["item_type"]
+    # Copy any unmapped fields
+    for k, v in item.items():
+        if k not in result and not k.startswith("item_"):
+            result[k] = v
+    return result
+
+
 def _extract_from_html(html: str) -> list | dict | None:
     if not html:
         return None
@@ -409,11 +442,16 @@ def _extract_from_html(html: str) -> list | dict | None:
         (r"window\.InventoryData\s*=\s*(\[.*?\]);?\s*(?:</script>|$)", 1),
         (r"window\.__INITIAL_STATE__\s*=\s*(\{.*?\});?\s*(?:</script>|$)", 1),
         (r"vehicleList\s*=\s*(\[.*?\]);?\s*(?:</script>|$)", 1),
+        (r"ga4ASCDataLayerVehicle\s*=\s*'(\[.*?\])'\s*;", 1),
     ]:
         m = re.search(pattern, html, re.DOTALL)
         if m:
             try:
-                return json.loads(m.group(group))
+                data = json.loads(m.group(group))
+                # If this is GA4 ASC format, convert each item
+                if isinstance(data, list) and data and isinstance(data[0], dict) and "item_id" in data[0]:
+                    data = [_asc_to_dealer_on(item) for item in data]
+                return data
             except json.JSONDecodeError:
                 continue
     return None

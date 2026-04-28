@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2010,Mercedes-Benz,CL-Class,CL550 4matic,5.5L V8 (PR),Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Compact Cars,8,5.5,14,21,17,,,,,
+2010,Mercedes-Benz,CL-Class,CL600,5.5L V12 (PR),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,12,5.5,11,17,14,,,,,
+2010,Mercedes-Benz,CL-Class,CL63 AMG,6.3L V8 (PR),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,6.3,11,18,14,,,,,
+2010,Mercedes-Benz,CL-Class,CL65 AMG,6.0L V12 (PR),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,12,6.0,11,17,13,,,,,

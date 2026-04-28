@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2016,Audi,A8,L,4.0L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,8,4.0,18,29,22,,,,,
+2016,Audi,A8,L,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,6,3.0,19,29,22,,,,,
+2016,Audi,A8,L,Diesel 3.0L V6 Diesel,Automatic (S8),All-Wheel Drive,Diesel,Large Cars,6,3.0,24,36,28,,,,,
+2016,Audi,A8,L,6.3L V12 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,12,6.3,13,22,16,,,,,

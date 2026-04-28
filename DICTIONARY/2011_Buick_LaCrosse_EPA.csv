@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2011,Buick,LaCrosse,LaCrosse,2.4L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,19,29,23,,,,,
+2011,Buick,LaCrosse,LaCrosse,3.6L V6 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.6,17,27,20,,,,,
+2011,Buick,LaCrosse,AWD,3.6L V6 (SIDI),Automatic (S6),All-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.6,16,26,20,,,,,

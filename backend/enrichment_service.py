@@ -396,11 +396,28 @@ def _log_vision_skipped(exc: BaseException, *, context: str = "", raw_response: 
     logger.warning("Vision Skipped%s: %s%s", suffix, exc, snippet)
 
 
-def _fetch_image_b64_optimized(url: str, timeout: int = 25) -> str | None:
+# Browser-like agent so dealer CDNs that require a listing Referer (hotlink / anti-bot) still deliver.
+_GALLERY_UA = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/120.0.0.0 Safari/537.36"
+)
+
+
+def _fetch_image_b64_optimized(
+    url: str, timeout: int = 25, *, referer: str | None = None
+) -> str | None:
+    headers: dict[str, str] = {
+        "User-Agent": _GALLERY_UA,
+        "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+    rfer = (referer or "").strip()
+    if rfer.lower().startswith("http"):
+        headers["Referer"] = rfer[:2000]
     try:
-        r = requests.get(url, timeout=timeout, headers={"User-Agent": "DealershipScanner/1.0"})
-        r.raise_for_status()
-        return _image_to_jpeg_b64(r.content)
+        resp = requests.get(url, timeout=timeout, headers=headers)
+        resp.raise_for_status()
+        return _image_to_jpeg_b64(resp.content)
     except Exception as e:
         logger.debug("Image fetch failed %s: %s", url, e)
         return None

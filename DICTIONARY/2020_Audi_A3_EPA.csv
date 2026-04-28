@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2020,Audi,A3,quattro,2.0L I4 (SIDI),Automatic (AM-S7),All-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,22,30,25,,,,,
+2020,Audi,A3,Cabriolet quattro,2.0L I4 (SIDI),Automatic (AM-S7),All-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,22,30,25,,,,,
+2020,Audi,A3,A3,2.0L I4 (SIDI),Automatic (AM-S7),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,27,36,30,,,,,

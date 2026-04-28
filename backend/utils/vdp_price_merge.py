@@ -19,6 +19,7 @@ _SOURCE_PRIORITY: dict[str, float] = {
     "json_ld_product": 92.0,
     "dataLayer": 88.0,
     "dom_itemprop": 55.0,
+    "dom_meta_price": 52.0,
     "dom_dealer": 45.0,
 }
 

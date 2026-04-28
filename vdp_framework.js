@@ -73,6 +73,171 @@ const MAX_NETWORK_CANDIDATES = 40;
 const VDP_NAV_TIMEOUT_MS = 32000;
 const VDP_SETTLE_MS = 2200;
 
+/** Align with backend.utils.vdp_price_merge._SOURCE_PRIORITY */
+const VDP_PRICE_SOURCE_PRIORITY = {
+  json_ld_offer: 100,
+  json_ld_product: 92,
+  dataLayer: 88,
+  dom_itemprop: 55,
+  dom_meta_price: 52,
+  dom_dealer: 45,
+};
+
+function clampVehiclePrice(n) {
+  if (typeof n !== "number" || !Number.isFinite(n)) return null;
+  if (n < 500 || n > 2_500_000) return null;
+  return n;
+}
+
+/**
+ * Push a numeric hint (browser-side helpers stringify raw).
+ * @param {unknown} raw
+ * @param {string} source
+ * @param {Array<{ value: number, raw: string, source: string }>} hints
+ */
+function pushPriceHintNode(raw, source, hints) {
+  if (raw === null || raw === undefined) return;
+  let num = null;
+  if (typeof raw === "number" && Number.isFinite(raw)) {
+    num = clampVehiclePrice(raw);
+  } else if (typeof raw === "string") {
+    const t = raw.replace(/[$,]/g, "").trim();
+    if (!t || /call|contact|request|quote|inquire/i.test(t)) return;
+    const m = t.match(/(\d{3,7})(?:\.\d{2})?/);
+    if (m) num = clampVehiclePrice(parseFloat(m[1]));
+  }
+  if (num === null) return;
+  hints.push({ value: num, raw: String(raw).slice(0, 60), source: String(source || "?") });
+}
+
+function listingPriceIsEmpty(vehicle) {
+  const p = vehicle && vehicle.price;
+  if (p == null) return true;
+  const s = normStr(p);
+  if (!s) return true;
+  const n = Number(s);
+  if (Number.isFinite(n)) return n <= 0;
+  return true;
+}
+
+function priorityForSource(src) {
+  const s = String(src || "");
+  for (const [k, v] of Object.entries(VDP_PRICE_SOURCE_PRIORITY)) {
+    if (s.startsWith(k)) return v;
+  }
+  if (s.startsWith("dataLayer:")) return VDP_PRICE_SOURCE_PRIORITY.dataLayer;
+  if (s.startsWith("network_json:")) return 35;
+  if (s.startsWith("network:")) return 30;
+  if (s.startsWith("dom_dealer:")) return VDP_PRICE_SOURCE_PRIORITY.dom_dealer;
+  if (s.startsWith("dom_meta_price")) return VDP_PRICE_SOURCE_PRIORITY.dom_meta_price;
+  return 20;
+}
+
+/**
+ * @param {Array<{ value: number, raw?: string, source?: string }>|null|undefined} hints
+ * @returns {[number|null, Record<string, unknown>|null]}
+ */
+function pickBestVdpPrice(hints) {
+  if (!hints || !hints.length) return [null, null];
+  let best = null;
+  let bestPri = -1;
+  /** @type {{ value: number, raw?: string, source?: string }|null} */
+  let bestHint = null;
+  for (const h of hints) {
+    if (!h || typeof h !== "object") continue;
+    const vf = clampVehiclePrice(Number(h.value));
+    if (vf == null) continue;
+    const pri = priorityForSource(h.source);
+    if (pri > bestPri || (pri === bestPri && best != null && vf > best)) {
+      best = vf;
+      bestPri = pri;
+      bestHint = h;
+    }
+  }
+  if (best == null || !bestHint) return [null, null];
+  return [
+    best,
+    {
+      source: String(bestHint.source || "?"),
+      raw: String(bestHint.raw || "").slice(0, 80),
+      candidates: hints.filter((x) => x && x.value != null).length,
+    },
+  ];
+}
+
+/** Keys commonly used across Dealer.com / CDK / Tekion / vAuto-style payloads */
+const NETWORK_PRICE_KEYS = new Set([
+  "internetPrice",
+  "InternetPrice",
+  "internet_price",
+  "salePrice",
+  "SalePrice",
+  "sale_price",
+  "sellingPrice",
+  "SellingPrice",
+  "selling_price",
+  "price",
+  "Price",
+  "vehiclePrice",
+  "VehiclePrice",
+  "vehicle_price",
+  "askingPrice",
+  "AskingPrice",
+  "asking_price",
+  "listPrice",
+  "ListPrice",
+  "list_price",
+  "retailPrice",
+  "RetailPrice",
+  "retail_price",
+  "msrp",
+  "MSRP",
+  "Msrp",
+  "finalPrice",
+  "FinalPrice",
+  "final_price",
+  "cashPrice",
+  "CashPrice",
+  "cash_price",
+  "drivePrice",
+  "DrivePrice",
+  "promotionalPrice",
+  "PromotionalPrice",
+  "specialPrice",
+  "SpecialPrice",
+  "dealerPrice",
+  "DealerPrice",
+  "marketPrice",
+  "MarketPrice",
+  "bestPrice",
+  "BestPrice",
+  "primaryPrice",
+  "PrimaryPrice",
+  "displayPrice",
+  "DisplayPrice",
+  "priceDisplay",
+  "PriceDisplay",
+  "paymentPrice",
+  "advertisedPrice",
+  "AdvertisedPrice",
+]);
+
+function appendPriceHintsFromNetworkJson(parsed, hints, depth = 0) {
+  if (depth > 14 || parsed == null || typeof parsed !== "object") return;
+  if (Array.isArray(parsed)) {
+    for (const x of parsed) appendPriceHintsFromNetworkJson(x, hints, depth + 1);
+    return;
+  }
+  for (const k of Object.keys(parsed)) {
+    if (NETWORK_PRICE_KEYS.has(k)) {
+      pushPriceHintNode(parsed[k], `network_json:${k}`, hints);
+    }
+  }
+  for (const v of Object.values(parsed)) {
+    if (v && typeof v === "object") appendPriceHintsFromNetworkJson(v, hints, depth + 1);
+  }
+}
+
 function normStr(v) {
   if (v == null) return "";
   return String(v).trim();
@@ -238,6 +403,11 @@ function epLikeFromObject(src, out = {}) {
   pick("trim", o.trim || o.trimName);
   if (o.options != null) out._options_hint = Array.isArray(o.options) ? o.options.slice(0, 30) : o.options;
   if (o.features != null) out._features_hint = Array.isArray(o.features) ? o.features.slice(0, 40) : o.features;
+  // Dealer description / seller notes (used for package extraction)
+  const descVal = o.description || o.dealer_description || o.sellerNotes || o.seller_notes
+    || o.remarks || o.comments || o.dealerNotes || o.dealer_notes || o.sellerComments || o.overview;
+  if (descVal && typeof descVal === "string" && descVal.trim().length > 40)
+    pick("description", descVal.trim().slice(0, 6000));
   if (o.vehicleId != null || o.vehicle_id != null) out._vehicle_id = o.vehicleId ?? o.vehicle_id;
   if (o.chromeStyleId != null || o.chrome_style_id != null) out._chrome_style_id = o.chromeStyleId ?? o.chrome_style_id;
   return out;
@@ -307,6 +477,8 @@ function buildPageEvaluateExtractor() {
       domSpecs: {},
       domFeatures: [],
       domBadges: [],
+      dealerDescription: "",
+      vdpPriceHints: [],
       scriptSrcSample: [],
       metaGenerator: "",
     };
@@ -341,7 +513,11 @@ function buildPageEvaluateExtractor() {
           if (!node || typeof node !== "object") continue;
           const t = [].concat(node["@type"] || []);
           const ts = t.map((x) => String(x).toLowerCase());
-          if (ts.some((x) => /vehicle|car|product|automobile/.test(x))) {
+          const hasVin = !!(node.vehicleIdentificationNumber || node.vin || node.VIN);
+          if (
+            ts.some((x) => /vehicle|car|automobile/.test(x)) ||
+            (hasVin && ts.some((x) => x === "product"))
+          ) {
             result.ldJsonVehicle.push(node);
           }
         }
@@ -449,6 +625,153 @@ function buildPageEvaluateExtractor() {
       if (t && t.length < 120) result.domBadges.push(t);
     });
 
+    // Dealer description / seller notes — captured for package extraction in Python
+    const DESCRIPTION_SELECTORS = [
+      ".vehicle-description", ".vehicleDescription", ".vehicle_description",
+      ".dealer-comments", ".dealerComments", ".dealer_comments",
+      ".seller-notes", ".sellerNotes", ".seller_notes",
+      ".vehicle-overview", ".vehicleOverview", ".vehicle_overview",
+      ".about-vehicle", ".aboutVehicle",
+      "[class*='description'][class*='vehicle']",
+      "[class*='dealer'][class*='comment']",
+      "[class*='seller'][class*='note']",
+      "#vehicle-description", "#vehicleDescription",
+      ".listing-description", ".listingDescription",
+      ".vdp-description", ".vdpDescription",
+      "[data-test='vehicle-description']",
+      "[data-testid='description']",
+    ];
+    let dealerDesc = "";
+    for (const sel of DESCRIPTION_SELECTORS) {
+      try {
+        const el = document.querySelector(sel);
+        if (el) {
+          const t = (el.innerText || el.textContent || "").trim();
+          if (t.length > 40) { dealerDesc = t.slice(0, 6000); break; }
+        }
+      } catch (e) { /* ignore */ }
+    }
+    if (dealerDesc) result.dealerDescription = dealerDesc;
+
+    function pushPriceHint(raw, source) {
+      if (raw === null || raw === undefined) return;
+      let num = null;
+      if (typeof raw === "number" && isFinite(raw)) {
+        num = raw;
+      } else if (typeof raw === "string") {
+        const t = raw.replace(/[$,]/g, "").trim();
+        if (!t || /call|contact|request|quote|inquire/i.test(t)) return;
+        const m = t.match(/(\d{3,7})(?:\.\d{2})?/);
+        if (m) num = parseFloat(m[1]);
+      }
+      if (num === null || !isFinite(num) || num < 500 || num > 2500000) return;
+      result.vdpPriceHints.push({ value: num, raw: String(raw).slice(0, 60), source: String(source || "?") });
+    }
+    function walkDataLayerPrice(obj, depth, seen) {
+      if (depth > 14 || !obj || typeof obj !== "object" || seen.has(obj)) return;
+      seen.add(obj);
+      const keys = [
+        "internetPrice",
+        "InternetPrice",
+        "salePrice",
+        "SalePrice",
+        "sellingPrice",
+        "price",
+        "Price",
+        "vehiclePrice",
+        "askingPrice",
+        "listPrice",
+        "retailPrice",
+        "finalPrice",
+        "cashPrice",
+        "msrp",
+        "MSRP",
+        "primaryPrice",
+        "advertisedPrice",
+      ];
+      for (const k of keys) {
+        if (Object.prototype.hasOwnProperty.call(obj, k)) pushPriceHint(obj[k], "dataLayer:" + k);
+      }
+      for (const v of Object.values(obj)) {
+        if (v && typeof v === "object") walkDataLayerPrice(v, depth + 1, seen);
+      }
+    }
+    try {
+      if (window.dataLayer && Array.isArray(window.dataLayer)) {
+        const seen = new WeakSet();
+        for (let i = 0; i < Math.min(40, window.dataLayer.length); i++) {
+          walkDataLayerPrice(window.dataLayer[i], 0, seen);
+        }
+      }
+    } catch (e3) {}
+    function offersFromLd(node) {
+      const out = [];
+      if (!node || typeof node !== "object") return out;
+      const o = node.offers || node.offer;
+      if (!o) return out;
+      return [].concat(o);
+    }
+    for (const node of result.ldJsonVehicle || []) {
+      for (const off of offersFromLd(node)) {
+        if (!off || typeof off !== "object") continue;
+        const p = off.price || off.Price || (off.priceSpecification && off.priceSpecification.price);
+        pushPriceHint(p, "json_ld_offer");
+      }
+      const p2 = node.price || node.Price;
+      if (p2) pushPriceHint(p2, "json_ld_product");
+    }
+    try {
+      document.querySelectorAll('[itemprop="price"],[itemprop=price]').forEach((el, idx) => {
+        if (idx > 12) return;
+        const c = el.getAttribute("content");
+        if (c) pushPriceHint(c, "dom_itemprop");
+        else pushPriceHint((el.textContent || "").trim(), "dom_itemprop");
+      });
+    } catch (e4) {}
+    try {
+      document.querySelectorAll('meta[property="price"],meta[itemprop="price"]').forEach((el, idx) => {
+        if (idx > 10) return;
+        const c = el.getAttribute("content");
+        if (c) pushPriceHint(c, "dom_meta_price");
+      });
+    } catch (e4b) {}
+    const priceSelectors = [
+      ".vehicle-price",
+      ".internetPrice",
+      ".internet-price",
+      ".sale-price",
+      ".final-price",
+      ".primary-price",
+      ".price-value",
+      ".pricing-price",
+      ".price-block",
+      ".highlight-price",
+      ".srp-price",
+      ".priceDisplay",
+      "#vehicle-price",
+      "#price",
+      "[class*='vehicle-price']",
+      "[class*='asking-price']",
+      "[class*='list-price']",
+      "[data-vehicle-price]",
+      "[data-price]",
+      "[data-selling-price]",
+      "[data-internet-price]",
+      "[data-msrp]",
+      "[data-final-price]",
+      "[data-testid*='price']",
+      "[class*='PriceDisplay']",
+      "[class*='vehiclePrice']",
+    ];
+    for (const sel of priceSelectors) {
+      try {
+        const el = document.querySelector(sel);
+        if (!el) continue;
+        const t = (el.textContent || "").trim();
+        if (t && t.length < 80) pushPriceHint(t, "dom_dealer:" + sel.slice(0, 40));
+      } catch (e5) {}
+    }
+
     return result;
   };
 }
@@ -475,7 +798,9 @@ async function runVdpExtraction(page, vdpUrl, options = {}) {
         return;
       }
       const { score, keyHits, epObjects } = analyzeJsonForVehicleSignals(parsed);
-      if (score < 6 && epObjects.length === 0) return;
+      const hintProbe = [];
+      appendPriceHintsFromNetworkJson(parsed, hintProbe);
+      if (score < 6 && epObjects.length === 0 && hintProbe.length === 0) return;
       networkCandidates.push({
         url: url.slice(0, 500),
         score,
@@ -575,6 +900,15 @@ async function runVdpExtraction(page, vdpUrl, options = {}) {
 
   const { merged: mergedEp, provenance: epProvenance } = mergeEpCandidates(epFromNetwork, expectedVin);
 
+  const allPriceHints = [...((pageBundle && pageBundle.vdpPriceHints) || [])];
+  for (const c of networkCandidates) {
+    if (c.parsed) appendPriceHintsFromNetworkJson(c.parsed, allPriceHints);
+  }
+  for (const hit of (pageBundle && pageBundle.inlineJsonHits) || []) {
+    if (hit && !hit._rawSnippet && typeof hit === "object") appendPriceHintsFromNetworkJson(hit, allPriceHints);
+  }
+  const [vdpPrice, vdpPriceMeta] = pickBestVdpPrice(allPriceHints);
+
   const networkLayerSummary = networkCandidates.slice(-15).map((c) => ({
     url: c.url,
     score: c.score,
@@ -601,11 +935,13 @@ async function runVdpExtraction(page, vdpUrl, options = {}) {
     domSpecKeys: Object.keys(domSpecs).length,
     domFeatureCount: ((pageBundle && pageBundle.domFeatures) || []).length,
     domBadgeCount: ((pageBundle && pageBundle.domBadges) || []).length,
+    vdpPriceHintCount: allPriceHints.length,
   };
 
   if (process.env.SCANNER_VDP_DEBUG === "1" || process.env.SCANNER_VDP_DEBUG === "true") {
+    const pstr = vdpPrice != null ? ` price=${Math.round(vdpPrice)}` : "";
     console.info(
-      `[vdp] ${normStr(vdpUrl).slice(0, 90)} score=${diagnostics.bestNetworkScore} eps=${diagnostics.epFragmentCount} ms=${diagnostics.durationMs}`
+      `[vdp] ${normStr(vdpUrl).slice(0, 90)} score=${diagnostics.bestNetworkScore} eps=${diagnostics.epFragmentCount}${pstr} ms=${diagnostics.durationMs}`
     );
   }
 
@@ -613,6 +949,8 @@ async function runVdpExtraction(page, vdpUrl, options = {}) {
     url: vdpUrl,
     expectedVin: expectedVin || null,
     mergedEp,
+    vdpPrice,
+    vdpPriceMeta,
     epProvenance,
     platformHints: fp,
     layers: {
@@ -623,6 +961,7 @@ async function runVdpExtraction(page, vdpUrl, options = {}) {
       domSpecs,
       domFeatures: ((pageBundle && pageBundle.domFeatures) || []).slice(0, 40),
       domBadges: ((pageBundle && pageBundle.domBadges) || []).slice(0, 20),
+      dealerDescription: (pageBundle && pageBundle.dealerDescription) || "",
       pageGlobals: (pageBundle && pageBundle.globalsTried) || [],
     },
     diagnostics,
@@ -660,29 +999,116 @@ function applyExtractionToVehicle(vehicle, extraction, vinToEp) {
     vinToEp.set(vin, { ...prior, ...merged });
     vehicle._ep_analytics = { ...(vehicle._ep_analytics || {}), ...merged };
   }
+
+  // Capture dealer description for package extraction in Python post-pipeline
+  const dealerDesc = (extraction.layers && extraction.layers.dealerDescription) || merged.description || "";
+  if (dealerDesc && dealerDesc.length > 40 && !vehicle.description) {
+    vehicle.description = dealerDesc.slice(0, 6000);
+  }
+
+  if (extraction.vdpPrice != null && listingPriceIsEmpty(vehicle)) {
+    vehicle.price = Math.round(Number(extraction.vdpPrice));
+    vehicle._vdp_price_meta = extraction.vdpPriceMeta || { source: "vdp_listing" };
+  }
 }
 
 /**
- * Batch: visit up to maxVisits unique VDP URLs and merge into vinToEp + vehicles.
+ * Parallel listing fetches using independent browser tabs (Puppeteer ``Browser``).
+ * @param {import("puppeteer").Browser} browser
+ * @param {Array<{ url: string, sample: Record<string, unknown> }>} entries
+ * @param {number} concurrency
+ * @param {{ userAgent?: string, viewportWidth?: number, viewportHeight?: number }} [options]
  */
-async function runBatchVdpExtraction(page, vehicles, vinToEp, _baseUrl, maxVisits) {
-  if (!maxVisits || maxVisits <= 0 || !vehicles || !vehicles.length) return;
-  let n = 0;
-  const seenUrl = new Set();
+async function fetchVdpExtractionsWithPool(browser, entries, concurrency, options = {}) {
+  /** @type {Map<string, Record<string, unknown>>} */
+  const results = new Map();
+  if (!entries.length || !browser || typeof browser.newPage !== "function") return results;
+
+  const ua = options.userAgent || "";
+  const vw = options.viewportWidth || 1920;
+  const vh = options.viewportHeight || 1080;
+  const nWorkers = Math.max(1, Math.min(Math.max(1, concurrency || 12), 64, entries.length));
+
+  let next = 0;
+  async function worker() {
+    const page = await browser.newPage();
+    try {
+      if (ua) await page.setUserAgent(ua);
+      await page.setViewport({ width: vw, height: vh });
+      while (true) {
+        const i = next++;
+        if (i >= entries.length) break;
+        const { url, sample } = entries[i];
+        try {
+          const extraction = await runVdpExtraction(page, url, { expectedVin: normStr(sample.vin) });
+          results.set(url, extraction);
+        } catch (e) {
+          console.warn(`[vdp] extraction failed: ${String(e.message || e).slice(0, 140)}`);
+        }
+      }
+    } finally {
+      await page.close().catch(() => {});
+    }
+  }
+
+  await Promise.all(Array.from({ length: nWorkers }, () => worker()));
+  return results;
+}
+
+/**
+ * Batch VDP visits: (1) up to ``maxEpVisits`` unique listing URLs for analytics / ep merge;
+ * (2) optional extra visits for vehicles still missing price (``priceFillMax`` unique URLs).
+ * Cached by URL so every vehicle with the same ``_detail_url`` gets the same extraction without re-navigation.
+ *
+ * @param {import("puppeteer").Browser} browser — Puppeteer browser (not a single Page).
+ * @param options.parallel — concurrent tabs (default 12).
+ */
+async function runBatchVdpExtraction(browser, vehicles, vinToEp, _baseUrl, maxEpVisits, priceFillMax, options = {}) {
+  const epMax = maxEpVisits != null ? Math.max(0, Number(maxEpVisits)) : 0;
+  const pMax = priceFillMax != null ? Math.max(0, Number(priceFillMax)) : 0;
+  const parallel = Math.max(1, Math.min(64, Number(options.parallel) || 12));
+  if ((!epMax && !pMax) || !vehicles || !vehicles.length) return;
+  if (!browser || typeof browser.newPage !== "function") {
+    console.warn("[vdp] runBatchVdpExtraction: expected Puppeteer Browser with newPage(); skipping VDP batch");
+    return;
+  }
+
+  /** @type {Map<string, Record<string, unknown>>} */
+  const extractionByUrl = new Map();
+
+  /**
+   * @param {(v: Record<string, unknown>) => boolean} predicate
+   */
+  function orderedUniqueUrls(predicate) {
+    const ordered = [];
+    const seen = new Set();
+    for (const v of vehicles) {
+      const u = normStr(v._detail_url);
+      if (!u || !u.startsWith("http")) continue;
+      if (!predicate(v)) continue;
+      if (seen.has(u)) continue;
+      seen.add(u);
+      ordered.push({ url: u, sample: v });
+    }
+    return ordered;
+  }
+
+  const phase1 = orderedUniqueUrls(() => true).slice(0, epMax);
+  const batch1 = await fetchVdpExtractionsWithPool(browser, phase1, parallel, options);
+  for (const [k, val] of batch1) extractionByUrl.set(k, val);
+
+  if (pMax > 0) {
+    const pending = orderedUniqueUrls((v) => listingPriceIsEmpty(v))
+      .filter(({ url }) => !extractionByUrl.has(url))
+      .slice(0, pMax);
+    const batch2 = await fetchVdpExtractionsWithPool(browser, pending, parallel, options);
+    for (const [k, val] of batch2) extractionByUrl.set(k, val);
+  }
+
   for (const v of vehicles) {
     const u = normStr(v._detail_url);
-    if (!u || !u.startsWith("http")) continue;
-    if (seenUrl.has(u)) continue;
-    seenUrl.add(u);
-    const expectedVin = normStr(v.vin);
-    try {
-      const extraction = await runVdpExtraction(page, u, { expectedVin });
-      applyExtractionToVehicle(v, extraction, vinToEp);
-    } catch (e) {
-      console.warn(`[vdp] extraction failed: ${String(e.message || e).slice(0, 140)}`);
-    }
-    n++;
-    if (n >= maxVisits) break;
+    if (!u || !extractionByUrl.has(u)) continue;
+    applyExtractionToVehicle(v, extractionByUrl.get(u), vinToEp);
   }
 }
 
@@ -690,6 +1116,7 @@ module.exports = {
   VEHICLE_SIGNAL_KEYS,
   runVdpExtraction,
   runBatchVdpExtraction,
+  fetchVdpExtractionsWithPool,
   applyExtractionToVehicle,
   analyzeJsonForVehicleSignals,
   mergeEpCandidates,
@@ -698,4 +1125,6 @@ module.exports = {
   fingerprintFromSignals,
   shouldSkipExteriorOverwrite,
   collectEpPayloadsFromJson,
+  listingPriceIsEmpty,
+  pickBestVdpPrice,
 };

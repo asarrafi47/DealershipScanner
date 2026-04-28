@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Buick,Encore,GX FWD (Flex Fuel),FFV 1.2L I3 (SIDI; FFV),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline / E85,Small Sport Utility Vehicle 2WD,3,1.2,30,31,30,,,,,
+2026,Buick,Encore,GX FWD,1.3L I3 (SIDI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,3,1.3,29,31,30,,,,,
+2026,Buick,Encore,GX AWD,1.3L I3 (SIDI),Automatic 9-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,3,1.3,26,28,27,,,,,

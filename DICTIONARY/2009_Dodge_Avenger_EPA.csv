@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2009,Dodge,Avenger,Avenger,2.4L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,21,30,24,,,,,
+2009,Dodge,Avenger,Avenger,3.5L V6,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,16,27,20,,,,,
+2009,Dodge,Avenger,Avenger,FFV 2.7L V6 (GAS 370),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline / E85,Midsize Cars,6,2.7,19,27,22,,,,,

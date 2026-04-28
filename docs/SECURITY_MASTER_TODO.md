@@ -23,7 +23,7 @@
 | 1     | Secrets & environment        | 0          |
 | 2     | Identity, sessions, CSRF     | 0          |
 | 3     | Input validation & stability | 0          |
-| 4     | Frontend XSS & CSP           | 0 (CSP: report-only opt-in; enforce + dev pages TBD) |
+| 4     | Frontend XSS & CSP           | 0          |
 | 5     | APIs, abuse, LLM surfaces    | 0          |
 | 6     | Dev / operator tooling       | 0          |
 
@@ -38,7 +38,7 @@
 | `/inventory`, `POST /inventory/*` | **Yes** — `session['user_id']` (app `users` table) | CSRF on POST; per-IP rate limit on VIN add; rows scoped to `user_id` in `dealer_portal.db` |
 | `/admin/*` (store dashboard, inventory, scans) | **Yes** — same app session; **admin** role or **dealer_staff** with `dealer_id` / `dealership_registry_id` on `users` row | CSRF on POST; inventory rows scoped to dealer match on `cars`; internal notes never exposed on public `/car` JSON; re-scan subprocess **off** unless `ALLOW_STORE_ADMIN_RESCAN=1` and caller is **admin** |
 | `/dealer-uploads/<user_id>/<vehicle_id>/<file>` | **Yes** — path `user_id` must match session | JPEG/PNG/WebP only at upload; filenames are server-generated; `send_from_directory` under upload root |
-| `/logout` | N/A | Clears Flask session (`GET` or `POST`) |
+| `/logout` | N/A | `POST` only; CSRF form; clears Flask session; `GET /logout` → **405** (avoids logout CSRF) (see **SEC-060**). |
 | `/mfa/choose` | **Yes** — `mfa_pending_user_id` in session (post-password) | CSRF on **POST**; user selects **email**, **TOTP** (if enabled), or **phone QR** (when `REDIS_URL` or in-memory in non-prod; see **SEC-063**); **POST** sends the email OTP when applicable |
 | `/mfa/qr-wait`, `/mfa/qr-approve-png`, `POST /mfa/qr/complete` | **Yes** — same `mfa_pending_user_id` + `mfa_qr_attempt_id` (desktop) | `POST /mfa/qr/complete` is CSRF-protected; desktop Socket.IO `mfa_qr_subscribe` requires matching session + attempt; PNG only for the session that created the attempt |
 | `GET/POST /mfa/qr-confirm/<token>` | **No** (browser on phone) | **Unguessable** `token` in URL + **per-view** `ap_nonce` in POST (no session CSRF); per-IP rate limit; state in **Redis** (or in-memory in dev; production needs `REDIS_URL`) with short TTL |
@@ -62,7 +62,6 @@
 | `FLASK_ENV=production` | Production | Enables strict checks below |
 | `SECRET_KEY` or `FLASK_SECRET_KEY` | `FLASK_ENV=production` | Flask session signing |
 | `ADMIN_PASSWORD` | `FLASK_ENV=production` | Bootstrap/update `/dev` admin hash |
-| `ALLOW_DEFAULT_APP_USER=1` | Optional in production | Allow seeded `admin`/`password` app user (discouraged) |
 | `SESSION_COOKIE_SECURE=0` | Local HTTPS testing | Allow session cookie without HTTPS |
 | `MIN_PASSWORD_LENGTH` | Optional | Registration (default 8) |
 | `USERS_DB_PATH` | Optional | Default `users.db` (app `users` table) |
@@ -98,7 +97,10 @@
 | `DEV_DISABLE_PUBLIC_REGISTER` | Non-production | When truthy, closes `/dev/register` locally |
 | `CHAT_MAX_MESSAGE_CHARS` | Optional | Default 4000 |
 | `CHAT_MAX_BODY_BYTES` | Optional | Default 65536 |
-| `CSP_REPORT_ONLY` | Optional (`1` / `true`) | Adds `Content-Security-Policy-Report-Only` (see SEC-032) |
+| `MAX_REQUEST_BODY_BYTES` | Optional | Max Werkzeug request size (default ≥ 9 MiB; covers JSON APIs + dealer multipart) |
+| `CSP_ENFORCE` | Optional | `1`/`0`: force `Content-Security-Policy` on vs off. If unset, **on** in production, **off** in non-production (see SEC-032). |
+| `CSP_REPORT_ONLY` | Optional (`1` / `true`) | `Content-Security-Policy-Report-Only` when `CSP_ENFORCE` is off (see SEC-032) |
+| `RATE_LIMIT_SQLITE_PATH` | Optional | Shared SQLite file for per-IP rate limit state across multiple workers (see SEC-040) |
 | `GOOGLE_CSE_API_KEY` | Optional spec search tier | Google Programmable Search JSON API key (never commit; used by `scripts/backfill_vehicle_specs.py` / `POST /dev/api/cars/<id>/spec-backfill` only when enabled) |
 | `GOOGLE_CSE_ID` | With `GOOGLE_CSE_API_KEY` | Programmable Search Engine cx identifier |
 | `SPEC_SEARCH_EXTRA_ALLOWED_HOSTS` | Optional | Comma-separated extra hostnames allowed for follow-up HTTP GET after CSE (default: `fueleconomy.gov`, `epa.gov` only) |
@@ -125,7 +127,7 @@
 | **Validation** | `FLASK_ENV=production python -c "import backend.main"` → `RuntimeError`; with `SECRET_KEY` set → import succeeds. |
 | **Last verified** | 2026-04-18 |
 
-### SEC-002 — Remove or dev-gate default app user
+### SEC-002 — No default `admin` / `password` app user
 
 | Field | Content |
 |-------|---------|
@@ -165,9 +167,19 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/utils/csrf.py`, `backend/main.py`, `backend/dev_routes.py`, `backend/dev_console.py`, templates, `frontend/static/{dev.js,listings.js,car_chat.js,dev_console.js}` |
-| **Outcome** | Form POSTs use hidden `csrf_token`; JSON / DELETE use `X-CSRF-Token` (same session token). |
-| **Validation** | Replay POST without token → 403; with token from same session → success (see manual / test client). |
-| **Last verified** | 2026-04-18 |
+| **Outcome** | Form POSTs use hidden `csrf_token` (incl. `POST /logout`); JSON / DELETE use `X-CSRF-Token` (same session token). |
+| **Validation** | Replay POST without token → 403; with token from same session → success; `python -m pytest tests/test_app_security_basics.py` (logout 403/405). |
+| **Last verified** | 2026-04-22 |
+
+### SEC-060 — App `/logout` POST + CSRF
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/main.py` (`logout_page`, `before_request` CSRF for `logout_page`); `frontend/templates/_app_logout.html` + nav includes |
+| **Outcome** | `POST /logout` only, with `csrf_token` in form. `GET /logout` returns **405**. Prevents cross-site “logout” image tricks. |
+| **Validation** | `GET /logout` → 405; `POST` without valid CSRF → 403. `python -m pytest tests/test_app_security_basics.py`. |
+| **Last verified** | 2026-04-22 |
 
 ### SEC-012 — Registration safety
 
@@ -235,11 +247,11 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/main.py` (login/register session, `/logout`, CSRF branch), `backend/db/users_db.py` (`get_user_by_login`, `save_user` returns id), `backend/dealer_portal.py`, `backend/db/dealer_portal_db.py`, `backend/utils/dealer_vin_prefill.py`, `frontend/templates/dealer_inventory.html`, nav in `dashboard.html` / `listings.html` / `car.html` |
-| **Outcome** | Successful `/login` and `/register` set `session['user_id']` + `session['username']`; `/logout` clears session. Dealer inventory lives in `dealer_portal.db` (path `DEALER_PORTAL_DB_PATH`). Mutating dealer routes validate CSRF form token. VIN add is rate-limited per IP (`RATE_LIMIT_DEALER_VIN_PER_MIN`, default 20/min). Photo uploads: MIME allow-list, max bytes (`DEALER_UPLOAD_MAX_BYTES`), bounded file count; gallery URLs stored as JSON on the vehicle row; files on disk under `DEALER_UPLOAD_ROOT` (default `uploads/dealer/`). |
+| **Outcome** | Successful `/login` and `/register` set `session['user_id']` + `session['username']`; `POST /logout` clears session (see SEC-060). Dealer inventory lives in `dealer_portal.db` (path `DEALER_PORTAL_DB_PATH`). Mutating dealer routes validate CSRF form token. VIN add is rate-limited per IP (`RATE_LIMIT_DEALER_VIN_PER_MIN`, default 20/min). Photo uploads: MIME allow-list, max bytes (`DEALER_UPLOAD_MAX_BYTES`), bounded file count; gallery URLs stored as JSON on the vehicle row; files on disk under `DEALER_UPLOAD_ROOT` (default `uploads/dealer/`). |
 | **Validation** | `python -m pytest tests/test_dealer_portal.py`; replay `POST /inventory/add-vin` without `csrf_token` → 403; logged-out `GET /inventory` → redirect to `/login`. |
 | **Last verified** | 2026-04-21 |
 
-### SEC-060 — Stripe org billing (subscription gate, webhook verification, admin bypass)
+### SEC-059 — Stripe org billing (subscription gate, webhook verification, admin bypass)
 
 | Field | Content |
 |-------|---------|
@@ -248,6 +260,16 @@
 | **Outcome** | One Stripe subscription per org (dealership). New registrations either create an org (owner) or join via invite; non-admin users require an active org subscription to access paid surfaces. Stripe webhook is signature-verified and is the only source of truth for subscription activation. Admin users bypass Stripe and gates via env-driven bootstrap (no hard-coded accounts). |
 | **Validation** | (1) With billing enabled, register non-admin → redirected to Stripe Checkout; no access to paid routes until webhook marks subscription active. (2) Replay webhook with invalid signature → 400/403 and no state change. (3) With `APP_ADMIN_EMAILS` containing a user email, that user registers/logs in without Stripe redirect and can access gated routes. (4) Confirm no Stripe secrets are logged or rendered to templates. |
 | **Last verified** | 2026-04-25 |
+
+### SEC-064 — Runtime SQLite not tracked in git
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `.gitignore` (root app DB paths); `git rm --cached` for previously tracked `users.db`, `inventory.db`, `dev_users.db`, `incomplete_listings.db`, `dealer_portal.db`, `backend/database.db` |
+| **Outcome** | Local/ops database files stay out of version control; reference data under `data/vehicle_reference/` and similar **remain** explicitly tracked. |
+| **Validation** | `git ls-files '*.db'` at repo root — no runtime app DBs. |
+| **Last verified** | 2026-04-22 |
 
 ---
 
@@ -262,6 +284,16 @@
 | **Outcome** | Non-numeric `max_price`, `max_mileage`, `radius` → `None` filters, no exception. |
 | **Validation** | `/search?max_price=abc&max_mileage=xx` → 200, no traceback in logs. |
 | **Last verified** | 2026-04-18 |
+
+### SEC-061 — Max request / JSON size
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/main.py` (`app.config["MAX_CONTENT_LENGTH"]`, `MAX_REQUEST_BODY_BYTES`); `api_search_smart` content-length check vs `CHAT_MAX_BODY_BYTES` |
+| **Outcome** | Global Werkzeug cap (default max(9 MiB, 2× `CHAT_MAX_BODY_BYTES`)) to reduce oversized POST DoS. `/api/search/smart` returns 413 for bodies over `CHAT_MAX_BODY_BYTES` (aligned with chat). |
+| **Validation** | `python -m pytest tests/test_app_security_basics.py::test_smart_search_payload_too_large`. |
+| **Last verified** | 2026-04-22 |
 
 ### SEC-021 — Admin `next` redirect hardening
 
@@ -297,15 +329,15 @@
 | **Validation** | Grep `innerHTML` — each site reviewed; logs use `escHtml` per line. |
 | **Last verified** | 2026-04-18 |
 
-### SEC-032 — Content-Security-Policy (optional hardening)
+### SEC-032 — Content-Security-Policy (enforce + report-only)
 
 | Field | Content |
 |-------|---------|
-| **Status** | In progress |
-| **Scope** | `backend/main.py`, `frontend/templates/{listings,car}.html`, `frontend/static/{main,car_page}.js`, `frontend/static/style.css` |
-| **Outcome** | **Done for this pass:** (1) Listings boot data → `application/json` script tags + `main.js` parse. (2) Car gallery + history → `car_page.js`. (3) Car inline `<style>` + small inline layout styles → `style.css`; `javascript:` back link → `<button>` + JS. **Opt-in:** `CSP_REPORT_ONLY=1` sends a report-only policy (`script-src 'self' https://esm.sh`, Motion; Google Fonts on `style-src`/`font-src`/`connect-src`; dealer images `http:`/`https:`). **Still TBD:** strict enforcement / nonces for `application/json` `<script>` blobs if browsers report them; `/dev` and auth templates not yet audited for CSP. |
-| **Validation** | Listings + car pages load and behave (gallery, thumbs, history list, smart search). With `CSP_REPORT_ONLY=1`, response includes `Content-Security-Policy-Report-Only`; watch browser console / reporting endpoint for remaining violations. |
-| **Last verified** | 2026-04-18 |
+| **Status** | Done |
+| **Scope** | `backend/main.py` (`CSP_ENFORCE`, `CSP_REPORT_ONLY`, per-request nonce, `g.csp_nonce`), all app templates with `<script>` (listings, car, dashboard, auth, `dev*`, `dev_manifest`, `_app_logout.html` partial) |
+| **Outcome** | Enforced `Content-Security-Policy` in production by default; per-request `script-src` **nonce** on all script elements (incl. `type="application/json"` blobs). `style-src` includes `unsafe-inline` for existing `style=""` until migrated to classes. `CSP_ENFORCE=0` / `1` overrides env default; if enforcement is off, `CSP_REPORT_ONLY=1` still sends report-only policy. |
+| **Validation** | `CSP_ENFORCE=1` → `GET /login` includes `Content-Security-Policy` with `nonce-`; public pages and `/dev` load. `python -m pytest tests/test_app_security_basics.py`. |
+| **Last verified** | 2026-04-22 |
 
 ---
 
@@ -317,9 +349,9 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/main.py`, `backend/utils/ip_rate_limit.py` |
-| **Outcome** | Per-IP sliding window (default 90/min, env-tunable). In-process only — use a reverse proxy or Redis for multi-worker deployments. |
-| **Validation** | Burst > limit → HTTP 429 JSON `rate_limited`. |
-| **Last verified** | 2026-04-18 |
+| **Outcome** | Per-IP sliding window (default 90/min, env-tunable). Optional `RATE_LIMIT_SQLITE_PATH` shares counters across gunicorn/uwsgi workers on the same host (SQLite WAL + busy timeout). For multi-node, use a reverse proxy or Redis. |
+| **Validation** | Burst > limit → HTTP 429 JSON `rate_limited`; with `RATE_LIMIT_SQLITE_PATH` set, `python -m pytest tests/test_app_security_basics.py::test_ip_rate_limit_sqlite_shared`. |
+| **Last verified** | 2026-04-22 |
 
 ### SEC-041 — `/api/car/<id>/chat` controls
 
@@ -340,6 +372,16 @@
 | **Outcome** | API keys read from environment only (e.g. `OPENAI_API_KEY`); no hardcoded secrets in repo from review. |
 | **Validation** | `rg` for key-like literals in `backend/ai_agent.py` / `llm/` — none committed. |
 | **Last verified** | 2026-04-18 |
+
+### SEC-058 — Ollama LLaVA (listing gallery + interior)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/vision/ollama_llava.py` |
+| **Outcome** | Vision calls go to operator-configured `OLLAMA_HOST` (default loopback). Listing image URLs are fetched with browser-like headers and the vehicle’s VDP URL as `Referer` when `_detail_url` is available (avoids many dealer CDN 403s on unauthenticated fetches). Gallery filter uses URL heuristics before LLM (F&I / VPP / plan-overview path substrings) and **lot-score demotion** for F&I-like URL tokens. **Thin bar** dimensions auto-drop as `marketing_strip` and override a bad `keep`. **No** auto pixel-triage of portrait “flyers” (that mis-tagged real 3:4/4:5 lot photos). `warranty_flyer_page` and technical rows are excluded from empty-set fallback. Prompts and per-image user triage text stress **landscape** and text-heavy F&I / VPP slides. No secrets in prompts. |
+| **Validation** | `python -m pytest tests/test_ollama_llava.py`. |
+| **Last verified** | 2026-04-22 |
 
 ### SEC-043 — Trusted client IP (rate limits, `X-Forwarded-For`)
 
@@ -440,14 +482,20 @@
 | 2026-04-20 | **SEC-056:** KBB IDWS — env-only `KBB_API_KEY`, HTTPS client, dev `kbb-refresh` route, optional `SCANNER_POST_KBB` / `--post-kbb`; env table + **SEC-013** surface list updated. |
 | 2026-04-20 | **SEC-057:** Store admin at `/admin` (session + dealer scope + CSRF); `scan_runs` table; optional `ALLOW_STORE_ADMIN_RESCAN` gated scanner subprocess; **SEC-013** + env quick reference updated. |
 | 2026-04-21 | **SEC-055:** App login/register now establish a signed Flask session; `/logout` clears it. Dealer **My inventory** at `/inventory` uses separate `dealer_portal.db`, CSRF on dealer POSTs, per-IP VIN-add rate limit, and validated image uploads + per-user file access under `/dealer-uploads/...`. **SEC-013** authorization table updated. |
+| 2026-04-22 | **SEC-058:** Documented Ollama LLaVA gallery/interior path; stricter listing-image prompt, KBB/guide URL pre-drop, dealer-lot sort; validation via `tests/test_ollama_llava.py`. Gallery keep requires explicit model `keep: true` plus an allowed category. |
+| 2026-04-22 | **SEC-058:** Category synonyms (`vehicle`, `lot_photo`, …) map to canonical keep classes; `SCANNER_GALLERY_VISION_FALLBACK_ON_EMPTY` (default on) restores lot-ordered URLs when the model drops every loadable image, excluding fetch/blank technical failures. |
+| 2026-04-22 | **SEC-058:** F&I / VPP / warranty URL pre-drop; `marketing_strip` (dimension-based banner) drops or overrides mislabeled vision keeps; that category and technical failures are excluded from fallback. |
+| 2026-04-22 | **SEC-058:** Gallery image HTTP fetch uses browser-like User-Agent and optional VDP `Referer` (from `page_referer` / `_detail_url`) so dealer CDNs do not 403 “hotlinked” lot photos; additional `warranty_flyer_page` triage for portrait F&I plan infographics. |
+| 2026-04-22 | **SEC-058:** Removed automatic **portrait** “warranty flyer” pixel triage (it mis-classified real 3:4/4:5 lot photos and missed landscape F&I art); only thin **strip** bar shapes are auto-dropped. F&I / VPP URL substrings are extended for pre-vision drop and for **lot-score demotion**; listing prompt + user triage line stress landscape VPP and text-heavy slides. |
+| 2026-04-22 | **SEC-002 / SEC-032 / SEC-040 / SEC-060/061/062 (logout, bodies, dbs):** Tightened default `admin` handling (see **SEC-002** for opt-in); **SEC-032** enforced CSP in prod (per-request nonces) + `CSP_ENFORCE` override; **SEC-040** optional `RATE_LIMIT_SQLITE_PATH`; app `POST` logout+CSRF, `MAX_REQUEST_BODY_BYTES` + smart-search 413, `.gitignore` runtime DBs + `git rm --cached`. Validation: `python -m pytest` including `tests/test_app_security_basics.py`. |
 | 2026-04-25 | **SEC-002:** Removed legacy seeded `admin/password` app user at init unless explicitly opted-in via `ALLOW_DEFAULT_APP_USER` (dev only). |
-| 2026-04-25 | **SEC-060:** Added org-level Stripe billing gate (post-register/login), admin bypass via `APP_ADMIN_EMAILS`, and signature-verified Stripe webhook endpoint. Validated: invalid webhook signature rejected (HTTP 400), billing gate redirects non-admins to `/billing/required`, and no Stripe secrets referenced in frontend templates. |
+| 2026-04-25 | **SEC-059:** Added org-level Stripe billing gate (post-register/login), admin bypass via `APP_ADMIN_EMAILS`, and signature-verified Stripe webhook endpoint. Validated: invalid webhook signature rejected (HTTP 400), billing gate redirects non-admins to `/billing/required`, and no Stripe secrets referenced in frontend templates. |
 | 2026-04-25 | **SEC-014:** Mandatory TOTP 2FA for app + dev accounts (setup + verify flows, DB fields, and route gating); added pytest coverage. |
 | 2026-04-25 | **SEC-014 (follow-up):** TOTP enrollment now calls `set_user_totp` / `set_admin_totp` after QR + code confirm; stable setup secret in session until confirm or regenerate; login uses TOTP path when enabled; per-IP rate limits on verify and TOTP enroll; `tests/test_mfa_totp.py` covers enroll + relogin. |
 | 2026-04-25 | **SEC-014 (follow-up):** App MFA adds **`/mfa/choose`**: email/SMS OTPs are **sent** when the user POSTs the channel; SMS needs E.164 on the form or stored `mfa_phone`. Env table: `MFA_DELIVERY_MODE`, `SMTP_*`, `TWILIO_*`, `MFA_DEV_UI_CODE`. Tests updated: `test_billing_gate.py` + `test_mfa_totp.py`. |
 | 2026-04-25 | **SEC-061:** MFA JSONL + `mfa_action` logger for 2FA debugging; delivery layer logs `smtp_sent` / fallbacks / Twilio errors. Env: `MFA_ACTION_LOG_PATH` (writable path, e.g. `logs/mfa_actions.jsonl`). |
 | 2026-04-25 | **SEC-061 (follow-up):** If `MFA_ACTION_LOG_PATH` is invalid, warn **once** and keep INFO logging without repeated file errors. |
-| 2026-04-25 | **SEC-062:** Resend for email (`RESEND_API_KEY` / `MFA_EMAIL_PROVIDER`); Twilio Verify for SMS (`TWILIO_VERIFY_SERVICE_SID`, `MFA_SMS_MODE`); session+Programmable SMS preserved for `log`/`test` and `MFA_SMS_MODE=session`. |
+| 2026-04-25 | **SEC-062 (email):** Resend for email (`RESEND_API_KEY` / `MFA_EMAIL_PROVIDER`); Twilio Verify for SMS (`TWILIO_VERIFY_SERVICE_SID`, `MFA_SMS_MODE`); session+Programmable SMS preserved for `log`/`test` and `MFA_SMS_MODE=session`. |
 | 2026-04-25 | **SEC-062 (follow-up):** Removed all **SMS 2FA** (Verify + messaging); deleted `mfa_twilio_verify.py` and `twilio` dependency. |
 | 2026-04-25 | **SEC-014 (follow-up):** App `role=admin` users **skip 2FA** on login and on new registration when the email is in the admin list; `tests/test_billing_gate.py` updated. |
 | 2026-04-25 | **SEC-013 / auth entry points:** General `/register` no longer requires an organization; `ROLE_GENERAL` for non-admin. Dealership flows use `/dealer/register` and `/dealer/login` (with org for non-admin); `session['mfa_intent']` routes post-2FA to `/listings` (general) or dealer inventory. Stripe gate applies only when `org_id` is set. Added `delete_user_by_email` + `dealer_vehicles` cleanup. |
@@ -463,4 +511,4 @@
 ## Future: non-security engineering backlog
 
 Security work **must** stay in this file until all Phase 1–6 items are `Done` or explicitly `Won't do` with rationale in Changelog.  
-**SEC-032** CSP: public listings/car paths refactored for script/style hygiene; enable `CSP_REPORT_ONLY=1` to collect violations before enforcement. Remaining: dev/admin templates, optional nonces on JSON `<script>` blobs, then `Content-Security-Policy` (enforce). For general features, consider `docs/ENGINEERING_MASTER_TODO.md` separately.
+CSP: enforced in production (nonces; `CSP_ENFORCE=0` to disable). Use `CSP_REPORT_ONLY=1` when enforcement is off to collect additional violations. Optional follow-up: remove `style-src` `unsafe-inline` by moving inline `style=""` to CSS. For general features, consider `docs/ENGINEERING_MASTER_TODO.md` separately.

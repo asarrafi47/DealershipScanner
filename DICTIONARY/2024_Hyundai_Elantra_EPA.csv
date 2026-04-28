@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,Hyundai,Elantra,Elantra,2.0L I4,Automatic (AV-S1),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,31,40,34,,,,,
+2024,Hyundai,Elantra,Elantra,2.0L I4,Automatic (AV-S1),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,32,41,36,,,,,
+2024,Hyundai,Elantra,Hybrid,Hybrid 1.6L I4 (SIDI; Hybrid),Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.6,49,52,50,,,,,
+2024,Hyundai,Elantra,Hybrid Blue,Hybrid 1.6L I4 (SIDI; Hybrid),Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.6,51,58,54,,,,,
+2024,Hyundai,Elantra,Elantra,1.6L I4 (SIDI),Automatic (AM-S7),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.6,28,35,31,,,,,
+2024,Hyundai,Elantra,N,2.0L I4 (SIDI),Automatic (AM-S8),Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,20,27,23,,,,,
+2024,Hyundai,Elantra,N,2.0L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,21,29,24,,,,,

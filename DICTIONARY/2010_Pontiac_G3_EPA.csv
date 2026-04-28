@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2010,Pontiac,G3,(5-Door),1.6L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,25,34,28,,,,,
+2010,Pontiac,G3,(5-Door),1.6L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,27,35,30,,,,,
+2010,Pontiac,G3,(3-Door),1.6L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,25,34,28,,,,,
+2010,Pontiac,G3,(3-Door),1.6L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,27,35,30,,,,,

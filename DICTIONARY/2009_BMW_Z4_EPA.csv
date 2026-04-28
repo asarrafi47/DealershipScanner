@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2009,BMW,Z4,sDrive30i,3.0L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,19,28,22,,,,,
+2009,BMW,Z4,sDrive30i,3.0L V6,Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,19,29,22,,,,,
+2009,BMW,Z4,sDrive35i,3.0L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,18,25,20,,,,,
+2009,BMW,Z4,sDrive35i,3.0L V6 (Dual clutch transmission),Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,17,24,20,,,,,

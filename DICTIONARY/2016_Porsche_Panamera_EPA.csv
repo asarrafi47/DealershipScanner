@@ -1,0 +1,12 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2016,Porsche,Panamera,Panamera,3.6L V6 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Large Cars,6,3.6,18,28,22,,,,,
+2016,Porsche,Panamera,4,3.6L V6 (SIDI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Large Cars,6,3.6,18,27,21,,,,,
+2016,Porsche,Panamera,S,3.0L V6 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Large Cars,6,3.0,18,26,21,,,,,
+2016,Porsche,Panamera,4S,3.0L V6 (SIDI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Large Cars,6,3.0,18,26,21,,,,,
+2016,Porsche,Panamera,4S Executive,3.0L V6 (SIDI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Large Cars,6,3.0,17,26,20,,,,,
+2016,Porsche,Panamera,Turbo Executive,4.8L V8 (SIDI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Large Cars,8,4.8,15,24,18,,,,,
+2016,Porsche,Panamera,Turbo S,4.8L V8 (SIDI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Large Cars,8,4.8,15,24,18,,,,,
+2016,Porsche,Panamera,GTS,4.8L V8 (SIDI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Large Cars,8,4.8,16,24,19,,,,,
+2016,Porsche,Panamera,Turbo,4.8L V8 (SIDI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Large Cars,8,4.8,15,24,18,,,,,
+2016,Porsche,Panamera,Turbo S Executive,4.8L V8 (SIDI),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Large Cars,8,4.8,15,24,18,,,,,
+2016,Porsche,Panamera,S E-Hybrid,Plug-in Hybrid 3.0L V6 (SIDI; PHEV),Automatic (AM-S8),Rear-Wheel Drive,Premium Gasoline / Electricity,Large Cars,6,3.0,23,29,25,,,,,

@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2014,Lexus,IS,350,3.5L V6 (SIDI & PFI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,19,28,22,,,,,
+2014,Lexus,IS,350 AWD,3.5L V6 (SIDI & PFI),Automatic (S6),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,19,26,21,,,,,
+2014,Lexus,IS,250,2.5L V6 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.5,21,30,24,,,,,
+2014,Lexus,IS,250 AWD,2.5L V6 (SIDI),Automatic (S6),All-Wheel Drive,Premium Gasoline,Compact Cars,6,2.5,20,27,23,,,,,
+2014,Lexus,IS,350 C,3.5L V6 (SIDI & PFI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.5,19,27,22,,,,,
+2014,Lexus,IS,250 C,2.5L V6 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,2.5,21,30,24,,,,,

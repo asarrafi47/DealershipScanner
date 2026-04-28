@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Kia,Rio,Rio,1.6L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,27,36,30,,,,,
+2015,Kia,Rio,Rio,1.6L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,27,36,30,,,,,
+2015,Kia,Rio,Eco,1.6L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,27,36,31,,,,,

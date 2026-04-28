@@ -3,8 +3,14 @@ import logging
 import os
 import re
 import sqlite3
-from typing import Any
+from contextlib import contextmanager
+from typing import Any, Iterator
 from urllib.parse import urlparse
+
+# Align with `scanner.js` (Node): default to repo-root `inventory.db`, not CWD-relative,
+# or Flask and the subprocess scanner write/read different files when INVENTORY_DB_PATH is unset.
+_REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
+_DEFAULT_INVENTORY_DB = os.path.join(_REPO_ROOT, "inventory.db")
 
 from backend.utils.car_serialize import car_matches_engine_displacement_l_range, serialize_car_for_api
 from backend.utils.field_clean import compute_data_quality_score, is_effectively_empty
@@ -15,7 +21,7 @@ from backend.utils.interior_color_buckets import (
     sort_paint_family_ids,
 )
 
-DB_PATH = os.environ.get("INVENTORY_DB_PATH", "inventory.db")
+DB_PATH = os.environ.get("INVENTORY_DB_PATH", _DEFAULT_INVENTORY_DB)
 _log = logging.getLogger(__name__)
 
 
@@ -55,7 +61,7 @@ def is_dummy_placeholder_vin(vin: str | None) -> bool:
 def delete_cars_with_dummy_placeholder_vins() -> dict[str, Any]:
     """
     Delete ``cars`` rows whose VIN matches :func:`is_dummy_placeholder_vin`, remove matching
-    ``incomplete_listings`` rows, and drop ``nhtsa_vpic_cache`` entries for those VINs.
+    ``incomplete_listings`` and ``saved_cars`` rows, and drop ``nhtsa_vpic_cache`` entries for those VINs.
     """
     from backend.db.incomplete_listings_db import delete_incomplete_record
 
@@ -83,6 +89,10 @@ def delete_cars_with_dummy_placeholder_vins() -> dict[str, Any]:
             cur.execute("DELETE FROM nhtsa_vpic_cache WHERE UPPER(TRIM(vin)) = ?", (vin.upper().strip(),))
             n_cache += cur.rowcount
         ph = ",".join("?" * len(ids))
+        try:
+            cur.execute(f"DELETE FROM saved_cars WHERE car_id IN ({ph})", ids)
+        except sqlite3.Error:
+            _log.debug("saved_cars delete for dummy VINs skipped (table missing?)")
         cur.execute(f"DELETE FROM cars WHERE id IN ({ph})", ids)
         conn.commit()
         return {"deleted": len(ids), "vins": vins, "nhtsa_cache_deleted": n_cache}
@@ -167,85 +177,82 @@ def record_scan_outcomes(outcomes: list[Any], *, finished_at: str) -> int:
     """
     if not outcomes:
         return 0
-    conn = get_conn()
-    cur = conn.cursor()
-    ensure_scan_runs_table(cur)
     n = 0
-    for o in outcomes:
-        if not isinstance(o, dict):
-            continue
-        did = str(o.get("dealer_id") or "").strip()
-        if not did:
-            continue
-        summary = {
-            "inventory_rows": o.get("inventory_rows"),
-            "deduped_rows": o.get("deduped_rows"),
-            "vdps_visited": o.get("vdps_visited"),
-            "vehicles_vdp_enriched": o.get("vehicles_vdp_enriched"),
-            "gallery_vdp_urls_added": o.get("gallery_vdp_urls_added"),
-            "gallery_vision": o.get("gallery_vision"),
-            "monroney_vision": o.get("monroney_vision"),
-            "reconcile": o.get("reconcile"),
-            "vins_count": len(o.get("vins") or []) if isinstance(o.get("vins"), list) else None,
-        }
-        err = o.get("error")
-        err_s = str(err)[:2000] if err else None
-        cur.execute(
-            """
-            INSERT INTO scan_runs (
-                dealer_id, dealer_name, finished_at, duration_seconds,
-                upserted, inventory_rows, deduped_rows, vdps_visited,
-                vehicles_vdp_enriched, error, summary_json
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                did,
-                (o.get("dealer_name") or "")[:500] or None,
-                finished_at,
-                float(o.get("seconds") or 0.0),
-                int(o.get("upserted") or 0),
-                int(o.get("inventory_rows") or 0),
-                int(o.get("deduped_rows") or 0),
-                int(o.get("vdps_visited") or 0),
-                int(o.get("vehicles_vdp_enriched") or 0),
-                err_s,
-                json.dumps(summary, ensure_ascii=False, default=str),
-            ),
-        )
-        n += 1
-    conn.commit()
-    conn.close()
+    with db_conn() as conn:
+        cur = conn.cursor()
+        ensure_scan_runs_table(cur)
+        for o in outcomes:
+            if not isinstance(o, dict):
+                continue
+            did = str(o.get("dealer_id") or "").strip()
+            if not did:
+                continue
+            summary = {
+                "inventory_rows": o.get("inventory_rows"),
+                "deduped_rows": o.get("deduped_rows"),
+                "vdps_visited": o.get("vdps_visited"),
+                "vehicles_vdp_enriched": o.get("vehicles_vdp_enriched"),
+                "gallery_vdp_urls_added": o.get("gallery_vdp_urls_added"),
+                "gallery_vision": o.get("gallery_vision"),
+                "monroney_vision": o.get("monroney_vision"),
+                "reconcile": o.get("reconcile"),
+                "vins_count": len(o.get("vins") or []) if isinstance(o.get("vins"), list) else None,
+            }
+            err = o.get("error")
+            err_s = str(err)[:2000] if err else None
+            cur.execute(
+                """
+                INSERT INTO scan_runs (
+                    dealer_id, dealer_name, finished_at, duration_seconds,
+                    upserted, inventory_rows, deduped_rows, vdps_visited,
+                    vehicles_vdp_enriched, error, summary_json
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    did,
+                    (o.get("dealer_name") or "")[:500] or None,
+                    finished_at,
+                    float(o.get("seconds") or 0.0),
+                    int(o.get("upserted") or 0),
+                    int(o.get("inventory_rows") or 0),
+                    int(o.get("deduped_rows") or 0),
+                    int(o.get("vdps_visited") or 0),
+                    int(o.get("vehicles_vdp_enriched") or 0),
+                    err_s,
+                    json.dumps(summary, ensure_ascii=False, default=str),
+                ),
+            )
+            n += 1
+        conn.commit()
     return n
 
 
 def list_scan_runs(*, dealer_id: str | None = None, limit: int = 50) -> list[dict[str, Any]]:
     """Recent scan rows (newest first), optionally filtered by ``dealer_id``."""
     lim = max(1, min(200, int(limit)))
-    conn = get_conn()
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
-    ensure_scan_runs_table(cur)
-    if dealer_id and str(dealer_id).strip():
-        cur.execute(
-            f"""
-            SELECT * FROM scan_runs
-            WHERE dealer_id = ?
-            ORDER BY datetime(finished_at) DESC, id DESC
-            LIMIT ?
-            """,
-            (str(dealer_id).strip(), lim),
-        )
-    else:
-        cur.execute(
-            f"""
-            SELECT * FROM scan_runs
-            ORDER BY datetime(finished_at) DESC, id DESC
-            LIMIT ?
-            """,
-            (lim,),
-        )
-    rows = [dict(r) for r in cur.fetchall()]
-    conn.close()
+    with db_conn(row_factory=sqlite3.Row) as conn:
+        cur = conn.cursor()
+        ensure_scan_runs_table(cur)
+        if dealer_id and str(dealer_id).strip():
+            cur.execute(
+                f"""
+                SELECT * FROM scan_runs
+                WHERE dealer_id = ?
+                ORDER BY datetime(finished_at) DESC, id DESC
+                LIMIT ?
+                """,
+                (str(dealer_id).strip(), lim),
+            )
+        else:
+            cur.execute(
+                f"""
+                SELECT * FROM scan_runs
+                ORDER BY datetime(finished_at) DESC, id DESC
+                LIMIT ?
+                """,
+                (lim,),
+            )
+        rows = [dict(r) for r in cur.fetchall()]
     return rows
 
 
@@ -333,6 +340,21 @@ def get_conn():
     except sqlite3.Error:
         pass
     return conn
+
+
+@contextmanager
+def db_conn(*, row_factory: Any = None) -> Iterator[sqlite3.Connection]:
+    """
+    Open an inventory SQLite connection and always close it (avoids leaks on error paths).
+    When *row_factory* is set, assign ``conn.row_factory = row_factory`` before *yield*.
+    """
+    conn = get_conn()
+    if row_factory is not None:
+        conn.row_factory = row_factory
+    try:
+        yield conn
+    finally:
+        conn.close()
 
 
 def init_inventory_db():
@@ -447,119 +469,25 @@ def init_inventory_db():
         _log.exception("incomplete_listings index bootstrap failed")
 
 
-# (vin, title, year, make, model, trim, price, mileage, zip_code,
-#  fuel_type, cylinders, transmission, drivetrain,
-#  exterior_color, interior_color, image_url, dealer_name, dealer_url)
-SEED_DATA = [
-    ("VIN001", "2022 BMW M3 Competition", 2022, "BMW", "M3", "Competition",
-     72995, 8200, "28202", "Gasoline", 6, "Automatic", "RWD",
-     "Frozen Portimao Blue", "Silverstone Merino",
-     "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800",
-     "Hendrick BMW Charlotte", "https://www.hendrickbmwcharlotte.com"),
-
-    ("VIN002", "2023 BMW M5 Competition", 2023, "BMW", "M5", "Competition",
-     115900, 3100, "28203", "Gasoline", 8, "Automatic", "AWD",
-     "Isle of Man Green", "Black Merino",
-     "https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=800",
-     "Hendrick BMW Charlotte", "https://www.hendrickbmwcharlotte.com"),
-
-    ("VIN003", "2022 BMW 550i xDrive", 2022, "BMW", "5 Series", "M550i",
-     78400, 14500, "28202", "Gasoline", 8, "Automatic", "AWD",
-     "Carbon Black", "Cognac",
-     "https://images.unsplash.com/photo-1556189250-72ba954cfc2b?w=800",
-     "Hendrick BMW Charlotte", "https://www.hendrickbmwcharlotte.com"),
-
-    ("VIN004", "2021 BMW 740i xDrive", 2021, "BMW", "7 Series", "740i",
-     82000, 22000, "28205", "Gasoline", 6, "Automatic", "AWD",
-     "Black Sapphire", "Ivory White",
-     "https://images.unsplash.com/photo-1619767886558-efdc259b6e09?w=800",
-     "Hendrick BMW Charlotte", "https://www.hendrickbmwcharlotte.com"),
-
-    ("VIN005", "2023 Mercedes-Benz C300", 2023, "Mercedes-Benz", "C-Class", "C300",
-     48500, 5600, "28203", "Gasoline", 4, "Automatic", "RWD",
-     "Polar White", "Black",
-     "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800",
-     "Fletcher Jones Mercedes", "https://www.fletcherjonesmercedes.com"),
-
-    ("VIN006", "2022 Audi Q5 Premium Plus", 2022, "Audi", "Q5", "Premium Plus",
-     41200, 18700, "28205", "Gasoline", 4, "Automatic", "AWD",
-     "Mythos Black", "Rock Gray",
-     "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800",
-     "Hendrick Audi", "https://www.hendrickaudi.com"),
-
-    ("VIN007", "2023 Porsche 911 Carrera S", 2023, "Porsche", "911", "Carrera S",
-     138000, 1200, "28207", "Gasoline", 6, "Automatic", "RWD",
-     "GT Silver", "Black",
-     "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800",
-     "Porsche Charlotte", "https://www.porschecharlotte.com"),
-
-    ("VIN008", "2022 Toyota Camry XSE", 2022, "Toyota", "Camry", "XSE",
-     31450, 27000, "28208", "Gasoline", 4, "Automatic", "FWD",
-     "Midnight Black", "Black",
-     "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800",
-     "Toyota of Charlotte", "https://www.toyotaofcharlotte.com"),
-
-    ("VIN009", "2023 Tesla Model 3 Long Range", 2023, "Tesla", "Model 3", "Long Range",
-     47990, 4300, "28212", "Electric", 0, "Automatic", "AWD",
-     "Pearl White", "Black",
-     "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800",
-     "Tesla Charlotte", "https://www.tesla.com/findus/location/store/charlotte"),
-
-    ("VIN010", "2022 Lexus RX 350 F Sport", 2022, "Lexus", "RX 350", "F Sport",
-     55600, 16400, "28213", "Gasoline", 6, "Automatic", "AWD",
-     "Atomic Silver", "Black",
-     "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800",
-     "Lexus of Charlotte", "https://www.lexusofcharlotte.com"),
-
-    ("VIN011", "2021 Ford F-150 Lariat", 2021, "Ford", "F-150", "Lariat",
-     54900, 31000, "28209", "Gasoline", 8, "Automatic", "4WD",
-     "Oxford White", "Medium Dark Slate",
-     "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800",
-     "Ford of Charlotte", "https://www.fordofcharlotte.com"),
-
-    ("VIN012", "2021 Chevrolet Corvette Stingray", 2021, "Chevrolet", "Corvette", "Stingray",
-     67800, 9800, "28210", "Gasoline", 8, "Manual", "RWD",
-     "Rapid Blue", "Jet Black",
-     "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800",
-     "Hendrick Chevrolet", "https://www.hendrickchevrolet.com"),
-
-    ("VIN013", "2022 Honda Accord Sport", 2022, "Honda", "Accord", "Sport",
-     29900, 19200, "28211", "Gasoline", 4, "CVT", "FWD",
-     "Sonic Gray Pearl", "Black",
-     "https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=800",
-     "Honda of Charlotte", "https://www.hondaofcharlotte.com"),
-
-    ("VIN014", "2023 BMW 640i Gran Coupe", 2023, "BMW", "6 Series", "640i Gran Coupe",
-     89500, 2900, "28202", "Gasoline", 6, "Automatic", "RWD",
-     "Mineral White", "Oyster",
-     "https://images.unsplash.com/photo-1556189250-72ba954cfc2b?w=800",
-     "Hendrick BMW Charlotte", "https://www.hendrickbmwcharlotte.com"),
-
-    ("VIN015", "2022 BMW M550i xDrive", 2022, "BMW", "5 Series", "M550i",
-     91200, 11000, "28202", "Gasoline", 8, "Automatic", "AWD",
-     "Bernina Grey", "Tartufo",
-     "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800",
-     "Hendrick BMW Charlotte", "https://www.hendrickbmwcharlotte.com"),
-
-    # Diesel example — Ram 1500
-    ("VIN016", "2022 Ram 1500 Laramie", 2022, "Ram", "1500", "Laramie",
-     58900, 21000, "28209", "Diesel", 6, "Automatic", "4WD",
-     "Granite Crystal", "Black",
-     "https://images.unsplash.com/photo-1622038085247-bbe4a0e98adb?w=800",
-     "Charlotte Ram", "https://www.charlotteram.com"),
-]
+# No bundled demo inventory; rows come from the scanner or tests.
+SEED_DATA: list[tuple] = []
 
 
-def seed_cars():
+def seed_cars() -> None:
+    if not SEED_DATA:
+        return
     conn = get_conn()
     cursor = conn.cursor()
-    cursor.executemany("""
+    cursor.executemany(
+        """
         INSERT OR IGNORE INTO cars
             (vin, title, year, make, model, trim, price, mileage, zip_code,
              fuel_type, cylinders, transmission, drivetrain,
              exterior_color, interior_color, image_url, dealer_name, dealer_url)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, SEED_DATA)
+        """,
+        SEED_DATA,
+    )
     conn.commit()
     conn.close()
 
@@ -599,16 +527,45 @@ def is_car_incomplete(car: dict) -> bool:
     return is_car_incomplete_for_public_listings(car)
 
 
+def listings_include_incomplete_cars() -> bool:
+    """
+    When True, listings JSON and ``search_cars`` include rows that fail public completeness
+    (e.g. missing transmission until VDP/repair). Override with env:
+
+    * ``LISTINGS_INCLUDE_INCOMPLETE_CARS=0`` — hide incomplete (strict) in any environment
+    * ``LISTINGS_INCLUDE_INCOMPLETE_CARS=1`` — show incomplete everywhere
+
+    Default: include incomplete in non-production, exclude in production (keeps public prod tidy).
+    """
+    from backend.utils.runtime_env import is_production_env
+
+    raw = (os.environ.get("LISTINGS_INCLUDE_INCOMPLETE_CARS") or "").strip().lower()
+    if raw in ("0", "false", "no", "off"):
+        return False
+    if raw in ("1", "true", "yes", "on"):
+        return True
+    return not is_production_env()
+
+
+def serialize_car_for_listings_grid(car: dict) -> dict[str, Any]:
+    """
+    ``serialize_car_for_api`` plus optional ``public_incomplete`` when that mode is enabled.
+    """
+    ser = serialize_car_for_api(car, include_verified=False)
+    if listings_include_incomplete_cars() and is_car_incomplete(car):
+        ser["public_incomplete"] = True
+    return ser
+
+
 def refresh_car_data_quality_score(car_id: int) -> None:
     """Recompute data_quality_score from current row."""
     car = get_car_by_id(car_id)
     if not car:
         return
     score = compute_data_quality_score(car)
-    conn = get_conn()
-    conn.execute("UPDATE cars SET data_quality_score = ? WHERE id = ?", (score, car_id))
-    conn.commit()
-    conn.close()
+    with db_conn() as conn:
+        conn.execute("UPDATE cars SET data_quality_score = ? WHERE id = ?", (score, car_id))
+        conn.commit()
     try:
         from backend.db import incomplete_listings_db as ild
 
@@ -638,8 +595,19 @@ def _sort_cars_by_price(cars: list) -> list:
     return sorted(cars, key=key)
 
 
-def link_cars_to_dealership_registry(registry_id: int, website_url: str) -> int:
-    """Attach scraped cars to a Smart Import dealership row (match on dealer_url)."""
+def link_cars_to_dealership_registry(
+    registry_id: int,
+    website_url: str,
+    *,
+    dealer_id_slug: str | None = None,
+) -> int:
+    """
+    Attach scraped cars to a Smart Import dealership row.
+
+    Matches on ``dealer_url`` (normalized host / URL variants) and, when given, on
+    ``dealer_id`` (same slug as ``dealers.json`` / ``scanner.js``), so links succeed even if
+    URL text differs between Node insert and the registry row.
+    """
     if not website_url or not registry_id:
         return 0
     w = (website_url or "").strip()
@@ -652,41 +620,53 @@ def link_cars_to_dealership_registry(registry_id: int, website_url: str) -> int:
         host = (urlparse(w).netloc or "").lower().replace("www.", "")
     except ValueError:
         pass
-    conn = get_conn()
-    cursor = conn.cursor()
-    if host:
-        cursor.execute(
-            """
-            UPDATE cars
-            SET dealership_registry_id = ?
-            WHERE dealership_registry_id IS NULL
-              AND (
-                LOWER(TRIM(dealer_url)) IN (?, ?, ?)
-                OR LOWER(dealer_url) LIKE ?
-              )
-            """,
-            (
-                registry_id,
-                w_lower,
-                base_lower,
-                base_slash_lower,
-                f"%{host}%",
-            ),
-        )
-    else:
-        cursor.execute(
-            """
-            UPDATE cars
-            SET dealership_registry_id = ?
-            WHERE dealership_registry_id IS NULL
-              AND LOWER(TRIM(dealer_url)) IN (?, ?)
-            """,
-            (registry_id, w_lower, base_lower),
-        )
-    n = cursor.rowcount
-    conn.commit()
-    conn.close()
-    return n
+    did = (dealer_id_slug or "").strip()
+    total = 0
+    with db_conn() as conn:
+        cursor = conn.cursor()
+        if host:
+            cursor.execute(
+                """
+                UPDATE cars
+                SET dealership_registry_id = ?
+                WHERE dealership_registry_id IS NULL
+                  AND (
+                    LOWER(TRIM(dealer_url)) IN (?, ?, ?)
+                    OR LOWER(dealer_url) LIKE ?
+                  )
+                """,
+                (
+                    registry_id,
+                    w_lower,
+                    base_lower,
+                    base_slash_lower,
+                    f"%{host}%",
+                ),
+            )
+        else:
+            cursor.execute(
+                """
+                UPDATE cars
+                SET dealership_registry_id = ?
+                WHERE dealership_registry_id IS NULL
+                  AND LOWER(TRIM(dealer_url)) IN (?, ?)
+                """,
+                (registry_id, w_lower, base_lower),
+            )
+        total += cursor.rowcount
+        if did:
+            cursor.execute(
+                """
+                UPDATE cars
+                SET dealership_registry_id = ?
+                WHERE dealership_registry_id IS NULL
+                  AND TRIM(dealer_id) = ?
+                """,
+                (registry_id, did),
+            )
+            total += cursor.rowcount
+        conn.commit()
+    return int(total)
 
 
 def _normalized_interior_bucket_filters(raw) -> set[str] | None:
@@ -712,16 +692,22 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 zip_code=None, radius_miles=None,
                 dealership_registry_id=None,
                 candidate_ids=None,
-                packages_json_contains=None):
+                packages_json_contains=None,
+                vin=None,
+                include_incomplete: bool | None = None):
     """
     ``candidate_ids``: optional list of SQLite ``cars.id`` values (e.g. pgvector semantic recall).
     When set, results are restricted to ``id IN (candidate_ids)`` in addition to other filters.
 
-    ``packages_json_contains``: optional substring matched case-insensitively against the raw
-    ``cars.packages`` TEXT (JSON). Intended for ``packages_normalized`` / catalog names populated
-    by ``scripts/parse_listing_descriptions.py``. Hybrid search wiring: see
-    ``backend.hybrid_inventory_search.flask_request_to_search_cars_kwargs`` (no separate public
-    filter UI contract yet — pass through kwargs or extend query params when exposing).
+    ``vin``: optional full 17-character VIN (normalized: spaces stripped, case-insensitive). When
+    set, only that VIN row is considered (with other filters AND).
+
+    ``packages_json_contains``: optional **literal** substring (case-insensitive) matched against
+    the raw ``cars.packages`` TEXT (uses ``INSTR``, not ``LIKE``, so ``%``/``_`` in the needle are
+    not SQL wildcards). Hybrid search: ``backend.hybrid_inventory_search`` kwargs builder.
+
+    ``max_price`` / ``max_mileage`` when set to ``0`` are applied; they are not treated as
+    "unset." ``dealership_registry_id`` must be a positive int; invalid values are ignored.
 
     ``interior_color_bucket_filters``: optional list of bucket ids (e.g. ``black``, ``tan``);
     a row matches if its ``interior_color_buckets`` JSON array intersects the selection (OR).
@@ -736,13 +722,16 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     liters, matched using ``engine_l`` (numeric) or a leading ``N.NL`` / ``NL`` token in
     ``engine_description``. Rows with no parseable displacement are excluded when either bound
     is set. Combined with ``cylinders`` as AND when both are provided.
+
+    ``include_incomplete``: when False, rows that fail :func:`is_car_incomplete` are omitted
+    (public listings). When None, use :func:`listings_include_incomplete_cars`.
     """
+    if include_incomplete is None:
+        inc = listings_include_incomplete_cars()
+    else:
+        inc = bool(include_incomplete)
 
     from backend.db.geo import zip_to_coords, haversine
-
-    conn = get_conn()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
 
     query = "SELECT * FROM cars WHERE (COALESCE(listing_active, 1) = 1)"
     params = []
@@ -761,8 +750,19 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
             params.extend(ids)
 
     if dealership_registry_id is not None:
-        query += " AND dealership_registry_id = ?"
-        params.append(int(dealership_registry_id))
+        try:
+            dr = int(dealership_registry_id)
+        except (TypeError, ValueError):
+            dr = 0
+        if dr > 0:
+            query += " AND dealership_registry_id = ?"
+            params.append(dr)
+
+    if vin and str(vin).strip():
+        vnorm = re.sub(r"\s+", "", str(vin).strip().upper())[:20]
+        if len(vnorm) == 17:
+            query += " AND REPLACE(UPPER(TRIM(IFNULL(vin, ''))), ' ', '') = ?"
+            params.append(vnorm)
 
     def add_multi(col, values):
         nonlocal query
@@ -806,8 +806,9 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
         needle = str(packages_json_contains).strip().lower()
         if len(needle) > 200:
             needle = needle[:200]
-        query += " AND LOWER(IFNULL(packages, '')) LIKE ?"
-        params.append(f"%{needle}%")
+        # INSTR: literal substring (avoids ``%`` / ``_`` wildcard meaning in ``LIKE``)
+        query += " AND INSTR(LOWER(IFNULL(packages, '')), ?) > 0"
+        params.append(needle)
 
     if min_year is not None:
         query += " AND year >= ?"
@@ -816,16 +817,27 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
         query += " AND year <= ?"
         params.append(int(max_year))
 
-    if max_price is not None and max_price:
-        query += " AND (price IS NULL OR price <= ? OR price = 0)"
-        params.append(max_price)
-    if max_mileage is not None and max_mileage:
-        query += " AND (mileage IS NULL OR mileage <= ? OR mileage = 0)"
-        params.append(max_mileage)
+    if max_price is not None:
+        try:
+            mp = float(max_price)
+        except (TypeError, ValueError):
+            pass
+        else:
+            query += " AND (price IS NULL OR price <= ? OR price = 0)"
+            params.append(mp)
+    if max_mileage is not None:
+        try:
+            mm = int(float(max_mileage))
+        except (TypeError, ValueError):
+            pass
+        else:
+            query += " AND (mileage IS NULL OR mileage <= ? OR mileage = 0)"
+            params.append(mm)
 
-    cursor.execute(query, params)
-    results = [dict(row) for row in cursor.fetchall()]
-    conn.close()
+    with db_conn(row_factory=sqlite3.Row) as conn:
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        results = [dict(row) for row in cursor.fetchall()]
 
     bucket_sel = _normalized_interior_bucket_filters(interior_color_bucket_filters)
     ext_family_sel = _normalized_interior_bucket_filters(exterior_colors)
@@ -878,31 +890,29 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
             for c in filtered:
                 _parse_car_gallery(c)
                 _parse_car_history_highlights(c)
-            complete = [c for c in filtered if not is_car_incomplete(c)]
-            complete = _post_sql_filters(complete)
+            base = filtered if inc else [c for c in filtered if not is_car_incomplete(c)]
+            complete = _post_sql_filters(base)
             return sorted(complete, key=lambda c: c["distance_miles"])
 
     for c in results:
         _parse_car_gallery(c)
         _parse_car_history_highlights(c)
-    complete = [c for c in results if not is_car_incomplete(c)]
-    complete = _post_sql_filters(complete)
+    base = results if inc else [c for c in results if not is_car_incomplete(c)]
+    complete = _post_sql_filters(base)
     return _sort_cars_by_price(complete)
 
 
 def get_car_by_id(car_id, *, include_inactive: bool = True):
-    conn = get_conn()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    if include_inactive:
-        cursor.execute("SELECT * FROM cars WHERE id = ?", (car_id,))
-    else:
-        cursor.execute(
-            "SELECT * FROM cars WHERE id = ? AND (COALESCE(listing_active, 1) = 1)",
-            (car_id,),
-        )
-    row = cursor.fetchone()
-    conn.close()
+    with db_conn(row_factory=sqlite3.Row) as conn:
+        cursor = conn.cursor()
+        if include_inactive:
+            cursor.execute("SELECT * FROM cars WHERE id = ?", (car_id,))
+        else:
+            cursor.execute(
+                "SELECT * FROM cars WHERE id = ? AND (COALESCE(listing_active, 1) = 1)",
+                (car_id,),
+            )
+        row = cursor.fetchone()
     car = dict(row) if row else None
     if car:
         _parse_car_gallery(car)
@@ -927,13 +937,11 @@ def get_cars_by_ids(car_ids: list[int]) -> list[dict]:
         ordered_unique.append(i)
     if not ordered_unique:
         return []
-    conn = get_conn()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    ph = _placeholders(ordered_unique)
-    cursor.execute(f"SELECT * FROM cars WHERE id IN ({ph})", ordered_unique)
-    by_id = {dict(row)["id"]: dict(row) for row in cursor.fetchall()}
-    conn.close()
+    with db_conn(row_factory=sqlite3.Row) as conn:
+        cursor = conn.cursor()
+        ph = _placeholders(ordered_unique)
+        cursor.execute(f"SELECT * FROM cars WHERE id IN ({ph})", ordered_unique)
+        by_id = {dict(row)["id"]: dict(row) for row in cursor.fetchall()}
     out: list[dict] = []
     for cid in ordered_unique:
         row = by_id.get(cid)
@@ -946,12 +954,10 @@ def get_cars_by_ids(car_ids: list[int]) -> list[dict]:
 
 
 def get_car_by_vin(vin):
-    conn = get_conn()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM cars WHERE vin = ?", (vin,))
-    row = cursor.fetchone()
-    conn.close()
+    with db_conn(row_factory=sqlite3.Row) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM cars WHERE vin = ?", (vin,))
+        row = cursor.fetchone()
     car = dict(row) if row else None
     if car:
         _parse_car_gallery(car)
@@ -1039,10 +1045,9 @@ def update_car_row_partial(car_id: int, fields: dict) -> None:
     if not sets:
         return
     vals.append(car_id)
-    conn = get_conn()
-    conn.execute(f"UPDATE cars SET {', '.join(sets)} WHERE id = ?", vals)
-    conn.commit()
-    conn.close()
+    with db_conn() as conn:
+        conn.execute(f"UPDATE cars SET {', '.join(sets)} WHERE id = ?", vals)
+        conn.commit()
     try:
         from backend.db import incomplete_listings_db as ild
 
@@ -1077,84 +1082,104 @@ def _facet_transmission_sane(val) -> bool:
     return True
 
 
+def listings_grid_serialized_cars() -> list[dict[str, Any]]:
+    """
+    Per-car JSON for the listings grid (``options.all_cars`` and ``GET /api/listings/cars``).
+    Honors :func:`listings_include_incomplete_cars` and :func:`serialize_car_for_listings_grid`.
+    """
+    active = "(COALESCE(listing_active, 1) = 1)"
+    inc = listings_include_incomplete_cars()
+    with db_conn(row_factory=sqlite3.Row) as conn2:
+        cur = conn2.cursor()
+        cur.execute(f"SELECT * FROM cars WHERE {active} ORDER BY price ASC")
+        all_cars_raw = [dict(r) for r in cur.fetchall()]
+    for c in all_cars_raw:
+        _parse_car_gallery(c)
+        _parse_car_history_highlights(c)
+    out: list[dict[str, Any]] = []
+    for c in all_cars_raw:
+        if not inc and is_car_incomplete(c):
+            continue
+        out.append(serialize_car_for_listings_grid(c))
+    return out
+
+
 def get_filter_options():
     """
     Returns all filter option data with full relationship maps so the
     frontend can do bidirectional cascading across every dimension.
     """
-    conn = get_conn()
-    cursor = conn.cursor()
-
     active = "(COALESCE(listing_active, 1) = 1)"
 
-    def distinct(col):
+    with db_conn() as conn:
+        cursor = conn.cursor()
+
+        def distinct(col):
+            cursor.execute(
+                f"SELECT DISTINCT {col} FROM cars WHERE {active} AND {col} IS NOT NULL ORDER BY {col}"
+            )
+            return [r[0] for r in cursor.fetchall() if not is_effectively_empty(r[0])]
+
+        fuel_types      = distinct("fuel_type")
+        cylinders       = distinct("cylinders")
+        transmissions   = [t for t in distinct("transmission") if _facet_transmission_sane(t)]
+        drivetrains     = distinct("drivetrain")
         cursor.execute(
-            f"SELECT DISTINCT {col} FROM cars WHERE {active} AND {col} IS NOT NULL ORDER BY {col}"
+            f"""
+            SELECT exterior_color, interior_color, interior_color_buckets
+            FROM cars
+            WHERE {active}
+            """
         )
-        return [r[0] for r in cursor.fetchall() if not is_effectively_empty(r[0])]
+        ext_facet_ids: set[str] = set()
+        int_facet_ids: set[str] = set()
+        for ext_raw, int_raw, int_bucks in cursor.fetchall():
+            if not is_effectively_empty(ext_raw):
+                ext_facet_ids.update(infer_paint_color_buckets(ext_raw, None))
+            ib = parse_stored_buckets(int_bucks)
+            if ib:
+                int_facet_ids.update(ib)
+            elif not is_effectively_empty(int_raw):
+                int_facet_ids.update(infer_paint_color_buckets(int_raw, None))
+        exterior_colors = sort_paint_family_ids(ext_facet_ids)
+        interior_colors = sort_paint_family_ids(int_facet_ids)
+        body_styles_list = distinct("body_style")
 
-    fuel_types      = distinct("fuel_type")
-    cylinders       = distinct("cylinders")
-    transmissions   = [t for t in distinct("transmission") if _facet_transmission_sane(t)]
-    drivetrains     = distinct("drivetrain")
-    cursor.execute(
-        f"""
-        SELECT exterior_color, interior_color, interior_color_buckets
-        FROM cars
-        WHERE {active}
-        """
-    )
-    ext_facet_ids: set[str] = set()
-    int_facet_ids: set[str] = set()
-    for ext_raw, int_raw, int_bucks in cursor.fetchall():
-        if not is_effectively_empty(ext_raw):
-            ext_facet_ids.update(infer_paint_color_buckets(ext_raw, None))
-        ib = parse_stored_buckets(int_bucks)
-        if ib:
-            int_facet_ids.update(ib)
-        elif not is_effectively_empty(int_raw):
-            int_facet_ids.update(infer_paint_color_buckets(int_raw, None))
-    exterior_colors = sort_paint_family_ids(ext_facet_ids)
-    interior_colors = sort_paint_family_ids(int_facet_ids)
-    body_styles_list = distinct("body_style")
-
-    # Full relationship rows — every unique combo of all filterable dims.
-    # The frontend embeds these as data-* on each checkbox so it can filter
-    # any dropdown based on any combination of other active filters.
-    cursor.execute(f"""
-        SELECT DISTINCT make, model, trim, fuel_type, cylinders, drivetrain, body_style
-        FROM cars
-        WHERE {active}
-          AND make IS NOT NULL AND TRIM(make) != ''
-        ORDER BY make, model, trim
-    """)
-    raw_car_rows = cursor.fetchall()
-    car_rows = []
-    for row in raw_car_rows:
-        make, model, trim, fuel_type, cyl, drive, body_st = (
-            row[0],
-            row[1],
-            row[2],
-            row[3],
-            row[4],
-            row[5],
-            row[6],
-        )
-        if is_effectively_empty(make) or is_effectively_empty(model):
-            continue
-        if not _facet_make_valid(make):
-            continue
-        if is_effectively_empty(trim):
-            trim = None
-        if is_effectively_empty(fuel_type):
-            fuel_type = None
-        if is_effectively_empty(drive):
-            drive = None
-        if is_effectively_empty(body_st):
-            body_st = None
-        car_rows.append((make, model, trim, fuel_type, cyl, drive, body_st))
-
-    conn.close()
+        # Full relationship rows — every unique combo of all filterable dims.
+        # The frontend embeds these as data-* on each checkbox so it can filter
+        # any dropdown based on any combination of other active filters.
+        cursor.execute(f"""
+            SELECT DISTINCT make, model, trim, fuel_type, cylinders, drivetrain, body_style
+            FROM cars
+            WHERE {active}
+              AND make IS NOT NULL AND TRIM(make) != ''
+            ORDER BY make, model, trim
+        """)
+        raw_car_rows = cursor.fetchall()
+        car_rows: list = []
+        for row in raw_car_rows:
+            make, model, trim, fuel_type, cyl, drive, body_st = (
+                row[0],
+                row[1],
+                row[2],
+                row[3],
+                row[4],
+                row[5],
+                row[6],
+            )
+            if is_effectively_empty(make) or is_effectively_empty(model):
+                continue
+            if not _facet_make_valid(make):
+                continue
+            if is_effectively_empty(trim):
+                trim = None
+            if is_effectively_empty(fuel_type):
+                fuel_type = None
+            if is_effectively_empty(drive):
+                drive = None
+            if is_effectively_empty(body_st):
+                body_st = None
+            car_rows.append((make, model, trim, fuel_type, cyl, drive, body_st))
 
     # Derive distinct makes/models/trims preserving order
     seen_makes  = []
@@ -1170,22 +1195,7 @@ def get_filter_options():
             seen_trims.append((make, model, trim))
 
     # Full per-car data for client-side live filtering and rendering
-    conn2 = get_conn()
-    conn2.row_factory = sqlite3.Row
-    all_cars_cursor = conn2.cursor()
-    all_cars_cursor.execute(
-        f"SELECT * FROM cars WHERE {active} ORDER BY price ASC"
-    )
-    all_cars_raw = [dict(r) for r in all_cars_cursor.fetchall()]
-    for c in all_cars_raw:
-        _parse_car_gallery(c)
-        _parse_car_history_highlights(c)
-    conn2.close()
-    all_cars = [
-        serialize_car_for_api(c, include_verified=False)
-        for c in all_cars_raw
-        if not is_car_incomplete(c)
-    ]
+    all_cars = listings_grid_serialized_cars()
 
     # Countries that have at least one make in our DB
     country_set = set()

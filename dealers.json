@@ -28,5 +28,11 @@
     "url": "https://www.kefferjeep.com",
     "provider": "dealer_on",
     "dealer_id": "kefferjeep-com"
+  },
+  {
+    "name": "Hendrick Chrysler Dodge Jeep Ram FIAT of Concord",
+    "url": "https://www.hendrickchryslerdodgejeepramofconcord.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "hendrickchryslerdodgejeepramofconcord-com"
   }
 ]

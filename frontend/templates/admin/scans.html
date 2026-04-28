@@ -6,6 +6,9 @@
         <p class="db-eyebrow">Sync reliability</p>
         <h1 class="db-section-title">Scanner runs</h1>
         <p class="admin-lead">One row per dealer per scanner process. Re-run requires <code>ALLOW_STORE_ADMIN_RESCAN=1</code> and admin role.</p>
+        {% if scan_scope_note %}
+        <p class="admin-flash admin-flash-error">{{ scan_scope_note }}</p>
+        {% endif %}
     </div>
 
     <div class="admin-table-wrap">

@@ -1154,10 +1154,37 @@ h1 {
 
 .result-content { padding: 18px; }
 
-.result-content h2 {
+.result-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.result-title-row h2 {
     font-size: 15px;
     font-weight: 600;
-    margin-bottom: 4px;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+.result-incomplete-pill {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #e8b86a;
+    border: 1px solid rgba(232, 184, 106, 0.45);
+    border-radius: 6px;
+    padding: 3px 7px;
+    line-height: 1.2;
+}
+
+.result-card--incomplete {
+    border-color: rgba(232, 184, 106, 0.2);
 }
 
 .result-trim {

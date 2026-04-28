@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2023,Jeep,Gladiator,EcoDiesel 4WD,Diesel 3.0L V6 Diesel,Automatic 8-spd,Four-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,6,3.0,22,28,24,,,,,
+2023,Jeep,Gladiator,Rubic EcoDiesel 4WD,Diesel 3.0L V6 Diesel,Automatic 8-spd,Four-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,6,3.0,21,27,24,,,,,
+2023,Jeep,Gladiator,4WD,3.6L V6,Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,3.6,17,22,19,,,,,
+2023,Jeep,Gladiator,4WD,3.6L V6,Manual 6-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,3.6,16,23,19,,,,,

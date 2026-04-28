@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,Audi,A5,Sportback quattro,Hybrid 2.0L I4 (SIDI; Mild Hybrid),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,26,35,30,,,,,
+2024,Audi,A5,Coupe quattro,Hybrid 2.0L I4 (SIDI; Mild Hybrid),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,24,32,27,,,,,
+2024,Audi,A5,Cabriolet quattro,Hybrid 2.0L I4 (SIDI; Mild Hybrid),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,24,33,27,,,,,
+2024,Audi,A5,Sportback S line quattro,Hybrid 2.0L I4 (SIDI; Mild Hybrid),Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,24,32,27,,,,,

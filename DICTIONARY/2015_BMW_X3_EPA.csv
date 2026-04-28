@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,BMW,X3,sDrive28i,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,21,28,24,,,,,
+2015,BMW,X3,xDrive28i,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,21,28,24,,,,,
+2015,BMW,X3,xDrive35i,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,6,3.0,19,26,21,,,,,
+2015,BMW,X3,xDrive28d,Diesel 2.0L I4 Diesel,Automatic (S8),All-Wheel Drive,Diesel,Small Sport Utility Vehicle 4WD,4,2.0,27,33,30,,,,,

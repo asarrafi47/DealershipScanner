@@ -99,6 +99,11 @@ def extract_price(obj: dict) -> float:
         ("internet_Price",),
         ("internet_price",),
         ("listPrice",),
+        ("item_price",),
+        ("itemPrice",),
+        ("vehiclePrice",),
+        ("finalPrice",),
+        ("retailPrice",),
     )
     price = norm_float(v)
     raw = v
@@ -114,6 +119,8 @@ def extract_price(obj: dict) -> float:
             ("internet_Price",),
             ("internet_price",),
             ("price",),
+            ("item_price",),
+            ("itemPrice",),
         )
         price = norm_float(fallback)
     return price

@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2021,Tesla,Model S,Performance (19in Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,114,106,110,,,,,
+2021,Tesla,Model S,Performance (21in Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,98,93,96,,,,,
+2021,Tesla,Model S,Long Range,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,124,115,120,,,,,
+2021,Tesla,Model S,Plaid (21inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,102,99,101,,,,,

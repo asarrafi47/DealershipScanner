@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2021,Nissan,Titan,2WD,5.6L V8 (SIDI),Automatic (S9),Rear-Wheel Drive,Premium Gasoline,Standard Pickup Trucks 2WD,8,5.6,16,21,18,,,,,
+2021,Nissan,Titan,4WD,5.6L V8 (SIDI),Automatic (S9),Four-Wheel Drive,Premium Gasoline,Standard Pickup Trucks 4WD,8,5.6,15,21,18,,,,,
+2021,Nissan,Titan,4WD PRO-4X,5.6L V8 (SIDI),Automatic (S9),Four-Wheel Drive,Premium Gasoline,Standard Pickup Trucks 4WD,8,5.6,15,20,17,,,,,

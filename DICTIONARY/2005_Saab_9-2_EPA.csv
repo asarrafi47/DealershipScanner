@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2005,Saab,9-2,x Wagon AWD,2.0L I4 (E2.0LAA),Automatic 4-spd,All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,17,23,19,,,,,
+2005,Saab,9-2,x Wagon AWD,2.0L I4 (E2.0LMA),Manual 5-spd,All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,17,24,20,,,,,
+2005,Saab,9-2,x Wagon AWD,2.5L I4 (E2.5CAB),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.5,20,26,23,,,,,
+2005,Saab,9-2,x Wagon AWD,2.5L I4 (E2.5CMB),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.5,20,27,22,,,,,

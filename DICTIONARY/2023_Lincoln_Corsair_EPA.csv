@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2023,Lincoln,Corsair,FWD,2.0L I4,Automatic (S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,22,30,25,,,,,
+2023,Lincoln,Corsair,AWD,2.0L I4,Automatic (S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,21,28,24,,,,,
+2023,Lincoln,Corsair,AWD PHEV,Plug-in Hybrid 2.5L I4 (PHEV),Automatic (variable gear ratios),Four-Wheel Drive,Regular Gasoline / Electricity,Small Sport Utility Vehicle 4WD,4,2.5,34,32,33,,,,,

@@ -1,6 +1,16 @@
 node_modules/
 .env
 *.log
+
+# Runtime / local app SQLite (paths configurable via USERS_DB_PATH, INVENTORY_DB_*, etc.)
+# Reference DBs under data/ remain tracked. Untrack with: git rm --cached <path>
+/users.db
+/dev_users.db
+/inventory.db
+/incomplete_listings.db
+/dealer_portal.db
+/backend/database.db
+/rate_limit_state.db
 __pycache__/
 *.pyc
 .DS_Store
@@ -38,6 +48,8 @@ copyright_out.csv
 # macOS / FUSE filesystem artifacts (can explode repo size if committed)
 .fuse_hidden*
 .fuse*
+# Stale FUSE/SSHFS files moved from repo root — local only
+backend/fuse_artifacts/
 
 # Local image caches / downloads
 car_images/

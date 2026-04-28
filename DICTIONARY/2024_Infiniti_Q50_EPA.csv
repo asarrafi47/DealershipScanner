@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2024,Infiniti,Q50,Q50,3.0L V6 (SIDI),Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,20,29,23,,,,,
+2024,Infiniti,Q50,AWD,3.0L V6 (SIDI),Automatic (S7),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,19,27,22,,,,,
+2024,Infiniti,Q50,Red Sport,3.0L V6 (SIDI),Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,20,26,22,,,,,
+2024,Infiniti,Q50,Red Sport  AWD,3.0L V6 (SIDI),Automatic (S7),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,19,26,22,,,,,

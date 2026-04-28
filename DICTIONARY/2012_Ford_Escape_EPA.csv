@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2012,Ford,Escape,Hybrid FWD,Hybrid 2.5L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.5,34,30,32,,,,,
+2012,Ford,Escape,FWD FFV,FFV 3.0L V6 (FFV),Automatic 6-spd,Front-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,6,3.0,19,25,21,,,,,
+2012,Ford,Escape,FWD,2.5L I4,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.5,21,27,23,,,,,
+2012,Ford,Escape,FWD,2.5L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.5,23,28,25,,,,,
+2012,Ford,Escape,Hybrid AWD,Hybrid 2.5L I4,Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.5,30,27,29,,,,,
+2012,Ford,Escape,AWD FFV,FFV 3.0L V6 (FFV),Automatic 6-spd,All-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 4WD,6,3.0,18,23,20,,,,,
+2012,Ford,Escape,AWD,2.5L I4,Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.5,20,26,23,,,,,

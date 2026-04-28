@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2006,Volvo,S40,AWD,2.5L V5,Manual 6-spd,All-Wheel Drive,Premium Gasoline,Compact Cars,5,2.5,18,26,21,,,,,
+2006,Volvo,S40,AWD,2.5L V5,Automatic (S5),All-Wheel Drive,Premium Gasoline,Compact Cars,5,2.5,18,25,20,,,,,
+2006,Volvo,S40,FWD,2.4L V5,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,5,2.4,19,27,22,,,,,
+2006,Volvo,S40,FWD,2.4L V5,Automatic (S5),Front-Wheel Drive,Premium Gasoline,Compact Cars,5,2.4,19,27,22,,,,,
+2006,Volvo,S40,FWD,2.5L V5,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,5,2.5,20,29,23,,,,,
+2006,Volvo,S40,FWD,2.5L V5,Automatic (S5),Front-Wheel Drive,Premium Gasoline,Compact Cars,5,2.5,19,28,22,,,,,

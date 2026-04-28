@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2019,Ferrari,GTC4Lusso,GTC4Lusso,6.3L V12 (SIDI),Automatic (AM7),Four-Wheel Drive,Premium Gasoline,Minicompact Cars,12,6.3,12,17,13,,,,,
+2019,Ferrari,GTC4Lusso,T,3.9L V8 (SIDI),Automatic (AM7),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,3.9,15,21,17,,,,,

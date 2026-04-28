@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2009,Cadillac,CTS,CTS,3.6L V6 (DI),Automatic (S6),Rear-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.6,17,26,20,,,,,
+2009,Cadillac,CTS,CTS,3.6L V6 (255HP),Automatic (S6),Rear-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.6,18,26,21,,,,,
+2009,Cadillac,CTS,CTS,3.6L V6 (DI),Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.6,16,25,19,,,,,
+2009,Cadillac,CTS,CTS,3.6L V6 (255HP),Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.6,16,25,19,,,,,
+2009,Cadillac,CTS,AWD,3.6L V6 (DI),Automatic (S6),All-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.6,17,26,20,,,,,
+2009,Cadillac,CTS,AWD,3.6L V6 (255HP),Automatic (S6),All-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.6,17,25,20,,,,,

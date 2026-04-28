@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2021,Toyota,Corolla,Corolla,1.8L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,30,38,33,,,,,
+2021,Toyota,Corolla,Corolla,1.8L I4,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,29,39,33,,,,,
+2021,Toyota,Corolla,XLE,1.8L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,29,37,32,,,,,
+2021,Toyota,Corolla,Hybrid,Hybrid 1.8L I4 (Hybrid),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,53,52,52,,,,,
+2021,Toyota,Corolla,Corolla,2.0L I4 (SIDI & PFI),Automatic (AV-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,31,40,34,,,,,
+2021,Toyota,Corolla,Corolla,2.0L I4 (SIDI & PFI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,29,36,32,,,,,
+2021,Toyota,Corolla,XSE,2.0L I4 (SIDI & PFI),Automatic (AV-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,31,38,34,,,,,
+2021,Toyota,Corolla,Hatchback,2.0L I4 (SIDI & PFI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,28,37,31,,,,,
+2021,Toyota,Corolla,Hatchback,2.0L I4 (SIDI & PFI),Automatic (AM-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,32,41,35,,,,,
+2021,Toyota,Corolla,Hatchback XSE,2.0L I4 (SIDI & PFI),Automatic (AM-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,30,38,33,,,,,
+2021,Toyota,Corolla,APEX,2.0L I4 (SIDI & PFI),Automatic (AV-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,31,38,34,,,,,
+2021,Toyota,Corolla,APEX,2.0L I4 (SIDI & PFI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,28,36,31,,,,,

@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2001,Ford,Taurus,Taurus,3.0L V6 (4 valve),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.0,17,25,20,,,,,
+2001,Ford,Taurus,Taurus,3.0L V6,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.0,16,25,19,,,,,
+2001,Ford,Taurus,Wagon,3.0L V6 (4 valve),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,6,3.0,17,24,19,,,,,
+2001,Ford,Taurus,Wagon,3.0L V6,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,6,3.0,16,24,19,,,,,
+2001,Ford,Taurus,Wagon FFV,FFV 3.0L V6 (FLEX-FUEL),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline / E85,Midsize Station Wagons,6,3.0,16,24,19,,,,,
+2001,Ford,Taurus,FFV,FFV 3.0L V6 (FLEX-FUEL),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline / E85,Large Cars,6,3.0,16,25,19,,,,,

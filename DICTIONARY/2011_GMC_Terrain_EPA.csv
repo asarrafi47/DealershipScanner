@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2011,GMC,Terrain,FWD,2.4L I4 (SIDI),Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.4,22,31,26,,,,,
+2011,GMC,Terrain,AWD,2.4L I4 (SIDI),Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.4,20,28,23,,,,,
+2011,GMC,Terrain,FWD,3.0L V6 (SIDI),Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.0,16,23,19,,,,,
+2011,GMC,Terrain,FWD,FFV 3.0L V6 (SIDI; FFV),Automatic 6-spd,Front-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,6,3.0,17,24,20,,,,,
+2011,GMC,Terrain,AWD,3.0L V6 (SIDI),Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.0,16,23,19,,,,,
+2011,GMC,Terrain,AWD,FFV 3.0L V6 (SIDI; FFV),Automatic 6-spd,All-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 4WD,6,3.0,16,23,19,,,,,

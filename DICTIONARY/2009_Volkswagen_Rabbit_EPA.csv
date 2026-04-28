@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2009,Volkswagen,Rabbit,Rabbit,2.5L V5,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,5,2.5,21,30,24,,,,,
+2009,Volkswagen,Rabbit,Rabbit,2.5L V5,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Compact Cars,5,2.5,20,29,24,,,,,

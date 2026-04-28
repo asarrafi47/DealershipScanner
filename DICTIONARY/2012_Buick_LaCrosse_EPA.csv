@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2012,Buick,LaCrosse,LaCrosse,FFV 3.6L V6 (SIDI; FFV),Automatic (S6),Front-Wheel Drive,Regular Gasoline / E85,Midsize Cars,6,3.6,17,27,21,,,,,
+2012,Buick,LaCrosse,AWD,FFV 3.6L V6 (SIDI; FFV),Automatic (S6),All-Wheel Drive,Regular Gasoline / E85,Midsize Cars,6,3.6,16,26,20,,,,,
+2012,Buick,LaCrosse,eAssist,Hybrid 2.4L I4 (SIDI),Automatic (AV-S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,24,35,28,,,,,
+2012,Buick,LaCrosse,LaCrosse,FFV 3.6L V6 (SIDI; FFV; Sport Transmission),Automatic (S6),Front-Wheel Drive,Regular Gasoline / E85,Midsize Cars,6,3.6,17,27,21,,,,,

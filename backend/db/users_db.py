@@ -100,10 +100,8 @@ def init_users_db():
             (default_pw,),
         )
     try:
-        cursor.execute("UPDATE users SET role = 'admin' WHERE lower(username) = 'admin'")
         cursor.execute(
-            "UPDATE users SET role = 'dealer_staff' WHERE (role IS NULL OR trim(role) = '') "
-            "AND lower(username) != 'admin'"
+            "UPDATE users SET role = 'dealer_staff' WHERE (role IS NULL OR trim(role) = '')"
         )
     except sqlite3.Error:
         pass

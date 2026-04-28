@@ -292,6 +292,6 @@
 
 </div>
 
-<script src="{{ url_for('static', filename='dev.js') }}"></script>
+<script src="{{ url_for('static', filename='dev.js') }}" nonce="{{ csp_nonce }}"></script>
 </body>
 </html>

@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2023,Chrysler,300,AWD,3.6L V6,Automatic 8-spd,All-Wheel Drive,Regular Gasoline,Large Cars,6,3.6,18,27,21,,,,,
+2023,Chrysler,300,300,3.6L V6,Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Large Cars,6,3.6,19,30,23,,,,,
+2023,Chrysler,300,300,5.7L V8 Midgrade Gasoline,Automatic 8-spd,Rear-Wheel Drive,Midgrade Gasoline,Large Cars,8,5.7,16,25,19,,,,,
+2023,Chrysler,300,300,6.4L V8,Automatic 8-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,6.4,15,24,18,,,,,

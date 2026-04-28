@@ -7,6 +7,7 @@ import json
 import pytest
 
 from backend.knowledge_engine import (
+    _bmw_has_40i_suffix,
     _is_na_spec,
     decode_trim_logic,
     lookup_epa_aggregate,
@@ -27,6 +28,16 @@ def test_is_na_spec_real_values() -> None:
     assert _is_na_spec("AWD") is False
     assert _is_na_spec("8-Speed Automatic") is False
     assert _is_na_spec(4) is False
+
+
+def test_is_na_spec_treats_false_as_placeholder() -> None:
+    assert _is_na_spec(False) is True
+    assert _is_na_spec(True) is False
+
+
+def test_bmw_40i_suffix_is_case_insensitive() -> None:
+    assert _bmw_has_40i_suffix("xDrive40i Sedan")
+    assert _bmw_has_40i_suffix("m340i xdrive")
 
 
 def test_lookup_epa_ford_f150_hyphen_model_matches_pickup_rows() -> None:
@@ -171,3 +182,19 @@ def test_lookup_epa_bmw_i4_short_model_and_edrive40_narrowing() -> None:
     fe = vs.get("fuel_economy_display") or ""
     assert "MPGe" in fe
     assert "33" not in fe  # not kWh/100mi masquerading as MPGe
+
+
+def test_prepare_car_detail_monroney_option_lists() -> None:
+    car = {
+        "gallery": [],
+        "packages": json.dumps(
+            {
+                "monroney_options": ["M Sport Package", "Panoramic roof"],
+                "monroney_standard_highlights": ["xDrive AWD", "SensaTec"],
+            }
+        ),
+    }
+    ctx = prepare_car_detail_context(car)
+    assert ctx.get("listing_monroney_options") == ["M Sport Package", "Panoramic roof"]
+    assert ctx.get("listing_monroney_standard") == ["xDrive AWD", "SensaTec"]
+    assert ctx.get("packages_panel_has_content") is True

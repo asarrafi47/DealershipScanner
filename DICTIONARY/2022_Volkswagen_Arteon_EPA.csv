@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2022,Volkswagen,Arteon,Arteon,2.0L I4 (SIDI),Automatic (AM7),Front-Wheel Drive,Premium Gasoline,Large Cars,4,2.0,24,34,28,,,,,
+2022,Volkswagen,Arteon,4motion,2.0L I4 (SIDI),Automatic (AM7),All-Wheel Drive,Premium Gasoline,Large Cars,4,2.0,22,30,25,,,,,

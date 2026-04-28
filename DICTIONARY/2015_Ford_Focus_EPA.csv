@@ -1,0 +1,11 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Ford,Focus,FWD,1.0L I3 (SIDI; Stop-Start),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,3,1.0,29,38,32,,,,,
+2015,Ford,Focus,FWD,2.0L I4 (SIDI),Automatic (AM6),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,27,38,31,,,,,
+2015,Ford,Focus,FWD,2.0L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,26,37,30,,,,,
+2015,Ford,Focus,FWD,2.0L I4 (SIDI),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,26,35,29,,,,,
+2015,Ford,Focus,FWD,2.0L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,23,31,26,,,,,
+2015,Ford,Focus,FWD FFV,FFV 2.0L I4 (SIDI; FFV),Automatic (AM6),Front-Wheel Drive,Regular Gasoline / E85,Compact Cars,4,2.0,27,39,31,,,,,
+2015,Ford,Focus,FWD FFV,FFV 2.0L I4 (SIDI; FFV),Automatic (S6),Front-Wheel Drive,Regular Gasoline / E85,Compact Cars,4,2.0,26,37,30,,,,,
+2015,Ford,Focus,FWD FFV,FFV 2.0L I4 (SIDI; FFV),Manual 5-spd,Front-Wheel Drive,Regular Gasoline / E85,Compact Cars,4,2.0,26,35,29,,,,,
+2015,Ford,Focus,SFE FWD,1.0L I3 (SIDI; Stop-Start),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,3,1.0,30,41,34,,,,,
+2015,Ford,Focus,Electric,EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Compact Cars,,,110,99,105,,,,,

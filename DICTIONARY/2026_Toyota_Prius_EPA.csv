@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Toyota,Prius,AWD,Hybrid 2.0L I4 (SIDI & PFI; Hybrid),Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,53,54,54,,,,,
+2026,Toyota,Prius,AWD XLE/LTD,Hybrid 2.0L I4 (SIDI & PFI; Hybrid),Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,49,50,49,,,,,
+2026,Toyota,Prius,XLE/LTD,Hybrid 2.0L I4 (SIDI & PFI; Hybrid),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,52,52,52,,,,,
+2026,Toyota,Prius,Prius,Hybrid 2.0L I4 (SIDI & PFI; Hybrid),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,57,56,57,,,,,

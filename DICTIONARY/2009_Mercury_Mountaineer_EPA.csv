@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2009,Mercury,Mountaineer,2WD,4.0L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.0,14,20,16,,,,,
+2009,Mercury,Mountaineer,2WD,4.6L V8,Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,4.6,15,21,17,,,,,
+2009,Mercury,Mountaineer,4WD,4.0L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.0,13,19,15,,,,,
+2009,Mercury,Mountaineer,4WD,4.6L V8,Automatic 6-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,8,4.6,14,19,16,,,,,

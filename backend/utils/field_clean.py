@@ -17,6 +17,19 @@ _MANUFACTURER_SPEC_JUNK_RE = re.compile(
     re.IGNORECASE,
 )
 
+# VDP/JSON-LD may leak machine-readable @type into drivetrain (e.g. schema.org/AllWheelDriveConfiguration)
+_SCHEMA_ORG_DRIVETRAIN_RE = re.compile(
+    r"(?:https?://)?schema\.org/([A-Za-z0-9-]+)\b",
+    re.IGNORECASE,
+)
+# schema.org/DriveWheelConfiguration value variants we normalize to short labels
+_SCHEMA_ORG_DRIVETRAIN_TO_ABBR: dict[str, str] = {
+    "allwheeldriveconfiguration": "AWD",
+    "fourwheeldriveconfiguration": "4WD",
+    "frontwheeldriveconfiguration": "FWD",
+    "rearwheeldriveconfiguration": "RWD",
+}
+
 
 _PLACEHOLDER_LOWER: frozenset[str] = frozenset(
     {
@@ -42,6 +55,9 @@ def is_effectively_empty(val: Any) -> bool:
     """True for None, whitespace-only, or known placeholder strings."""
     if val is None:
         return True
+    if isinstance(val, bool):
+        # bool is a subclass of int; ``False`` must not look like a numeric 0
+        return not val
     if isinstance(val, (int, float)):
         return False
     s = str(val).strip()
@@ -56,6 +72,27 @@ def is_spec_overlay_junk(val: Any) -> bool:
         return True
     s = str(val).strip()
     return bool(_MANUFACTURER_SPEC_JUNK_RE.search(s))
+
+
+def coerce_drivetrain_stored(val: Any) -> str | None:
+    """
+    Map schema.org drive-wheel type tokens (or full URLs) to AWD/FWD/RWD/4WD;
+    if the value is not schema.org-related, return stripped text or None when empty.
+    If schema.org is present but not a known drive type, return None (bad leak).
+    """
+    if is_effectively_empty(val):
+        return None
+    s = str(val).strip()
+    if "schema.org" not in s.lower():
+        return s
+
+    m = _SCHEMA_ORG_DRIVETRAIN_RE.search(s)
+    if not m:
+        return None
+    key = re.sub(r"[^a-z0-9]", "", m.group(1).lower())
+    if key in _SCHEMA_ORG_DRIVETRAIN_TO_ABBR:
+        return _SCHEMA_ORG_DRIVETRAIN_TO_ABBR[key]
+    return None
 
 
 def normalize_optional_str(val: Any, *, max_len: int | None = None) -> str | None:
@@ -121,6 +158,8 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
             continue
         if k in ("dealer_url", "carfax_url", "image_url", "source_url"):
             out[k] = normalize_optional_url(out.get(k))
+        elif k == "drivetrain":
+            out[k] = normalize_optional_str(coerce_drivetrain_stored(out.get(k)))
         else:
             out[k] = normalize_optional_str(out.get(k))
 

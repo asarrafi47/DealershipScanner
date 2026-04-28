@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2010,Volkswagen,Golf/GTI,Golf,2.5L V5,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,5,2.5,22,30,25,,,,,
+2010,Volkswagen,Golf/GTI,Golf,2.5L V5,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Compact Cars,5,2.5,23,30,26,,,,,
+2010,Volkswagen,Golf/GTI,GTI,2.0L I4,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,21,31,25,,,,,
+2010,Volkswagen,Golf/GTI,GTI,2.0L I4,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,32,27,,,,,
+2010,Volkswagen,Golf/GTI,Golf,Diesel 2.0L I4 Diesel,Manual 6-spd,Front-Wheel Drive,Diesel,Compact Cars,4,2.0,29,39,32,,,,,
+2010,Volkswagen,Golf/GTI,Golf,Diesel 2.0L I4 Diesel,Automatic (S6),Front-Wheel Drive,Diesel,Compact Cars,4,2.0,29,37,32,,,,,

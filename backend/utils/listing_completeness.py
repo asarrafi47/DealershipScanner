@@ -122,17 +122,18 @@ def listing_missing_field_codes(car_raw: dict[str, Any], *, for_public_filter: b
     if not _has_http_image(dict(car_raw)):
         missing.append("images")
 
-    p = car.get("price")
-    msrp = car.get("msrp")
-    try:
-        pi = int(p) if p is not None and str(p).strip() != "" else 0
-    except (TypeError, ValueError):
-        pi = 0
-    try:
-        mi = int(msrp) if msrp is not None and str(msrp).strip() != "" else 0
-    except (TypeError, ValueError):
-        mi = 0
-    if (pi is None or pi <= 0) and (mi is None or mi <= 0):
+    def _row_field_blank(val: Any) -> bool:
+        """True for NULL/empty; False for zero (0 is a stored value, e.g. TBD/free list price)."""
+        if val is None:
+            return True
+        if isinstance(val, str) and not str(val).strip():
+            return True
+        return False
+
+    # Use raw row so list/MSRP ``0`` is not confused with "missing" after serialization.
+    p_blank = _row_field_blank(car_raw.get("price"))
+    m_blank = _row_field_blank(car_raw.get("msrp"))
+    if p_blank and m_blank:
         missing.append("price")
 
     if car.get("year") is None:

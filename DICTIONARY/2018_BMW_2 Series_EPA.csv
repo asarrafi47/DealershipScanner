@@ -1,0 +1,12 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2018,BMW,2 Series,230i Coupe,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,24,35,28,,,,,
+2018,BMW,2 Series,230i Convertible,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,24,34,27,,,,,
+2018,BMW,2 Series,230i xDrive Convertible,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,33,27,,,,,
+2018,BMW,2 Series,M240i Coupe,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,21,30,24,,,,,
+2018,BMW,2 Series,M240i Coupe,3.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,19,28,22,,,,,
+2018,BMW,2 Series,M240i xDrive Coupe,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,21,30,24,,,,,
+2018,BMW,2 Series,M240i Convertible,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,21,30,24,,,,,
+2018,BMW,2 Series,M240i Convertible,3.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,18,27,22,,,,,
+2018,BMW,2 Series,M240i xDrive Convertible,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,21,30,24,,,,,
+2018,BMW,2 Series,230i xDrive Coupe,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,24,33,27,,,,,
+2018,BMW,2 Series,230i Coupe,2.0L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,21,32,25,,,,,

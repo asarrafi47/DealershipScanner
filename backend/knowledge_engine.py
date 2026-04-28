@@ -719,12 +719,14 @@ def lookup_epa_aggregate(
 
 def _is_na_spec(v: Any) -> bool:
     """True when dealer DMS sent a placeholder instead of a real spec (includes ``--``, em dash)."""
-    if v is None:
-        return True
-    if isinstance(v, (int, float)):
-        return False
     from backend.utils.field_clean import is_effectively_empty
 
+    if v is None:
+        return True
+    if isinstance(v, bool):
+        return is_effectively_empty(v)
+    if isinstance(v, (int, float)):
+        return False
     if is_effectively_empty(v):
         return True
     s = str(v).strip().upper()
@@ -898,6 +900,8 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
     listing_packages_sections: list[dict[str, Any]] = []
     listing_standalone_features: list[str] = []
     listing_observed_features: list[str] = []
+    listing_monroney_options: list[str] = []
+    listing_monroney_standard: list[str] = []
     interior_from_listing_description = False
     interior_from_llava_vision = False
     llava_interior_section: dict[str, Any] | None = None
@@ -952,6 +956,22 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
                     "from_vision": False,
                 }
             )
+
+        mo = pj.get("monroney_options")
+        if isinstance(mo, list):
+            for x in mo:
+                s = str(x).strip()[:500]
+                if s:
+                    listing_monroney_options.append(s)
+        listing_monroney_options = listing_monroney_options[:60]
+
+        mstd = pj.get("monroney_standard_highlights")
+        if isinstance(mstd, list):
+            for x in mstd:
+                s = str(x).strip()[:500]
+                if s:
+                    listing_monroney_standard.append(s)
+        listing_monroney_standard = listing_monroney_standard[:40]
 
         for raw in pj.get("possible_packages") or []:
             if not isinstance(raw, str):
@@ -1020,6 +1040,8 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
         listing_packages_sections
         or listing_standalone_features
         or listing_observed_features
+        or listing_monroney_options
+        or listing_monroney_standard
         or llava_interior_section
     )
 
@@ -1029,6 +1051,8 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
         "listing_packages_sections": listing_packages_sections,
         "listing_standalone_features": listing_standalone_features,
         "listing_observed_features": listing_observed_features,
+        "listing_monroney_options": listing_monroney_options,
+        "listing_monroney_standard": listing_monroney_standard,
         "interior_from_listing_description": interior_from_listing_description,
         "interior_from_llava_vision": interior_from_llava_vision,
         "packages_panel_has_content": packages_panel_has_content,

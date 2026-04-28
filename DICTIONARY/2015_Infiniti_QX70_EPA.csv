@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2015,Infiniti,QX70,RWD,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 2WD,6,3.7,17,24,19,,,,,
+2015,Infiniti,QX70,AWD,3.7L V6,Automatic (S7),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,6,3.7,16,22,18,,,,,

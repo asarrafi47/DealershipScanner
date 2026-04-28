@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2023,Toyota,bZ4X,bZ4X,EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,131,107,119,,,,,
+2023,Toyota,bZ4X,LIMITED,EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,125,103,114,,,,,
+2023,Toyota,bZ4X,AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,114,94,104,,,,,
+2023,Toyota,bZ4X,LIMITED AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,112,92,102,,,,,

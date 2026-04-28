@@ -1,0 +1,10 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,BMW,8 Series,840i Coupe,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,21,29,24,,,,,
+2026,BMW,8 Series,840i xDrive Coupe,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,21,29,24,,,,,
+2026,BMW,8 Series,840i Convertible,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,21,29,24,,,,,
+2026,BMW,8 Series,840i xDrive Convertible,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,21,29,24,,,,,
+2026,BMW,8 Series,M850i xDrive Coupe,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.4,17,24,19,,,,,
+2026,BMW,8 Series,M850i xDrive Convertible,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.4,17,24,19,,,,,
+2026,BMW,8 Series,840i Gran Coupe,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,21,29,24,,,,,
+2026,BMW,8 Series,840i xDrive Gran Coupe,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,21,29,24,,,,,
+2026,BMW,8 Series,M850i xDrive Gran Coupe,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.4,17,24,19,,,,,

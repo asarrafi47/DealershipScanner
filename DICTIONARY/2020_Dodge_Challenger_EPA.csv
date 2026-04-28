@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2020,Dodge,Challenger,SRT,6.2L V8 (Hellcat engine),Automatic 8-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,6.2,13,22,16,,,,,
+2020,Dodge,Challenger,SRT,6.2L V8 (Hellcat engine),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,6.2,13,21,16,,,,,
+2020,Dodge,Challenger,SRT Widebody,6.2L V8 (Hellcat engine),Automatic 8-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,6.2,13,21,15,,,,,
+2020,Dodge,Challenger,SRT Widebody,6.2L V8 (Hellcat engine),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,6.2,13,21,16,,,,,
+2020,Dodge,Challenger,Challenger,3.6L V6,Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.6,19,30,23,,,,,
+2020,Dodge,Challenger,Challenger,6.4L V8,Automatic 8-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,6.4,15,24,18,,,,,
+2020,Dodge,Challenger,Challenger,6.4L V8,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,6.4,14,23,17,,,,,
+2020,Dodge,Challenger,Widebody,6.4L V8,Automatic 8-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,6.4,15,24,18,,,,,
+2020,Dodge,Challenger,Widebody,6.4L V8,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,6.4,14,23,17,,,,,
+2020,Dodge,Challenger,AWD,3.6L V6,Automatic 8-spd,All-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.6,18,27,21,,,,,
+2020,Dodge,Challenger,Challenger,5.7L V8 Midgrade Gasoline,Automatic 8-spd,Rear-Wheel Drive,Midgrade Gasoline,Midsize Cars,8,5.7,16,25,19,,,,,
+2020,Dodge,Challenger,Challenger,5.7L V8,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.7,15,23,18,,,,,

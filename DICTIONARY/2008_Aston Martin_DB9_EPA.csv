@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2008,Aston Martin,DB9,Coupe,5.9L V12,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,12,5.9,10,16,12,,,,,
+2008,Aston Martin,DB9,Coupe,5.9L V12,Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,12,5.9,11,18,13,,,,,
+2008,Aston Martin,DB9,Volante,5.9L V12,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,12,5.9,10,16,12,,,,,
+2008,Aston Martin,DB9,Volante,5.9L V12,Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,12,5.9,11,17,13,,,,,

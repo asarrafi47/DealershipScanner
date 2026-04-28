@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2001,Volkswagen,Eurovan,Camper,2.8L V6,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,2.8,14,18,16,,,,,
+2001,Volkswagen,Eurovan,Eurovan,2.8L V6,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,2.8,15,18,16,,,,,

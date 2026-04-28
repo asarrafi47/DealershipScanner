@@ -9,10 +9,9 @@ Gallery / images (inventory + VDP):
   Inventory parsers deep-walk intercepted JSON for nested media keys (see backend/parsers/base.py).
 
 Optional VDP (detail page) enrichment (see scanner_vdp):
-  SCANNER_VDP_EP_MAX — max VDP **page navigations** per dealer (default: 10; set 0 to disable).
-    This single budget covers both EP-style spec extraction and gallery harvesting; there is no
-    separate paid API. To “do more VDP for images”, raise this value (full dealer runs: keep
-    moderate to avoid opening thousands of VDPs).
+  SCANNER_VDP_EP_MAX — max unique listing URLs for EP / gallery harvest per dealer (default: 10; 0 = skip this phase).
+  SCANNER_VDP_PRICE_MAX — extra unique listing URLs only for rows still missing price after inventory JSON
+    (default: 400; max 5000; 0 = skip). Mirrors Node ``scanner.js`` VDP price phase.
   SCANNER_VDP_GALLERY_MIN_HTTPS — rows with fewer than this many unique https gallery URLs get
     extra priority in the VDP visit queue when SCANNER_VDP_GALLERY_PRIORITY is enabled (default: 3).
   SCANNER_VDP_GALLERY_PRIORITY — truthy (default): thin-gallery vehicles compete for VDP slots.
@@ -22,7 +21,8 @@ Optional VDP (detail page) enrichment (see scanner_vdp):
   SCANNER_VDP_SETTLE_MS — wait after load for analytics/XHR (default: 2200).
   SCANNER_VDP_GALLERY_MAX_ROUNDS — max carousel-advance iterations per VDP (default: 80).
   SCANNER_VDP_GALLERY_IDLE_ROUNDS — stop gallery loop after this many rounds with no new HTTPS URL (default: 3).
-  SCANNER_VDP_DOWNLOAD_IMAGES — default on: persist gallery bytes under SCANNER_VDP_IMAGE_DOWNLOAD_DIR
+  SCANNER_VDP_GALLERY_OPEN_LIGHTBOX — when truthy (default), try to open the dealer photo modal before DOM gallery harvest; set 0 to collect from the full page like before.
+  SCANNER_VDP_DOWNLOAD_IMAGES — default on: persist gallery bytes under SCANNER_VDP_IMAGE_DOWNLOAD_DIR; set 0 to disable.
     (default ``vdp_images``) keyed by VIN or stock (``SCANNER_VDP_IMAGE_DOWNLOAD_KEY=vin|stock``); manifest +
     ``spec_source_json.vdp_gallery_local`` updated on the vehicle row (see backend.database upsert). Set to ``0``
     to disable.
@@ -31,7 +31,7 @@ Optional VDP (detail page) enrichment (see scanner_vdp):
   SCANNER_GALLERY_MERGE_REPLACE_IF_BELOW — VDP merge replaces whole gallery when existing https
     count is below this (default: 3); otherwise VDP URLs extend listing gallery (see gallery_merge).
   SCANNER_MAX_DEALER_CONCURRENCY — parallel dealer scans (default: 2; set 1 for sequential).
-  SCANNER_MAX_VDP_CONCURRENCY — parallel VDP page visits per dealer (default: 2).
+  SCANNER_MAX_VDP_CONCURRENCY — parallel VDP page visits per dealer (default: 12; max 64).
 
 Inventory JSON intercept gating (drops third-party vehicle-shaped JSON, e.g. payment widgets):
   SCANNER_INTERCEPT_URL_ALLOW — comma-separated URL substrings that always allow (lowercased match).
@@ -89,9 +89,14 @@ Post-scan pipeline (SQLite, same run):
 Vision passes (default **on** for ``python scanner.py``; requires local Ollama, default
 ``OLLAMA_VISION_MODEL=llava:13b``):
 
-  **Gallery** — each HTTPS gallery / hero URL is classified with LLaVA; non-vehicle images are
-  removed. Opt out: ``SCANNER_GALLERY_VISION_FILTER=0`` or ``--no-gallery-vision-filter``.
-  ``SCANNER_GALLERY_VISION_MAX_WORKERS`` (default ``1``) sets parallel Ollama calls per vehicle.
+  **Gallery** — HTTPS gallery / hero URLs are de-junked (KBB, CARFAX, OEM, etc.); for proven dealer
+  inventory image URLs, LLaVA can be **skipped** so the full VDP photo carousel is preserved
+  (``SCANNER_GALLERY_VISION_PASSTHROUGH_TRUSTED_CDN=1`` default; set ``0`` to run vision on every URL).
+  Remaining images are LLaVA-triaged. Opt out entirely: ``SCANNER_GALLERY_VISION_FILTER=0`` or
+  ``--no-gallery-vision-filter``. ``SCANNER_GALLERY_VISION_MAX_WORKERS`` (default ``1``) sets parallel
+  Ollama calls per vehicle. ``SCANNER_GALLERY_VISION_KEEP_UNFETCHABLE=1`` preserves URLs when the image
+  could not be fetched (legacy: avoid dropping on CDN flakes; default is to **drop** broken/blank
+  fetches from the list).
 
   **Monroney** — after gallery cleanup, LLaVA reads sticker-like URLs and VDP Monroney text into
   ``packages`` / empty specs. Opt out: ``SCANNER_MONRONEY_VISION=0`` or ``--no-monroney-vision``.
@@ -494,7 +499,11 @@ def _apply_gallery_vision_filter_to_vehicles(vehicles: list[dict[str, Any]]) -> 
                 seen_u.add(u)
                 n_before += 1
         total_before += n_before
-        filtered = _llv.filter_gallery_urls_for_vehicle_listing(urls, max_workers=max_w)
+        ref = str(v.get("_detail_url") or v.get("detail_url") or "").strip()
+        page_referer = ref if ref.lower().startswith("http") else None
+        filtered = _llv.filter_gallery_urls_for_vehicle_listing(
+            urls, max_workers=max_w, page_referer=page_referer
+        )
         seen_f: set[str] = set()
         n_after = 0
         for u in filtered:
@@ -1207,19 +1216,19 @@ if __name__ == "__main__":
         help="After repair + listing parse, vision-only enrichment for scanned rows (Ollama; catalog not required).",
     )
     ap.add_argument(
-        "--no-post-interior-vision",
+        "--enable-interior-vision",
         action="store_true",
-        help="Skip post-scan Ollama LLaVA interior/cabin pass (default is on; see SCANNER_POST_INTERIOR_VISION).",
+        help="Enable post-scan Ollama LLaVA interior/cabin analysis (default is off; run separately via image_analyzer.py).",
     )
     ap.add_argument(
-        "--no-gallery-vision-filter",
+        "--enable-gallery-vision",
         action="store_true",
-        help="Skip LLaVA gallery cleanup before upsert (default is on; see SCANNER_GALLERY_VISION_FILTER).",
+        help="Enable LLaVA gallery cleanup before upsert (default is off; run separately via image_analyzer.py).",
     )
     ap.add_argument(
-        "--no-monroney-vision",
+        "--enable-monroney-vision",
         action="store_true",
-        help="Skip LLaVA Monroney / sticker pass before upsert (default is on; see SCANNER_MONRONEY_VISION).",
+        help="Enable LLaVA Monroney / sticker pass before upsert (default is off; run separately via image_analyzer.py).",
     )
     ap.add_argument(
         "--enrichment-workers",
@@ -1248,9 +1257,11 @@ if __name__ == "__main__":
     do_listing = not args.no_post_listing_description and post_listing_description_env_enabled()
     do_vision = bool(args.post_enrich_vision_only) or post_enrich_vision_env_enabled()
     do_enrich = bool(args.post_enrich) or post_enrich_env_enabled()
-    do_interior_vision = (not args.no_post_interior_vision) and post_interior_vision_env_enabled()
-    do_gallery_vision = (not args.no_gallery_vision_filter) and gallery_vision_filter_env_enabled()
-    do_monroney = (not args.no_monroney_vision) and monroney_vision_env_enabled()
+    # Vision passes disabled by default (run separately via image_analyzer.py)
+    # Enable with: --enable-gallery-vision, --enable-interior-vision, --enable-monroney-vision
+    do_interior_vision = args.enable_interior_vision and post_interior_vision_env_enabled()
+    do_gallery_vision = args.enable_gallery_vision and gallery_vision_filter_env_enabled()
+    do_monroney = args.enable_monroney_vision and monroney_vision_env_enabled()
     do_kbb = bool(args.post_kbb) or post_kbb_env_enabled()
 
     try:

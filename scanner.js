@@ -25,12 +25,32 @@ const MAX_SCRAPE_SAMPLES = 5;
 /** Last N raw Dealer.com objects + parsed snapshots for dev audit (flushed in upsertAll). */
 const scrapeSamplesBuffer = [];
 
+/**
+ * Bodies of JSON inventory API responses (Dealer.com intercepts), last run only.
+ * Used in smart import to backfill city/state and dealer name when the homepage
+ * is a WAF/block page (e.g. "Access Denied" title) but inventory APIs still return 200.
+ */
+let lastDealerInventoryBodies = null;
+
 const FALLBACK_IMAGE_URL = "/static/placeholder.svg";
 const DEFAULT_STR = "N/A";
 const TARGET_PAGE_SIZE = Math.min(500, parseInt(process.env.INVENTORY_PAGE_SIZE || "500", 10) || 500);
 const MAX_EXTRA_PAGES = 50;
-/** Max VDP pages to open for analytics / dataLayer ep extraction (0 = off; default 10 matches scanner.py). */
+/** Max unique listing (VDP) URLs for analytics / ep extraction (0 = skip this phase). */
 const SCANNER_VDP_EP_MAX = Math.min(100, parseInt(process.env.SCANNER_VDP_EP_MAX || "10", 10) || 0);
+/**
+ * Extra VDP navigations for vehicles still missing price after inventory JSON (0 = off).
+ * Default 400 caps runtime while covering typical lots; raise for full coverage (max 5000).
+ */
+const SCANNER_VDP_PRICE_MAX = Math.min(
+  5000,
+  Math.max(0, parseInt(process.env.SCANNER_VDP_PRICE_MAX ?? "400", 10) || 0)
+);
+/** Concurrent Puppeteer tabs for listing (VDP) extraction (default 12; max 64). */
+const SCANNER_VDP_PARALLEL = Math.min(
+  64,
+  Math.max(1, parseInt(process.env.SCANNER_VDP_PARALLEL ?? "12", 10) || 12)
+);
 const EP_RESPONSE_MAX_BYTES = 2 * 1024 * 1024;
 
 const INVENTORY_PATHS = [
@@ -65,6 +85,118 @@ function randomDelayMs() {
 function normStr(v) {
   if (v == null) return "";
   return String(v).trim();
+}
+
+/**
+ * Titles/labels that look like a blocked page, not a real dealership (meta/title/JSON-LD).
+ */
+function isBogusDealerName(n) {
+  const s = normStr(n);
+  if (!s) return true;
+  if (s.length < 2) return true;
+  const t = s.toLowerCase();
+  if (
+    t === "access denied" ||
+    t === "forbidden" ||
+    t === "not found" ||
+    t === "error" ||
+    t === "unauthorized" ||
+    t === "log in" ||
+    t === "just a moment" ||
+    t === "attention required"
+  ) {
+    return true;
+  }
+  if (/^403\b|^404\b|^4\d{2}\s/.test(t) && t.length < 30) return true;
+  if (/\baccess denied\b|\bforbidden\b|\bnot found\b/.test(t) && t.length < 45) return true;
+  if (t.includes("cloudflare") && t.length < 60) return true;
+  return false;
+}
+
+function normState2(st) {
+  return normStr(st)
+    .toUpperCase()
+    .replace(/[^A-Z]/g, "")
+    .slice(0, 2);
+}
+
+/**
+ * If ``root`` is a Dealer.com-style inventory response, find nested address + dealer name.
+ * Returns partial fields; caller fills gaps.
+ */
+function tryExtractRegistryFromInventoryBodies(bodies) {
+  if (!bodies || !bodies.length) return null;
+
+  function tryCityStateFromObject(o) {
+    if (!o || typeof o !== "object") return null;
+    const city = normStr(
+      o.addressLocality || o.city || o.town || o.dealerCity || o.dealerCityName
+    );
+    const state = normState2(
+      o.addressRegion || o.state || o.stateCode || o.region || o.dealerState
+    );
+    if (city.length < 2 || state.length !== 2) return null;
+    return { city, state };
+  }
+
+  function labelFromObject(o) {
+    if (!o || typeof o !== "object") return "";
+    for (const k of ["dealerName", "dealer_name", "dealerNameOfficial", "legalName", "companyName", "name"]) {
+      if (k === "name" && (o.vin || o.vinNumber || o.stockNumber || o.year)) continue;
+      const v = normStr(o[k]);
+      if (v && !isBogusDealerName(v) && v.length > 1) return v;
+    }
+    return "";
+  }
+
+  function walk(node, depth) {
+    if (depth > 22 || node == null) return null;
+    if (typeof node !== "object") return null;
+    if (Array.isArray(node)) {
+      for (const item of node) {
+        const w = walk(item, depth + 1);
+        if (w) return w;
+      }
+      return null;
+    }
+
+    const direct = tryCityStateFromObject(node);
+    if (direct) {
+      const nm = labelFromObject(node);
+      return { name: nm || "", city: direct.city, state: direct.state };
+    }
+    const ad = node.address;
+    if (ad && typeof ad === "object") {
+      const ts = tryCityStateFromObject(ad);
+      if (ts) {
+        return {
+          name: labelFromObject(node) || labelFromObject(ad) || "",
+          city: ts.city,
+          state: ts.state,
+        };
+      }
+    }
+    for (const v of Object.values(node)) {
+      const w = walk(v, depth + 1);
+      if (w) return w;
+    }
+    return null;
+  }
+
+  let name = "";
+  let city = "";
+  let state = "";
+  for (const root of bodies) {
+    if (!root || typeof root !== "object") continue;
+    const hit = walk(root, 0);
+    if (!hit) continue;
+    if (normStr(hit.name) && !isBogusDealerName(hit.name) && !name) name = normStr(hit.name);
+    if (normStr(hit.city) && !city) city = normStr(hit.city);
+    if (normState2(hit.state) && !state) state = normState2(hit.state);
+    if (name && city && state.length === 2) break;
+  }
+  if (!name && !city && !state) return null;
+  return { name, city, state, hint: "inventory-json" };
 }
 
 /** Match Python `normalize_optional_str`: placeholders → null for SQLite TEXT columns. */
@@ -1513,10 +1645,14 @@ async function runDealerSlow(browser, dealer, opts = {}) {
       }
     }
     const mergedList = [...byVin.values()];
-    if (SCANNER_VDP_EP_MAX > 0 && mergedList.length) {
-      await runBatchVdpExtraction(page, mergedList, vinToEp, url, SCANNER_VDP_EP_MAX);
+    if ((SCANNER_VDP_EP_MAX > 0 || SCANNER_VDP_PRICE_MAX > 0) && mergedList.length) {
+      await runBatchVdpExtraction(browser, mergedList, vinToEp, url, SCANNER_VDP_EP_MAX, SCANNER_VDP_PRICE_MAX, {
+        parallel: SCANNER_VDP_PARALLEL,
+        userAgent: randomUserAgent(),
+      });
     }
     attachEpToVehicles(mergedList, vinToEp);
+    lastDealerInventoryBodies = intercepted.filter((b) => b && typeof b === "object");
     await page.close();
     return mergedList;
   } catch (e) {
@@ -1616,10 +1752,17 @@ async function runDealerTurbo(browser, dealer, opts = {}) {
     for (const { body } of captured) pushBody(body);
 
     const mergedList = [...byVin.values()];
-    if (SCANNER_VDP_EP_MAX > 0 && mergedList.length) {
-      await runBatchVdpExtraction(page, mergedList, vinToEp, url, SCANNER_VDP_EP_MAX);
+    if ((SCANNER_VDP_EP_MAX > 0 || SCANNER_VDP_PRICE_MAX > 0) && mergedList.length) {
+      await runBatchVdpExtraction(browser, mergedList, vinToEp, url, SCANNER_VDP_EP_MAX, SCANNER_VDP_PRICE_MAX, {
+        parallel: SCANNER_VDP_PARALLEL,
+        userAgent: randomUserAgent(),
+      });
     }
     attachEpToVehicles(mergedList, vinToEp);
+
+    lastDealerInventoryBodies = captured
+      .map((c) => c.body)
+      .filter((b) => b && typeof b === "object");
 
     await page.close();
 
@@ -1646,6 +1789,7 @@ async function runDealer(browser, dealer, opts = {}) {
   }
 
   scrapeSamplesBuffer.length = 0;
+  lastDealerInventoryBodies = null;
 
   try {
     console.info(`[turbo] Starting: ${name}`);
@@ -1828,6 +1972,7 @@ async function ensureSchema(db) {
     ["is_cpo", "INTEGER"],
     ["model_full_raw", "TEXT"],
     ["data_quality_score", "REAL"],
+    ["spec_source_json", "TEXT"],
   ]) {
     if (!cols.includes(col)) {
       await run(db, `ALTER TABLE cars ADD COLUMN ${col} ${ctype}`);
@@ -1880,10 +2025,44 @@ async function applySelfCorrection(db, vehicle) {
   return vehicle;
 }
 
+/**
+ * Merge VDP listing price provenance into ``spec_source_json`` (aligned with Python ``scanner_vdp``).
+ */
+function finalizeVehicleSpecSourceJson(v) {
+  if (!v._vdp_price_meta || v.price == null) return;
+  const pr = Number(v.price);
+  if (!Number.isFinite(pr) || pr <= 0) return;
+  let base = {};
+  const existing = v.spec_source_json;
+  if (existing && String(existing).trim()) {
+    try {
+      const parsed = JSON.parse(existing);
+      if (typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)) base = parsed;
+    } catch {
+      base = {};
+    }
+  }
+  const now = new Date().toISOString();
+  const meta = v._vdp_price_meta || {};
+  const patch = {
+    source: "node_scanner",
+    origin: String(meta.source || ""),
+    raw: String(meta.raw || ""),
+    value: Math.round(pr),
+    url: normStr(v.source_url || v._detail_url).slice(0, 500),
+    fetched_at: now,
+  };
+  if (meta.candidates != null) patch.candidates = meta.candidates;
+  base.vdp_price = patch;
+  v.spec_source_json = JSON.stringify(base);
+}
+
 async function upsertVehicle(db, v) {
   const now = new Date().toISOString();
   const title =
     v.title || `${v.year || ""} ${v.make || ""} ${v.model || ""} ${v.trim || ""}`.trim();
+
+  finalizeVehicleSpecSourceJson(v);
 
   const price = v.price != null ? Math.round(Number(v.price)) || 0 : 0;
   const mileage = v.mileage != null ? normInt(v.mileage) : 0;
@@ -1899,8 +2078,9 @@ async function upsertVehicle(db, v) {
       exterior_color, interior_color, stock_number, gallery, carfax_url, history_highlights, msrp,
       dealership_registry_id,
       body_style, engine_description, condition, source_url,
-      mpg_city, mpg_highway, is_cpo, model_full_raw, data_quality_score
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      mpg_city, mpg_highway, is_cpo, model_full_raw, data_quality_score,
+      spec_source_json
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(vin) DO UPDATE SET
       title=excluded.title, year=excluded.year, make=excluded.make,
       model=excluded.model, trim=excluded.trim, price=excluded.price,
@@ -1922,7 +2102,8 @@ async function upsertVehicle(db, v) {
       mpg_highway=COALESCE(excluded.mpg_highway, mpg_highway),
       is_cpo=COALESCE(excluded.is_cpo, is_cpo),
       model_full_raw=COALESCE(excluded.model_full_raw, model_full_raw),
-      data_quality_score=COALESCE(excluded.data_quality_score, data_quality_score)
+      data_quality_score=COALESCE(excluded.data_quality_score, data_quality_score),
+      spec_source_json=COALESCE(excluded.spec_source_json, spec_source_json)
   `;
 
   const mpgCity = v.mpg_city != null && normInt(v.mpg_city) > 0 ? normInt(v.mpg_city) : null;
@@ -1968,6 +2149,7 @@ async function upsertVehicle(db, v) {
     v.data_quality_score != null && Number.isFinite(Number(v.data_quality_score))
       ? Number(v.data_quality_score)
       : null,
+    sqlOptionalStr(v.spec_source_json),
   ];
 
   await run(db, sql, params);
@@ -2090,7 +2272,9 @@ function runCrawl4aiDiscoverySubprocess(pageUrl) {
 function enrichMetadataWithCrawl4ai(pageUrl, meta) {
   const navFail = meta && meta.retryable && meta.error === "navigation";
   const missingLoc = !navFail && (!normStr(meta.city) || !normStr(meta.state));
-  const badName = !navFail && looksLikeDomainOrSlugName(normStr(meta.name), pageUrl);
+  const badName =
+    !navFail &&
+    (looksLikeDomainOrSlugName(normStr(meta.name), pageUrl) || isBogusDealerName(normStr(meta.name)));
   if (!navFail && !missingLoc && !badName) return meta;
 
   emitDiscovery({
@@ -2342,6 +2526,14 @@ async function discoverDealerMetadata(page, url, profile = "default") {
   let city = normStr(extracted.city);
   let state = normStr(extracted.state).toUpperCase().slice(0, 2);
 
+  if (isBogusDealerName(name)) {
+    name = "";
+    emitDiscovery({
+      step: "parse",
+      message: "Homepage text looks like a WAF/block page, not a dealer name; will try other sources…",
+    });
+  }
+
   if ((!city || !state) && extracted.addrBlob) {
     const fromFoot = extractCityStateFromText(extracted.addrBlob);
     if (!city && fromFoot.city) city = fromFoot.city;
@@ -2354,7 +2546,10 @@ async function discoverDealerMetadata(page, url, profile = "default") {
   if (name) {
     emitDiscovery({ step: "found_name", message: `Found name: ${name}`, name });
   } else {
-    emitDiscovery({ step: "found_name", message: "Could not resolve a business name from meta data; using site slug." });
+    emitDiscovery({
+      step: "found_name",
+      message: "Could not resolve a business name from meta data; using site slug or inventory API.",
+    });
   }
   if (city && state) {
     emitDiscovery({
@@ -2482,6 +2677,30 @@ async function main() {
         console.info(`[dev] Single-URL mode (${profile}): ${dealer.url} (${dealer.dealer_id})`);
 
         const dcVehicles = await runDealer(browser, dealer, { profile, scrollLazyLoad: true });
+
+        if (smartImport) {
+          const fromInv = tryExtractRegistryFromInventoryBodies(lastDealerInventoryBodies);
+          if (fromInv) {
+            if (normStr(fromInv.city)) city = normStr(fromInv.city);
+            if (normState2(fromInv.state)) state = normState2(fromInv.state);
+            if (normStr(fromInv.name) && !isBogusDealerName(fromInv.name)) {
+              name = fromInv.name;
+              dealer.name = fromInv.name;
+            }
+            emitDiscovery({
+              step: "inventory_meta",
+              message: "Used name/location hints from inventory API response when homepage metadata was missing or blocked.",
+            });
+          }
+          if (isBogusDealerName(dealer.name) || !normStr(dealer.name)) {
+            const fallback = normStr(name) && !isBogusDealerName(name) ? name : dealerId;
+            dealer.name = fallback;
+            name = fallback;
+          }
+          for (const v of dcVehicles) {
+            v.dealer_name = dealer.name;
+          }
+        }
 
         // ── Crawl4AI inventory sniffer fallback ────────────────────────────
         // When the Dealer.com JSON interceptor finds nothing (non-Dealer.com site

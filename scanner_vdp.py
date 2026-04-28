@@ -5,7 +5,8 @@ This module does not start Playwright; the ``page`` passed in is the same as the
 browser, which (when ``playwright_stealth`` is installed) is created via
 ``Stealth().use_async(async_playwright())`` in ``scanner.py``.
 
-Runs during the main scan when SCANNER_VDP_EP_MAX > 0: visits up to N unique VDP URLs
+Runs during the main scan when SCANNER_VDP_EP_MAX > 0 or SCANNER_VDP_PRICE_MAX > 0: visits up to N
+unique listing (VDP) URLs per phase — EP/gallery budget plus optional extra URLs for rows missing price.
 per dealer, extracts analytics ep.*, network JSON, JSON-LD, inline JSON, and DOM heuristics,
 then merges into vehicle rows via merge_analytics_ep_into_vehicle (conservative fallback).
 Gallery URLs from network JSON and in-page extraction are merged separately (see
@@ -19,6 +20,13 @@ until no new unique HTTPS URLs appear for ``SCANNER_VDP_GALLERY_IDLE_ROUNDS`` ro
 to nudge React/lazy clients. Network image URLs use ``Content-Type`` (e.g. ``image/webp``) not only
 URL extensions; JSON bodies are parsed when ``Content-Type`` is JSON-like or ``text/plain`` (e.g. GraphQL).
 Image ``response`` URLs merge with DOM harvest.
+
+``SCANNER_VDP_GALLERY_OPEN_LIGHTBOX`` (default ``1``): before the gallery URL harvest loop, try
+Playwright clicks to open the same full-screen photo modal a user would (e.g. “N of M Photos”,
+“View all photos”); when the modal is open, ``GALLERY_COLLECT_URLS_JS`` prefers ``[role=dialog]`` /
+``[aria-modal]`` and large image regions over harvesting every ``img`` on the page. Set to ``0`` to
+use legacy whole-document harvest only. Validate manually on a DMS with a lightbox, or with
+``python -c "from scanner_vdp import GALLERY_COLLECT_URLS_JS; assert 'pickGalleryRoot' in GALLERY_COLLECT_URLS_JS"``.
 
 Local VDP image download (default **on**): gallery bytes are saved under
 ``SCANNER_VDP_IMAGE_DOWNLOAD_DIR`` (default ``vdp_images`` in the process cwd), keyed by VIN with
@@ -58,6 +66,7 @@ from backend.utils.gallery_merge import (
 from backend.utils.spec_provenance import merge_spec_source_json
 from backend.utils.vdp_gallery_urls import merge_https_url_batches
 from backend.utils.vdp_price_merge import (
+    listing_price_is_empty,
     merge_vdp_price_into_vehicle,
     pick_vdp_price_from_hints,
 )
@@ -232,6 +241,15 @@ def _vdp_max_per_dealer() -> int:
         return 10
 
 
+def _vdp_price_max_per_dealer() -> int:
+    """Extra unique listing URLs for rows still missing price after inventory JSON (aligned with Node ``scanner.js``)."""
+    raw = (os.environ.get("SCANNER_VDP_PRICE_MAX") or "400").strip()
+    try:
+        return max(0, min(5000, int(raw)))
+    except ValueError:
+        return 400
+
+
 def _nav_timeout_ms() -> int:
     raw = (os.environ.get("SCANNER_VDP_NAV_TIMEOUT_MS") or "32000").strip()
     try:
@@ -249,11 +267,11 @@ def _settle_ms() -> int:
 
 
 def _max_vdp_concurrency() -> int:
-    raw = (os.environ.get("SCANNER_MAX_VDP_CONCURRENCY") or "2").strip()
+    raw = (os.environ.get("SCANNER_MAX_VDP_CONCURRENCY") or "12").strip()
     try:
-        return max(1, int(raw))
+        return max(1, min(64, int(raw)))
     except ValueError:
-        return 2
+        return 12
 
 
 def _vdp_gallery_min_https() -> int:
@@ -284,6 +302,142 @@ def _gallery_idle_rounds() -> int:
         return max(1, min(20, int((os.environ.get("SCANNER_VDP_GALLERY_IDLE_ROUNDS") or "3").strip())))
     except ValueError:
         return 3
+
+
+def _vdp_gallery_open_lightbox_enabled() -> bool:
+    """When truthy, try to open the dealer photo lightbox before scoped DOM gallery harvest (default: on)."""
+    return (os.environ.get("SCANNER_VDP_GALLERY_OPEN_LIGHTBOX") or "1").strip().lower() not in (
+        "0",
+        "false",
+        "no",
+        "off",
+    )
+
+
+_VDP_LIGHTBOX_OPEN_TIMEOUT_MS = 2500
+
+
+async def _vdp_try_open_photo_lightbox(wp: Any) -> None:
+    """
+    Best-effort: click like a user to open the main vehicle photo viewer. Never raises; VDP
+    must succeed even if every step fails. On first successful click, briefly waits for paint.
+    """
+    if not _vdp_gallery_open_lightbox_enabled():
+        return
+    tmo = int(_VDP_LIGHTBOX_OPEN_TIMEOUT_MS)
+
+    # 1) "1 of 42 Photos" (common inventory widget)
+    try:
+        n_of = wp.get_by_text(re.compile(r"\d+\s+of\s+\d+\s+photos?", re.I))
+        if await n_of.count() > 0:
+            await n_of.first.click(timeout=tmo)
+            await asyncio.sleep(0.6)
+            return
+    except Exception:
+        pass
+
+    # 1b) "42 Photos" (Sonic / Dealer.com — not always "1 of 42" format)
+    for rx in (
+        re.compile(r"^\d+\s+photos?\s*$", re.I),
+        re.compile(r"^\d+\s*\+\s*photos?\s*$", re.I),
+    ):
+        try:
+            tloc = wp.get_by_text(rx, exact=True)
+            if await tloc.count() > 0:
+                await tloc.first.click(timeout=tmo)
+                await asyncio.sleep(0.6)
+                return
+        except Exception:
+            try:
+                tloc2 = wp.get_by_text(rx)
+                if await tloc2.count() > 0:
+                    await tloc2.first.click(timeout=tmo)
+                    await asyncio.sleep(0.6)
+                    return
+            except Exception:
+                pass
+
+    # 2) Common CTAs
+    for rx in (
+        re.compile(r"(view|see|show)\s+all\s+photos?", re.I),
+        re.compile(r"^all\s+photos?\s*$", re.I),
+    ):
+        try:
+            tloc = wp.get_by_text(rx)
+            if await tloc.count() > 0:
+                await tloc.first.click(timeout=tmo)
+                await asyncio.sleep(0.6)
+                return
+        except Exception:
+            pass
+
+    # 3) Buttons / links (photo / gallery)
+    for role in ("button", "link"):
+        for rx in (
+            re.compile(r"(photo|image|picture|slide|gallery)\b", re.I),
+            re.compile(r"^more\s+photos", re.I),
+        ):
+            try:
+                rloc = wp.get_by_role(role, name=rx)  # type: ignore[arg-type]
+                c = await rloc.count()
+                if 0 < c < 20:
+                    await rloc.first.click(timeout=tmo)
+                    await asyncio.sleep(0.6)
+                    return
+            except Exception:
+                pass
+
+    # 4) Hero / primary gallery image
+    for sel in (
+        ".vehicle-image-gallery img",
+        ".vehicle-photos img",
+        "[class*='vdp-photos'] img",
+        "[class*='vehicle-image'] img",
+        "[class*='photo-gallery'] img",
+        ".photo-gallery img",
+        ".gallery img",
+    ):
+        try:
+            im = wp.locator(sel).first
+            if await im.is_visible():
+                await im.click(timeout=tmo, force=True)
+                await asyncio.sleep(0.6)
+                return
+        except Exception:
+            pass
+
+
+GALLERY_MODAL_NUDGE_JS = r"""
+() => {
+  let n = 0;
+  try {
+    const d = document.querySelector('[role="dialog"], [aria-modal="true"]');
+    if (d) {
+      d.scrollTop = d.scrollHeight;
+      d.scrollTo(0, d.scrollHeight);
+      n += 1;
+    }
+  } catch (e1) {}
+  try {
+    const wr = document.querySelector(
+      ".swiper-wrapper, [class*='swiper-wrapper'], [class*='thumbnails']"
+    );
+    if (wr) {
+      wr.scrollLeft = wr.scrollWidth;
+      wr.scrollTo(wr.scrollWidth, 0);
+      n += 1;
+    }
+  } catch (e2) {}
+  try {
+    const tb = document.querySelector("[class*='thumbnail'], [class*='thumbs']");
+    if (tb) {
+      tb.scrollLeft = tb.scrollWidth;
+      n += 1;
+    }
+  } catch (e3) {}
+  return n;
+}
+"""
 
 
 def _vdp_download_images_enabled() -> bool:
@@ -907,21 +1061,44 @@ PAGE_EXTRACT_JS = r"""
     window.scrollTo(0, Math.min(3200, (document.body && document.body.scrollHeight) || 0));
   } catch (e) {}
   const imgSeen = new Set();
-  const imgSelectors = [
+  function isLikelyVdpJunkImage(el) {
+    let cur = el;
+    for (let d = 0; d < 10 && cur; d++) {
+      const cls = (cur.className && String(cur.className)) || "";
+      const cid = (cur.id && String(cur.id)) || "";
+      const role = (cur.getAttribute && cur.getAttribute("role")) || "";
+      const t = (cls + " " + cid + " " + role).toLowerCase();
+      if (
+        /(cfx|cfximg|ipacket|i-packet|i_packet|vpp|vehicle-?protec|warrantytile|vpp-|-vpp-|-vpp|carfax-?widget|kbb-?widget|dealer-?feature-?ti|dealer-?ti|value-?your-?trade|as-?is-?disclaim|asistile|recall-?polic|financ|about-?us-?|warranty-?ext|warranty-?flyer|vdp-?tile|quick-?link|vehicle-?broch|apply-?fin|ipocket|i-pocket|mlp-?image|fandi|fi_badge|plan-?overview)/i.test(
+          t
+        )
+      ) {
+        return true;
+      }
+      cur = cur.parentElement;
+    }
+    return false;
+  }
+  const imgSelectorsSpecific = [
     ".vehicle-image-gallery img",
+    ".vehicle-photos img",
     ".gallery img",
     "[class*='photo-gallery'] img",
     "[class*='vehicle-photo'] img",
     "[class*='image-gallery'] img",
+    "[class*='media-gallery'] img",
+  ];
+  const imgSelectorsWide = [
     "img[src*='.jpg']",
     "img[src*='.jpeg']",
     "img[src*='.png']",
     "img[src*='.webp']",
   ];
-  for (const sel of imgSelectors) {
+  for (const sel of imgSelectorsSpecific) {
     try {
       document.querySelectorAll(sel).forEach((el, idx) => {
-        if (idx > 90 || result.domGalleryUrls.length >= 48) return;
+        if (idx > 120 || result.domGalleryUrls.length >= 64) return;
+        if (isLikelyVdpJunkImage(el)) return;
         const s =
           el.getAttribute("src") ||
           el.getAttribute("data-src") ||
@@ -936,7 +1113,30 @@ PAGE_EXTRACT_JS = r"""
         result.domGalleryUrls.push(t.slice(0, 900));
       });
     } catch (e) {}
-    if (result.domGalleryUrls.length >= 36) break;
+    if (result.domGalleryUrls.length >= 50) break;
+  }
+  if (result.domGalleryUrls.length < 4) {
+    for (const sel of imgSelectorsWide) {
+      try {
+        document.querySelectorAll(sel).forEach((el, idx) => {
+          if (idx > 120 || result.domGalleryUrls.length >= 64) return;
+          if (isLikelyVdpJunkImage(el)) return;
+          const s =
+            el.getAttribute("src") ||
+            el.getAttribute("data-src") ||
+            el.getAttribute("data-lazy-src") ||
+            el.getAttribute("data-original") ||
+            "";
+          const t = (s || "").trim();
+          if (!/^https?:\/\//i.test(t)) return;
+          if (!/\.(jpe?g|png|webp|gif)(\?|$)/i.test(t)) return;
+          if (imgSeen.has(t)) return;
+          imgSeen.add(t);
+          result.domGalleryUrls.push(t.slice(0, 900));
+        });
+      } catch (e) {}
+      if (result.domGalleryUrls.length >= 4) break;
+    }
   }
   result.galleryExtractDebug.domImgSample = result.domGalleryUrls.length;
   const jSeen = new Set();
@@ -1000,7 +1200,7 @@ PAGE_EXTRACT_JS = r"""
       num = raw;
     } else if (typeof raw === "string") {
       const t = raw.replace(/[$,]/g, "").trim();
-      if (!t || /call|contact|request|quote/i.test(t)) return;
+      if (!t || /call|contact|request|quote|inquire/i.test(t)) return;
       const m = t.match(/(\\d{3,7})(?:\\.\\d{2})?/);
       if (m) num = parseFloat(m[1]);
     }
@@ -1015,14 +1215,19 @@ PAGE_EXTRACT_JS = r"""
       "InternetPrice",
       "salePrice",
       "SalePrice",
+      "sellingPrice",
       "price",
       "Price",
       "vehiclePrice",
       "askingPrice",
       "listPrice",
       "retailPrice",
+      "finalPrice",
+      "cashPrice",
       "msrp",
       "MSRP",
+      "primaryPrice",
+      "advertisedPrice",
     ];
     for (const k of keys) {
       if (Object.prototype.hasOwnProperty.call(obj, k)) pushPriceHint(obj[k], "dataLayer:" + k);
@@ -1063,15 +1268,40 @@ PAGE_EXTRACT_JS = r"""
       else pushPriceHint((el.textContent || "").trim(), "dom_itemprop");
     });
   } catch (e4) {}
+  try {
+    document.querySelectorAll('meta[property="price"],meta[itemprop="price"]').forEach((el, idx) => {
+      if (idx > 10) return;
+      const c = el.getAttribute("content");
+      if (c) pushPriceHint(c, "dom_meta_price");
+    });
+  } catch (e4b) {}
   const priceSelectors = [
     ".vehicle-price",
     ".internetPrice",
+    ".internet-price",
     ".sale-price",
+    ".final-price",
+    ".primary-price",
     ".price-value",
     ".pricing-price",
+    ".price-block",
+    ".highlight-price",
+    ".srp-price",
+    ".priceDisplay",
+    "#vehicle-price",
+    "#price",
     "[class*='vehicle-price']",
+    "[class*='asking-price']",
+    "[class*='list-price']",
     "[data-vehicle-price]",
     "[data-price]",
+    "[data-selling-price]",
+    "[data-internet-price]",
+    "[data-msrp]",
+    "[data-final-price]",
+    "[data-testid*='price']",
+    "[class*='PriceDisplay']",
+    "[class*='vehiclePrice']",
   ];
   for (const sel of priceSelectors) {
     try {
@@ -1164,6 +1394,7 @@ GALLERY_COLLECT_URLS_JS = r"""
     if (/(\\/image\\/|\\/images\\/|\\/photos\\/|\\/media\\/|cloudinary|dealerinspire|dealer\\.com|inventoryphoto|resizable)/i.test(low)) return true;
     return false;
   }
+  const MIN_TO_TRUST = 2;
   function push(u) {
     if (!u || typeof u !== "string") return;
     let t = u.trim();
@@ -1193,33 +1424,130 @@ GALLERY_COLLECT_URLS_JS = r"""
       if (m[1]) push(m[1].replace(/^["']|["']$/g, ""));
     }
   }
-  try {
-    document.querySelectorAll("img").forEach((img, idx) => {
-      if (idx > 220) return;
+  function countImgs(node) {
+    if (!node || !node.querySelectorAll) return 0;
+    try {
+      return node.querySelectorAll("img").length;
+    } catch (eC) {
+      return 0;
+    }
+  }
+  function pickGalleryRoot() {
+    let best = null;
+    let bestN = 0;
+    const dialogRows = [];
+    try {
+      document.querySelectorAll('[role="dialog"], [aria-modal="true"]').forEach((el) => {
+        const n = countImgs(el);
+        if (n >= MIN_TO_TRUST) dialogRows.push({ el, n });
+      });
+    } catch (eD) {}
+    for (const row of dialogRows) {
+      if (row.n > bestN) {
+        bestN = row.n;
+        best = row.el;
+      }
+    }
+    if (best) return best;
+    const fallbacks = [
+      ".lightbox",
+      ".media-modal",
+      ".photo-viewer",
+      ".gallery-modal",
+      ".image-modal",
+      "[class*='MuiDialog']",
+      "[class*='MuiModal']",
+      "[class*='dealer-image-gallery']",
+      "[class*='image-gallery--']",
+      "[class*='lightbox']",
+      "[class*='media-modal']",
+      "[class*='photo-viewer']",
+      "[class*='gallery-modal']",
+      "[class*='image-lightbox']",
+    ];
+    for (const sel of fallbacks) {
       try {
-        if (img.currentSrc) push(img.currentSrc);
-      } catch (e0) {}
-      push(img.getAttribute("src"));
-      fromSrcset(img.getAttribute("srcset"));
-      const lazy = [
-        "data-src",
-        "data-lazy-src",
-        "data-original",
-        "data-lazy",
-        "data-image",
-        "data-zoom-src",
-        "data-fullsrc",
-      ];
-      for (const a of lazy) push(img.getAttribute(a));
-    });
-  } catch (e1) {}
-  try {
-    document.querySelectorAll("picture source[srcset], picture source[src]").forEach((src, idx) => {
-      if (idx > 80) return;
-      fromSrcset(src.getAttribute("srcset"));
-      push(src.getAttribute("src"));
-    });
-  } catch (e2) {}
+        const els = document.querySelectorAll(sel);
+        for (const el of els) {
+          const n = countImgs(el);
+          if (n >= MIN_TO_TRUST && n > bestN) {
+            bestN = n;
+            best = el;
+          }
+        }
+      } catch (eF) {}
+    }
+    if (best) return best;
+    return null;
+  }
+  function isLikelyVdpJunkContext(img) {
+    let cur = img;
+    for (let d = 0; d < 10 && cur; d++) {
+      const cls = (cur.className && String(cur.className)) || "";
+      const cid = (cur.id && String(cur.id)) || "";
+      const role = (cur.getAttribute && cur.getAttribute("role")) || "";
+      const t = (cls + " " + cid + " " + role).toLowerCase();
+      if (
+        /(cfx|cfximg|ipacket|i-packet|i_packet|vpp|vehicle-?protec|warrantytile|vpp-|-vpp-|-vpp|carfax-?widget|kbb-?widget|dealer-?feature-?ti|dealer-?ti|value-?your-?trade|as-?is-?disclaim|asistile|recall-?polic|financ|about-?us-?|warranty-?ext|warranty-?flyer|vdp-?tile|quick-?link|vehicle-?broch|apply-?fin|ipocket|i-pocket|mlp-?image|fandi|fi_badge|plan-?overview)/i.test(
+          t
+        )
+      ) {
+        return true;
+      }
+      cur = cur.parentElement;
+    }
+    return false;
+  }
+  const picked = pickGalleryRoot();
+  const roots = [];
+  if (picked) {
+    roots.push(picked);
+  } else {
+    try {
+      document
+        .querySelectorAll(
+          ".vehicle-image-gallery, .vehicle-photos, [class*='vdp-photo'], [class*='VDP-Photo'], [class*='image-gallery__'], [class*='media-gallery']"
+        )
+        .forEach((h) => roots.push(h));
+    } catch (eP) {}
+  }
+  if (roots.length === 0) {
+    try {
+      roots.push(document);
+    } catch (eD) {
+      return out;
+    }
+  }
+  for (const root of roots) {
+    try {
+      root.querySelectorAll("img").forEach((img, idx) => {
+        if (idx > 220) return;
+        if (isLikelyVdpJunkContext(img)) return;
+        try {
+          if (img.currentSrc) push(img.currentSrc);
+        } catch (e0) {}
+        push(img.getAttribute("src"));
+        fromSrcset(img.getAttribute("srcset"));
+        const lazy = [
+          "data-src",
+          "data-lazy-src",
+          "data-original",
+          "data-lazy",
+          "data-image",
+          "data-zoom-src",
+          "data-fullsrc",
+        ];
+        for (const a of lazy) push(img.getAttribute(a));
+      });
+    } catch (e1) {}
+    try {
+      root.querySelectorAll("picture source[srcset], picture source[src]").forEach((src, idx) => {
+        if (idx > 80) return;
+        fromSrcset(src.getAttribute("srcset"));
+        push(src.getAttribute("src"));
+      });
+    } catch (e2) {}
+  }
   try {
     const bsel =
       "div,span,section,article,li,a,button,p,figure,header,footer,main,aside," +
@@ -1511,7 +1839,20 @@ async def _vdp_gallery_interaction_loop(
     thumb_rot = [0]
     cap = max(inventory_gallery_max(), 160)
     settle_sleep = min(1200, max(240, int(settle_ms // 4)))
-    for _ in range(_gallery_max_rounds()):
+    try:
+        await _vdp_try_open_photo_lightbox(wp)
+        try:
+            await wp.evaluate(GALLERY_MODAL_NUDGE_JS)
+        except Exception:
+            pass
+    except Exception:
+        pass
+    for round_i in range(_gallery_max_rounds()):
+        if round_i > 0 and round_i % 6 == 0:
+            try:
+                await wp.evaluate(GALLERY_MODAL_NUDGE_JS)
+            except Exception:
+                pass
         snap = list(response_image_urls)
         try:
             dom_batch = await _vdp_evaluate_gallery_all_frames(wp)
@@ -1660,7 +2001,8 @@ async def _vdp_visit_one(
                 return
             img_hint = bool(
                 re.search(
-                    r"vehiclePhotos|vehiclephotos|\"images\"\s*:\s*\[|imageUrls|imageurls|photoList|"
+                    r"vehiclePhotos|vehiclephotos|vehicleImages|\"images\"\s*:\s*\[|imageUrls|imageurls|"
+                    r"photoList|photoUrl|mediaUrl|primaryImage|dealerinspire|pictures\.dealer|getvehicleimage|"
                     r"spin|gallery|carousel|cdn\..*\.(jpe?g|png|webp)",
                     text,
                     re.I,
@@ -1681,7 +2023,14 @@ async def _vdp_visit_one(
             score, key_hits, ep_objs = _analyze_json_signals(parsed)
             origin = _response_origin(response.url or "")
             urls_from_images = harvest_image_urls_from_json(parsed, origin, max_urls=96)
-            if score < 6 and not ep_objs and len(urls_from_images) < 3:
+            if not urls_from_images and score < 6 and not ep_objs:
+                return
+            if (
+                not ep_objs
+                and score < 6
+                and len(urls_from_images) < 3
+                and not img_hint
+            ):
                 return
             network_rows.append(
                 {
@@ -1964,6 +2313,54 @@ async def _vdp_visit_one(
         _detach_response_handler(wp, on_response)
 
 
+def _ripple_vdp_price_same_detail_url(vehicles: list[dict[str, Any]]) -> None:
+    """
+    After VDP visits, copy ``price`` / ``spec_source_json.vdp_price`` onto sibling rows that share
+    ``_detail_url`` but did not receive the browser visit (same URL, different queue positions).
+    """
+    donors: dict[str, dict[str, Any]] = {}
+    for v in vehicles:
+        u = (v.get("_detail_url") or "").strip()
+        if not u.startswith("http"):
+            continue
+        cur = donors.get(u)
+        if cur is None:
+            donors[u] = v
+            continue
+        if listing_price_is_empty(cur) and not listing_price_is_empty(v):
+            donors[u] = v
+            continue
+        if listing_price_is_empty(v) or listing_price_is_empty(cur):
+            continue
+        try:
+            if float(v.get("price") or 0) > float(cur.get("price") or 0):
+                donors[u] = v
+        except (TypeError, ValueError):
+            pass
+
+    for v in vehicles:
+        u = (v.get("_detail_url") or "").strip()
+        if not u.startswith("http"):
+            continue
+        donor = donors.get(u)
+        if donor is None or donor is v:
+            continue
+        if listing_price_is_empty(v) and not listing_price_is_empty(donor):
+            v["price"] = donor["price"]
+            ds = donor.get("spec_source_json")
+            if isinstance(ds, str) and ds.strip():
+                try:
+                    dj = json.loads(ds)
+                    vp = dj.get("vdp_price")
+                    if isinstance(vp, dict):
+                        v["spec_source_json"] = merge_spec_source_json(
+                            v.get("spec_source_json"),
+                            {"vdp_price": dict(vp)},
+                        )
+                except json.JSONDecodeError:
+                    pass
+
+
 async def enrich_vehicles_vdp(
     page,
     vehicles: list[dict[str, Any]],
@@ -1985,9 +2382,13 @@ async def enrich_vehicles_vdp(
         "skipped_no_detail_url": False,
         "gallery_phase_bins": {},
     }
-    max_v = _vdp_max_per_dealer()
-    if max_v == 0:
-        log.info("VDP: %s — enrichment skipped (SCANNER_VDP_EP_MAX=0)", dealer_name)
+    ep_cap = _vdp_max_per_dealer()
+    price_cap = _vdp_price_max_per_dealer()
+    if ep_cap == 0 and price_cap == 0:
+        log.info(
+            "VDP: %s — enrichment skipped (SCANNER_VDP_EP_MAX=0 and SCANNER_VDP_PRICE_MAX=0)",
+            dealer_name,
+        )
         return stats
 
     bins_before = gallery_https_bin_histogram(vehicles)
@@ -1996,10 +2397,10 @@ async def enrich_vehicles_vdp(
     vehicles.sort(key=lambda v: _vdp_queue_sort_key(v, seed, rotation=rot))
 
     log.info(
-        "VDP: %s — enrichment enabled (max %d VDP visit(s) per dealer; set SCANNER_VDP_EP_MAX=0 to disable; "
-        "rotation=%s)",
+        "VDP: %s — enrichment enabled (EP cap=%d, price-extra cap=%d; rotation=%s)",
         dealer_name,
-        max_v,
+        ep_cap,
+        price_cap,
         rot,
     )
 
@@ -2014,18 +2415,37 @@ async def enrich_vehicles_vdp(
     work: list[tuple[dict[str, Any], str, str]] = []
     seen_urls: set[str] = set()
     for v in vehicles:
-        if len(work) >= max_v:
+        if len(work) >= ep_cap:
             break
         u = (v.get("_detail_url") or "").strip()
         if not u.startswith("http"):
             continue
         if u in seen_urls:
             continue
-        seen_urls.add(u)
         vin = (v.get("vin") or "").strip().upper()
         if not _looks_like_vin17(vin):
             continue
+        seen_urls.add(u)
         work.append((v, u, vin))
+
+    if price_cap > 0:
+        added = 0
+        for v in vehicles:
+            if added >= price_cap:
+                break
+            if not listing_price_is_empty(v):
+                continue
+            u = (v.get("_detail_url") or "").strip()
+            if not u.startswith("http"):
+                continue
+            if u in seen_urls:
+                continue
+            vin = (v.get("vin") or "").strip().upper()
+            if not _looks_like_vin17(vin):
+                continue
+            seen_urls.add(u)
+            work.append((v, u, vin))
+            added += 1
 
     if not work:
         return stats
@@ -2088,6 +2508,8 @@ async def enrich_vehicles_vdp(
             for res in results:
                 if isinstance(res, Exception):
                     log.warning("VDP: %s — worker task failed: %s", dealer_name, res)
+
+        _ripple_vdp_price_same_detail_url(vehicles)
 
         stats["vdps_visited"] = visited
         stats["vehicles_enriched"] = vehicles_enriched

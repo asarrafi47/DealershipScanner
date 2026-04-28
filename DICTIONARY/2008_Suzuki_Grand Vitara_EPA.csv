@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2008,Suzuki,Grand Vitara,Grand Vitara,2.7L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,2.7,17,22,19,,,,,
+2008,Suzuki,Grand Vitara,Grand Vitara,2.7L V6,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,2.7,16,22,18,,,,,
+2008,Suzuki,Grand Vitara,AWD,2.7L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,2.7,17,21,19,,,,,
+2008,Suzuki,Grand Vitara,AWD,2.7L V6,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,2.7,16,21,18,,,,,

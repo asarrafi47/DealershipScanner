@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Nissan,Rogue,FWD,1.5L I3 (SIDI),Automatic (AV-S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,3,1.5,29,36,32,,,,,
+2026,Nissan,Rogue,AWD,1.5L I3 (SIDI),Automatic (AV-S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,3,1.5,28,35,31,,,,,
+2026,Nissan,Rogue,AWD Rock Creek,1.5L I3 (SIDI),Automatic (AV-S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,3,1.5,27,32,29,,,,,

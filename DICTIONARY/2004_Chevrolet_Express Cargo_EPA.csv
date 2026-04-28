@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2004,Chevrolet,Express Cargo,(Bi-fuel),Bifuel (CNG) 6.0L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline / Natural Gas,"Vans, Cargo Type",8,6.0,11,15,12,,,,,
+2004,Chevrolet,Express Cargo,(dedicated CNG),CNG 6.0L V8 Natural Gas,Automatic 4-spd,Rear-Wheel Drive,Natural Gas,"Vans, Cargo Type",8,6.0,11,15,12,,,,,

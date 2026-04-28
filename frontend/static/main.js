@@ -382,14 +382,20 @@ document.addEventListener("DOMContentLoaded", () => {
             const specLine = specBits.length
                 ? `<p class="result-meta result-meta--specs">${specBits.join(" &middot; ")}</p>`
                 : "";
+            const incompletePill = c.public_incomplete
+                ? `<span class="result-incomplete-pill" title="Missing some public-listing fields">Incomplete</span>`
+                : "";
             return `
-            <a href="/car/${idStr}" class="result-card">
+            <a href="/car/${idStr}" class="result-card${c.public_incomplete ? " result-card--incomplete" : ""}">
                 <div class="result-image-wrap">
                     <div class="result-image" style="background-image:url('${imgSrcQuoted}')"></div>
                     ${photoLabel ? `<span class="result-photo-count">${escapeHtml(photoLabel)}</span>` : ""}
                 </div>
                 <div class="result-content">
-                    <h2>${escapeHtml(c.title)}</h2>
+                    <div class="result-title-row">
+                        <h2>${escapeHtml(c.title)}</h2>
+                        ${incompletePill}
+                    </div>
                     <p class="result-trim">${escapeHtml(c.trim || "")}</p>
                     <p class="result-price">${fmtUSD(c.price)}</p>
                     <p class="result-meta">
@@ -555,5 +561,25 @@ document.addEventListener("DOMContentLoaded", () => {
             trigger.classList.toggle("open", !isOpen);
         });
     });
+
+    // Poll inventory JSON while a scan writes to inventory.db (LISTINGS_CLIENT_POLL_MS, e.g. 8000).
+    const pollAttr = document.body && document.body.getAttribute("data-listings-poll-ms");
+    const pollMs = pollAttr != null ? parseInt(pollAttr, 10) : 0;
+    if (Number.isFinite(pollMs) && pollMs > 0) {
+        setInterval(() => {
+            fetch("/api/listings/cars", { credentials: "same-origin" })
+                .then((r) => (r.ok ? r.json() : Promise.reject()))
+                .then((data) => {
+                    if (!data || !data.ok || !Array.isArray(data.cars)) return;
+                    window.ALL_CARS = data.cars;
+                    const smartIn = document.getElementById("smart-search-input");
+                    if (smartIn && (smartIn.value || "").trim()) return;
+                    if (typeof window.__DS_runFilterRender === "function") {
+                        window.__DS_runFilterRender();
+                    }
+                })
+                .catch(() => {});
+        }, pollMs);
+    }
 
 });

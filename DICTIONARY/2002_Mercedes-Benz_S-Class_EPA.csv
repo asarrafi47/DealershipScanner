@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2002,Mercedes-Benz,S-Class,S430,4.3L V8,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,4.3,15,22,18,,,,,
+2002,Mercedes-Benz,S-Class,S500,5.0L V8 (GUZZLER),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,14,21,17,,,,,
+2002,Mercedes-Benz,S-Class,S55 AMG,5.4L V8 (GUZZLER),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.4,14,20,17,,,,,
+2002,Mercedes-Benz,S-Class,S600,5.8L V12 (GUZZLER),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,12,5.8,13,21,16,,,,,

@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2005,Jeep,Liberty/Cherokee,2WD,2.4L I4,Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.4,18,24,20,,,,,
+2005,Jeep,Liberty/Cherokee,2WD,3.7L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.7,15,20,17,,,,,
+2005,Jeep,Liberty/Cherokee,2WD,3.7L V6,Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.7,16,20,17,,,,,
+2005,Jeep,Liberty/Cherokee,4WD,2.4L I4,Manual 6-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.4,18,22,20,,,,,
+2005,Jeep,Liberty/Cherokee,4WD,3.7L V6,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.7,15,20,17,,,,,
+2005,Jeep,Liberty/Cherokee,4WD,3.7L V6,Manual 6-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.7,16,20,17,,,,,
+2005,Jeep,Liberty/Cherokee,4WD,Diesel 2.8L I4 Diesel,Automatic 5-spd,All-Wheel Drive,Diesel,Sport Utility Vehicle - 4WD,4,2.8,19,24,21,,,,,

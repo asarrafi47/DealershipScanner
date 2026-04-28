@@ -11,7 +11,12 @@ import os
 import re
 from typing import Any
 
-from backend.utils.field_clean import is_effectively_empty, is_spec_overlay_junk, normalize_optional_str
+from backend.utils.field_clean import (
+    coerce_drivetrain_stored,
+    is_effectively_empty,
+    is_spec_overlay_junk,
+    normalize_optional_str,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +65,10 @@ def _norm_transmission(s: str | None) -> str | None:
 def _norm_drivetrain(s: str | None) -> str | None:
     if s is None or is_effectively_empty(s):
         return None
-    low = str(s).strip().lower()
+    raw = str(s).strip()
+    if "schema.org" in raw.lower():
+        return coerce_drivetrain_stored(raw)
+    low = raw.lower()
     if "all-wheel" in low or low == "awd" or "xdrive" in low:
         return "AWD"
     if "four-wheel" in low or "4-wheel" in low or low in ("4wd", "4x4") or "4x4" in low or "4 wd" in low:
@@ -436,7 +444,7 @@ def _coerce_mpg_number(val: Any) -> float | None:
     if isinstance(val, dict):
         for k in ("value", "amount", "mpg", "city", "highway", "combined"):
             x = val.get(k)
-            if isinstance(x, (int, float)):
+            if isinstance(x, (int, float)) and not isinstance(x, bool):
                 f = float(x)
                 if 4 <= f <= 200:
                     return f
@@ -470,6 +478,8 @@ def _listing_is_placeholder_like_for_overlay(field: str, existing: Any) -> bool:
         ),
     }
     if field in junk and s in junk[field]:
+        return True
+    if field in ("drivetrain", "transmission", "fuel_type", "body_style") and "schema.org" in s:
         return True
     if len(s) <= 1:
         return True

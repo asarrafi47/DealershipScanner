@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2006,Chevrolet,Impala,Impala,3.9L V6,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.9,17,25,20,,,,,
+2006,Chevrolet,Impala,Impala,5.3L V8,Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Large Cars,8,5.3,16,26,19,,,,,
+2006,Chevrolet,Impala,Impala,FFV 3.5L V6 (FLEX-FUEL),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline / E85,Large Cars,6,3.5,18,28,22,,,,,
+2006,Chevrolet,Impala,Impala,3.9L V6 (FFS MPFI),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.9,17,23,19,,,,,

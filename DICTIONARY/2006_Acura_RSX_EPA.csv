@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2006,Acura,RSX,RSX,2.0L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,24,31,26,,,,,
+2006,Acura,RSX,RSX,2.0L I4,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,20,28,23,,,,,
+2006,Acura,RSX,RSX,2.0L I4,Automatic (S5),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,22,31,25,,,,,

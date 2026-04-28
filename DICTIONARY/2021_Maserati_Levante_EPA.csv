@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2021,Maserati,Levante,S,3.0L V6 (SIDI),Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,16,22,18,,,,,
+2021,Maserati,Levante,Levante,3.0L V6 (SIDI),Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,16,22,18,,,,,
+2021,Maserati,Levante,GTS,3.8L V8 (SIDI),Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,3.8,13,20,16,,,,,
+2021,Maserati,Levante,Trofeo,3.8L V8 (SIDI),Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,3.8,13,20,16,,,,,

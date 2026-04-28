@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2022,Jaguar,F-Pace,SVR,5.0L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,8,5.0,15,21,17,,,,,
+2022,Jaguar,F-Pace,F-Pace,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,22,27,24,,,,,
+2022,Jaguar,F-Pace,P340 MHEV,Hybrid 3.0L V6 (SIDI; Mild Hybrid),Automatic (S8),Four-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,6,3.0,20,27,22,,,,,
+2022,Jaguar,F-Pace,P400 MHEV,Hybrid 3.0L V6 (SIDI; Mild Hybrid),Automatic (S8),Four-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,6,3.0,19,26,22,,,,,

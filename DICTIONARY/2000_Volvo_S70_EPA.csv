@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2000,Volvo,S70,S70,2.3L V5,Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,5,2.3,17,25,20,,,,,
+2000,Volvo,S70,S70,2.3L V5,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,5,2.3,18,25,21,,,,,
+2000,Volvo,S70,S70,2.4L V5,Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,5,2.4,17,24,20,,,,,
+2000,Volvo,S70,S70,2.4L V5,Automatic 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,5,2.4,18,26,21,,,,,
+2000,Volvo,S70,S70,2.4L V5,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,5,2.4,19,26,22,,,,,
+2000,Volvo,S70,AWD,2.4L V5,Automatic 4-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,5,2.4,16,23,19,,,,,

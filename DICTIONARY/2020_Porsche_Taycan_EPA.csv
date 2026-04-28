@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2020,Porsche,Taycan,Turbo,EV Electricity,Automatic (A2),All-Wheel Drive,Electricity,Large Cars,,,68,71,69,,,,,
+2020,Porsche,Taycan,Turbo S,EV Electricity,Automatic (A2),All-Wheel Drive,Electricity,Large Cars,,,67,68,68,,,,,
+2020,Porsche,Taycan,4S Perf Battery Plus,EV Electricity,Automatic (A2),All-Wheel Drive,Electricity,Large Cars,,,68,71,69,,,,,

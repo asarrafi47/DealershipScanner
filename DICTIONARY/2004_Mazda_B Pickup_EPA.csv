@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2004,Mazda,B Pickup,B2300 2WD,2.3L I4,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,4,2.3,19,24,21,,,,,
+2004,Mazda,B Pickup,B2300 2WD,2.3L I4,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,4,2.3,21,27,23,,,,,
+2004,Mazda,B Pickup,B3000,3.0L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,3.0,16,21,18,,,,,
+2004,Mazda,B Pickup,B3000,3.0L V6,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,3.0,16,21,18,,,,,
+2004,Mazda,B Pickup,B4000 2WD,4.0L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,4.0,15,20,17,,,,,
+2004,Mazda,B Pickup,B4000 2WD,4.0L V6,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,4.0,15,21,17,,,,,
+2004,Mazda,B Pickup,B4000 4WD,4.0L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,4.0,14,18,15,,,,,
+2004,Mazda,B Pickup,B4000 4WD,4.0L V6,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,4.0,14,17,15,,,,,

@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2005,Saturn,Vue,FWD,2.2L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.2,20,26,22,,,,,
+2005,Saturn,Vue,FWD,2.2L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.2,19,25,21,,,,,
+2005,Saturn,Vue,FWD,2.2L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.2,20,27,23,,,,,
+2005,Saturn,Vue,FWD,3.5L V6,Automatic 5-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.5,18,25,20,,,,,
+2005,Saturn,Vue,AWD,2.2L I4,Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.2,19,24,21,,,,,
+2005,Saturn,Vue,AWD,3.5L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.5,17,23,19,,,,,

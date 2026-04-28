@@ -94,7 +94,7 @@
     </main>
 </div>
 
-<script type="application/json" id="dev-providers-json">{{ providers | tojson }}</script>
-<script src="{{ url_for('static', filename='dev_console.js') }}" defer></script>
+<script type="application/json" id="dev-providers-json" nonce="{{ csp_nonce }}">{{ providers | tojson }}</script>
+<script src="{{ url_for('static', filename='dev_console.js') }}" defer nonce="{{ csp_nonce }}"></script>
 </body>
 </html>

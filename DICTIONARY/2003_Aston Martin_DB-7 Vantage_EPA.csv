@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2003,Aston Martin,DB-7 Vantage,Coupe,5.9L V12 (GUZZLER),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,12,5.9,11,18,13,,,,,
+2003,Aston Martin,DB-7 Vantage,Coupe,5.9L V12 (GUZZLER),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,12,5.9,10,17,12,,,,,
+2003,Aston Martin,DB-7 Vantage,Volante,5.9L V12 (GUZZLER),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,12,5.9,10,17,12,,,,,
+2003,Aston Martin,DB-7 Vantage,Volante,5.9L V12 (GUZZLER),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,12,5.9,10,17,12,,,,,

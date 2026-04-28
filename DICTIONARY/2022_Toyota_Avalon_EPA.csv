@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2022,Toyota,Avalon,XLE,3.5L V6 (SIDI & PFI),Automatic (S8),Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,22,32,26,,,,,
+2022,Toyota,Avalon,Avalon,3.5L V6 (SIDI & PFI),Automatic (S8),Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,22,31,25,,,,,
+2022,Toyota,Avalon,Hybrid,Hybrid 2.5L I4 (SIDI & PFI; Hybrid),Automatic (AV-S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,43,43,43,,,,,
+2022,Toyota,Avalon,Hybrid XLE,Hybrid 2.5L I4 (SIDI & PFI; Hybrid),Automatic (AV-S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,43,44,44,,,,,

@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2003,Honda,Accord,Accord,2.4L I4 (VTC/VTEC),Automatic 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,21,31,25,,,,,
+2003,Honda,Accord,Accord,2.4L I4 (VTC/VTEC),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,23,31,26,,,,,
+2003,Honda,Accord,Accord,3.0L V6,Automatic 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.0,19,27,22,,,,,
+2003,Honda,Accord,Accord,3.0L V6,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.0,18,27,21,,,,,

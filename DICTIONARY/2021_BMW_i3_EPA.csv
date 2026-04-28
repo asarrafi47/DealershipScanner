@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2021,BMW,i3,s,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Subcompact Cars,,,124,102,113,,,,,
+2021,BMW,i3,with Range Extender,Plug-in Hybrid 0.6L I2 (PHEV),Automatic (A1),Rear-Wheel Drive,Premium Gasoline / Electricity,Subcompact Cars,2,0.6,30,31,31,,,,,
+2021,BMW,i3,s with Range Extender,Plug-in Hybrid 0.6L I2 (PHEV),Automatic (A1),Rear-Wheel Drive,Premium Gasoline / Electricity,Subcompact Cars,2,0.6,30,31,31,,,,,
+2021,BMW,i3,i3,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Subcompact Cars,,,124,102,113,,,,,

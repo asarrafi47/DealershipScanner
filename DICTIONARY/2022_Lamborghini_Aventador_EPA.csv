@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2022,Lamborghini,Aventador,Coupe,6.5L V12,Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Two Seaters,12,6.5,9,16,11,,,,,
+2022,Lamborghini,Aventador,Roadster,6.5L V12,Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Two Seaters,12,6.5,9,16,11,,,,,
+2022,Lamborghini,Aventador,Countach,6.5L V12,Automatic (AM-S7),All-Wheel Drive,Premium Gasoline,Two Seaters,12,6.5,9,16,11,,,,,

@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2006,Saturn,Ion,Ion,2.0L I4,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,20,27,23,,,,,
+2006,Saturn,Ion,Ion,2.2L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.2,21,29,24,,,,,
+2006,Saturn,Ion,Ion,2.2L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.2,23,32,26,,,,,
+2006,Saturn,Ion,Ion,2.4L I4,Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.4,21,29,24,,,,,
+2006,Saturn,Ion,Ion,2.4L I4,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.4,22,31,25,,,,,

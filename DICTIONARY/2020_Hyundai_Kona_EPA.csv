@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2020,Hyundai,Kona,AWD,1.6L I4 (SIDI),Automatic (AM7),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,1.6,26,29,27,,,,,
+2020,Hyundai,Kona,FWD,1.6L I4 (SIDI),Automatic (AM7),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,1.6,28,32,30,,,,,
+2020,Hyundai,Kona,FWD,2.0L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,27,33,30,,,,,
+2020,Hyundai,Kona,AWD,2.0L I4 (SIDI),Automatic (S6),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,26,30,28,,,,,
+2020,Hyundai,Kona,Electric,EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,132,108,120,,,,,

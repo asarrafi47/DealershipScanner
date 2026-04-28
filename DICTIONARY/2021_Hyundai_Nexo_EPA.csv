@@ -1,0 +1,3 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2021,Hyundai,Nexo,Nexo,FCV (PEM) Hydrogen,Automatic (A1),Front-Wheel Drive,Hydrogen,Small Sport Utility Vehicle 2WD,,,59,54,57,,,,,
+2021,Hyundai,Nexo,Blue,FCV (PEM) Hydrogen,Automatic (A1),Front-Wheel Drive,Hydrogen,Small Sport Utility Vehicle 2WD,,,65,58,61,,,,,

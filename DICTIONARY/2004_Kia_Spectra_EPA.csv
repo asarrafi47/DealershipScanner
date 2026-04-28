@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2004,Kia,Spectra,1.8L,1.8L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,19,27,22,,,,,
+2004,Kia,Spectra,1.8L,1.8L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,21,29,24,,,,,
+2004,Kia,Spectra,2.0L,2.0L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,21,31,25,,,,,
+2004,Kia,Spectra,2.0L,2.0L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,22,29,25,,,,,

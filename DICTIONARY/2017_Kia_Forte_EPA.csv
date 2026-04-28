@@ -1,0 +1,10 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2017,Kia,Forte,Forte,2.0L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,25,33,28,,,,,
+2017,Kia,Forte,Forte,2.0L I4,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,29,38,32,,,,,
+2017,Kia,Forte,Forte,2.0L I4,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,25,34,28,,,,,
+2017,Kia,Forte,Koup,2.0L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,25,33,28,,,,,
+2017,Kia,Forte,Koup,1.6L I4 (SIDI),Automatic (AM7),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,25,32,27,,,,,
+2017,Kia,Forte,Koup,1.6L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,23,30,26,,,,,
+2017,Kia,Forte,5,2.0L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,25,34,28,,,,,
+2017,Kia,Forte,5,1.6L I4 (SIDI),Automatic (AM7),Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.6,25,30,27,,,,,
+2017,Kia,Forte,5,1.6L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.6,23,29,25,,,,,

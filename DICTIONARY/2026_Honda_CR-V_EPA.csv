@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2026,Honda,CR-V,FWD,1.5L I4 (SIDI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,1.5,28,33,30,,,,,
+2026,Honda,CR-V,FWD,Hybrid 2.0L I4 (SIDI; Hybrid;),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,43,36,40,,,,,
+2026,Honda,CR-V,AWD,1.5L I4 (SIDI),Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,1.5,27,31,29,,,,,
+2026,Honda,CR-V,AWD,Hybrid 2.0L I4 (SIDI; Hybrid),Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,40,34,37,,,,,
+2026,Honda,CR-V,AWD TrailSport,Hybrid 2.0L I4 (SIDI; Hybrid),Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,38,33,35,,,,,

@@ -1,0 +1,10 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2011,Ford,Fusion,FWD,2.5L I4,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,22,29,24,,,,,
+2011,Ford,Fusion,FWD,2.5L I4,Automatic 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,23,32,26,,,,,
+2011,Ford,Fusion,FWD,2.5L I4,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,22,28,24,,,,,
+2011,Ford,Fusion,AWD,3.5L V6,Automatic (S6),All-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,17,24,19,,,,,
+2011,Ford,Fusion,FWD,3.5L V6,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.5,18,26,21,,,,,
+2011,Ford,Fusion,S FWD,2.5L I4,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,22,31,25,,,,,
+2011,Ford,Fusion,AWD FFV,FFV 3.0L V6 (FFV),Automatic (S6),All-Wheel Drive,Regular Gasoline / E85,Midsize Cars,6,3.0,18,25,20,,,,,
+2011,Ford,Fusion,Hybrid FWD,Hybrid 2.5L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,41,35,38,,,,,
+2011,Ford,Fusion,FWD FFV,FFV 3.0L V6 (FFV),Automatic (S6),Front-Wheel Drive,Regular Gasoline / E85,Midsize Cars,6,3.0,20,28,23,,,,,

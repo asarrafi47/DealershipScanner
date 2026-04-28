@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2000,Mitsubishi,Eclipse,Eclipse,2.4L I4 (SOHC),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.4,18,25,21,,,,,
+2000,Mitsubishi,Eclipse,Eclipse,2.4L I4 (SOHC),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.4,18,25,21,,,,,
+2000,Mitsubishi,Eclipse,Eclipse,2.4L I4 (SOHC),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.4,20,28,23,,,,,
+2000,Mitsubishi,Eclipse,Eclipse,3.0L V6 (SOHC),Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,18,25,20,,,,,
+2000,Mitsubishi,Eclipse,Eclipse,3.0L V6 (SOHC),Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,18,26,21,,,,,

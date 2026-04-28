@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2016,Ford,Fusion,FWD,1.5L I4 (SIDI; Stop-Start),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.5,25,36,29,,,,,
+2016,Ford,Fusion,FWD,1.5L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.5,24,36,28,,,,,
+2016,Ford,Fusion,AWD,2.0L I4 (SIDI),Automatic (S6),All-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,22,31,25,,,,,
+2016,Ford,Fusion,FWD,2.0L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,22,33,26,,,,,
+2016,Ford,Fusion,FWD,2.5L I4,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.5,22,33,26,,,,,
+2016,Ford,Fusion,Hybrid FWD,Hybrid 2.0L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,43,39,41,,,,,
+2016,Ford,Fusion,Energi Plug-in Hybrid,Plug-in Hybrid 2.0L I4 (PHEV),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline / Electricity,Midsize Cars,4,2.0,40,36,38,,,,,

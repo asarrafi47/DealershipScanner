@@ -75,6 +75,25 @@ def car_needs_spec_backfill(car: dict[str, Any]) -> bool:
     return bool(cyl_missing or mpg_missing)
 
 
+def _listing_spec_gaps_for_backfill(car: dict[str, Any]) -> bool:
+    """
+    True when common listing fields this pipeline can fill are still empty/placeholder.
+    (Previously only ``car_needs_spec_backfill`` (MPG/cyl) could open the backfill, so
+    a row with good MPG but no transmission never hit EPA / VDP / NHTSA paths.)
+    """
+    if not car or not car.get("id"):
+        return False
+    for k in ("transmission", "drivetrain", "body_style", "engine_description"):
+        if is_effectively_empty(car.get(k)):
+            return True
+    return False
+
+
+def should_run_spec_backfill(car: dict[str, Any]) -> bool:
+    """Run the multi-tier backfill when MPG/cyl is incomplete *or* listing spec columns have gaps."""
+    return car_needs_spec_backfill(car) or _listing_spec_gaps_for_backfill(car)
+
+
 def _title_for_decode(car: dict[str, Any]) -> str:
     title = (car.get("title") or "").strip()
     if (car.get("make") or "").strip().upper() == "BMW" and (car.get("fuel_type") or "").strip():
@@ -321,7 +340,7 @@ def run_spec_backfill_for_car(
     car = get_car_by_id(car_id)
     if not car:
         return SpecBackfillResult(car_id=car_id, ok=False, message="not_found")
-    if not car_needs_spec_backfill(car):
+    if not should_run_spec_backfill(car):
         return SpecBackfillResult(car_id=car_id, ok=True, message="already_complete")
 
     merged: dict[str, Any] = {}
@@ -344,7 +363,7 @@ def run_spec_backfill_for_car(
                 v[k] = val
         return v
 
-    if use_vdp and car_needs_spec_backfill(_virtual_row()):
+    if use_vdp and (car_needs_spec_backfill(_virtual_row()) or _listing_spec_gaps_for_backfill(_virtual_row())):
         fv, pv = tier_b_vdp(car)
         if fv:
             tiers.append("b_vdp")

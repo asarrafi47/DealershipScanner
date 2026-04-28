@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2012,Saab,9-5,Sedan,FFV 2.0L I4 (SIDI; FFV),Automatic (S6),Front-Wheel Drive,Regular Gasoline / E85,Midsize Cars,4,2.0,18,28,21,,,,,
+2012,Saab,9-5,Sedan,FFV 2.0L I4 (SIDI; FFV),Manual 6-spd,Front-Wheel Drive,Regular Gasoline / E85,Midsize Cars,4,2.0,20,32,24,,,,,
+2012,Saab,9-5,Sedan AWD,2.8L V6,Automatic (S6),All-Wheel Drive,Regular Gasoline,Midsize Cars,6,2.8,17,26,20,,,,,

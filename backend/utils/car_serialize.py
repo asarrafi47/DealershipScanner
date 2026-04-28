@@ -14,6 +14,7 @@ from typing import Any
 
 from backend.utils.field_clean import (
     clean_car_row_dict,
+    coerce_drivetrain_stored,
     is_effectively_empty,
     is_spec_overlay_junk,
     normalize_optional_url,
@@ -650,7 +651,7 @@ def serialize_car_for_api(
     else:
         td = format_display_value(inferred_t or dealer_t)
 
-    dealer_d = c.get("drivetrain")
+    dealer_d = coerce_drivetrain_stored(c.get("drivetrain"))
     inferred_dd = vs.get("drivetrain_display")
     if _dealer_spec_wins(dealer_d):
         dd = format_display_value(dealer_d)

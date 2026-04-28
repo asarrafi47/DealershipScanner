@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2017,Chevrolet,Cruze,Cruze,1.4L I4 (SIDI; Stop-Start),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.4,30,40,34,,,,,
+2017,Chevrolet,Cruze,Premier,1.4L I4 (SIDI; Stop-Start),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.4,29,39,33,,,,,
+2017,Chevrolet,Cruze,Hatchback,1.4L I4 (SIDI; Stop-Start),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.4,29,38,32,,,,,
+2017,Chevrolet,Cruze,Premier Hatchback,1.4L I4 (SIDI; Stop-Start),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.4,28,37,31,,,,,
+2017,Chevrolet,Cruze,Cruze,1.4L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.4,28,39,32,,,,,
+2017,Chevrolet,Cruze,Hatchback,1.4L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.4,28,37,31,,,,,
+2017,Chevrolet,Cruze,Cruze,Diesel 1.6L I4 Diesel,Automatic 9-spd,Front-Wheel Drive,Diesel,Compact Cars,4,1.6,31,47,37,,,,,
+2017,Chevrolet,Cruze,Cruze,Diesel 1.6L I4 Diesel,Manual 6-spd,Front-Wheel Drive,Diesel,Compact Cars,4,1.6,30,52,37,,,,,
