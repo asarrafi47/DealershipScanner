@@ -315,7 +315,7 @@ def _pick_detail_url_dealer_on(obj: dict, base_url: str) -> str | None:
 
 
 def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dealer_url: str) -> dict | None:
-    vin = norm_str(obj.get("vin") or obj.get("VIN") or obj.get("stockNumber") or obj.get("stock_number") or "")
+    vin = norm_str(obj.get("vin") or obj.get("VIN") or obj.get("item_id") or obj.get("stockNumber") or obj.get("stock_number") or "")
     if not vin:
         vin = f"unknown-{hash(str(obj)) % 10**8}"
     hero = extract_image_url(obj, base_url)
@@ -381,13 +381,18 @@ def _parse_json_list(data, base_url: str, dealer_id: str, dealer_name: str, deal
     for obj in items:
         if not isinstance(obj, dict):
             continue
+        # Detect and convert ASC/GA4 format (DealerOn sites) before filtering
+        if obj.get("item_id") and not obj.get("vin"):
+            obj = _asc_to_dealer_on(obj)
         if not (
             obj.get("vin")
             or obj.get("VIN")
+            or obj.get("item_id")
             or obj.get("stockNumber")
             or obj.get("stock_number")
             or obj.get("stock")
             or obj.get("price")
+            or obj.get("item_price")
             or obj.get("salePrice")
             or obj.get("internetPrice")
             or obj.get("sellingPrice")

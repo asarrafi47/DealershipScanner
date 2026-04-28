@@ -8,7 +8,7 @@ from urllib.parse import parse_qsl, urlencode, urljoin, urlparse, urlunparse
 def _has_vin(d: dict) -> bool:
     if not isinstance(d, dict):
         return False
-    return "vin" in d or "VIN" in d
+    return "vin" in d or "VIN" in d or "item_id" in d
 
 
 def get_total_count(obj) -> int | None:
