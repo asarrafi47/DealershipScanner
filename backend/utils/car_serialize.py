@@ -149,6 +149,119 @@ _MANUFACTURER_SPEC_RE = re.compile(
 # Listing/VDP text that is only a liter figure (no layout / cylinder / motor words) — merge with inferred cylinders.
 _DISP_ONLY_ENGINE_RE = re.compile(r"^\s*(\d+\.\d+|\d+)\s*l?\s*$", re.IGNORECASE)
 
+# Injection/valve/program tech codes that add no buyer-facing value.
+_ENGINE_JUNK_PARENS_RE = re.compile(
+    r"\(\s*(?:SIDI(?:\s*&\s*PFI)?|PFI|GDI|MPFI|DOHC|SOHC|FFV|Stop[- ]Start|ZL[0-9]+)"
+    r"(?:[^)]*?)?\s*\)",
+    re.IGNORECASE,
+)
+# Strip "Mild Hybrid" or plain "Hybrid" from inside parentheses but keep the text outside.
+_ENGINE_MILD_HYBRID_PARENS_RE = re.compile(
+    r"\(\s*(?:[^)]*?;\s*)?(?:Mild\s+)?Hybrid(?:[^)]*?)?\s*\)",
+    re.IGNORECASE,
+)
+# Inline valve/injection codes not in parens: "16V", "MPFI", "DOHC", "PDI", "GDI"
+_ENGINE_INLINE_TECH_RE = re.compile(
+    r"\b\d{1,2}V\b|\b(?:MPFI|DOHC|SOHC|PDI|GDI)\b",
+    re.IGNORECASE,
+)
+# Hyundai/Kia internal engine-family suffix codes standing alone after layout token.
+_ENGINE_FAMILY_CODE_RE = re.compile(
+    r"\b(?:CW|PY|Nu|Theta|Gamma|Kappa|Lambda|Tau|Smartstream)\b",
+    re.IGNORECASE,
+)
+# Redundant fuel-quality or type suffixes at end of string.
+_ENGINE_FUEL_SUFFIX_RE = re.compile(
+    r"\s+(?:Midgrade\s+)?Gasoline\s*$",
+    re.IGNORECASE,
+)
+
+
+def _normalize_engine_description(raw: str) -> str:
+    """
+    Strip injection-tech jargon from an ``engine_description`` string,
+    keeping displacement, cylinder layout, and drivetrain qualifiers
+    (Diesel, Hybrid, Mild Hybrid, Twin Turbo, Turbocharged).
+
+    Examples:
+      "2.0L I4 (SIDI)"                    → "2.0L I4"
+      "Hybrid 3.6L V6 (Mild Hybrid)"      → "3.6L V6 Mild Hybrid"
+      "Diesel 3.0L V6 Diesel"             → "3.0L V6 Diesel"
+      "3.5L V6 24V PDI DOHC Twin Turbo"   → "3.5L V6 Twin Turbo"
+      "EV Electricity"                    → "Electric"
+      "2L GDI Nu"                         → "2.0L"   (displacement-only; cylinders merged downstream)
+    """
+    s = raw.strip()
+    if not s:
+        return s
+
+    low = s.lower()
+
+    if "electricity" in low or low.startswith("ev ") or low == "ev":
+        return "Electric"
+
+    # Detect and strip leading type prefixes; track what qualifiers to append.
+    hybrid_prefix = False
+    mild_hybrid_qual = False
+    diesel_qual = False
+    ffv_qual = False
+
+    if re.match(r"(?i)^hybrid\s+", s):
+        hybrid_prefix = True
+        s = re.sub(r"(?i)^hybrid\s+", "", s).strip()
+    if re.match(r"(?i)^diesel\s+", s):
+        diesel_qual = True
+        s = re.sub(r"(?i)^diesel\s+", "", s).strip()
+    if re.match(r"(?i)^ffv\s+", s):
+        ffv_qual = True
+        s = re.sub(r"(?i)^ffv\s+", "", s).strip()
+
+    # Extract "Mild Hybrid" or plain "Hybrid" qualifier from parentheses before stripping them.
+    if re.search(r"(?i)\bMild\s+Hybrid\b", s):
+        mild_hybrid_qual = True
+    elif hybrid_prefix or re.search(r"(?i)\bHybrid\b", s):
+        hybrid_prefix = True
+
+    # Strip parenthetical tech groups (SIDI, PFI, Stop-Start, ZL1, FFV, Mild Hybrid, etc.).
+    s = _ENGINE_JUNK_PARENS_RE.sub("", s)
+    s = _ENGINE_MILD_HYBRID_PARENS_RE.sub("", s)
+    # Strip any remaining empty parens.
+    s = re.sub(r"\(\s*\)", "", s)
+
+    # Strip inline valve/injection tokens.
+    s = _ENGINE_INLINE_TECH_RE.sub("", s)
+
+    # Strip Hyundai/Kia internal engine-family codes.
+    s = _ENGINE_FAMILY_CODE_RE.sub("", s)
+
+    # Strip trailing redundant fuel words.
+    s = _ENGINE_FUEL_SUFFIX_RE.sub("", s)
+    # Deduplicate trailing "Diesel" if already present in core.
+    s = re.sub(r"(?i)\s+Diesel$", lambda m: "" if re.search(r"(?i)\bDiesel\b", s[: s.rfind(m.group())]) else m.group(), s)
+
+    # Normalize integer-only displacement tokens: "2L" → "2.0L", "3L" → "3.0L".
+    # Do NOT touch already-decimal values like "2.0L", "3.5L".
+    s = re.sub(r"(?i)(?<!\d\.)(?<!\d)\b(\d+)L\b", lambda m: f"{int(m.group(1))}.0L", s)
+
+    # Collapse multiple spaces.
+    s = re.sub(r"\s{2,}", " ", s).strip()
+
+    # Re-append qualifiers in a consistent order.
+    qualifiers: list[str] = []
+    if diesel_qual and not re.search(r"(?i)\bDiesel\b", s):
+        qualifiers.append("Diesel")
+    if mild_hybrid_qual and not re.search(r"(?i)\bMild\s+Hybrid\b", s):
+        qualifiers.append("Mild Hybrid")
+    elif hybrid_prefix and not mild_hybrid_qual and not re.search(r"(?i)\bHybrid\b", s):
+        qualifiers.append("Hybrid")
+    if ffv_qual and not re.search(r"(?i)\b(?:FFV|Flex\s+Fuel)\b", s):
+        qualifiers.append("Flex Fuel")
+
+    if qualifiers:
+        s = f"{s} {' '.join(qualifiers)}".strip()
+
+    return s
+
 
 def _is_displacement_only_engine_text(s: str) -> bool:
     t = (s or "").strip()
@@ -384,8 +497,11 @@ def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | N
 
     ed = c.get("engine_description")
     if isinstance(ed, str) and ed.strip() and not is_effectively_empty(ed):
-        if not _MANUFACTURER_SPEC_RE.search(ed) and not _is_displacement_only_engine_text(ed):
-            return format_display_value(ed, dash=dash)
+        ed_norm = _normalize_engine_description(ed)
+        if not _MANUFACTURER_SPEC_RE.search(ed_norm) and not _is_displacement_only_engine_text(ed_norm):
+            return format_display_value(ed_norm, dash=dash)
+        # Fall through with normalized value for downstream displacement merge.
+        ed = ed_norm
 
     if isinstance(mes, str) and mes.strip():
         if not _is_displacement_only_engine_text(mes):
@@ -573,7 +689,7 @@ def serialize_car_for_api(
         vs = verified_specs
     elif include_verified:
         try:
-            from backend.knowledge_engine import merge_verified_specs
+            from backend.enrichment.knowledge_engine import merge_verified_specs
 
             vs = merge_verified_specs(c)
         except Exception:
@@ -643,13 +759,30 @@ def serialize_car_for_api(
         except (TypeError, ValueError):
             out["cylinders"] = vcyl
 
-    # Prefer grounded dealer/VDP columns over EPA-only inference when dealer data is real.
-    dealer_t = c.get("transmission")
-    inferred_t = vs.get("transmission_display")
-    if _dealer_spec_wins(dealer_t):
-        td = format_display_value(dealer_t)
+    # Prefer persisted transmission_type bucket when present; else dealer text / EPA / normalize.
+    stored_tt = c.get("transmission_type")
+    if isinstance(stored_tt, str) and stored_tt.strip() in ("Automatic", "Manual", "CVT"):
+        td = format_display_value(stored_tt.strip())
     else:
-        td = format_display_value(inferred_t or dealer_t)
+        dealer_t = c.get("transmission")
+        inferred_t = vs.get("transmission_display")
+        if _dealer_spec_wins(dealer_t):
+            td_src = dealer_t
+        else:
+            td_src = inferred_t or dealer_t
+
+        from backend.utils.transmission_normalize import normalize_transmission_standard
+
+        td_norm, _td_weak = normalize_transmission_standard(
+            td_src,
+            make=c.get("make"),
+            model=c.get("model"),
+            trim=c.get("trim"),
+            title=c.get("title"),
+            year=c.get("year"),
+            vin=c.get("vin"),
+        )
+        td = format_display_value(td_norm if td_norm else td_src)
 
     dealer_d = coerce_drivetrain_stored(c.get("drivetrain"))
     inferred_dd = vs.get("drivetrain_display")
@@ -672,7 +805,7 @@ def serialize_car_for_api(
 
     if out.get("body_style") == DISPLAY_DASH or is_effectively_empty(out.get("body_style")):
         try:
-            from backend.knowledge_engine import decode_trim_logic
+            from backend.enrichment.knowledge_engine import decode_trim_logic
 
             _hints = decode_trim_logic(c.get("make"), c.get("model"), c.get("trim"), c.get("title"))
             _bh = _hints.get("body_style_hint")
@@ -903,6 +1036,61 @@ def fill_derived_condition_for_display(c: dict[str, Any], out: dict[str, Any]) -
                 or "/new/" in su4
             ):
                 out["condition"] = "New"
+
+    # Final fallback: mileage=0 on a current/upcoming model year → New.
+    # These are new inventory rows scraped without a URL or "New" title prefix.
+    _oc5 = out.get("condition")
+    if _oc5 is None or str(_oc5).strip() in ("", DISPLAY_DASH):
+        try:
+            yy5 = int(c.get("year")) if c.get("year") is not None else None
+        except (TypeError, ValueError):
+            yy5 = None
+        if yy5 is not None and yy5 >= 2024:
+            try:
+                raw_m5 = c.get("mileage")
+                mi5 = (
+                    int(float(str(raw_m5).replace(",", "")))
+                    if raw_m5 is not None and str(raw_m5).strip() != ""
+                    else None
+                )
+            except (TypeError, ValueError):
+                mi5 = None
+            if mi5 == 0:
+                out["condition"] = "New"
+
+
+def normalize_condition_for_storage(car: dict[str, Any]) -> str | None:
+    """
+    Normalize non-blank but incorrect stored condition values.
+
+    - "Certified" → "Certified Pre-Owned" when CPO signals present in title/URL
+    - "Pre-Owned"  → "Used"
+
+    Returns the corrected value, or None if no change needed.
+    """
+    cond = (car.get("condition") or "").strip()
+    if not cond:
+        return None
+
+    low_t = (car.get("title") or "").lower()
+    low_u = (car.get("source_url") or "").lower()
+    is_cpo_flag = car.get("is_cpo") in (1, True, "1")
+
+    if cond == "Certified":
+        if (
+            "certified pre-owned" in low_t
+            or "certified preowned" in low_t
+            or "/certified" in low_u
+            or "-cpo-" in low_u
+            or "cpo-inventory" in low_u
+            or is_cpo_flag
+        ):
+            return "Certified Pre-Owned"
+
+    if cond == "Pre-Owned":
+        return "Used"
+
+    return None
 
 
 def infer_condition_for_storage(car: dict[str, Any]) -> str | None:

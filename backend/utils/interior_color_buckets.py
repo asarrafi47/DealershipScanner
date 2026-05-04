@@ -18,7 +18,7 @@ from typing import Any, Iterable
 
 from backend.utils.field_clean import is_effectively_empty
 
-_LEXICON_PATH = Path(__file__).resolve().parents[2] / "data" / "lexicons" / "interior_color_buckets.json"
+_LEXICON_PATH = Path(__file__).resolve().parents[1] / "data" / "lexicons" / "interior_color_buckets.json"
 
 # Keep in sync with LLaVA allowlist in ``backend.vision.ollama_llava``.
 ALLOWED_BUCKETS: frozenset[str] = frozenset(

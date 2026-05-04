@@ -126,11 +126,129 @@ def extract_price(obj: dict) -> float:
     return price
 
 
+# Path fragments that identify dealer-site branding / badge / non-photo URLs.
+_FLUFF_PATH_RE = re.compile(
+    r"""
+    /franchise(?:-logo)?s?/         # /franchise/ and /franchise-logos/
+    | /static/v\d+/global/images/   # Dealer.com shared static assets
+    | /static/dist/v\d+/            # Dealer.com dist bundles (JS/CSS)
+    | /wp-content/                  # WordPress plugin/theme assets
+    | [-_/]logo[-_./]               # -logo- / _logo_ filename fragments
+    | (?:^|/)logo[-.]               # logo at start of a path component
+    | /badge                        # /badge in path
+    | /award                        # /award in path
+    | /seal[^a-z]                   # /seal but not /sealing etc.
+    | [-_]certified[_.]             # dealer-certified badge PNG
+    | [-_]affordable[_.]            # dealer-affordable badge PNG
+    | [-_]trusted[_.]               # generic trust badge
+    | /transparent[-_]pricing       # "transparent pricing" promo image
+    | \.gif(?:\?|$)                 # GIF — almost always icons/logos
+    | /\d{2,4}x\d{2,4}\.           # dimension hint: /117x80.png /80x60.png
+    | \b\d{2,4}x\d{2,4}(?:\?|$)    # dimension hint at end of path/query
+    | /spincar-static/              # SpinCar/Impel static scripts
+    | /Feature_Tour_Images/         # Impel feature-tour marketing overlays
+    | /provider_script_avatars/     # Impel provider script avatar icons
+    | privacyoptions                # CCPA privacy options icon
+    | /trade[-_]in/                 # trade-in banner/promo images
+    | /themes/                      # dealer website theme assets
+    | /gmp/conversion               # Google conversion pixels
+    | /privacy_sandbox              # Facebook privacy sandbox
+    | /track/t\?                    # analytics track endpoint
+    """,
+    re.VERBOSE | re.IGNORECASE,
+)
+
+# Non-image file extensions that are never car photos.
+_NON_IMAGE_EXT_RE = re.compile(
+    r"\.(css|js|ts|json|woff2?|ttf|eot|svg|map|txt|html?|xml|pdf)(\?|$)",
+    re.IGNORECASE,
+)
+
+# Whole-URL hostname/substring signals that mark a URL as non-photo.
+_FLUFF_URL_SIGNALS = (
+    "autoipacket.com",          # iPacket service-history document thumbnails
+    "ipacket.com",
+    "nr-data.net",              # New Relic analytics beacon
+    "google.com/gmp/",          # Google Marketing Platform conversion pixel
+    "facebook.com/privacy",     # Facebook privacy sandbox pixel
+    "blockboardtech.com/track", # Blockboard analytics
+    "smetrics.",                # Adobe SiteCatalyst beacons
+    "fcacert.com",              # FCA analytics endpoint
+    "carstory.com",             # CarStory widget branding
+    "phone-swap-service",       # Dealer.com phone swap tracking
+    "styleid=0",                # Evox stock image with no car style (placeholder silhouette)
+    "getlibraryimage",          # secureoffersites.com generic library images (not vehicle photos)
+    "iperceptions.com",         # iPerceptions survey/analytics pixel
+    "secureoffersites.com",     # generic dealer offer overlay images / library
+    "common-vehicle-media",     # cai-media-management generic stock photos (same UUIDs across many cars)
+)
+
+# Patterns that indicate a URL is an HTML inventory page, not an image.
+_VDP_PAGE_PATH_RE = re.compile(
+    r"/(?:inventory|used-inventory|new-inventory)/(?:used|new)-\d{4}-",
+    re.IGNORECASE,
+)
+
+# Hostnames that are confirmed vehicle-photo CDNs and may serve images at URLs
+# without an explicit image file extension.
+_KNOWN_PHOTO_CDN_HOSTS: frozenset[str] = frozenset(
+    {
+        "pictures.dealer.com",
+        "images.dealer.com",
+        "vehicle-images.carscommerce.inc",
+        "assets.cai-media-management.com",
+        "content.homenetiol.com",
+        "img2.cargurus.com",
+        "images.autotrader.com",
+        "media.ed.edmunds-media.com",
+        "spyne-media.s3.amazonaws.com",
+        "spyne-prod-app-assets.s3.us-east-1.amazonaws.com",
+        "spyne-acceleration.s3-accelerate.amazonaws.com",
+        "media.spyneai.com",
+        "cdn.impel.io",
+        "consumer-assets.impel.io",
+    }
+)
+
+# Valid image-file extensions (covers CDN-style paths like "…x.jpg" and
+# content-negotiated paths like "…?format=webp").
+_IMAGE_EXT_RE = re.compile(
+    r"\.(jpe?g|png|webp|gif|avif|bmp)(\?|#|$)",
+    re.IGNORECASE,
+)
+
+
 def _is_placeholder_url(url: str) -> bool:
+    """True for placeholder, missing-photo, branding, non-image assets, and doc overlays."""
     if not url or not isinstance(url, str):
         return True
     u = url.lower()
-    return "coming-soon" in u or "placeholder" in u or "no-image" in u or "default" in u
+    if "coming-soon" in u or "placeholder" in u or "no-image" in u:
+        return True
+    if "nophoto" in u or "no_photo" in u or "no-photo" in u:
+        return True
+    for signal in _FLUFF_URL_SIGNALS:
+        if signal in u:
+            return True
+    if _NON_IMAGE_EXT_RE.search(u):
+        return True
+    if _VDP_PAGE_PATH_RE.search(u):
+        return True
+    try:
+        from urllib.parse import urlparse
+        parsed = urlparse(u)
+        host = parsed.netloc
+        path = parsed.path
+    except Exception:
+        host = ""
+        path = u
+    if _FLUFF_PATH_RE.search(path):
+        return True
+    # Reject URLs that have no image extension and aren't from a known photo CDN.
+    # This blocks analytics pixels, ad-network beacons, API endpoints, fonts, etc.
+    if host not in _KNOWN_PHOTO_CDN_HOSTS and not _IMAGE_EXT_RE.search(u):
+        return True
+    return False
 
 
 _RESIZE_QUERY_KEYS_DROP = frozenset(

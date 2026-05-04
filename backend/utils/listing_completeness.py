@@ -1,10 +1,11 @@
 """
 Detect gaps in the car detail "regular listing" spec sheet (car.html col 2).
 
-* ``for_public_filter=True`` — subset used with public ``/listings`` (``is_car_incomplete``).
-* ``for_public_filter=False`` — full queue used for ``incomplete_listings.db`` + dev page.
+* ``for_public_filter=True`` — keys aligned with the ``car.html`` spec sheet for ``/listings``
+  (``is_car_incomplete`` / ``public_incomplete`` pill).
+* ``for_public_filter=False`` — same field codes as public (used for ``incomplete_listings.db`` + dev tools).
 
-Efficiency (MPG) is intentionally excluded: many rows lack EPA data and would flood the queue.
+Efficiency (MPG / ``fuel_economy_display``) remains excluded: many rows lack EPA data.
 """
 from __future__ import annotations
 
@@ -12,7 +13,7 @@ import json
 from collections import Counter
 from typing import Any
 
-from backend.knowledge_engine import prepare_car_detail_context
+from backend.enrichment.knowledge_engine import prepare_car_detail_context
 from backend.utils.car_serialize import DISPLAY_DASH, serialize_car_for_api
 
 # Human labels for ``listing_missing_field_codes`` / ``incomplete_missing_fields`` (dev UI + summaries).
@@ -24,6 +25,7 @@ INCOMPLETE_FIELD_LABELS: dict[str, str] = {
     "make": "Make",
     "model": "Model",
     "trim": "Trim",
+    "mileage": "Mileage",
     "engine": "Engine",
     "transmission": "Transmission",
     "drivetrain": "Drivetrain",
@@ -36,8 +38,7 @@ INCOMPLETE_FIELD_LABELS: dict[str, str] = {
     "vin": "VIN",
 }
 
-# Public listings: same core as historical ``is_car_incomplete`` plus real gaps
-# on drivetrain/transmission/colors/fuel, but do not require trim/engine/body/condition/cylinders/VIN.
+# Public listings / incomplete index: spec-sheet fields from ``car.html`` (col 2), minus MPG.
 _PUBLIC_INCOMPLETE_KEYS = frozenset(
     {
         "title",
@@ -46,11 +47,18 @@ _PUBLIC_INCOMPLETE_KEYS = frozenset(
         "year",
         "make",
         "model",
+        "trim",
+        "mileage",
+        "engine",
         "transmission",
         "drivetrain",
+        "body_style",
         "fuel_type",
+        "condition",
+        "cylinders",
         "exterior_color",
         "interior_color",
+        "vin",
     }
 )
 
@@ -105,10 +113,21 @@ def _cylinders_display_missing(car: dict[str, Any], verified_specs: dict[str, An
     return True
 
 
+def _mileage_blank(car_raw: dict[str, Any]) -> bool:
+    """Match ``car.html`` mileage row: missing only when NULL or empty string (0 mi is valid)."""
+    m = car_raw.get("mileage")
+    if m is None:
+        return True
+    if isinstance(m, str) and not str(m).strip():
+        return True
+    return False
+
+
 def listing_missing_field_codes(car_raw: dict[str, Any], *, for_public_filter: bool) -> list[str]:
     """
     Ordered-ish stable labels for missing spec-sheet fields.
-    When *for_public_filter* is True, only keys in ``_PUBLIC_INCOMPLETE_KEYS`` are returned.
+    When *for_public_filter* is True, only keys in ``_PUBLIC_INCOMPLETE_KEYS`` are returned
+    (same codes as the full queue today).
     """
     if not car_raw:
         return []
@@ -144,6 +163,8 @@ def listing_missing_field_codes(car_raw: dict[str, Any], *, for_public_filter: b
         missing.append("model")
     if _dash(car.get("trim")):
         missing.append("trim")
+    if _mileage_blank(car_raw):
+        missing.append("mileage")
     if _dash(car.get("engine_display")):
         missing.append("engine")
     if _dash(car.get("transmission_display")):

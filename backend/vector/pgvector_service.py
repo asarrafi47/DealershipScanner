@@ -18,14 +18,14 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-from SCRAPING.paths import ROOT
+from scraping.paths import ROOT
 
 from backend.db.inventory_db import get_conn as inventory_get_conn
 from backend.utils.field_clean import is_effectively_empty
 from backend.vector.listings_semantic import build_semantic_listing_document
-from oem_intake.paths import BMW_DB_PATH
-from oem_intake.sqlite_store import connect as bmw_connect
-from oem_intake.sqlite_store import init_schema as bmw_init_schema
+from oem.intake.paths import BMW_DB_PATH
+from oem.intake.sqlite_store import connect as bmw_connect
+from oem.intake.sqlite_store import init_schema as bmw_init_schema
 
 logger = logging.getLogger(__name__)
 

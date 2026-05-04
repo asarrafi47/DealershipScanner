@@ -147,14 +147,17 @@ def check_admin(login_input: str, password: str) -> bool:
 
 
 def authenticate_admin(login_input: str, password: str) -> tuple[int, str] | None:
+    li = (login_input or "").strip()
+    if not li:
+        return None
     conn = get_dev_users_conn()
     cursor = conn.cursor()
     cursor.execute(
         """
         SELECT id, username, password FROM admin_users
-        WHERE username = ? OR email = ?
+        WHERE lower(username) = lower(?) OR lower(email) = lower(?)
         """,
-        (login_input, login_input),
+        (li, li),
     )
     row = cursor.fetchone()
     if not row:

@@ -6,8 +6,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Callable
 
-from backend.knowledge_engine import merge_verified_specs
-from backend.nhtsa_vpic import (
+from backend.enrichment.knowledge_engine import merge_verified_specs
+from backend.enrichment.nhtsa_vpic import (
     decode_vpic_http_response,
     fetch_decode_vin_values_extended,
     flat_vpic_result_to_car_patch,

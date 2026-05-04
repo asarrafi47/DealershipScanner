@@ -38,11 +38,32 @@ def admin_emails() -> set[str]:
     return {p for p in parts if p and "@" in p and len(p) <= 254}
 
 
+def admin_usernames() -> set[str]:
+    """Lowercase usernames that receive full app admin privileges (set only via ``APP_ADMIN_USERNAMES`` in ``.env``)."""
+    raw = (os.environ.get("APP_ADMIN_USERNAMES") or "").strip()
+    if not raw:
+        return set()
+    parts = [p.strip().lower() for p in raw.split(",")]
+    return {p for p in parts if p and len(p) <= 128}
+
+
 def email_is_admin(email: str | None) -> bool:
     e = (email or "").strip().lower()
     if not e:
         return False
     return e in admin_emails()
+
+
+def username_is_admin(username: str | None) -> bool:
+    u = (username or "").strip().lower()
+    if not u:
+        return False
+    return u in admin_usernames()
+
+
+def account_has_env_admin_privilege(email: str | None, username: str | None) -> bool:
+    """True when ``APP_ADMIN_EMAILS`` / ``APP_ADMIN_USERNAMES`` designate this account (operators configure ``.env`` only)."""
+    return email_is_admin(email) or username_is_admin(username)
 
 
 def is_admin_role(role: str | None) -> bool:

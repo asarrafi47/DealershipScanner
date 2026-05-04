@@ -12,11 +12,16 @@ import os
 import sqlite3
 from datetime import datetime, timezone
 
+from backend.db.inventory_db import DB_PATH as _INVENTORY_DB_PATH
 from backend.utils.listing_completeness import listing_missing_field_codes
 
 logger = logging.getLogger(__name__)
 
-DB_PATH = os.environ.get("INCOMPLETE_LISTINGS_DB_PATH", "incomplete_listings.db")
+# Keep incomplete index beside the active inventory DB (same directory as ``DB_PATH`` targets).
+DB_PATH = os.environ.get(
+    "INCOMPLETE_LISTINGS_DB_PATH",
+    os.path.join(os.path.dirname(_INVENTORY_DB_PATH), "incomplete_listings.db"),
+)
 _META_BOOTSTRAP_KEY = "index_bootstrap_v1"
 
 
@@ -126,69 +131,15 @@ def rebuild_incomplete_listings_index() -> int:
 
 def fast_rebuild_incomplete_listings_index() -> int:
     """
-    Fast full resync of the incomplete_listings index — loads all cars in one
-    query and checks raw DB fields directly, without invoking the knowledge engine
-    (EPA lookups, trim decoder) on each row.  Use this after a scanner run where
-    specs have already been backfilled.  Returns the number of incomplete rows.
+    Full resync of the incomplete_listings index using the same rules as
+    :func:`sync_incomplete_listing_for_car_id` / the car detail page
+    (:func:`listing_missing_field_codes`). This includes display-only trim derivation
+    (e.g. BMW ``apply_bmw_model_trim_display``), so the dev incomplete list matches
+    what operators see on ``/car/<id>``.
+
+    Returns the number of incomplete rows.
     """
     from backend.db.inventory_db import get_conn as inv_get_conn
-
-    _PLACEHOLDER_VALUES = frozenset({
-        "", "n/a", "na", "null", "none", "unknown", "--", "-", "—",
-        "/static/placeholder.svg",
-    })
-
-    def _empty(v: object) -> bool:
-        if v is None:
-            return True
-        s = str(v).strip()
-        return not s or s.lower() in _PLACEHOLDER_VALUES
-
-    def _has_real_image(car: dict) -> bool:
-        if str(car.get("image_url") or "").startswith("http"):
-            return True
-        raw_g = car.get("gallery")
-        try:
-            g = json.loads(raw_g) if isinstance(raw_g, str) else (raw_g or [])
-            return any(isinstance(u, str) and u.startswith("http") for u in g)
-        except (TypeError, ValueError):
-            return False
-
-    def _missing_fields(car: dict) -> list[str]:
-        missing: list[str] = []
-        if _empty(car.get("title")):
-            missing.append("title")
-        if not _has_real_image(car):
-            missing.append("images")
-        try:
-            price = int(float(car.get("price") or 0))
-        except (TypeError, ValueError):
-            price = 0
-        try:
-            msrp = int(float(car.get("msrp") or 0))
-        except (TypeError, ValueError):
-            msrp = 0
-        if price <= 0 and msrp <= 0:
-            missing.append("price")
-        if not car.get("year"):
-            missing.append("year")
-        for f in ("make", "model", "trim", "drivetrain", "body_style", "fuel_type", "condition"):
-            if _empty(car.get(f)):
-                missing.append(f)
-        if _empty(car.get("engine_description")):
-            missing.append("engine")
-        if _empty(car.get("transmission")):
-            missing.append("transmission")
-        cyl = car.get("cylinders")
-        if cyl is None or str(cyl).strip() == "":
-            missing.append("cylinders")
-        for f in ("exterior_color", "interior_color"):
-            if _empty(car.get(f)):
-                missing.append(f)
-        vin = str(car.get("vin") or "").strip()
-        if not vin or vin.lower().startswith("unknown"):
-            missing.append("vin")
-        return missing
 
     inv = inv_get_conn()
     inv.row_factory = sqlite3.Row
@@ -198,11 +149,13 @@ def fast_rebuild_incomplete_listings_index() -> int:
     inv.close()
 
     now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-    rows_to_upsert = [
-        (car["id"], str(car.get("vin") or "?").strip(), json.dumps(_missing_fields(car)), now)
-        for car in all_cars
-        if _missing_fields(car)
-    ]
+    rows_to_upsert = []
+    for car in all_cars:
+        missing = listing_missing_field_codes(car, for_public_filter=False)
+        if missing:
+            rows_to_upsert.append(
+                (car["id"], str(car.get("vin") or "?").strip(), json.dumps(missing), now)
+            )
 
     conn_inc = get_conn()
     _ensure_schema(conn_inc)
@@ -250,6 +203,23 @@ def ensure_incomplete_index_built() -> None:
         logger.exception("Failed to build incomplete_listings index")
 
 
+def _attach_listing_display_for_dev(cars: list[dict]) -> None:
+    """
+    Match ``/car/<id>`` spec-line display: BMW trim/model normalization lives in
+    :func:`serialize_car_for_api` (not always equal to raw ``cars.trim``).
+    Mutates each dict in place with ``listing_trim_display`` / ``listing_model_display``.
+    """
+    from backend.enrichment.knowledge_engine import prepare_car_detail_context
+    from backend.utils.car_serialize import serialize_car_for_api
+
+    for c in cars:
+        ctx = prepare_car_detail_context(dict(c))
+        vs = ctx.get("verified_specs") or {}
+        ser = serialize_car_for_api(dict(c), include_verified=False, verified_specs=vs)
+        c["listing_trim_display"] = ser.get("trim")
+        c["listing_model_display"] = ser.get("model")
+
+
 def get_incomplete_cars_for_dev() -> list[dict]:
     """Cars referenced in the incomplete index, newest first, with ``incomplete_missing_fields``."""
     from backend.db.inventory_db import get_cars_by_ids
@@ -271,4 +241,5 @@ def get_incomplete_cars_for_dev() -> list[dict]:
     cars = get_cars_by_ids(ids)
     for c in cars:
         c["incomplete_missing_fields"] = fields_by_id.get(int(c["id"]), [])
+    _attach_listing_display_for_dev(cars)
     return cars

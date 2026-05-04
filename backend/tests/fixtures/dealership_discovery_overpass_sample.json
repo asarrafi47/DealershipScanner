@@ -1,0 +1,20 @@
+{
+  "elements": [
+    {
+      "type": "node",
+      "id": 900000001,
+      "lat": 35.051,
+      "lon": -80.849,
+      "tags": {
+        "shop": "car",
+        "name": "Fixture Auto Sales",
+        "addr:housenumber": "100",
+        "addr:street": "Pineville Matthews Rd",
+        "addr:city": "Charlotte",
+        "addr:state": "NC",
+        "addr:postcode": "28210",
+        "website": "https://fixture-auto-example.invalid"
+      }
+    }
+  ]
+}

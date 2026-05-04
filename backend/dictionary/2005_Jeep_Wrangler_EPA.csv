@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+2005,Jeep,Wrangler,"Man 6-spd, 4 cyl, 2.4 L",2.4L I4,Manual 6-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.4,16,19,17,,,,,
+2005,Jeep,Wrangler,"Auto 4-spd, 6 cyl, 4.0 L",4.0L V6,Automatic 4-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,4.0,13,16,14,,,,,
+2005,Jeep,Wrangler,"Man 6-spd, 6 cyl, 4.0 L",4.0L V6,Manual 6-spd,Four-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,4.0,13,17,15,,,,,

@@ -109,6 +109,8 @@
 | `KBB_IDWS_BASE_URL` | With `KBB_API_KEY` | Override default `https://api.kbb.com/idws` if your tenant uses a different host |
 | `KBB_DEFAULT_ZIP` | KBB refresh when rows lack ZIP | Five-digit ZIP for IDWS mileage/region pricing |
 | `SCANNER_POST_KBB` | Optional scanner | When `1`, run KBB refresh for VINs touched in the scan (same as `--post-kbb`) |
+| `APP_ADMIN_EMAILS` | Optional | Comma-separated emails → app `users.role=admin`, Stripe billing bypass, **skip app MFA** on login/register |
+| `APP_ADMIN_USERNAMES` | Optional | Comma-separated usernames (case-insensitive match) → same as `APP_ADMIN_EMAILS`; **set only in `.env`**, never commit |
 | `ALLOW_STORE_ADMIN_RESCAN` | Optional | When `1`, allows **admin** users to POST re-scan from `/admin/scans` (spawns `scanner.py` subprocess; long-running) |
 | `STORE_ADMIN_MIN_PHOTOS` | Optional | Merchandising rule threshold for “low photo count” (default 3) |
 | `STORE_ADMIN_STALE_PRICE_DAYS` | Optional | Days without list-price change for stale heuristic (default 45) |
@@ -176,10 +178,10 @@
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`logout_page`, `before_request` CSRF for `logout_page`); `frontend/templates/_app_logout.html` + nav includes |
+| **Scope** | `backend/main.py` (`logout_page`, `before_request` CSRF for `logout_page`); `frontend/templates/_app_logout.html` + nav includes; MFA (`mfa_choose`, `mfa_verify`, `mfa_setup`, `mfa_qr_wait`), billing (`billing_required`, `billing_success`), `inventory/base_inventory.html` — all use `POST` logout (no `GET` links). |
 | **Outcome** | `POST /logout` only, with `csrf_token` in form. `GET /logout` returns **405**. Prevents cross-site “logout” image tricks. |
 | **Validation** | `GET /logout` → 405; `POST` without valid CSRF → 403. `python -m pytest tests/test_app_security_basics.py`. |
-| **Last verified** | 2026-04-22 |
+| **Last verified** | 2026-04-28 |
 
 ### SEC-012 — Registration safety
 
@@ -261,15 +263,25 @@
 | **Validation** | (1) With billing enabled, register non-admin → redirected to Stripe Checkout; no access to paid routes until webhook marks subscription active. (2) Replay webhook with invalid signature → 400/403 and no state change. (3) With `APP_ADMIN_EMAILS` containing a user email, that user registers/logs in without Stripe redirect and can access gated routes. (4) Confirm no Stripe secrets are logged or rendered to templates. |
 | **Last verified** | 2026-04-25 |
 
+### SEC-065 — Env-only app admin usernames (`APP_ADMIN_USERNAMES`)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/utils/roles.py` (`admin_usernames`, `username_is_admin`, `account_has_env_admin_privilege`), `backend/db/users_db.py` (`_apply_env_admin_privileges`, `sync_env_admin_user_row`), `backend/main.py`, `backend/dealer/routes.py`, `backend/tests/test_billing_gate.py` |
+| **Outcome** | Operators set comma-separated usernames in `.env` only (`APP_ADMIN_USERNAMES`); matching `users` rows get `role=admin`, TOTP cleared, MFA skipped on login — same as `APP_ADMIN_EMAILS`. Startup migration + per-login sync cover accounts created before env updates. |
+| **Validation** | `python -m pytest backend/tests/test_billing_gate.py` |
+| **Last verified** | 2026-04-29 |
+
 ### SEC-064 — Runtime SQLite not tracked in git
 
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `.gitignore` (root app DB paths); `git rm --cached` for previously tracked `users.db`, `inventory.db`, `dev_users.db`, `incomplete_listings.db`, `dealer_portal.db`, `backend/database.db` |
-| **Outcome** | Local/ops database files stay out of version control; reference data under `data/vehicle_reference/` and similar **remain** explicitly tracked. |
-| **Validation** | `git ls-files '*.db'` at repo root — no runtime app DBs. |
-| **Last verified** | 2026-04-22 |
+| **Scope** | `.gitignore` (root app DB paths, local Chroma under `backend/data/chroma/`, pipeline outputs under `backend/data/oem/`); `git rm --cached` for previously tracked `users.db`, `inventory.db`, `dev_users.db`, `incomplete_listings.db`, `dealer_portal.db`, `backend/database.db` |
+| **Outcome** | Local/ops database files and generated embedding stores stay out of version control; reference data under `data/vehicle_reference/` and similar **remain** explicitly tracked. |
+| **Validation** | `git ls-files '*.db'` at repo root — no runtime app DBs; `git check-ignore -v backend/data/chroma/` confirms ignore when present locally; `git ls-files | grep -E '^csv_out/|backend/dictionary/csv_out/|csv_out_cleaned_main/|csv_out_rejected_main/'` → empty after excluding listing/options trees. |
+| **Last verified** | 2026-04-29 |
 
 ---
 
@@ -467,6 +479,36 @@
 | **Validation** | `python -m pytest tests/test_store_admin.py`; anonymous `GET /admin/` → 302 to `/login`. |
 | **Last verified** | 2026-04-20 |
 
+### SEC-063 — Dealership discovery pipeline (Overpass / DDG HTTP, new CLI)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/discovery/` (`candidate.py`, `pipeline.py`, `merge.py`, `normalize.py`, `osm.py`, `web.py`, `cli.py`, `zcta_gazetteer.py`, `dmv/`), `scripts/discover_dealerships.py`, `backend/db/dealerships_db.py` (`upsert_discovery_row`), `docs/discovery/DMV_SOURCES.md` |
+| **Outcome** | Outbound HTTP only in `backend/discovery/osm.py` (Overpass API, timeout default 90 s, configurable) and `backend/discovery/web.py` (DuckDuckGo Instant Answer JSON, timeout ≤ 15 s). Both use `requests` with bounded timeouts; no `shell=True`. ZIP/radius validated before use; Overpass POST body is built server-side from numeric bbox only. OSM/DDG responses parsed defensively. DMV tier reads **local CSV** paths from env / `data/discovery/dmv/<STATE>/` (operator-supplied files). ZCTA centroid tier reads **local** pipe-delimited gazetteer (`backend/ZIPs/*.txt` or `DISCOVERY_ZCTA_GAZETTEER` / `--zcta-gazetteer`); no outbound HTTP for that file. CLI defaults to seed-ZIP-only rows after enrichment unless `--allow-adjacent-zips`. CLI (`scripts/discover_dealerships.py`) validates `--zip` (5-digit), `--radius` (0–500 mi), optional `--dmv-state`; `--persist` uses parameterized SQL via `upsert_discovery_row`. No new Flask routes; operator-only CLI. |
+| **Validation** | `python -m pytest tests/test_dealership_discovery.py` (mocked HTTP). Invalid ZIP raises before network; Overpass failure returns empty OSM list without crashing; DDG skips aggregator URLs. |
+| **Last verified** | 2026-05-02 |
+
+### SEC-066 — Scanner failure HAR traces (`workspace/debug/`)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/scanner/cli.py` (`_capture_scanner_failure_har`, `SCANNER_FAILURE_HAR`), `.gitignore` (`workspace/debug/`) |
+| **Outcome** | When a **known inventory provider** (`dealer_dot_com`, `dealer_on`) yields **zero vehicles**, the scanner may write a Playwright **HAR** under `workspace/debug/fail_<dealer_id>_<epoch>.har` for operator diagnosis. HAR files can contain **cookies, Authorization headers, and URL query tokens** — treat as **sensitive**, do not commit, and restrict filesystem permissions in shared environments. Disabled with `SCANNER_FAILURE_HAR=0`. |
+| **Validation** | `.gitignore` contains `workspace/debug/`; `python -m pytest backend/tests/test_scanner_intercept_filter.py -q` passes; manual optional: run scanner against a dealer forced to 0 rows with `SCANNER_FAILURE_HAR=1` and confirm a `.har` appears under `workspace/debug/` when play succeeds. |
+| **Last verified** | 2026-05-02 |
+
+### SEC-064 — Post-scan listing gap fill (operator inventory DB URLs + DDG Instant Answer)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `backend/listing_gap_fill.py`, `backend/scanner_post_pipeline.py` (`run_listing_gap_fill_stage`), `scanner.py` (`--post-listing-gap-fill` / `SCANNER_POST_LISTING_GAP_FILL`), `backend/utils/vdp_spec_parse.py` (`parse_condition_from_listing_html`) |
+| **Outcome** | After a scan, optionally backfill incomplete listing rows for VINs touched in that run: tier 1 reuses existing EPA/vPIC structured backfill; tier 2 fetches each row’s stored HTTPS `source_url` via `requests` then optional **sync Playwright** Chromium when the HTML shell looks thin; **condition** is parsed only from page HTML/JSON-LD (never from DDG). Tier 3 uses **DuckDuckGo Instant Answer** (`api.duckduckgo.com`, bounded timeout) only for residual mechanical fields (transmission/drivetrain/fuel_type). Provenance merged into `cars.spec_source_json`. No new Flask routes; operator CLI / batch only. Max rows per run capped via `SCANNER_POST_LISTING_GAP_FILL_MAX` (default 400). DDG can be disabled with `LISTING_GAP_FILL_ALLOW_DDG=0`. |
+| **Validation** | `python -m pytest tests/test_listing_gap_fill.py`; manual: `SCANNER_POST_LISTING_GAP_FILL=1` or `--post-listing-gap-fill` after a scan with `SCANNER_POST_REPAIR=1` recommended so repair runs first. |
+| **Last verified** | 2026-04-29 |
+
 ---
 
 ## Changelog
@@ -503,6 +545,17 @@
 | 2026-04-25 | **SEC-063:** Phone **QR 2FA** (Segno PNG, Redis-bounded attempt IDs, Socket.IO to notify the desktop, CSRF on finalize); `REDIS_URL` for production; **SEC-013** + env table updated. |
 | 2026-04-25 | **`/dev` 2FA removed:** `/dev` operator login is password-only; `/dev/mfa/*` and dev MFA templates **removed**; **SEC-013** and env rate-limit rows updated. |
 | 2026-04-25 | **Follow-up:** `GET/POST /dev/mfa/verify|setup` and `GET /dev/mfa/qr` redirect to `/dev/` or `/dev/login?next=/dev/` so old tabs/bookmarks do not 500. |
+| 2026-04-28 | **SEC-060:** Replaced remaining **GET** `/logout` links (MFA, billing, dealer inventory nav) with `POST` via `_app_logout.html`; optional button label for QR wait **Cancel**. `tests/test_mfa_totp.py` uses `POST /logout` + CSRF. Validation: `python -m pytest tests/` |
+| 2026-04-29 | **SEC-063:** Tiered dealership discovery (DMV CSV pilot `NC`, Overpass `shop=car`/`amenity=car_dealer`, DDG instant JSON URL gap-fill); merge/dedupe + CLI `scripts/discover_dealerships.py`. Validation: `python -m pytest tests/test_dealership_discovery.py`. |
+| 2026-05-02 | **SEC-063 (follow-up):** ZCTA gazetteer internal-point centroids (`backend/ZIPs/` or `DISCOVERY_ZCTA_GAZETTEER`); CLI `--allow-adjacent-zips` / `--zcta-gazetteer`; seed-ZIP filter after enrichment. Validation: `python -m pytest backend/tests/test_dealership_discovery.py`. |
+| 2026-04-29 | **SEC-064:** Post-scan listing gap fill (`listing_gap_fill.py`): EPA/vPIC → listing-page fetch (`requests` + optional Playwright) → DDG Instant Answer for mechanical fields only; condition from listing HTML; `scanner.py --post-listing-gap-fill`. Validation: `python -m pytest tests/test_listing_gap_fill.py`. |
+| 2026-04-29 | **SEC-065:** Env-only operator bootstrap: `APP_ADMIN_USERNAMES` (comma-separated) mirrors `APP_ADMIN_EMAILS` for `users.role=admin`, MFA disabled (`totp` cleared), applied at `init_users_db` and on login sync — **no credentials in source**. Validation: `python -m pytest backend/tests/test_billing_gate.py`. |
+| 2026-04-29 | **SEC-065 (follow-up):** Login POST trims identifiers/password; `python -m backend.scripts.app_users_status` lists `users.db` rows (no secrets); gated `ALLOW_LOCAL_PASSWORD_RESET=1` + non-prod password reset via `python -m backend.scripts.reset_app_user_password`. |
+| 2026-04-29 | **SEC-064 (pre-commit audit):** `.gitignore` — `backend/data/chroma/`, `backend/data/oem/`, scraper scratch JSON, `backend/data/review_queue.jsonl`; stop ignoring `backend/package.json` / `package-lock.json` (reproducible npm); restored accidental working-tree wipes (`csv_out/`); reconciled index with `backend/dealer/`, `backend/auth/mfa.py`, scanner package + root `scanner.py` shim; no `.env` or live API keys staged. Validation: `git ls-files .env` empty; staged diff grep for `sk_live_`, `AKIA`, `ghp_` → none; `python -m pytest backend/tests/test_app_security_basics.py backend/tests/test_scanner_intercept_filter.py backend/tests/test_listing_gap_fill.py backend/tests/test_mfa_totp.py -q`. |
+| 2026-04-29 | **SEC-064 (follow-up):** Listing/options scrapes (`csv_out*` at repo root and under `backend/dictionary/`) — `git rm --cached` (~7k paths), `.gitignore` patterns, broader FUSE ignore; `README.md` documents fresh-machine setup and regeneration (`import_epa_to_dictionary.py`, `car_data_scraper.py`, `reindex_vectors.py`). EPA `*_EPA.csv` dictionary files remain tracked where present. |
+| 2026-04-29 | **SEC-064 (follow-up):** Also excluded `csv_out_cleaned_main/` + `csv_out_rejected_main/` (~2.3k paths) and repo-root `data/chroma/` from tracking; same regeneration story as other `csv_out*` trees. |
+| 2026-05-02 | **Hygiene (docs):** Removed obsolete `backend/routes/` shims and corrected **SEC-065** scope row to `backend/dealer/routes.py` (dealer portal blueprint). |
+| 2026-05-02 | **SEC-066:** Documented + gated scanner failure **HAR** capture under `workspace/debug/` (sensitive network artifacts); `.gitignore` excludes that directory. Validation: `python -m pytest backend/tests/test_scanner_intercept_filter.py -q`. |
 
 **Done items** stay in their phase table with **Status: Done** and **Last verified** — do not duplicate into a second list.
 
@@ -512,3 +565,4 @@
 
 Security work **must** stay in this file until all Phase 1–6 items are `Done` or explicitly `Won't do` with rationale in Changelog.  
 CSP: enforced in production (nonces; `CSP_ENFORCE=0` to disable). Use `CSP_REPORT_ONLY=1` when enforcement is off to collect additional violations. Optional follow-up: remove `style-src` `unsafe-inline` by moving inline `style=""` to CSS. For general features, consider `docs/ENGINEERING_MASTER_TODO.md` separately.
+

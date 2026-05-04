@@ -22,12 +22,65 @@ _SCHEMA_ORG_DRIVETRAIN_RE = re.compile(
     r"(?:https?://)?schema\.org/([A-Za-z0-9-]+)\b",
     re.IGNORECASE,
 )
-# schema.org/DriveWheelConfiguration value variants we normalize to short labels
+# schema.org/DriveWheelConfiguration value variants → canonical abbreviations (storage + UI)
 _SCHEMA_ORG_DRIVETRAIN_TO_ABBR: dict[str, str] = {
     "allwheeldriveconfiguration": "AWD",
     "fourwheeldriveconfiguration": "4WD",
     "frontwheeldriveconfiguration": "FWD",
     "rearwheeldriveconfiguration": "RWD",
+}
+
+# Any free-text drivetrain value → canonical abbreviations
+_CANONICAL_DRIVETRAIN: dict[str, str] = {
+    "fwd": "FWD",
+    "front-wheel drive": "FWD",
+    "front wheel drive": "FWD",
+    "f": "FWD",
+    "rwd": "RWD",
+    "rear-wheel drive": "RWD",
+    "rear wheel drive": "RWD",
+    "r": "RWD",
+    "4x2": "FWD",
+    "2wd": "RWD",
+    "awd": "AWD",
+    "all-wheel drive": "AWD",
+    "all wheel drive": "AWD",
+    "a": "AWD",
+    "awd (xdrive)": "AWD",
+    "awd 4matic": "AWD",
+    "4matic": "AWD",
+    "xdrive": "AWD",
+    "quattro": "AWD",
+    "4wd": "4WD",
+    "four-wheel drive": "4WD",
+    "four wheel drive": "4WD",
+    "4x4": "AWD",
+}
+
+# Any free-text fuel_type value → canonical display name (Gas / Hybrid / Diesel / Electric / Hydrogen)
+_CANONICAL_FUEL_TYPE: dict[str, str] = {
+    "gasoline": "Gasoline",
+    "gas": "Gasoline",
+    "regular gasoline": "Gasoline",
+    "premium gasoline": "Gasoline",
+    "midgrade gasoline": "Gasoline",
+    "regular gasoline / e85": "Gasoline",
+    "flex fuel": "Gasoline",
+    "e85": "Gasoline",
+    "other": "Gasoline",
+    "hybrid": "Hybrid",
+    "gas / mild hybrid": "Hybrid",
+    "mild hybrid": "Hybrid",
+    "plug-in hybrid": "Plug-In Hybrid",
+    "plug in hybrid": "Plug-In Hybrid",
+    "phev": "Plug-In Hybrid",
+    "electric": "Electric",
+    "battery electric": "Electric",
+    "bev": "Electric",
+    "diesel": "Diesel",
+    "hydrogen": "Hydrogen",
+    "hydrogen fuel cell": "Hydrogen",
+    "fcev": "Hydrogen",
 }
 
 
@@ -76,23 +129,36 @@ def is_spec_overlay_junk(val: Any) -> bool:
 
 def coerce_drivetrain_stored(val: Any) -> str | None:
     """
-    Map schema.org drive-wheel type tokens (or full URLs) to AWD/FWD/RWD/4WD;
-    if the value is not schema.org-related, return stripped text or None when empty.
-    If schema.org is present but not a known drive type, return None (bad leak).
+    Map any drivetrain text (schema.org URLs, abbreviations, long-form) to one
+    of the four canonical values: FWD / RWD / AWD / 4WD.
+    Returns None for empty/unknown inputs.
     """
     if is_effectively_empty(val):
         return None
     s = str(val).strip()
-    if "schema.org" not in s.lower():
-        return s
+    if re.fullmatch(r"[ARF]", s, re.I):
+        return {"A": "AWD", "R": "RWD", "F": "FWD"}[s.upper()]
+    # Handle schema.org URLs first
+    if "schema.org" in s.lower():
+        m = _SCHEMA_ORG_DRIVETRAIN_RE.search(s)
+        if not m:
+            return None
+        key = re.sub(r"[^a-z0-9]", "", m.group(1).lower())
+        return _SCHEMA_ORG_DRIVETRAIN_TO_ABBR.get(key)
+    # Canonical lookup (case-insensitive)
+    return _CANONICAL_DRIVETRAIN.get(s.lower(), s)
 
-    m = _SCHEMA_ORG_DRIVETRAIN_RE.search(s)
-    if not m:
+
+def coerce_fuel_type_stored(val: Any) -> str | None:
+    """
+    Map any fuel type text to one of the canonical values:
+    Gasoline / Hybrid / Plug-In Hybrid / Diesel / Electric / Hydrogen.
+    Returns None for empty/unknown inputs.
+    """
+    if is_effectively_empty(val):
         return None
-    key = re.sub(r"[^a-z0-9]", "", m.group(1).lower())
-    if key in _SCHEMA_ORG_DRIVETRAIN_TO_ABBR:
-        return _SCHEMA_ORG_DRIVETRAIN_TO_ABBR[key]
-    return None
+    s = str(val).strip()
+    return _CANONICAL_FUEL_TYPE.get(s.lower(), s)
 
 
 def normalize_optional_str(val: Any, *, max_len: int | None = None) -> str | None:
@@ -149,6 +215,7 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
         "source_url",
         "body_style",
         "engine_description",
+        "transmission_type",
         "condition",
         "description",
         "model_full_raw",
@@ -160,6 +227,8 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
             out[k] = normalize_optional_url(out.get(k))
         elif k == "drivetrain":
             out[k] = normalize_optional_str(coerce_drivetrain_stored(out.get(k)))
+        elif k == "fuel_type":
+            out[k] = normalize_optional_str(coerce_fuel_type_stored(out.get(k)))
         else:
             out[k] = normalize_optional_str(out.get(k))
 

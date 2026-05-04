@@ -1,0 +1,158 @@
+[
+  {
+    "name": "Long Beach BMW",
+    "url": "https://www.longbeachbmw.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "long-beach-bmw"
+  },
+  {
+    "name": "Irvine BMW",
+    "url": "https://www.irvinebmw.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "irvine-bmw"
+  },
+  {
+    "name": "Tuttle Click Ford",
+    "url": "https://www.tuttleclickford.com",
+    "provider": "dealer_on",
+    "dealer_id": "tuttle-click-ford"
+  },
+  {
+    "name": "Tuttle Click Mazda",
+    "url": "https://www.tuttleclickmazda.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "tuttle-click-mazda"
+  },
+  {
+    "name": "Keffer Chrysler Dodge Jeep RAM",
+    "url": "https://www.kefferjeep.com",
+    "provider": "dealer_on",
+    "dealer_id": "kefferjeep-com"
+  },
+  {
+    "name": "Hendrick Chrysler Dodge Jeep Ram FIAT of Concord",
+    "url": "https://www.hendrickchryslerdodgejeepramofconcord.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "hendrickchryslerdodgejeepramofconcord-com"
+  },
+  {
+    "name": "Toyota",
+    "url": "https://www.townandcountrytoyota.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "townandcountrytoyota-com"
+  },
+  {
+    "name": "Parks Chevrolet Huntersville",
+    "url": "https://www.parkschevrolethuntersville.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "parkschevrolethuntersville-com"
+  },
+  {
+    "name": "Huntersville Ford",
+    "url": "https://huntersvilleford.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "huntersvilleford-com"
+  },
+  {
+    "name": "Randy Marion Buick GMC",
+    "url": "https://www.randymariongmc.net",
+    "provider": "dealer_dot_com",
+    "dealer_id": "randymariongmc-net"
+  },
+  {
+    "name": "Fort Mill Ford",
+    "url": "https://www.fortmillford.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "fortmillford-com"
+  },
+  {
+    "name": "Burns Chevrolet",
+    "url": "https://www.burnschevycadillac.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "burnschevycadillac-com"
+  },
+  {
+    "name": "Hertz Car Sales",
+    "url": "https://www.hertzcarsales.com/charlotte.htm",
+    "provider": "dealer_dot_com",
+    "dealer_id": "hertzcarsales-com"
+  },
+  {
+    "name": "East Coast Motorsports",
+    "url": "https://www.ecmcars.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "ecmcars-com"
+  },
+  {
+    "name": "Infiniti Of Charlotte",
+    "url": "https://www.infinitiofcharlotte.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "infinitiofcharlotte-com"
+  },
+  {
+    "name": "Hendrick Lexus",
+    "url": "https://www.hendrickmini.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "hendrickmini-com"
+  },
+  {
+    "name": "CarMax",
+    "url": "https://www.carmax.com/stores/7106",
+    "provider": "dealer_dot_com",
+    "dealer_id": "carmax-com"
+  },
+  {
+    "name": "Town and Country Ford",
+    "url": "https://www.townandcountryford.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "townandcountryford-com"
+  },
+  {
+    "name": "Volvo of Charlotte",
+    "url": "https://www.volvocharlotte.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "volvocharlotte-com"
+  },
+  {
+    "name": "Keith Hawthorne Ford of Belmont",
+    "url": "https://www.keithhawthornefordofbelmont.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "keithhawthornefordofbelmont-com"
+  },
+  {
+    "name": "Cadillac of South Charlotte",
+    "url": "https://www.cadillacofsouthcharlotte.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "cadillacofsouthcharlotte-com"
+  },
+  {
+    "name": "EchoPark Charlotte",
+    "url": "https://www.echopark.com/dealerships/charlotte.htm",
+    "provider": "dealer_dot_com",
+    "dealer_id": "echopark-com"
+  },
+  {
+    "name": "Down East Auto",
+    "url": "https://downeastautonc.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "downeastautonc-com"
+  },
+  {
+    "name": "Direct Automotive",
+    "url": "https://gmdirectautomotive.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "gmdirectautomotive-com"
+  },
+  {
+    "name": "Subaru South Charlotte",
+    "url": "https://www.subarusouthcharlotte.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "subarusouthcharlotte-com"
+  },
+  {
+    "name": "South Charlotte Hyundai",
+    "url": "https://www.southcharlottehyundai.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "southcharlottehyundai-com"
+  }
+]

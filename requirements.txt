@@ -2,11 +2,14 @@ flask
 python-dotenv>=1.0
 pydantic>=2
 requests
+aiohttp>=3.9
+duckdb>=1.1
 pillow>=10
 beautifulsoup4
 pgeocode
 playwright
 playwright-stealth
+fake-useragent>=1.5
 thefuzz
 sentence-transformers>=2.2
 # Postgres + pgvector (semantic search, master catalog, BMW OEM embeddings)
@@ -29,5 +32,6 @@ stripe>=8
 #   python3 -m patchright install chromium
 # Do not append comments on the same line as "playwright install" unless your shell treats # as a comment; otherwise Playwright treats extra words as invalid browser names.
 
-# Optional: encrypted users.db (set USERS_DB_ENCRYPTION_KEY). May require SQLCipher libs on some platforms.
-# sqlcipher3>=0.5.4
+# SQLCipher for at-rest encryption of credential DBs (dev_users.db, users.db).
+# Requires native lib: brew install sqlcipher (macOS) / apt install libsqlcipher-dev (Linux)
+sqlcipher3>=0.5.4

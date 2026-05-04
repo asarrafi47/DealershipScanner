@@ -16,7 +16,7 @@
                class="{% if request.path.startswith('/inventory/listings') %}nav-link-active{% endif %}">Listings</a>
             <a href="{{ url_for('dashboard') }}">App dashboard</a>
             <a href="{{ url_for('listings') }}">Public listings</a>
-            <a href="{{ url_for('logout_page') }}">Logout</a>
+            {% include "_app_logout.html" %}
         </div>
     </nav>
 

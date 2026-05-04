@@ -26,23 +26,44 @@ def ensure_dealerships_table(cursor: sqlite3.Cursor) -> None:
             name              TEXT NOT NULL,
             website_url       TEXT NOT NULL,
             city              TEXT NOT NULL,
-            state               TEXT NOT NULL,
+            state             TEXT NOT NULL,
             latitude          REAL,
             longitude         REAL,
             created_at        TEXT NOT NULL DEFAULT (datetime('now')),
             duplicate_of_id   INTEGER,
             duplicate_score   REAL,
             is_active         INTEGER NOT NULL DEFAULT 1,
+            street_address    TEXT,
+            zip_code          TEXT,
+            dealer_website_url TEXT,
+            source_dmv        INTEGER NOT NULL DEFAULT 0,
+            source_osm        INTEGER NOT NULL DEFAULT 0,
+            source_web        INTEGER NOT NULL DEFAULT 0,
+            osm_id            TEXT,
             FOREIGN KEY (duplicate_of_id) REFERENCES dealerships(id)
         )
         """
     )
     cursor.execute("PRAGMA table_info(dealerships)")
     dcols = [row[1] for row in cursor.fetchall()]
-    if "is_active" not in dcols:
-        cursor.execute("ALTER TABLE dealerships ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1")
+    additive = [
+        ("is_active",         "INTEGER NOT NULL DEFAULT 1"),
+        ("street_address",    "TEXT"),
+        ("zip_code",          "TEXT"),
+        ("dealer_website_url","TEXT"),
+        ("source_dmv",        "INTEGER NOT NULL DEFAULT 0"),
+        ("source_osm",        "INTEGER NOT NULL DEFAULT 0"),
+        ("source_web",        "INTEGER NOT NULL DEFAULT 0"),
+        ("osm_id",            "TEXT"),
+    ]
+    for col, coltype in additive:
+        if col not in dcols:
+            cursor.execute(f"ALTER TABLE dealerships ADD COLUMN {col} {coltype}")
     cursor.execute(
         "CREATE INDEX IF NOT EXISTS idx_dealerships_created ON dealerships(created_at DESC)"
+    )
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_dealerships_zip ON dealerships(zip_code)"
     )
 
 
@@ -82,6 +103,160 @@ def geocode_city_state(city: str, state: str) -> tuple[float, float] | None:
     if math.isnan(lat) or math.isnan(lon):
         return None
     return (lat, lon)
+
+
+def upsert_discovery_row(row: dict[str, Any]) -> int:
+    """
+    Insert or update a dealership discovered by the ingestion pipeline.
+
+    Uniqueness key: ``osm_id`` when present; otherwise fuzzy-dedupe against
+    existing rows via ``deduplicate_dealerships``.  Returns the canonical row id.
+
+    Provenance booleans (source_dmv / source_osm / source_web) are ORed so a row
+    that was first found by OSM and later confirmed by DDG accumulates both flags.
+    """
+    conn = get_conn()
+    cursor = conn.cursor()
+    ensure_dealerships_table(cursor)
+
+    now = datetime.now(timezone.utc).isoformat()
+    osm_id = (row.get("osm_id") or "").strip() or None
+
+    existing_id: int | None = None
+    if osm_id:
+        cursor.execute("SELECT id FROM dealerships WHERE osm_id = ?", (osm_id,))
+        r = cursor.fetchone()
+        if r:
+            existing_id = int(r[0])
+
+    if existing_id is None:
+        # Fall back to name+city+state fuzzy match
+        name = (row.get("name") or "").strip()
+        city = (row.get("city") or "").strip()
+        state = (row.get("state") or "").strip().upper()
+        if name:
+            cursor.execute(
+                "SELECT id, name, website_url, city, state FROM dealerships "
+                "WHERE state = ? AND duplicate_of_id IS NULL",
+                (state,),
+            )
+            for cid, cname, curl, ccity, cstate in cursor.fetchall():
+                score = fuzz.token_set_ratio(
+                    _normalize_dedupe_key(name, row.get("dealer_website_url") or "", city, state),
+                    _normalize_dedupe_key(cname, curl or "", ccity, cstate),
+                )
+                if score >= _DEDUPE_THRESHOLD:
+                    existing_id = int(cid)
+                    break
+
+    website_url = (
+        row.get("dealer_website_url")
+        or row.get("website_url")
+        or ""
+    ).strip()
+
+    if existing_id is not None:
+        # Merge: fill blanks, OR provenance flags
+        cursor.execute(
+            """
+            UPDATE dealerships SET
+                street_address     = COALESCE(NULLIF(TRIM(street_address),''),   NULLIF(TRIM(?),'')),
+                zip_code           = COALESCE(NULLIF(TRIM(zip_code),''),         NULLIF(TRIM(?),'')),
+                dealer_website_url = COALESCE(NULLIF(TRIM(dealer_website_url),''),NULLIF(TRIM(?),'')),
+                website_url        = CASE WHEN TRIM(website_url)='' OR website_url IS NULL
+                                         THEN NULLIF(TRIM(?), '') ELSE website_url END,
+                latitude           = COALESCE(latitude,  ?),
+                longitude          = COALESCE(longitude, ?),
+                osm_id             = COALESCE(osm_id,    NULLIF(TRIM(?),'')),
+                source_dmv         = source_dmv | ?,
+                source_osm         = source_osm | ?,
+                source_web         = source_web | ?
+            WHERE id = ?
+            """,
+            (
+                row.get("street_address") or "",
+                row.get("zip_code") or "",
+                website_url,
+                website_url,
+                row.get("latitude"),
+                row.get("longitude"),
+                osm_id or "",
+                int(bool(row.get("source_dmv"))),
+                int(bool(row.get("source_osm"))),
+                int(bool(row.get("source_web"))),
+                existing_id,
+            ),
+        )
+        conn.commit()
+        conn.close()
+        return existing_id
+
+    # Insert new row
+    name = (row.get("name") or "Unknown Dealer").strip()
+    city = (row.get("city") or "").strip()
+    state = (row.get("state") or "").strip().upper()
+    cursor.execute(
+        """
+        INSERT INTO dealerships
+            (name, website_url, city, state, latitude, longitude, created_at,
+             street_address, zip_code, dealer_website_url,
+             source_dmv, source_osm, source_web, osm_id, is_active)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1)
+        """,
+        (
+            name,
+            website_url,
+            city,
+            state,
+            row.get("latitude"),
+            row.get("longitude"),
+            now,
+            row.get("street_address") or "",
+            row.get("zip_code") or "",
+            website_url,
+            int(bool(row.get("source_dmv"))),
+            int(bool(row.get("source_osm"))),
+            int(bool(row.get("source_web"))),
+            osm_id,
+        ),
+    )
+    new_id = int(cursor.lastrowid)
+    conn.commit()
+    conn.close()
+    return new_id
+
+
+def search_dealerships_by_radius(
+    lat: float, lon: float, radius_miles: float
+) -> list[dict[str, Any]]:
+    """Return all active dealerships within *radius_miles* of (lat, lon)."""
+    from backend.db.geo import haversine
+
+    conn = get_conn()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    ensure_dealerships_table(cursor)
+    cursor.execute(
+        """
+        SELECT id, name, website_url, city, state, latitude, longitude, created_at,
+               street_address, zip_code, dealer_website_url,
+               source_dmv, source_osm, source_web, osm_id,
+               duplicate_of_id, duplicate_score, is_active
+        FROM dealerships
+        WHERE is_active = 1 AND duplicate_of_id IS NULL
+          AND latitude IS NOT NULL AND longitude IS NOT NULL
+        """
+    )
+    results = []
+    for row in cursor.fetchall():
+        d = haversine(lat, lon, float(row["latitude"]), float(row["longitude"]))
+        if d <= radius_miles:
+            r = dict(row)
+            r["distance_miles"] = round(d, 2)
+            results.append(r)
+    conn.close()
+    results.sort(key=lambda x: x["distance_miles"])
+    return results
 
 
 def insert_dealership(row: dict[str, Any]) -> int:

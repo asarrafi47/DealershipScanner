@@ -16,8 +16,29 @@ document.addEventListener("DOMContentLoaded", () => {
         window.CAR_ROWS = readJsonScript("ds-listings-car-rows", []);
         window.ALL_CARS = readJsonScript("ds-listings-all-cars", []);
         window.COUNTRY_TO_MAKES = readJsonScript("ds-listings-country-to-makes", {});
+        window.ZIP_COORDS = readJsonScript("ds-listings-zip-coords", {});
+        window.DEALER_COORDS = readJsonScript("ds-listings-dealer-coords", {});
         window.INITIAL_GRID_CARS = readJsonScript("ds-listings-initial-grid", []);
     })();
+
+    // Haversine formula: calculate distance in miles between two lat/lon points
+    window.haversineJS = function(lat1, lon1, lat2, lon2) {
+        const R = 3958.8; // Earth's radius in miles
+        const toRad = Math.PI / 180;
+        const lat1Rad = lat1 * toRad;
+        const lat2Rad = lat2 * toRad;
+        const dlat = (lat2 - lat1) * toRad;
+        const dlon = (lon2 - lon1) * toRad;
+        const a = Math.sin(dlat / 2) ** 2 + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(dlon / 2) ** 2;
+        return R * 2 * Math.asin(Math.sqrt(a));
+    };
+
+    // Look up coordinates for a ZIP code from preloaded data
+    window.zipCoordsJS = function(zipCode) {
+        if (!zipCode || typeof ZIP_COORDS !== "object") return null;
+        const coords = ZIP_COORDS[String(zipCode).trim()];
+        return Array.isArray(coords) && coords.length === 2 ? coords : null;
+    };
 
     // Fade in
     document.body.style.opacity = 0;
@@ -418,6 +439,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const makes       = checked("make");
         const models      = checked("model");
+        const zipCode     = scalarVal("zip_code");
+        const radiusMi    = parseFloat(scalarVal("radius"))      || null;
+
+        // Require either (make or model) OR (zip code + radius)
+        const hasLocationFilter = zipCode && radiusMi;
+        const hasMakeModelFilter = makes.length > 0 || models.length > 0;
+
+        if (!hasMakeModelFilter && !hasLocationFilter) {
+            resultsGrid.innerHTML = "";
+            if (emptyState) {
+                emptyState.style.display = "";
+                emptyState.querySelector(".no-results").textContent = "Select a make/model or enter a zip code + radius to browse listings";
+                emptyState.querySelector(".no-results-sub").textContent = "";
+            }
+            if (resultsCount) resultsCount.textContent = "";
+            return;
+        }
         const trims       = checked("trim");
         const fuels       = checked("fuel_type");
         const cyls        = checked("cylinders");
@@ -431,8 +469,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const maxMileage  = parseInt(scalarVal("max_mileage"))   || null;
         const engLMin     = parseFloat(scalarVal("engine_l_min")) || null;
         const engLMax     = parseFloat(scalarVal("engine_l_max")) || null;
-        const zipCode     = scalarVal("zip_code");
-        const radiusMi    = parseFloat(scalarVal("radius"))      || null;
 
         function parseEngineLiters(c) {
             const raw = c.engine_l;
@@ -465,10 +501,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (makesFilter.length && !valueInListCI(makesFilter, c.make))     return false;
             if (models.length     && !valueInListCI(models, c.model))          return false;
             if (trims.length      && !valueInListCI(trims, c.trim))            return false;
-            if (fuels.length      && !fuels.includes(c.fuel_type))       return false;
-            if (cyls.length       && !cyls.includes(String(c.cylinders)))return false;
-            if (trans.length      && !trans.includes(c.transmission))    return false;
-            if (drives.length     && !drives.includes(c.drivetrain))     return false;
+            if (fuels.length      && !valueInListCI(fuels, c.fuel_type))       return false;
+            if (cyls.length       && !cyls.includes(String(c.cylinders)))      return false;
+            if (trans.length      && !valueInListCI(trans, c.transmission))    return false;
+            if (drives.length     && !valueInListCI(drives, c.drivetrain))     return false;
             if (bodies.length     && !valueInListCI(bodies, c.body_style)) return false;
             if (extColors.length  && !carMatchesPaintFamilyBuckets(c, "exterior_color", extColors)) return false;
             if (intColors.length  && !carMatchesPaintFamilyBuckets(c, "interior_color", intColors)) return false;
@@ -484,14 +520,29 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (zipCode && radiusMi && typeof haversineJS === "function") {
-            const origin = zipCoordsJS(zipCode);
-            if (origin) {
-                cars = cars.filter(c => {
-                    const dest = zipCoordsJS(c.zip_code);
-                    if (!dest) return false;
-                    return haversineJS(origin[0], origin[1], dest[0], dest[1]) <= radiusMi;
+            const applyRadius = (origin) => {
+                if (!origin) { renderCarGrid(cars); return; }
+                const filtered = cars.filter(c => {
+                    const dealerCoords = (typeof DEALER_COORDS === "object" && c.dealer_url)
+                        ? DEALER_COORDS[String(c.dealer_url).trim()] : null;
+                    if (!dealerCoords) return false;
+                    return haversineJS(origin[0], origin[1], dealerCoords[0], dealerCoords[1]) <= radiusMi;
                 });
+                renderCarGrid(filtered);
+            };
+
+            // Try preloaded ZIP_COORDS first (fast), else fetch from API
+            let origin = zipCoordsJS(zipCode);
+            if (origin) {
+                applyRadius(origin);
+            } else {
+                fetch(`/api/zip-coords?zip=${encodeURIComponent(zipCode)}`, { credentials: "same-origin" })
+                    .then(r => r.ok ? r.json() : null)
+                    .then(data => applyRadius(data && data.lat != null ? [data.lat, data.lon] : null))
+                    .catch(() => applyRadius(null));
+                return; // renderCarGrid called inside applyRadius
             }
+            return;
         }
 
         renderCarGrid(cars);
@@ -504,7 +555,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeof INITIAL_GRID_CARS !== "undefined" && Array.isArray(INITIAL_GRID_CARS) && INITIAL_GRID_CARS.length) {
         renderCarGrid(INITIAL_GRID_CARS);
     } else {
-        renderResults();
+        // Show "select make/model or zip code" message on initial load instead of loading all cars
+        const emptyState = document.getElementById("empty-state");
+        if (emptyState) {
+            emptyState.style.display = "";
+            emptyState.querySelector(".no-results").textContent = "Select a make/model or enter a zip code + radius to browse listings";
+            emptyState.querySelector(".no-results-sub").textContent = "";
+        }
     }
 
     // ── Pill dropdown open/close ───────────────────────────────────────

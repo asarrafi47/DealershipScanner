@@ -7,9 +7,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from backend.knowledge_engine import merge_verified_specs
-from backend.utils.car_serialize import DISPLAY_DASH, _dealer_spec_wins, infer_condition_for_storage
+from backend.enrichment.knowledge_engine import merge_verified_specs
+from backend.utils.car_serialize import DISPLAY_DASH, _dealer_spec_wins, infer_condition_for_storage, normalize_condition_for_storage
 from backend.utils.field_clean import clean_car_row_dict, is_effectively_empty
+from backend.utils.spec_field_normalize import collect_raw_spec_heuristic_updates
 from backend.utils.interior_color_buckets import interior_color_buckets_json
 
 _CLEANABLE_FOR_SQL = frozenset(
@@ -110,9 +111,16 @@ def collect_row_storage_repairs(raw: dict[str, Any]) -> dict[str, Any]:
     """Single-row patch dict for ``update_car_row_partial`` (may be empty)."""
     updates = collect_cleaned_field_updates(raw)
     updates.update(collect_merge_spec_storage_updates(raw))
+    merged = {**raw, **updates}
+    updates.update(collect_raw_spec_heuristic_updates(merged))
     cond = infer_condition_for_storage(raw)
     if cond:
         updates["condition"] = cond
+    # Normalize non-blank but wrong stored values ("Certified" → CPO, "Pre-Owned" → Used)
+    norm_source = {**raw, **updates}
+    norm = normalize_condition_for_storage(norm_source)
+    if norm:
+        updates["condition"] = norm
     if "interior_color" in updates:
         updates["interior_color_buckets"] = interior_color_buckets_json(
             updates.get("interior_color"), raw.get("make")

@@ -46,10 +46,19 @@ document.addEventListener("DOMContentLoaded", () => {
         return false;
     }
 
-    /** e.g. "dealers" or "/status" -> "/dev/api/dealers" */
+    /** Flask ``SCRIPT_NAME`` / reverse-proxy mount (empty when served at site root). */
+    function appPathPrefix() {
+        const m = document.querySelector('meta[name="application-path-prefix"]');
+        const raw = m ? String(m.getAttribute("content") || "").trim() : "";
+        return raw.replace(/\/$/, "");
+    }
+
+    /** e.g. "dealers" -> "{script_root}/dev/api/dealers" */
     function devApi(endpoint) {
         const e = String(endpoint).replace(/^\//, "");
-        return `/dev/api/${e}`;
+        const p = appPathPrefix();
+        const base = p ? `${p}/dev/api` : `/dev/api`;
+        return `${base}/${e}`;
     }
 
     const fetchOpts = { credentials: "same-origin" };
@@ -65,7 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const res = await fetch(url, opts);
         if (res.status === 401) {
-            window.location.href = "/dev/login?next=" + encodeURIComponent(window.location.pathname);
+            const pre = appPathPrefix();
+            const loginBase = pre ? `${pre}/dev/login` : `/dev/login`;
+            window.location.href =
+                loginBase + "?next=" + encodeURIComponent(window.location.pathname + window.location.search);
             throw new Error("unauthorized");
         }
         return res;
@@ -631,6 +643,7 @@ document.addEventListener("DOMContentLoaded", () => {
         make: "Make",
         model: "Model",
         trim: "Trim",
+        mileage: "Mileage",
         engine: "Engine",
         transmission: "Transmission",
         drivetrain: "Drivetrain",
@@ -692,6 +705,93 @@ document.addEventListener("DOMContentLoaded", () => {
             }));
     }
 
+    function incompleteCodesAttr(c) {
+        const f = c.incomplete_missing_fields;
+        if (!Array.isArray(f) || !f.length) return "";
+        const uniq = [...new Set(f.map((x) => String(x).trim()).filter(Boolean))].sort();
+        return uniq.join(",");
+    }
+
+    function setIncompleteActionMsg(text) {
+        const el = document.getElementById("dev-incomplete-action-msg");
+        if (el) el.textContent = text || "";
+    }
+
+    function syncIncompleteLogButton() {
+        const btn = document.getElementById("dev-incomplete-log-terminal");
+        const sel = document.getElementById("dev-incomplete-issue-filter");
+        if (!btn || !sel) return;
+        btn.disabled = !String(sel.value || "").trim();
+    }
+
+    function populateIncompleteIssueFilter(issuesSummary, cars) {
+        const sel = document.getElementById("dev-incomplete-issue-filter");
+        if (!sel) return;
+        const prev = sel.value;
+        const total = Array.isArray(cars) ? cars.length : 0;
+        const byCount = new Map();
+        if (Array.isArray(issuesSummary)) {
+            for (const r of issuesSummary) {
+                if (r && r.code) byCount.set(String(r.code).trim(), Number(r.count) || 0);
+            }
+        }
+        const codesSet = new Set(byCount.keys());
+        if (Array.isArray(cars)) {
+            for (const c of cars) {
+                const f = c.incomplete_missing_fields;
+                if (!Array.isArray(f)) continue;
+                for (const code of f) {
+                    const k = String(code || "").trim();
+                    if (k) codesSet.add(k);
+                }
+            }
+        }
+        const sortedCodes = [...codesSet].sort((a, b) => {
+            const da = byCount.get(a) ?? 0;
+            const db = byCount.get(b) ?? 0;
+            if (db !== da) return db - da;
+            return a.localeCompare(b);
+        });
+        const parts = [`<option value="">${escHtml(`All gap types (${fmtNumber(total)})`)}</option>`];
+        for (const code of sortedCodes) {
+            const label = INCOMPLETE_FIELD_LABELS[code] || code;
+            const cnt = byCount.get(code);
+            const labelWithCount =
+                cnt != null ? `${label} (${fmtNumber(cnt)})` : label;
+            parts.push(`<option value="${escHtml(code)}">${escHtml(labelWithCount)}</option>`);
+        }
+        sel.innerHTML = parts.join("");
+        if (prev && [...sel.options].some((o) => o.value === prev)) sel.value = prev;
+        else sel.value = "";
+        syncIncompleteLogButton();
+    }
+
+    function applyIncompleteIssueFilter() {
+        const sel = document.getElementById("dev-incomplete-issue-filter");
+        const hint = document.getElementById("dev-incomplete-filter-hint");
+        if (!incompleteGrid || !incompleteCount) return;
+        const filterCode = sel && sel.value ? String(sel.value).trim() : "";
+        const cards = incompleteGrid.querySelectorAll(".dev-incomplete-card");
+        let visible = 0;
+        const total = cards.length;
+        cards.forEach((card) => {
+            const raw = card.getAttribute("data-incomplete-codes") || "";
+            const codes = raw
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean);
+            const show = !filterCode || codes.includes(filterCode);
+            card.style.display = show ? "" : "none";
+            if (show) visible += 1;
+        });
+        if (!filterCode) incompleteCount.textContent = fmtNumber(total);
+        else incompleteCount.textContent = `${fmtNumber(visible)} / ${fmtNumber(total)}`;
+        if (hint) {
+            hint.hidden = !(filterCode && total > 0 && visible === 0);
+        }
+        syncIncompleteLogButton();
+    }
+
     function renderIssuesSummary(cars, issuesSummary) {
         const el = document.getElementById("dev-incomplete-issues");
         if (!el) return;
@@ -727,13 +827,18 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!incompleteGrid) return;
         if (incompleteCount) incompleteCount.textContent = cars.length;
         renderIssuesSummary(cars, issuesSummary);
+        populateIncompleteIssueFilter(issuesSummary, cars);
 
         if (!cars.length) {
             incompleteGrid.innerHTML = '<div class="dev-incomplete-empty"><p>All cars have complete data.</p></div>';
+            const hint = document.getElementById("dev-incomplete-filter-hint");
+            if (hint) hint.hidden = true;
+            setIncompleteActionMsg("");
+            syncIncompleteLogButton();
             return;
         }
 
-        incompleteGrid.innerHTML = cars.map(c => {
+        incompleteGrid.innerHTML = cars.map((c) => {
             const gallery = Array.isArray(c.gallery) ? c.gallery : [];
             const imgCandidate = (gallery.length && gallery[0]) ? gallery[0] : (c.image_url || "");
             const imgRaw = isHttpUrl(imgCandidate) ? imgCandidate : "";
@@ -743,15 +848,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 .join("");
             const idNum = Number(c.id);
             const idAttr = Number.isFinite(idNum) && idNum > 0 ? String(Math.floor(idNum)) : "0";
+            const codesAttr = escHtml(incompleteCodesAttr(c));
             return `
-            <div class="result-card dev-incomplete-card" data-car-id="${idAttr}">
+            <div class="result-card dev-incomplete-card" data-car-id="${idAttr}" data-incomplete-codes="${codesAttr}">
                 <div class="result-image-wrap">
                     <div class="result-image" style="background-image:url('${imgQuoted}')"></div>
                     <span class="dev-incomplete-badge">Incomplete</span>
                 </div>
                 <div class="result-content">
                     <h2>${escHtml(c.title || "No title")}</h2>
-                    <p class="result-trim">${escHtml(c.trim || "")}</p>
+                    <p class="result-trim">${escHtml(c.listing_trim_display || c.trim || "")}</p>
                     <p class="result-price">${fmtUSD(c.price)}</p>
                     <p class="result-meta">
                         ${c.mileage ? fmtNumber(c.mileage) + " mi" : "-- mi"}
@@ -771,6 +877,7 @@ document.addEventListener("DOMContentLoaded", () => {
         incompleteGrid.querySelectorAll(".dev-delete-car-btn").forEach(btn =>
             btn.addEventListener("click", onDeleteCar)
         );
+        applyIncompleteIssueFilter();
     }
 
     async function onDeleteCar(ev) {
@@ -792,8 +899,75 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.ok) renderIncompleteGrid(data.cars || [], data.issues_summary);
     }
 
+    async function onLogIncompleteIssueToTerminal() {
+        const sel = document.getElementById("dev-incomplete-issue-filter");
+        const issue = sel && String(sel.value || "").trim();
+        if (!issue) return;
+        setIncompleteActionMsg("");
+        try {
+            const res = await devFetch(devApi("incomplete-export"), {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ issue }),
+            });
+            const raw = await res.text();
+            let data = null;
+            try {
+                data = raw ? JSON.parse(raw) : null;
+            } catch {
+                setIncompleteActionMsg(
+                    "Server returned non-JSON (HTTP " + res.status + "). Check Flask logs."
+                );
+                return;
+            }
+            if (!data || !data.ok) {
+                setIncompleteActionMsg((data && data.error) || "Request failed");
+                return;
+            }
+            if (!data.matched) {
+                setIncompleteActionMsg("No cars matched this issue; no file written.");
+                return;
+            }
+            const rel = data.export_path ? String(data.export_path) : "";
+            setIncompleteActionMsg(
+                "Wrote " +
+                    fmtNumber(data.matched) +
+                    " car row(s) for issue \"" +
+                    issue +
+                    "\" to " +
+                    rel +
+                    " (folder should open in Finder / Explorer)."
+            );
+        } catch (err) {
+            setIncompleteActionMsg(String(err));
+        }
+    }
+
     if (refreshIncomplete) {
         refreshIncomplete.addEventListener("click", refreshIncompleteCars);
+    }
+
+    const incompleteIssueFilter = document.getElementById("dev-incomplete-issue-filter");
+    const incompleteLogTerminal = document.getElementById("dev-incomplete-log-terminal");
+    if (incompleteIssueFilter) {
+        incompleteIssueFilter.addEventListener("change", () => {
+            setIncompleteActionMsg("");
+            applyIncompleteIssueFilter();
+        });
+        if (incompleteGrid && incompleteGrid.querySelector(".dev-incomplete-card")) {
+            const carsSnapshot = [...incompleteGrid.querySelectorAll(".dev-incomplete-card")].map((card) => ({
+                incomplete_missing_fields: (card.getAttribute("data-incomplete-codes") || "")
+                    .split(",")
+                    .map((s) => s.trim())
+                    .filter(Boolean),
+            }));
+            const summary = summarizeIncompleteFromCars(carsSnapshot);
+            populateIncompleteIssueFilter(summary, carsSnapshot);
+            applyIncompleteIssueFilter();
+        }
+    }
+    if (incompleteLogTerminal) {
+        incompleteLogTerminal.addEventListener("click", onLogIncompleteIssueToTerminal);
     }
 
     document.querySelectorAll(".dev-delete-car-btn").forEach(btn =>

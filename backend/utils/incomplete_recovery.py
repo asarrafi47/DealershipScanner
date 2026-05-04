@@ -10,9 +10,7 @@ import asyncio
 import json
 import logging
 import re
-import sys
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any
 
 import requests
@@ -403,10 +401,7 @@ def prepare_vdp_urls(vehicle: dict[str, Any]) -> tuple[str | None, list[str]]:
 
 async def recover_vehicle_vdp_async(page: Any, vehicle: dict[str, Any], dealer_name: str) -> dict[str, Any]:
     """Run scanner VDP extraction for one row (mutates *vehicle*)."""
-    root = Path(__file__).resolve().parents[2]
-    if str(root) not in sys.path:
-        sys.path.insert(0, str(root))
-    from scanner_vdp import _vdp_visit_one  # noqa: WPS433 — runtime path for project root
+    from backend.scanner.vdp import _vdp_visit_one
 
     vin = (vehicle.get("vin") or "").strip().upper()
     primary, alts = prepare_vdp_urls(vehicle)

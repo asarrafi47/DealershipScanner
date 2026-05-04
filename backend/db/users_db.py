@@ -4,11 +4,104 @@ import time
 
 from backend.db.password_hash import hash_password, verify_or_legacy
 from backend.db.users_sqlite import DB_PATH, get_users_conn
+from backend.utils.roles import ROLE_ADMIN
 from backend.utils.runtime_env import is_production_env
 
 
 def get_conn():
     return get_users_conn()
+
+
+def _env_admin_set_clause(cursor: sqlite3.Cursor) -> str:
+    """Return ``SET role=…, totp off, …`` fragment for env-listed admin accounts."""
+    cursor.execute("PRAGMA table_info(users)")
+    cols = {r[1] for r in cursor.fetchall()}
+    parts = ["role = ?", "totp_enabled = 0"]
+    if "totp_secret" in cols:
+        parts.append("totp_secret = NULL")
+    if "mfa_method" in cols:
+        parts.append("mfa_method = NULL")
+    return ", ".join(parts)
+
+
+def _apply_env_admin_privileges(cursor: sqlite3.Cursor) -> None:
+    """Promote (or create in dev) ``APP_ADMIN_EMAILS`` / ``APP_ADMIN_USERNAMES`` accounts to admin and disable MFA.
+    Creation only happens when ALLOW_DEFAULT_APP_USER=1 (non-production).
+    """
+    from backend.utils.roles import admin_emails, admin_usernames
+    from backend.utils.runtime_env import is_production_env
+
+    emails = admin_emails()
+    usernames_list = admin_usernames()
+    if not emails and not usernames_list:
+        return
+
+    allow_default = (os.environ.get("ALLOW_DEFAULT_APP_USER") or "").strip().lower() in (
+        "1", "true", "yes", "on"
+    )
+    set_sql = _env_admin_set_clause(cursor)
+    default_pw_plain = (os.environ.get("ADMIN_PASSWORD") or "ChangeMe2026!").strip()
+    default_pw = hash_password(default_pw_plain)
+
+    for em in emails:
+        cursor.execute(
+            f"UPDATE users SET {set_sql} WHERE lower(email) = lower(?)",
+            (ROLE_ADMIN, em),
+        )
+        if cursor.rowcount == 0 and allow_default and not is_production_env():
+            uname = em.split("@")[0]
+            cursor.execute(
+                """
+                INSERT INTO users (username, email, password, role, totp_enabled)
+                VALUES (?, ?, ?, 'admin', 0)
+                """,
+                (uname, em, default_pw),
+            )
+
+    for un in usernames_list:
+        cursor.execute(
+            f"UPDATE users SET {set_sql} WHERE lower(username) = lower(?)",
+            (ROLE_ADMIN, un),
+        )
+        if cursor.rowcount == 0 and allow_default and not is_production_env():
+            email_guess = f"{un}@localhost"
+            cursor.execute(
+                """
+                INSERT INTO users (username, email, password, role, totp_enabled)
+                VALUES (?, ?, ?, 'admin', 0)
+                """,
+                (un, email_guess, default_pw),
+            )
+
+
+def sync_env_admin_user_row(user_id: int) -> None:
+    """After login or when env changed, ensure env-listed users have admin + MFA off in SQLite."""
+    from backend.utils.roles import account_has_env_admin_privilege
+
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return
+    if uid <= 0:
+        return
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("SELECT email, username FROM users WHERE id = ?", (uid,))
+    row = cursor.fetchone()
+    if not row:
+        conn.close()
+        return
+    email, username = row[0], row[1]
+    if not account_has_env_admin_privilege(str(email or ""), str(username or "")):
+        conn.close()
+        return
+    set_sql = _env_admin_set_clause(cursor)
+    cursor.execute(
+        f"UPDATE users SET {set_sql} WHERE id = ?",
+        (ROLE_ADMIN, uid),
+    )
+    conn.commit()
+    conn.close()
 
 
 def init_users_db():
@@ -94,17 +187,36 @@ def init_users_db():
         default_pw = hash_password("password")
         cursor.execute(
             """
-            INSERT OR IGNORE INTO users (username, email, password)
-            VALUES ('admin', 'admin@admin.com', ?)
+            INSERT OR IGNORE INTO users (username, email, password, role)
+            VALUES ('admin', 'admin@admin.com', ?, 'admin')
             """,
             (default_pw,),
         )
+
+    # Always seed APP_ADMIN_USERNAMES in development (convenience for the main developer)
+    if not is_production_env():
+        try:
+            from backend.utils.roles import admin_usernames
+            for uname in admin_usernames():
+                email_guess = f"{uname}@localhost"
+                cursor.execute(
+                    """
+                    INSERT OR IGNORE INTO users (username, email, password, role, totp_enabled)
+                    VALUES (?, ?, ?, 'admin', 0)
+                    """,
+                    (uname, email_guess, hash_password("ChangeMe2026!")),
+                )
+            _apply_env_admin_privileges(cursor)
+        except Exception as e:
+            print(f"Warning: Could not seed APP_ADMIN_USERNAMES: {e}")
+
     try:
         cursor.execute(
             "UPDATE users SET role = 'dealer_staff' WHERE (role IS NULL OR trim(role) = '')"
         )
     except sqlite3.Error:
         pass
+
     conn.commit()
     conn.close()
 
@@ -193,7 +305,7 @@ def get_user_by_login(login_input: str) -> dict | None:
         if extra in cols:
             want.append(extra)
     cursor.execute(
-        f"SELECT {', '.join(want)} FROM users WHERE username = ? OR email = ?",
+        f"SELECT {', '.join(want)} FROM users WHERE lower(username) = lower(?) OR lower(email) = lower(?)",
         (li, li),
     )
     row = cursor.fetchone()
@@ -281,11 +393,17 @@ def set_user_mfa_phone(user_id: int, phone: str | None) -> bool:
 
 
 def check_user(login_input, password):
+    li = (login_input or "").strip()
+    if not li:
+        return False
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT id, username, email, password FROM users WHERE username = ? OR email = ?",
-        (login_input, login_input),
+        """
+        SELECT id, username, email, password FROM users
+        WHERE lower(username) = lower(?) OR lower(email) = lower(?)
+        """,
+        (li, li),
     )
     row = cursor.fetchone()
     conn.close()

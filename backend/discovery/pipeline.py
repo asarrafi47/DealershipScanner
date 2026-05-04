@@ -1,0 +1,236 @@
+"""
+Tiered discovery orchestration: DMV → OSM → DDG URL gap-fill.
+"""
+from __future__ import annotations
+
+import logging
+from pathlib import Path
+from typing import Any
+
+import requests
+
+from backend.db.dealerships_db import geocode_city_state, upsert_discovery_row
+from backend.db.geo import haversine, zip_to_coords
+from backend.discovery.candidate import DealerCandidate
+from backend.discovery.dmv import fetch_dmv_records
+from backend.discovery.dmv.schema import DMVRecord
+from backend.discovery.coordinate_enrich import enrich_candidate_location_fields
+from backend.discovery.merge import merge_and_dedupe
+from backend.discovery.normalize import (
+    looks_like_dealer_website,
+    normalize_address,
+    normalize_url,
+    normalize_zip,
+    state_code_for_geocode,
+)
+from backend.discovery.osm import fetch_osm_dealerships
+from backend.discovery.web import ddg_find_dealer_url
+from backend.discovery.zcta_gazetteer import resolve_zip_center
+
+logger = logging.getLogger(__name__)
+
+
+def _validate_zip(zip_code: str) -> str:
+    z = normalize_zip(zip_code)
+    if not z:
+        raise ValueError("zip_code must be a 5-digit US ZIP")
+    return z
+
+
+def _validate_radius(radius_miles: float) -> float:
+    if radius_miles <= 0 or radius_miles > 500:
+        raise ValueError("radius_miles must be in (0, 500]")
+    return float(radius_miles)
+
+
+def dmv_records_to_candidates(
+    records: list[DMVRecord],
+    center_lat: float,
+    center_lon: float,
+    radius_miles: float,
+) -> list[DealerCandidate]:
+    """Filter DMV rows by distance; fill coords via ZIP centroid or city/state geocode."""
+    out: list[DealerCandidate] = []
+    for r in records:
+        st = (r.state or "").strip().upper()[:2]
+        city = (r.city or "").strip()
+        if len(st) != 2 or not city:
+            continue
+        z = normalize_zip(r.zip_code) or ""
+        lat: float | None = None
+        lon: float | None = None
+        if z:
+            cc = zip_to_coords(z)
+            if cc:
+                lat, lon = cc
+        if lat is None:
+            gc = geocode_city_state(city, st)
+            if gc:
+                lat, lon = gc
+        if lat is None or lon is None:
+            continue
+        if haversine(center_lat, center_lon, lat, lon) > radius_miles:
+            continue
+        addr = normalize_address(r.street_address) or ""
+        w = (r.website or "").strip()
+        nu = normalize_url(w) if w else ""
+        out.append(
+            DealerCandidate(
+                name=r.business_name.strip(),
+                city=city,
+                state=st,
+                street_address=addr,
+                zip_code=z,
+                latitude=lat,
+                longitude=lon,
+                dealer_website_url=nu or "",
+                website_url=nu or "",
+                source_dmv=True,
+            )
+        )
+    return out
+
+
+def run_discovery(
+    zip_code: str,
+    radius_miles: float,
+    *,
+    dmv_state: str | None = None,
+    persist: bool = False,
+    fill_urls_via_ddg: bool = True,
+    project_root: Path | None = None,
+    gazetteer_path: Path | None = None,
+    within_seed_zip_only: bool = False,
+    overpass_url: str | None = None,
+    overpass_timeout_s: float = 90.0,
+    ddg_timeout_s: float = 15.0,
+    skip_osm: bool = False,
+    session: Any = None,
+) -> list[DealerCandidate]:
+    """
+    Discover dealerships near ``zip_code`` within ``radius_miles``.
+
+    - Optional ``dmv_state``: 2-letter code with a registered loader (e.g. ``NC``).
+    - OSM tier runs unless ``skip_osm=True`` (for city-based discovery or when Overpass unavailable).
+    - ``fill_urls_via_ddg``: query DDG for HTTPS URLs when still missing after merge.
+    - ``persist``: upsert each merged row via ``upsert_discovery_row``.
+    - ``gazetteer_path``: optional ZCTA gazetteer file; default picks ``backend/ZIPs/*.txt``
+      or ``DISCOVERY_ZCTA_GAZETTEER``. Centroids (INTPTLAT/LONG) override pgeocode when found.
+    - ``within_seed_zip_only``: after enrichment, keep rows whose ZIP matches the seed ZCTA.
+    - ``skip_osm``: when True, skip OpenStreetMap tier entirely (useful for city-based discovery).
+    """
+    z = _validate_zip(zip_code)
+    radius_miles = _validate_radius(radius_miles)
+
+    lat0, lon0, center_src = resolve_zip_center(
+        z,
+        project_root=project_root,
+        gazetteer_path=gazetteer_path,
+    )
+    logger.info("Discovery center for %s from %s", z, center_src)
+
+    sess = session if session is not None else requests.Session()
+
+    combined: list[DealerCandidate] = []
+    n_dmv = 0
+
+    if dmv_state:
+        dmv_state_u = dmv_state.strip().upper()
+        records = fetch_dmv_records(dmv_state_u, project_root)
+        combined.extend(dmv_records_to_candidates(records, lat0, lon0, radius_miles))
+        n_dmv = len(combined)
+        logger.info("DMV tier %s: %s candidates in radius", dmv_state_u, n_dmv)
+
+    n_osm = 0
+    if not skip_osm:
+        osm_list = fetch_osm_dealerships(
+            lat0,
+            lon0,
+            radius_miles,
+            overpass_url=overpass_url,
+            timeout_s=overpass_timeout_s,
+            session=sess,
+        )
+        combined.extend(osm_list)
+        n_osm = len(osm_list)
+        logger.info("OSM tier: %s POIs in radius", n_osm)
+    else:
+        logger.info("OSM tier: skipped (skip_osm=True)")
+
+    merged = merge_and_dedupe(combined)
+
+    for c in merged:
+        enrich_candidate_location_fields(c)
+
+    for c in merged:
+        if (c.latitude is None or c.longitude is None) and c.city:
+            st = state_code_for_geocode(c.state)
+            if len(st) == 2:
+                gc = geocode_city_state(c.city, st)
+                if gc:
+                    c.latitude, c.longitude = gc
+        nz = normalize_zip(c.zip_code)
+        if nz:
+            c.zip_code = nz
+
+    if within_seed_zip_only:
+        before = len(merged)
+        merged = [c for c in merged if normalize_zip(c.zip_code) == z]
+        logger.info(
+            "Seed ZIP scope %s: %d → %d candidates (addr/ZIP must match ZCTA after enrichment)",
+            z,
+            before,
+            len(merged),
+        )
+
+    if fill_urls_via_ddg:
+        for c in merged:
+            existing = normalize_url(c.dealer_website_url or c.website_url)
+            if existing and looks_like_dealer_website(existing):
+                if existing:
+                    c.dealer_website_url = existing
+                    c.website_url = existing
+                continue
+            u = ddg_find_dealer_url(
+                c.name, c.city, c.state, timeout_s=ddg_timeout_s, session=sess
+            )
+            if u and looks_like_dealer_website(u):
+                c.dealer_website_url = u
+                c.website_url = u
+                c.source_web = True
+
+    def _candidate_has_url(c: DealerCandidate) -> bool:
+        raw = (c.dealer_website_url or c.website_url or "").strip()
+        return bool(raw)
+
+    # Final radius pass (merged rows may only have city geocode)
+    final: list[DealerCandidate] = []
+    for c in merged:
+        if c.latitude is not None and c.longitude is not None:
+            if haversine(lat0, lon0, c.latitude, c.longitude) > radius_miles:
+                continue
+        final.append(c)
+
+    n_with_url = sum(1 for c in final if _candidate_has_url(c))
+    n_missing_url = len(final) - n_with_url
+    logger.info(
+        "Discovery tiers done (DMV=%s, OSM=%d POIs): %d candidates in output radius, "
+        "%d with a URL string after DMV+OSM+%s.",
+        n_dmv if dmv_state else 0,
+        n_osm,
+        len(final),
+        n_with_url,
+        "DDG" if fill_urls_via_ddg else "no DDG",
+    )
+    if n_missing_url:
+        logger.info(
+            "%d candidates still have no URL (OSM often lacks website=; DDG Instant Answer is not full web search). "
+            "dealers.json merge will skip those rows until a URL exists.",
+            n_missing_url,
+        )
+
+    if persist:
+        for c in final:
+            upsert_discovery_row(c.to_db_dict())
+
+    return final

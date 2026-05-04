@@ -10,6 +10,8 @@
 <script type="application/json" id="ds-listings-car-rows" nonce="{{ csp_nonce }}">{{ options.car_rows | tojson }}</script>
 <script type="application/json" id="ds-listings-all-cars" nonce="{{ csp_nonce }}">{{ options.all_cars | tojson }}</script>
 <script type="application/json" id="ds-listings-country-to-makes" nonce="{{ csp_nonce }}">{{ options.country_to_makes | tojson }}</script>
+<script type="application/json" id="ds-listings-zip-coords" nonce="{{ csp_nonce }}">{{ (options.zip_coords if options.zip_coords is defined else {}) | tojson }}</script>
+<script type="application/json" id="ds-listings-dealer-coords" nonce="{{ csp_nonce }}">{{ (options.dealer_coords if options.dealer_coords is defined else {}) | tojson }}</script>
 <script type="application/json" id="ds-listings-initial-grid" nonce="{{ csp_nonce }}">{{ (initial_grid_cars or []) | tojson }}</script>
 
 <div class="page">

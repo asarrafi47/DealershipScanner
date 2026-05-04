@@ -13,7 +13,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Iterator
 
-_CATALOG_DIR = Path(__file__).resolve().parents[2] / "data" / "oem_option_catalogs"
+_CATALOG_DIR = Path(__file__).resolve().parents[1] / "data" / "oem_option_catalogs"
 
 
 @dataclass(frozen=True)

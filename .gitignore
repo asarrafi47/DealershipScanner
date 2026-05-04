@@ -1,4 +1,5 @@
 node_modules/
+backend/node_modules/
 .env
 *.log
 
@@ -13,8 +14,23 @@ node_modules/
 /rate_limit_state.db
 __pycache__/
 *.pyc
+.pytest_cache/
+# Claude Code isolated worktrees (full repo copies; not part of the app)
+.claude/worktrees/
 .DS_Store
 data/vectors/
+
+# Local Chroma / embedding stores (generated; never commit)
+backend/data/chroma/
+data/chroma/
+
+# Pipeline / scraper outputs under backend/data (regenerated locally)
+backend/data/oem/
+backend/data/dealer_group_results.json
+backend/data/hybrid_run_latest.json
+
+# Local scraping / pipeline queues (regenerated)
+backend/data/review_queue.jsonl
 
 # Local SQLite DBs (keep user/admin data off GitHub)
 users.db
@@ -48,8 +64,28 @@ copyright_out.csv
 # macOS / FUSE filesystem artifacts (can explode repo size if committed)
 .fuse_hidden*
 .fuse*
+.fuse_hidden*/
+**/fuse_hidden*
 # Stale FUSE/SSHFS files moved from repo root — local only
 backend/fuse_artifacts/
+
+# Listing / options CSV scrapes (large; regenerate with scripts — see README.md)
+csv_out/
+csv_out_cleaned/
+csv_out_rejected/
+csv_out_needs_cleaning/
+backend/dictionary/csv_out/
+backend/dictionary/csv_out_cleaned/
+backend/dictionary/csv_out_rejected/
+backend/dictionary/csv_out_needs_cleaning/
+
+# Alternate listing-scrape output dirs (same pipeline; large — see README.md)
+csv_out_cleaned_main/
+csv_out_rejected_main/
+csv_out_needs_cleaning_main/
+backend/dictionary/csv_out_cleaned_main/
+backend/dictionary/csv_out_rejected_main/
+backend/dictionary/csv_out_needs_cleaning_main/
 
 # Local image caches / downloads
 car_images/
@@ -58,3 +94,7 @@ vdp_images/
 # Ephemeral exports (keep artifacts/README.md and .gitkeep tracked)
 artifacts/scratch/*
 !artifacts/scratch/.gitkeep
+
+# Dev dashboard: incomplete listing SQLite dumps (generated)
+workspace/incomplete_exports/
+workspace/debug/

@@ -25,6 +25,18 @@
 
             <button type="button" class="back-link" id="car-back-link" aria-label="Back to results">← Back to results</button>
 
+            {% if listing_incomplete_fields %}
+            <div class="car-detail-incomplete-banner" role="status">
+                <p class="car-detail-incomplete-title">Incomplete listing</p>
+                <p class="car-detail-incomplete-lead">Missing or unclear fields on this spec sheet:</p>
+                <ul class="car-detail-incomplete-list">
+                    {% for item in listing_incomplete_fields %}
+                    <li>{{ item.label }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
             {% if car.carfax_url %}
             <p class="carfax-hint">If Carfax shows a verification step, complete it on their site to view the report.</p>
             {% endif %}

@@ -22,7 +22,7 @@ Environment (document for operators):
 
 Persistence / merge thresholds live on the merge layer: ``INTERIOR_VISION_CONFIDENCE``,
 ``INTERIOR_VISION_OVERWRITE`` (see ``backend.vision.interior_vision_merge``). When no cabin
-photo exists, ``backend.scanner_post_pipeline`` can still send the hero frame with
+photo exists, ``backend.scanner.post_pipeline`` can still send the hero frame with
 ``inference_context=through_windows`` (see ``INTERIOR_VISION_FALLBACK_THROUGH_WINDOWS``).
 
 The chat API returns JSON only (enforced in prompt). Interior buckets must be from the fixed
@@ -43,7 +43,7 @@ from urllib.parse import unquote, urlparse
 
 import requests
 
-from backend.enrichment_service import _fetch_image_b64_optimized
+from backend.enrichment.service import _fetch_image_b64_optimized
 
 logger = logging.getLogger(__name__)
 

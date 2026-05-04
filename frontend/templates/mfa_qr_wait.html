@@ -12,7 +12,8 @@
     <nav class="topbar">
         <div class="logo">Dealership Scanner</div>
         <div class="nav-links">
-            <a href="/logout">Cancel</a>
+            {% set logout_button_label = 'Cancel' %}
+            {% include "_app_logout.html" %}
         </div>
     </nav>
 

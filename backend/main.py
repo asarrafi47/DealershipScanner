@@ -12,14 +12,14 @@ from pathlib import Path
 
 from flask import Flask, abort, g, jsonify, redirect, render_template, request, send_from_directory, session, url_for
 
-from backend.ai_agent import run_car_page_chat
+from backend.intelligence.ai.agent import run_car_page_chat
 from backend.billing.routes import bp as billing_bp
-from backend.dealer_admin import store_admin_bp
-from backend.dealer_portal import bp as dealer_portal_bp
-from backend.mfa_qr import bp as mfa_qr_bp
-from backend.mfa_qr import register_mfa_qr_socketio
-from backend.dev_console import register_dev_console
-from backend.dev_routes import dev_bp
+from backend.dealer.admin import store_admin_bp
+from backend.dealer.routes import bp as dealer_portal_bp
+from backend.auth.mfa import bp as mfa_qr_bp
+from backend.auth.mfa import register_mfa_qr_socketio
+from backend.dev.console import register_dev_console
+from backend.dev.routes import dev_bp
 from backend.db.admin_users_db import init_admin_db
 from backend.db.dealer_portal_db import init_dealer_portal_db
 from backend.db.inventory_db import (
@@ -38,14 +38,16 @@ from backend.db.users_db import (
     init_users_db,
     save_user,
     set_user_totp,
+    sync_env_admin_user_row,
 )
-from backend.hybrid_inventory_search import (
+from backend.utils.hybrid_search import (
     flask_request_to_search_cars_kwargs,
     hybrid_search_with_kwargs,
 )
-from backend.knowledge_engine import prepare_car_detail_context
-from backend.listings import listings_page
+from backend.enrichment.knowledge_engine import prepare_car_detail_context
+from backend.listings.routes import listings_page
 from backend.utils.car_serialize import format_display_value, serialize_car_for_api
+from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS, listing_missing_field_codes
 from backend.utils.oem_links import mopar_vin_lookup_url
 from backend.utils.client_ip import client_ip as _client_ip_from_request
 from backend.utils.csrf import ensure_csrf_token, validate_csrf_form, validate_csrf_header
@@ -67,6 +69,7 @@ from backend.utils.roles import (
     email_is_admin,
     is_admin_role,
     normalize_role,
+    username_is_admin,
 )
 
 _MIN_PASSWORD_LEN = max(8, int(os.environ.get("MIN_PASSWORD_LENGTH", "8")))
@@ -225,6 +228,9 @@ def _csrf_mutating_requests():
         "mfa_setup",
         "mfa_verify",
         "mfa_qr.mfa_qr_complete",
+        "dev.admin_login",
+        "dev.admin_register",
+        "dev.admin_logout",
     ):
         validate_csrf_form()
     elif ep and str(ep).startswith("dealer_portal."):
@@ -344,9 +350,15 @@ def login_page():
         ip = _client_ip()
         if not allow_request(f"login:{ip}", max_events=_LOGIN_RPM, window_seconds=60.0):
             return render_template("login.html", error="Too many login attempts. Try again in a minute."), 429
-        login_input = request.form["login"]
-        password = request.form["password"]
+        login_input = (request.form.get("login") or "").strip()
+        password = (request.form.get("password") or "").strip()
+        if not login_input or not password:
+            return render_template("login.html", error="Enter username/email and password.")
         if check_user(login_input, password):
+            u = get_user_by_login(login_input)
+            if not u:
+                return render_template("login.html", error="Invalid username/email or password.")
+            sync_env_admin_user_row(int(u["id"]))
             u = get_user_by_login(login_input)
             if not u:
                 return render_template("login.html", error="Invalid username/email or password.")
@@ -410,7 +422,7 @@ def register_page():
         )
         if err:
             return render_template("register.html", error=err)
-        is_admin = email_is_admin(email)
+        is_admin = email_is_admin(email) or username_is_admin(username)
         if is_admin:
             role = ROLE_ADMIN
             org_id = None
@@ -1043,6 +1055,25 @@ def api_listings_cars():
     return jsonify({"ok": True, "cars": listings_grid_serialized_cars()})
 
 
+@app.route("/api/zip-coords")
+def api_zip_coords():
+    """Return {lat, lon} for a US zip code via pgeocode."""
+    zip_code = request.args.get("zip", "").strip()
+    if not zip_code:
+        return jsonify({"error": "zip required"}), 400
+    try:
+        from backend.db.geo import zip_to_coords
+        coords = zip_to_coords(zip_code)
+        if coords is None:
+            return jsonify({"error": "not found"}), 404
+        import math
+        if math.isnan(coords[0]) or math.isnan(coords[1]):
+            return jsonify({"error": "not found"}), 404
+        return jsonify({"lat": float(coords[0]), "lon": float(coords[1])})
+    except Exception:
+        return jsonify({"error": "lookup failed"}), 500
+
+
 @app.route("/car/<int:car_id>")
 def car_detail(car_id):
     car_raw = get_car_by_id(car_id, include_inactive=False)
@@ -1054,9 +1085,15 @@ def car_detail(car_id):
         include_verified=False,
         verified_specs=ctx.get("verified_specs") or {},
     )
+    _missing_codes = listing_missing_field_codes(car_raw, for_public_filter=False)
+    listing_incomplete_fields = [
+        {"code": c, "label": INCOMPLETE_FIELD_LABELS.get(c, c.replace("_", " ").title())}
+        for c in _missing_codes
+    ]
     return render_template(
         "car.html",
         car=car,
+        listing_incomplete_fields=listing_incomplete_fields,
         gallery_images=ctx.get("gallery_images") or [],
         verified_specs=ctx.get("verified_specs") or {},
         listing_packages_sections=ctx.get("listing_packages_sections") or [],
@@ -1118,7 +1155,7 @@ def api_search_smart():
     data = request.get_json() or {}
     q = (data.get("query") or data.get("q") or "").strip()
     filters = parse_natural_query(q)
-    from backend.hybrid_inventory_search import hybrid_smart_search
+    from backend.utils.hybrid_search import hybrid_smart_search
 
     results, search_meta = hybrid_smart_search(q, filters, vector_top_k=100)
     safe_results = [serialize_car_for_listings_grid(c) for c in results]

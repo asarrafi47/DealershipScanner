@@ -7,10 +7,21 @@ from contextlib import contextmanager
 from typing import Any, Iterator
 from urllib.parse import urlparse
 
-# Align with `scanner.js` (Node): default to repo-root `inventory.db`, not CWD-relative,
-# or Flask and the subprocess scanner write/read different files when INVENTORY_DB_PATH is unset.
+# Default SQLite location for the public scanned inventory. Prefer ``backend/inventory.db``
+# when that file exists (common dev layout next to ``backend/incomplete_listings.db``); otherwise
+# ``<repo>/inventory.db``. Always set ``INVENTORY_DB_PATH`` in production if ambiguous.
 _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
-_DEFAULT_INVENTORY_DB = os.path.join(_REPO_ROOT, "inventory.db")
+
+
+def _default_inventory_db_path() -> str:
+    backend_p = os.path.join(_REPO_ROOT, "backend", "inventory.db")
+    root_p = os.path.join(_REPO_ROOT, "inventory.db")
+    try:
+        if os.path.isfile(backend_p):
+            return backend_p
+    except OSError:
+        pass
+    return root_p
 
 from backend.utils.car_serialize import car_matches_engine_displacement_l_range, serialize_car_for_api
 from backend.utils.field_clean import compute_data_quality_score, is_effectively_empty
@@ -21,7 +32,7 @@ from backend.utils.interior_color_buckets import (
     sort_paint_family_ids,
 )
 
-DB_PATH = os.environ.get("INVENTORY_DB_PATH", _DEFAULT_INVENTORY_DB)
+DB_PATH = os.environ.get("INVENTORY_DB_PATH", _default_inventory_db_path())
 _log = logging.getLogger(__name__)
 
 
@@ -108,6 +119,7 @@ def ensure_cars_table_columns(cursor) -> None:
         ("source_url", "TEXT"),
         ("body_style", "TEXT"),
         ("engine_description", "TEXT"),
+        ("transmission_type", "TEXT"),
         ("condition", "TEXT"),
         ("description", "TEXT"),
         ("data_quality_score", "REAL"),
@@ -581,6 +593,42 @@ def get_incomplete_cars() -> list[dict]:
     return get_incomplete_cars_for_dev()
 
 
+def get_dealership_issue_stats(limit: int = 10) -> list[dict[str, Any]]:
+    """Get dealerships ranked by number of incomplete/problematic listings."""
+    with db_conn() as conn:
+        cursor = conn.cursor()
+        # Query dealerships with the most incomplete or low-quality cars
+        cursor.execute(f"""
+            SELECT
+                dealer_name,
+                dealer_id,
+                COUNT(*) as total_cars,
+                SUM(CASE WHEN public_incomplete = 1 THEN 1 ELSE 0 END) as incomplete_count,
+                SUM(CASE WHEN missing_field_count > 0 THEN 1 ELSE 0 END) as missing_fields_count,
+                ROUND(AVG(COALESCE(data_quality_score, 0)), 2) as avg_quality_score,
+                SUM(CASE WHEN price IS NULL OR price = 0 THEN 1 ELSE 0 END) as no_price_count
+            FROM cars
+            WHERE dealer_name IS NOT NULL AND TRIM(dealer_name) != ''
+            GROUP BY dealer_id, dealer_name
+            HAVING incomplete_count > 0 OR missing_fields_count > 0
+            ORDER BY incomplete_count DESC, missing_fields_count DESC
+            LIMIT ?
+        """, (limit,))
+
+        stats = []
+        for row in cursor.fetchall():
+            stats.append({
+                "dealer_name": row[0],
+                "dealer_id": row[1],
+                "total_cars": row[2],
+                "incomplete_count": row[3] or 0,
+                "missing_fields_count": row[4] or 0,
+                "avg_quality_score": row[5] or 0.0,
+                "no_price_count": row[6] or 0,
+            })
+        return stats
+
+
 def _sort_cars_by_price(cars: list) -> list:
     """Stable sort: priced vehicles first, unknown/NULL last (avoids TypeError vs None)."""
     def key(c):
@@ -704,7 +752,7 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
 
     ``packages_json_contains``: optional **literal** substring (case-insensitive) matched against
     the raw ``cars.packages`` TEXT (uses ``INSTR``, not ``LIKE``, so ``%``/``_`` in the needle are
-    not SQL wildcards). Hybrid search: ``backend.hybrid_inventory_search`` kwargs builder.
+    not SQL wildcards). Hybrid search: ``backend.utils.hybrid_search`` kwargs builder.
 
     ``max_price`` / ``max_mileage`` when set to ``0`` are applied; they are not treated as
     "unset." ``dealership_registry_id`` must be a positive int; invalid values are ignored.
@@ -978,6 +1026,7 @@ _UPDATABLE_CAR_COLUMNS = frozenset(
         "fuel_type",
         "cylinders",
         "transmission",
+        "transmission_type",
         "drivetrain",
         "exterior_color",
         "interior_color",
@@ -1056,6 +1105,41 @@ def update_car_row_partial(car_id: int, fields: dict) -> None:
         _log.exception("incomplete_listings sync after partial update failed")
 
 
+def _normalize_make_capitalization(make: str) -> str:
+    """Normalize make name capitalization: title case for most, handle special cases."""
+    if not make:
+        return make
+
+    # Special cases: handle multi-word makes and known variations
+    special_cases = {
+        "land rover": "Land Rover",
+        "rolls royce": "Rolls Royce",
+        "aston martin": "Aston Martin",
+        "mclaren": "McLaren",
+        "mclaughlin": "McLaughlin",
+        "ram": "RAM",
+        "gmc": "GMC",
+        "bmw": "BMW",
+        "tesla": "Tesla",
+        "vw": "Volkswagen",
+        "mercedes-benz": "Mercedes-Benz",
+        "alfa romeo": "Alfa Romeo",
+        "mini": "MINI",
+        "infiniti": "INFINITI",
+        "lexus": "LEXUS",
+    }
+
+    m = str(make).strip()
+    m_lower = m.lower()
+
+    # Check special cases
+    if m_lower in special_cases:
+        return special_cases[m_lower]
+
+    # Default: capitalize first letter, lowercase the rest
+    return m[0].upper() + m[1:].lower() if m else m
+
+
 def _facet_make_valid(make) -> bool:
     """Reject polluted ``make`` values (numeric trims, model names) for facet lists."""
     if is_effectively_empty(make):
@@ -1120,6 +1204,21 @@ def get_filter_options():
             )
             return [r[0] for r in cursor.fetchall() if not is_effectively_empty(r[0])]
 
+        def distinct_title_cased(col):
+            """Get distinct values, deduplicated with title-case normalization."""
+            values = distinct(col)
+            seen = {}
+            result = []
+            for v in values:
+                if v:
+                    # Normalize to title case, but keep as-is for short acronyms
+                    normalized = v if len(v) <= 3 and v.isupper() else v.title()
+                    key = normalized.lower()
+                    if key not in seen:
+                        seen[key] = normalized
+                        result.append(normalized)
+            return result
+
         fuel_types      = distinct("fuel_type")
         cylinders       = distinct("cylinders")
         transmissions   = [t for t in distinct("transmission") if _facet_transmission_sane(t)]
@@ -1143,7 +1242,7 @@ def get_filter_options():
                 int_facet_ids.update(infer_paint_color_buckets(int_raw, None))
         exterior_colors = sort_paint_family_ids(ext_facet_ids)
         interior_colors = sort_paint_family_ids(int_facet_ids)
-        body_styles_list = distinct("body_style")
+        body_styles_list = distinct_title_cased("body_style")
 
         # Full relationship rows — every unique combo of all filterable dims.
         # The frontend embeds these as data-* on each checkbox so it can filter
@@ -1181,18 +1280,20 @@ def get_filter_options():
                 body_st = None
             car_rows.append((make, model, trim, fuel_type, cyl, drive, body_st))
 
-    # Derive distinct makes/models/trims preserving order
+    # Derive distinct makes/models/trims preserving order, with normalized make capitalization
     seen_makes  = []
     seen_models = []  # (make, model)
     seen_trims  = []  # (make, model, trim)
     for row in car_rows:
         make, model, trim = row[0], row[1], row[2]
-        if make not in seen_makes:
-            seen_makes.append(make)
-        if (make, model) not in seen_models:
-            seen_models.append((make, model))
-        if (make, model, trim) not in seen_trims:
-            seen_trims.append((make, model, trim))
+        # Normalize make capitalization to avoid duplicates (e.g., "cadillac" vs "Cadillac")
+        make_normalized = _normalize_make_capitalization(make)
+        if make_normalized not in seen_makes:
+            seen_makes.append(make_normalized)
+        if (make_normalized, model) not in seen_models:
+            seen_models.append((make_normalized, model))
+        if (make_normalized, model, trim) not in seen_trims:
+            seen_trims.append((make_normalized, model, trim))
 
     # Full per-car data for client-side live filtering and rendering
     all_cars = listings_grid_serialized_cars()
@@ -1201,13 +1302,43 @@ def get_filter_options():
     country_set = set()
     country_to_makes = {}
     for make in seen_makes:
-        c = _lookup_make_country(make)
+        # Try normalized make first, fall back to original for legacy compatibility
+        c = _lookup_make_country(make) or _lookup_make_country(make.lower())
         if c:
             country_set.add(c)
             country_to_makes.setdefault(c, []).append(make)
     for lst in country_to_makes.values():
         lst.sort()
     countries = sorted(country_set)
+
+    # Build dealer_url → [lat, lon] mapping from dealer_geopoints table.
+    # Used by client-side radius filter (more accurate than zip centroids,
+    # handles dealers with no zip_code on the car row).
+    dealer_coords: dict[str, list[float]] = {}
+    with db_conn() as conn:
+        try:
+            rows = conn.execute(
+                "SELECT dealer_url, lat, lon FROM dealer_geopoints "
+                "WHERE lat IS NOT NULL AND lon IS NOT NULL"
+            ).fetchall()
+            for dealer_url, lat, lon in rows:
+                if dealer_url:
+                    dealer_coords[str(dealer_url).strip()] = [float(lat), float(lon)]
+        except Exception:
+            pass
+
+    # Legacy ZIP_COORDS kept for backward compat (may be empty when all car zip_codes are null).
+    from backend.db.geo import zip_to_coords
+    zip_coords: dict[str, list[float]] = {}
+    with db_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT DISTINCT zip_code FROM cars WHERE {active} AND zip_code IS NOT NULL")
+        unique_zips = {row[0] for row in cursor.fetchall()}
+    for zip_code in unique_zips:
+        if zip_code and str(zip_code).strip():
+            coords = zip_to_coords(str(zip_code).strip())
+            if coords:
+                zip_coords[str(zip_code).strip()] = [float(coords[0]), float(coords[1])]
 
     return {
         "makes":           seen_makes,
@@ -1237,4 +1368,8 @@ def get_filter_options():
         ],
         # Complete car objects for client-side live rendering
         "all_cars":        all_cars,
+        # ZIP code → [latitude, longitude] mapping for radius filtering
+        "zip_coords":      zip_coords,
+        # dealer_url → [lat, lon] mapping for dealer-based radius filtering
+        "dealer_coords":   dealer_coords,
     }
