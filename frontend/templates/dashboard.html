@@ -54,6 +54,42 @@
             </a>
         </section>
 
+        {# ── Recommendations ── #}
+        {% if recommendations %}
+        <section class="db-section" id="reco-section">
+            <div class="db-section-header">
+                <p class="db-eyebrow">Based on your history</p>
+                <h2 class="db-section-title">Recommended for You</h2>
+            </div>
+            <div class="reco-carousel-wrap">
+                <div class="reco-track-outer">
+                    <div class="reco-track" id="reco-track">
+                        {% for car in recommendations %}
+                        <a href="/car/{{ car.id }}" class="reco-card">
+                            {% set img = car.gallery[0] if car.gallery else (car.image_url or '') %}
+                            <div class="reco-card-image" style="background-image:url('{{ img or '/static/placeholder.svg' }}')"></div>
+                            <div class="reco-card-body">
+                                <p class="reco-card-title">{{ car.title }}</p>
+                                {% if car.trim %}<p class="reco-card-trim">{{ car.trim }}</p>{% endif %}
+                                <p class="reco-card-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
+                                <p class="reco-card-meta">{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi &middot; {{ car.fuel_type or '' }}</p>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="reco-nav">
+                    <button class="reco-nav-btn" id="reco-prev" aria-label="Previous" disabled>
+                        <svg viewBox="0 0 16 16" width="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 3L5 8l5 5"/></svg>
+                    </button>
+                    <button class="reco-nav-btn" id="reco-next" aria-label="Next">
+                        <svg viewBox="0 0 16 16" width="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
         {# ── Saved Cars ── #}
         <section class="db-section">
             <div class="db-section-header">
@@ -89,5 +125,48 @@
 </div>
 
 <script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
+<script nonce="{{ csp_nonce }}">
+(function () {
+    const track = document.getElementById("reco-track");
+    const prevBtn = document.getElementById("reco-prev");
+    const nextBtn = document.getElementById("reco-next");
+    if (!track || !prevBtn || !nextBtn) return;
+
+    const cards = track.querySelectorAll(".reco-card");
+    if (!cards.length) return;
+
+    const CARD_W = 220 + 16; // card width + gap
+    const VISIBLE = Math.max(1, Math.floor(track.parentElement.offsetWidth / CARD_W));
+    const MAX_IDX = Math.max(0, cards.length - VISIBLE);
+    let idx = 0;
+    let autoTimer = null;
+
+    function goTo(i) {
+        idx = Math.max(0, Math.min(i, MAX_IDX));
+        track.style.transform = `translateX(-${idx * CARD_W}px)`;
+        prevBtn.disabled = idx === 0;
+        nextBtn.disabled = idx >= MAX_IDX;
+    }
+
+    function startAuto() {
+        stopAuto();
+        autoTimer = setInterval(() => {
+            goTo(idx >= MAX_IDX ? 0 : idx + 1);
+        }, 5000);
+    }
+
+    function stopAuto() {
+        clearInterval(autoTimer);
+    }
+
+    prevBtn.addEventListener("click", () => { goTo(idx - 1); startAuto(); });
+    nextBtn.addEventListener("click", () => { goTo(idx + 1); startAuto(); });
+    track.parentElement.addEventListener("mouseenter", stopAuto);
+    track.parentElement.addEventListener("mouseleave", startAuto);
+
+    goTo(0);
+    startAuto();
+})();
+</script>
 </body>
 </html>

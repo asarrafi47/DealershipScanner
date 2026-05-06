@@ -1,0 +1,61 @@
+.git
+.github
+.claude
+.cursor
+.env
+*.env
+
+# Runtime DBs (mounted from PVC in k8s; not baked into image)
+*.db
+*.db-wal
+*.db-shm
+
+# Local image cache (mounted from PVC)
+vdp_images/
+car_images/
+
+# Node modules (rebuilt in image)
+node_modules/
+backend/node_modules/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Chroma / vector stores (too large; regenerated from DB)
+backend/data/chroma/
+data/chroma/
+data/vectors/
+
+# Generated CSV outputs
+csv_out/
+csv_out_*/
+backend/dictionary/csv_out/
+backend/dictionary/csv_out_*/
+
+# Scrape artifacts
+backend/data/oem/
+backend/data/dealer_group_results.json
+backend/data/hybrid_run_latest.json
+backend/data/review_queue.jsonl
+
+# Docs / debug artefacts
+docs/
+debug/
+backend/debug/
+workspace/
+backend/fuse_artifacts/
+
+# macOS
+.DS_Store
+.fuse_hidden*
+
+# Logs
+*.log
+logs/mfa*.jsonl
+
+# DICTIONARY CSVs (large; read from mounted /data or baked in separately)
+# Comment out next line if you want EPA data in the image
+DICTIONARY/

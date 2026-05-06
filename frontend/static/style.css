@@ -1904,6 +1904,171 @@ h1 {
     line-height: 1.55;
 }
 
+/* ── Save button (car detail page) ── */
+
+.car-detail-price-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 0;
+}
+
+.save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: transparent;
+    color: #999;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    flex-shrink: 0;
+}
+
+.save-btn:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.25);
+    color: #fff;
+}
+
+.save-btn--saved {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #f87171;
+}
+
+.save-btn--saved:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.6);
+    color: #fca5a5;
+}
+
+.save-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/* ── Recommendations carousel ── */
+
+.reco-carousel-wrap {
+    position: relative;
+}
+
+.reco-track-outer {
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.reco-track {
+    display: flex;
+    gap: 16px;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+}
+
+.reco-card {
+    flex: 0 0 220px;
+    background: #111;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.reco-card:hover {
+    border-color: rgba(255,255,255,0.18);
+    transform: translateY(-2px);
+}
+
+.reco-card-image {
+    width: 100%;
+    aspect-ratio: 16/10;
+    background-size: cover;
+    background-position: center;
+    background-color: #1a1a1a;
+    flex-shrink: 0;
+}
+
+.reco-card-body {
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.reco-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.reco-card-trim {
+    font-size: 11px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.reco-card-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 6px;
+}
+
+.reco-card-meta {
+    font-size: 11px;
+    color: #555;
+    margin-top: 2px;
+}
+
+.reco-nav {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    justify-content: flex-end;
+}
+
+.reco-nav-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    flex-shrink: 0;
+}
+
+.reco-nav-btn:hover {
+    background: #242424;
+    border-color: rgba(255,255,255,0.22);
+    color: #fff;
+}
+
+.reco-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
 @media (max-width: 1400px) {
     .results-grid { grid-template-columns: repeat(3, 1fr); }
 }
@@ -2768,10 +2933,33 @@ button.back-link {
     flex-wrap: wrap;
     align-items: center;
     gap: 8px;
+    padding: 8px 0;
+    user-select: none;
+    transition: opacity 0.15s ease-out;
+}
+
+.listing-package-summary:hover {
+    opacity: 0.85;
 }
 
 .listing-package-summary::-webkit-details-marker {
     display: none;
+}
+
+.listing-package-summary::before {
+    content: "▸";
+    display: inline-block;
+    width: 1.2em;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    transition: transform 0.2s ease-out;
+    font-size: 0.9em;
+    margin-right: 0.2em;
+}
+
+details[open] > .listing-package-summary::before {
+    transform: rotate(90deg);
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .listing-package-title {
@@ -2779,11 +2967,21 @@ button.back-link {
 }
 
 .listing-package-features {
-    margin: 10px 0 0 1.1rem;
+    margin: 12px 0 0 2.2rem;
     padding: 0;
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.82);
-    line-height: 1.45;
+    line-height: 1.55;
+    list-style: disc;
+}
+
+.listing-package-features li {
+    margin-bottom: 6px;
+    padding-left: 0;
+}
+
+.listing-package-features li:last-child {
+    margin-bottom: 0;
 }
 
 .spec-source-badge {

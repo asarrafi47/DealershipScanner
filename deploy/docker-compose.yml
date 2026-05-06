@@ -1,0 +1,50 @@
+version: "3.9"
+
+# Local development stack — mirrors k8s topology without the cluster overhead.
+# Databases live in ./data/ (gitignored). Run: docker compose up -d
+
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: Dockerfile.web
+    image: dealership-web:dev
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount local data dir so DBs + images persist across restarts
+      - ../data/runtime:/data
+      # Hot-reload source (remove for production-parity testing)
+      - ..:/app
+    environment:
+      FLASK_ENV: development
+      INVENTORY_DB_PATH: /data/inventory.db
+      DEALER_PORTAL_DB_PATH: /data/dealer_portal.db
+      USERS_DB_PATH: /data/users.db
+      DEV_USERS_DB_PATH: /data/dev_users.db
+      SCANNER_VDP_IMAGE_DOWNLOAD_DIR: /data/vdp_images
+      LISTINGS_INCLUDE_INCOMPLETE_CARS: "0"
+    env_file:
+      - ../.env
+    depends_on: []
+    restart: unless-stopped
+
+  scanner:
+    build:
+      context: ..
+      dockerfile: Dockerfile.scanner
+    image: dealership-scanner:dev
+    profiles:
+      # Only start with: docker compose --profile scanner up scanner
+      - scanner
+    volumes:
+      - ../data/runtime:/data
+    environment:
+      INVENTORY_DB_PATH: /data/inventory.db
+      DEALER_PORTAL_DB_PATH: /data/dealer_portal.db
+    env_file:
+      - ../.env
+    command: ["python", "scanner.py", "--dealer", "all"]
+    # No restart — run on demand
+
+volumes: {}

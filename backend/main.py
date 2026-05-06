@@ -24,12 +24,18 @@ from backend.db.admin_users_db import init_admin_db
 from backend.db.dealer_portal_db import init_dealer_portal_db
 from backend.db.inventory_db import (
     get_car_by_id,
+    get_cars_by_ids,
     get_filter_options,
+    get_saved_car_ids,
     init_inventory_db,
+    is_car_saved,
     listings_grid_serialized_cars,
+    save_car,
     search_cars,
     serialize_car_for_listings_grid,
+    unsave_car,
 )
+from backend.db.user_history_db import get_recent_viewed_car_ids, record_car_view
 from backend.db.users_db import (
     check_user,
     get_user_by_login,
@@ -322,6 +328,11 @@ def _csp_headers(response):
 @app.template_filter("fmt_spec")
 def _jinja_fmt_spec(value):
     return format_display_value(value)
+
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok"}), 200
 
 
 @app.route("/favicon.ico")
@@ -979,11 +990,61 @@ def mfa_qr():
     return Response(raw, mimetype="image/png")
 
 
+def _recommendations_for_user(user_id: int, limit: int = 20) -> list[dict]:
+    viewed_ids = get_recent_viewed_car_ids(user_id, limit=30)
+    if not viewed_ids:
+        return []
+    viewed_cars = get_cars_by_ids(viewed_ids)
+    if not viewed_cars:
+        return []
+
+    seen_mm: list[tuple[str, str]] = []
+    seen_mm_set: set[tuple[str, str]] = set()
+    for c in viewed_cars:
+        make = (c.get("make") or "").strip()
+        model = (c.get("model") or "").strip()
+        if make and model:
+            key = (make.lower(), model.lower())
+            if key not in seen_mm_set:
+                seen_mm_set.add(key)
+                seen_mm.append((make, model))
+
+    if not seen_mm:
+        return []
+
+    viewed_id_set = set(viewed_ids)
+    seen_rec: set[int] = set()
+    recs: list[dict] = []
+    for make, model in seen_mm[:5]:
+        for c in search_cars(makes=[make], models=[model]):
+            cid = c.get("id")
+            if cid and cid not in viewed_id_set and cid not in seen_rec:
+                seen_rec.add(cid)
+                recs.append(c)
+        if len(recs) >= limit:
+            break
+
+    return [serialize_car_for_listings_grid(c) for c in recs[:limit]]
+
+
 @app.route("/dashboard")
 def dashboard():
     if session.get("mfa_pending_user_id") and not session.get("mfa_ok"):
         return redirect(url_for("mfa_verify"))
-    return render_template("dashboard.html", saved_cars=[])
+    user_id = session.get("user_id")
+    recommendations = []
+    saved_cars_list = []
+    if user_id:
+        uid = int(user_id)
+        recommendations = _recommendations_for_user(uid)
+        saved_ids = get_saved_car_ids(uid)
+        raw_saved = get_cars_by_ids(saved_ids)
+        saved_cars_list = [serialize_car_for_listings_grid(c) for c in raw_saved]
+    return render_template(
+        "dashboard.html",
+        saved_cars=saved_cars_list,
+        recommendations=recommendations,
+    )
 
 
 @app.route("/search")
@@ -1079,6 +1140,17 @@ def car_detail(car_id):
     car_raw = get_car_by_id(car_id, include_inactive=False)
     if not car_raw:
         abort(404)
+    uid = session.get("user_id")
+    car_is_saved = False
+    if uid:
+        try:
+            record_car_view(int(uid), car_id)
+        except Exception:
+            pass
+        try:
+            car_is_saved = is_car_saved(int(uid), car_id)
+        except Exception:
+            pass
     ctx = prepare_car_detail_context(car_raw)
     car = serialize_car_for_api(
         car_raw,
@@ -1093,6 +1165,8 @@ def car_detail(car_id):
     return render_template(
         "car.html",
         car=car,
+        car_is_saved=car_is_saved,
+        logged_in=bool(uid),
         listing_incomplete_fields=listing_incomplete_fields,
         gallery_images=ctx.get("gallery_images") or [],
         verified_specs=ctx.get("verified_specs") or {},
@@ -1107,6 +1181,22 @@ def car_detail(car_id):
         llava_interior_section=ctx.get("llava_interior_section"),
         mopar_vin_lookup_url=mopar_vin_lookup_url(make=car.get("make"), vin=car.get("vin")),
     )
+
+
+@app.route("/api/cars/<int:car_id>/save", methods=["POST"])
+def api_toggle_save(car_id):
+    if not validate_csrf_header(request):
+        return jsonify({"ok": False, "error": "csrf"}), 403
+    uid = session.get("user_id")
+    if not uid:
+        return jsonify({"ok": False, "error": "not_logged_in"}), 401
+    uid = int(uid)
+    currently_saved = is_car_saved(uid, car_id)
+    if currently_saved:
+        unsave_car(uid, car_id)
+    else:
+        save_car(uid, car_id)
+    return jsonify({"ok": True, "saved": not currently_saved})
 
 
 @app.route("/listings")

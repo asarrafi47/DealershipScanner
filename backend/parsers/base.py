@@ -210,6 +210,62 @@ _KNOWN_PHOTO_CDN_HOSTS: frozenset[str] = frozenset(
     }
 )
 
+# Spyne AI CDN hosts — serve 3 variants per angle (bg-removed, 3d-render, original)
+_SPYNE_CDN_HOSTS: frozenset[str] = frozenset(
+    {
+        "spyne-media.s3.amazonaws.com",
+        "spyne-prod-app-assets.s3.us-east-1.amazonaws.com",
+        "spyne-acceleration.s3-accelerate.amazonaws.com",
+        "media.spyneai.com",
+    }
+)
+
+
+def filter_spyne_gallery_variants(urls: list[str]) -> list[str]:
+    """For Spyne CDN images, keep only the best variant per photo angle.
+
+    Spyne generates 3 file types per captured angle:
+      car_replace_bg_UUID.jpg  — AI background-removed  (keep, best quality)
+      UUID.jpg                 — original raw photo      (keep only if no bg counterpart)
+      3d_renders_UUID.png      — synthetic 3D CG render  (ALWAYS drop — not a real photo)
+
+    All three have distinct UUIDs so they defeat normal path-based dedup.
+    We use count parity: if bg_removed count >= originals count, every angle already has
+    a bg_removed version, so originals are fully redundant.
+    """
+    spyne: list[str] = []
+    other: list[str] = []
+    for url in urls:
+        try:
+            host = urlparse(url).netloc.lower()
+        except Exception:
+            host = ""
+        if host in _SPYNE_CDN_HOSTS:
+            spyne.append(url)
+        else:
+            other.append(url)
+
+    if not spyne:
+        return urls
+
+    bg_removed: list[str] = []
+    originals: list[str] = []
+    for url in spyne:
+        fname = url.rsplit("/", 1)[-1].lower().split("?")[0]
+        if fname.startswith("3d_renders_"):
+            continue  # synthetic render — always drop
+        elif fname.startswith(("car_replace_bg_", "car_replace_bg_high_")):
+            bg_removed.append(url)
+        else:
+            originals.append(url)
+
+    # bg_removed covers one photo per angle. When count(bg) >= count(orig),
+    # every angle is represented — originals are fully covered and redundant.
+    if len(bg_removed) >= len(originals):
+        return bg_removed + other
+    # Extra originals represent angles that lack a bg_removed counterpart.
+    return bg_removed + originals[len(bg_removed):] + other
+
 # Valid image-file extensions (covers CDN-style paths like "…x.jpg" and
 # content-negotiated paths like "…?format=webp").
 _IMAGE_EXT_RE = re.compile(
@@ -367,6 +423,7 @@ def dedupe_urls_order_prefer_large(urls: list[str], *, max_len: int) -> list[str
     position in list but swapping in a later URL if it has a higher prefer score.
     Output order is stable by first canonical occurrence.
     """
+    urls = filter_spyne_gallery_variants(list(urls))
     key_to_idx: dict[str, int] = {}
     out: list[str] = []
     for u in urls:

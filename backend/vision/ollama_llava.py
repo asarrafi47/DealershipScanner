@@ -130,6 +130,8 @@ INTERIOR_BUCKET_ALLOWLIST: tuple[str, ...] = (
     "other",
 )
 
+EXTERIOR_BUCKET_ALLOWLIST: tuple[str, ...] = INTERIOR_BUCKET_ALLOWLIST
+
 _SYSTEM_PROMPT = (
     "You analyze a vehicle interior/cabin photo. Prioritize **seat upholstery color** as the primary "
     "signal for the interior color (dash/trim can be secondary). Reply with STRICT JSON only, no markdown, "
@@ -161,6 +163,19 @@ _USER_INTERIOR_THROUGH_WINDOWS = (
     "visible **only through the glass**. Focus on the **seat upholstery color** if you can see seats. "
     "If you cannot see inside, say so and use low confidence."
 )
+
+_EXTERIOR_SYSTEM_PROMPT = (
+    "You analyze a vehicle photo to identify the **exterior body paint color**. "
+    "Ignore the interior, wheels, trim strips, and window glass. "
+    "Reply with STRICT JSON only, no markdown, no prose outside JSON. "
+    "Keys: exterior_buckets (array of strings from this fixed set only: "
+    + ", ".join(EXTERIOR_BUCKET_ALLOWLIST)
+    + "), exterior_guess_text (short human label INCLUDING a color, e.g. 'Pearl White' or 'Midnight Blue'), "
+    "confidence (0.0-1.0 float), evidence (one short phrase describing the visible paint). "
+    "If the image is an interior-only shot with no body paint visible, use exterior_buckets [\"other\"] and confidence 0.1."
+)
+
+_USER_EXTERIOR = "Identify the **exterior body paint color** of this vehicle."
 
 
 def _guess_text_from_buckets(buckets: list[str]) -> str:
@@ -331,6 +346,11 @@ def heuristic_listing_gallery_fluff_url(url: str) -> bool:
     for needle in _GALLERY_HOST_DROP_SUBSTR:
         if needle in h or needle in path:
             return True
+    # Spyne 3D renders are synthetic CG models — not real photos, always drop
+    if "spyne" in h:
+        fname = path.rsplit("/", 1)[-1].split("?")[0]
+        if fname.startswith("3d_renders_"):
+            return True
     if "autotrader.com" in h and ("/kbb" in sl or "kelley" in sl):
         return True
     if h.endswith("carfax.com") and ("/img/" in sl or "brand" in sl or "badge" in sl or "1-owner" in sl or "1owner" in sl):
@@ -455,6 +475,11 @@ def dealer_lot_photo_score(url: str) -> int:
     ):
         if token in u:
             n += 8
+    # Spyne bg-removed photos are clean listing shots — lift above plain originals
+    if "spyne" in u:
+        fname = u.rsplit("/", 1)[-1].split("?")[0]
+        if fname.startswith("car_replace_bg_"):
+            n += 20
     for token in ("buildyour", "configurator", "bmgusa", "bimmerpost"):
         if token in u:
             n -= 22
@@ -689,6 +714,60 @@ def analyze_interior_from_image_b64(
         "model": OLLAMA_VISION_MODEL,
         "image_b64_len": len(image_b64_jpeg),
         "inference_context": "through_windows" if ctx == "through_windows" else "cabin",
+    }
+
+
+def analyze_exterior_color_from_image_url(image_url: str) -> dict[str, Any] | None:
+    """Analyze vehicle body paint color from image URL."""
+    b64 = _fetch_image_b64_optimized(image_url)
+    if not b64:
+        return None
+    return analyze_exterior_color_from_image_b64(b64)
+
+
+def analyze_exterior_color_from_image_b64(image_b64_jpeg: str) -> dict[str, Any] | None:
+    """Analyze vehicle body paint color from base64 JPEG."""
+    content = _ollama_vision_chat_json(
+        system=_EXTERIOR_SYSTEM_PROMPT,
+        user_text=_USER_EXTERIOR,
+        image_b64_jpeg=image_b64_jpeg,
+    )
+    if not content:
+        return None
+    parsed = _extract_json_object(content)
+    if not isinstance(parsed, dict):
+        # salvage low-confidence from unstructured text
+        low = content.strip().lower()
+        allow = set(EXTERIOR_BUCKET_ALLOWLIST)
+        found = [b for b in EXTERIOR_BUCKET_ALLOWLIST if b != "other" and re.search(rf"\b{re.escape(b)}\b", low)]
+        buckets = found if found else ["other"]
+        return {
+            "exterior_buckets": buckets,
+            "exterior_guess_text": " / ".join(b.title() for b in buckets if b != "other"),
+            "confidence": 0.12 if buckets != ["other"] else 0.05,
+            "evidence": content.strip()[:160],
+            "model": OLLAMA_VISION_MODEL,
+            "parse_error": "non_json",
+        }
+    raw_buckets = parsed.get("exterior_buckets")
+    buckets = []
+    if isinstance(raw_buckets, list):
+        allow = set(EXTERIOR_BUCKET_ALLOWLIST)
+        buckets = [b for b in raw_buckets if isinstance(b, str) and b in allow]
+    if not buckets:
+        buckets = ["other"]
+    guess = (parsed.get("exterior_guess_text") or "").strip()
+    if not guess:
+        guess = " / ".join(b.title() for b in buckets if b != "other")
+    conf = float(parsed.get("confidence", 0.0))
+    conf = max(0.0, min(1.0, conf))
+    return {
+        "exterior_buckets": buckets,
+        "exterior_guess_text": guess,
+        "confidence": conf,
+        "evidence": (parsed.get("evidence") or "").strip(),
+        "model": OLLAMA_VISION_MODEL,
+        "image_b64_len": len(image_b64_jpeg),
     }
 
 

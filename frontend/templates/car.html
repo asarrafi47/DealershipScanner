@@ -76,18 +76,33 @@
                 <div class="car-detail-info">
                     <p class="eyebrow">{{ car.dealer_name }}</p>
                     <h1>{{ car.title }}</h1>
-                    <p class="car-detail-price">
-                        {% if car.price and car.price > 0 %}
-                            ${{ "{:,.0f}".format(car.price) }}
-                            {% if car.msrp and car.msrp > 0 and car.msrp != car.price %}
-                            <span class="price-msrp-secondary">MSRP: ${{ "{:,.0f}".format(car.msrp) }}</span>
+                    <div class="car-detail-price-row">
+                        <p class="car-detail-price">
+                            {% if car.price and car.price > 0 %}
+                                ${{ "{:,.0f}".format(car.price) }}
+                                {% if car.msrp and car.msrp > 0 and car.msrp != car.price %}
+                                <span class="price-msrp-secondary">MSRP: ${{ "{:,.0f}".format(car.msrp) }}</span>
+                                {% endif %}
+                            {% elif car.msrp and car.msrp > 0 %}
+                                <span class="price-msrp-hero">MSRP: ${{ "{:,.0f}".format(car.msrp) }}</span>
+                            {% else %}
+                                Call for Price
                             {% endif %}
-                        {% elif car.msrp and car.msrp > 0 %}
-                            <span class="price-msrp-hero">MSRP: ${{ "{:,.0f}".format(car.msrp) }}</span>
-                        {% else %}
-                            Call for Price
+                        </p>
+                        {% if logged_in %}
+                        <button type="button"
+                            id="save-btn"
+                            class="save-btn{% if car_is_saved %} save-btn--saved{% endif %}"
+                            data-car-id="{{ car.id }}"
+                            aria-label="{% if car_is_saved %}Saved{% else %}Save{% endif %}"
+                            title="{% if car_is_saved %}Remove from saved{% else %}Save this car{% endif %}">
+                            <svg class="save-icon" viewBox="0 0 24 24" width="20" fill="{% if car_is_saved %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                            <span class="save-btn-label">{% if car_is_saved %}Saved{% else %}Save{% endif %}</span>
+                        </button>
                         {% endif %}
-                    </p>
+                    </div>
 
                     {% if car.kbb and car.kbb.has_data %}
                     <div class="car-kbb-panel" role="region" aria-label="KBB valuation summary">
@@ -235,6 +250,9 @@
                         <details class="listing-package-disclosure">
                             <summary class="listing-package-summary">
                                 <span class="listing-package-title">{{ pkg.name }}</span>
+                                {% if pkg.features %}
+                                <span class="spec-source-badge" title="{{ pkg.features|length }} feature{{ 's' if pkg.features|length != 1 else '' }}">{{ pkg.features|length }} {% if pkg.features|length == 1 %}item{% else %}items{% endif %}</span>
+                                {% endif %}
                                 {% if pkg.get('from_vision') %}
                                 <span class="spec-source-badge">Vision assist</span>
                                 {% elif pkg.get('from_listing_description') %}
@@ -247,6 +265,8 @@
                                 <li>{{ feat }}</li>
                                 {% endfor %}
                             </ul>
+                            {% else %}
+                            <p class="listing-packages-sub-heading">No details extracted yet</p>
                             {% endif %}
                         </details>
                         {% endfor %}
@@ -324,5 +344,34 @@
     <script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='car_chat.js') }}" nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='car_page.js') }}" nonce="{{ csp_nonce }}"></script>
+    <script nonce="{{ csp_nonce }}">
+    (function () {
+        const btn = document.getElementById("save-btn");
+        if (!btn) return;
+        const csrf = (document.querySelector('meta[name="csrf-token"]') || {}).content || "";
+
+        btn.addEventListener("click", function () {
+            btn.disabled = true;
+            fetch(`/api/cars/${btn.dataset.carId}/save`, {
+                method: "POST",
+                headers: { "X-CSRFToken": csrf, "Content-Type": "application/json" },
+                credentials: "same-origin",
+            })
+            .then(r => r.ok ? r.json() : Promise.reject())
+            .then(data => {
+                if (!data.ok) return;
+                const saved = data.saved;
+                btn.classList.toggle("save-btn--saved", saved);
+                btn.setAttribute("aria-label", saved ? "Saved" : "Save");
+                btn.setAttribute("title", saved ? "Remove from saved" : "Save this car");
+                btn.querySelector(".save-btn-label").textContent = saved ? "Saved" : "Save";
+                const icon = btn.querySelector(".save-icon");
+                if (icon) icon.setAttribute("fill", saved ? "currentColor" : "none");
+            })
+            .catch(() => {})
+            .finally(() => { btn.disabled = false; });
+        });
+    })();
+    </script>
 </body>
 </html>

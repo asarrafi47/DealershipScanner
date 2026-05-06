@@ -13,6 +13,7 @@
 <script type="application/json" id="ds-listings-zip-coords" nonce="{{ csp_nonce }}">{{ (options.zip_coords if options.zip_coords is defined else {}) | tojson }}</script>
 <script type="application/json" id="ds-listings-dealer-coords" nonce="{{ csp_nonce }}">{{ (options.dealer_coords if options.dealer_coords is defined else {}) | tojson }}</script>
 <script type="application/json" id="ds-listings-initial-grid" nonce="{{ csp_nonce }}">{{ (initial_grid_cars or []) | tojson }}</script>
+<script type="application/json" id="ds-listings-package-rows" nonce="{{ csp_nonce }}">{{ (options.package_rows or []) | tojson }}</script>
 
 <div class="page">
 
@@ -195,6 +196,19 @@
                 </div>
                 {% endcall %}
 
+                {% if options.all_package_names %}
+                {% call pill("Package", "package") %}
+                <div class="pill-options" id="options-package">
+                    {% for name in options.all_package_names %}
+                    <label class="filter-option">
+                        <input type="checkbox" name="package" value="{{ name }}">
+                        <span>{{ name }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% endcall %}
+                {% endif %}
+
                 {# Price / Mileage / Zip inline selects #}
                 <div class="pill-group pill-select-group" data-filter-param="max_price">
                     <label class="pill-select-label">Price</label>
@@ -249,9 +263,8 @@
                 <div class="pill-group pill-select-group">
                     <label class="pill-select-label">Radius</label>
                     <select name="radius" class="pill-select">
-                        <option value="" {% if not active or not active.radius %}selected{% endif %}>Any</option>
-                        {% for r in [50, 100, 150, 200, 250, 300, 400, 500] %}
-                        <option value="{{ r }}" {% if active and active.radius == r|string %}selected{% endif %}>{{ r }}mi</option>
+                        {% for r in [10, 25, 50, 100, 200, 500] %}
+                        <option value="{{ r }}" {% if active and active.radius == r|string %}selected{% elif (not active or not active.radius) and r == 25 %}selected{% endif %}>{{ r }}mi</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -421,6 +434,19 @@
                     </div>
                     {% endcall %}
 
+                    {% if options.all_package_names %}
+                    {% call acc("Package", "package") %}
+                    <div class="acc-options" id="acc-options-package">
+                        {% for name in options.all_package_names %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="package" value="{{ name }}">
+                            <span>{{ name }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endcall %}
+                    {% endif %}
+
                     <div class="acc-plain-group" data-filter-param="max_price">
                         <div class="acc-plain-label">Max Price</div>
                         <select name="max_price" class="sidebar-select">
@@ -468,9 +494,8 @@
                     <div class="acc-plain-group">
                         <div class="acc-plain-label">Radius</div>
                         <select name="radius" class="sidebar-select">
-                            <option value="" {% if not active or not active.radius %}selected{% endif %}>Any distance</option>
-                            {% for r in [50, 100, 150, 200, 250, 300, 400, 500] %}
-                            <option value="{{ r }}" {% if active and active.radius == r|string %}selected{% endif %}>{{ r }} miles</option>
+                            {% for r in [10, 25, 50, 100, 200, 500] %}
+                            <option value="{{ r }}" {% if active and active.radius == r|string %}selected{% elif (not active or not active.radius) and r == 25 %}selected{% endif %}>{{ r }} miles</option>
                             {% endfor %}
                         </select>
                     </div>

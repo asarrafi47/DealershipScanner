@@ -220,6 +220,12 @@ def init_users_db():
     conn.commit()
     conn.close()
 
+    try:
+        from backend.db.user_history_db import ensure_car_history_table
+        ensure_car_history_table()
+    except Exception:
+        pass
+
 
 def get_user_totp(user_id: int) -> dict | None:
     try:

@@ -91,6 +91,9 @@ backend/dictionary/csv_out_needs_cleaning_main/
 car_images/
 vdp_images/
 
+# Docker compose runtime data (mounted into containers)
+data/runtime/
+
 # Ephemeral exports (keep artifacts/README.md and .gitkeep tracked)
 artifacts/scratch/*
 !artifacts/scratch/.gitkeep

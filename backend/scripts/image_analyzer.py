@@ -2,11 +2,11 @@
 """
 Standalone image analyzer for dealership listings.
 
-Separates image analysis (LLaVA vision, interior color, gallery filtering, Monroney stickers)
-from the scanner. Run independently to enrich existing vehicles with image data.
+Analyzes images to detect interior/exterior paint colors, filters gallery, reads Monroney stickers.
+Run independently to enrich vehicles with vision data.
 
 Usage:
-  python image_analyzer.py                        # Analyze all cars missing interior_color
+  python image_analyzer.py                        # Analyze all cars missing interior/exterior color
   python image_analyzer.py --vin 1HGBH41JXMN...  # Analyze specific VIN
   python image_analyzer.py --dealer-id <id>      # Analyze dealer's cars
   python image_analyzer.py --limit 50             # Analyze up to 50 cars
@@ -16,9 +16,10 @@ Options:
   --vin VIN                    Analyze only this VIN
   --dealer-id ID               Analyze only this dealer's vehicles
   --limit N                    Max vehicles to analyze (default: 1000)
-  --all                        Reanalyze all (overwrite existing interior_color)
-  --skip-gallery-vision        Skip gallery filtering (just interior color)
-  --skip-interior-vision       Skip interior color (just gallery filtering)
+  --all                        Reanalyze all (overwrite existing colors)
+  --skip-gallery-vision        Skip gallery filtering
+  --skip-interior-vision       Skip interior color detection
+  --skip-exterior-vision       Skip exterior/paint color detection
   --skip-monroney-vision       Skip Monroney sticker reading
   --workers N                  Parallel vision workers (default: 2)
   --provider {ollama,claude}   Vision provider (default: ollama from OLLAMA_HOST)
@@ -75,24 +76,24 @@ def get_vehicles_to_analyze(
 
     if vin:
         cursor.execute(
-            "SELECT id, vin, gallery, dealer_name FROM cars WHERE vin = ?",
+            "SELECT id, vin, gallery, dealer_name, interior_color, exterior_color FROM cars WHERE vin = ?",
             (vin,),
         )
     elif dealer_id:
         cursor.execute(
-            "SELECT id, vin, gallery, dealer_name FROM cars WHERE dealer_id = ? ORDER BY vin LIMIT ?",
+            "SELECT id, vin, gallery, dealer_name, interior_color, exterior_color FROM cars WHERE dealer_id = ? ORDER BY vin LIMIT ?",
             (dealer_id, limit),
         )
     elif all_vehicles:
         cursor.execute(
-            "SELECT id, vin, gallery, dealer_name FROM cars WHERE gallery IS NOT NULL ORDER BY scraped_at DESC LIMIT ?",
+            "SELECT id, vin, gallery, dealer_name, interior_color, exterior_color FROM cars WHERE gallery IS NOT NULL ORDER BY scraped_at DESC LIMIT ?",
             (limit,),
         )
     else:
-        # Default: vehicles missing interior_color
+        # Default: vehicles missing interior_color OR exterior_color
         cursor.execute(
-            "SELECT id, vin, gallery, dealer_name FROM cars "
-            "WHERE gallery IS NOT NULL AND interior_color IS NULL "
+            "SELECT id, vin, gallery, dealer_name, interior_color, exterior_color FROM cars "
+            "WHERE gallery IS NOT NULL AND (interior_color IS NULL OR exterior_color IS NULL) "
             "ORDER BY scraped_at DESC LIMIT ?",
             (limit,),
         )
@@ -100,7 +101,7 @@ def get_vehicles_to_analyze(
     rows = cursor.fetchall()
     conn.close()
     return [
-        {"id": r[0], "vin": r[1], "gallery": r[2], "dealer_name": r[3]}
+        {"id": r[0], "vin": r[1], "gallery": r[2], "dealer_name": r[3], "interior_color": r[4], "exterior_color": r[5]}
         for r in rows
     ]
 
@@ -115,19 +116,23 @@ def parse_gallery_json(gallery_str: str | None) -> list[str]:
         return []
 
 
-def analyze_vehicle_interior(
+def analyze_vehicle_colors(
     vin: str,
     gallery_urls: list[str],
     skip_gallery_vision: bool = False,
     skip_interior_vision: bool = False,
+    skip_exterior_vision: bool = False,
     skip_monroney_vision: bool = False,
 ) -> dict[str, Any]:
-    """Analyze a vehicle's images for interior color, gallery filtering, and stickers."""
+    """Analyze a vehicle's images for interior/exterior colors, gallery filtering, and stickers."""
     result = {
         "vin": vin,
         "interior_color": None,
         "interior_buckets": None,
         "interior_confidence": None,
+        "exterior_color": None,
+        "exterior_buckets": None,
+        "exterior_confidence": None,
         "errors": [],
     }
 
@@ -176,7 +181,33 @@ def analyze_vehicle_interior(
                     logger.debug(f"[{vin}] Interior analysis failed for {url}: {e}")
                     continue
 
-        # 3. Monroney sticker (optional)
+        # 3. Exterior color detection
+        if not skip_exterior_vision and filtered_urls:
+            logger.info(f"[{vin}] Analyzing exterior from gallery ({len(filtered_urls)} images)...")
+            for url in filtered_urls:
+                if not url:
+                    continue
+                try:
+                    exterior_result = ollama_llava.analyze_exterior_color_from_image_url(url)
+                    if exterior_result:
+                        confidence = exterior_result.get("confidence", 0)
+                        if confidence > 0.4:  # Confidence threshold
+                            result["exterior_color"] = exterior_result.get(
+                                "exterior_guess_text"
+                            )
+                            result["exterior_buckets"] = exterior_result.get(
+                                "exterior_buckets"
+                            )
+                            result["exterior_confidence"] = confidence
+                            logger.info(
+                                f"[{vin}] Exterior: {result['exterior_color']} (conf={confidence:.2f})"
+                            )
+                            break
+                except Exception as e:
+                    logger.debug(f"[{vin}] Exterior analysis failed for {url}: {e}")
+                    continue
+
+        # 4. Monroney sticker (optional)
         if not skip_monroney_vision and filtered_urls:
             logger.info(f"[{vin}] Checking for Monroney stickers...")
             for url in filtered_urls:
@@ -206,11 +237,19 @@ def update_vehicle_in_db(
     interior_color: str | None,
     interior_buckets: list[str] | None,
     interior_confidence: float | None,
+    exterior_color: str | None = None,
+    exterior_buckets: list[str] | None = None,
+    exterior_confidence: float | None = None,
     dry_run: bool = False,
 ) -> bool:
     """Update vehicle row with analysis results."""
     if dry_run:
-        logger.info(f"[DRY-RUN] Would update {vin}: interior_color={interior_color}")
+        updates_info = []
+        if interior_color:
+            updates_info.append(f"interior_color={interior_color}")
+        if exterior_color:
+            updates_info.append(f"exterior_color={exterior_color}")
+        logger.info(f"[DRY-RUN] Would update {vin}: {', '.join(updates_info)}")
         return True
 
     try:
@@ -224,6 +263,12 @@ def update_vehicle_in_db(
             updates["interior_buckets_json"] = json.dumps(interior_buckets)
         if interior_confidence is not None:
             updates["interior_vision_confidence"] = interior_confidence
+        if exterior_color:
+            updates["exterior_color"] = exterior_color
+        if exterior_buckets:
+            updates["exterior_buckets_json"] = json.dumps(exterior_buckets)
+        if exterior_confidence is not None:
+            updates["exterior_vision_confidence"] = exterior_confidence
 
         if not updates:
             return False
@@ -245,6 +290,7 @@ def analyze_batch(
     db_path: str,
     skip_gallery_vision: bool = False,
     skip_interior_vision: bool = False,
+    skip_exterior_vision: bool = False,
     skip_monroney_vision: bool = False,
     workers: int = 2,
     dry_run: bool = False,
@@ -262,11 +308,12 @@ def analyze_batch(
         gallery_urls = parse_gallery_json(vehicle["gallery"])
 
         logger.info(f"\n[{vin}] Processing {vehicle['dealer_name']}...")
-        result = analyze_vehicle_interior(
+        result = analyze_vehicle_colors(
             vin,
             gallery_urls,
             skip_gallery_vision=skip_gallery_vision,
             skip_interior_vision=skip_interior_vision,
+            skip_exterior_vision=skip_exterior_vision,
             skip_monroney_vision=skip_monroney_vision,
         )
 
@@ -276,13 +323,16 @@ def analyze_batch(
         else:
             stats["succeeded"] += 1
 
-            if result["interior_color"]:
+            if result["interior_color"] or result["exterior_color"]:
                 updated = update_vehicle_in_db(
                     db_path,
                     vin,
                     result["interior_color"],
                     result["interior_buckets"],
                     result["interior_confidence"],
+                    exterior_color=result["exterior_color"],
+                    exterior_buckets=result["exterior_buckets"],
+                    exterior_confidence=result["exterior_confidence"],
                     dry_run=dry_run,
                 )
                 if updated:
@@ -325,6 +375,11 @@ def main():
         "--skip-interior-vision",
         action="store_true",
         help="Skip interior color detection",
+    )
+    ap.add_argument(
+        "--skip-exterior-vision",
+        action="store_true",
+        help="Skip exterior/paint color detection",
     )
     ap.add_argument(
         "--skip-monroney-vision",
@@ -371,6 +426,7 @@ def main():
         db_path,
         skip_gallery_vision=args.skip_gallery_vision,
         skip_interior_vision=args.skip_interior_vision,
+        skip_exterior_vision=args.skip_exterior_vision,
         skip_monroney_vision=args.skip_monroney_vision,
         workers=args.workers,
         dry_run=args.dry_run,

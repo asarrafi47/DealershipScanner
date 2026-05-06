@@ -12,6 +12,7 @@ import os
 import re
 from typing import Any
 
+from backend.parsers.base import filter_spyne_gallery_variants
 from backend.utils.field_clean import (
     clean_car_row_dict,
     coerce_drivetrain_stored,
@@ -285,7 +286,7 @@ def _effective_cylinder_count(car: dict[str, Any], vs: dict[str, Any]) -> int | 
         di = int(raw) if raw is not None and str(raw).strip() != "" else None
     except (TypeError, ValueError):
         di = None
-    if di is not None and di > 0:
+    if di is not None and di >= 0:
         return di
     if not vs:
         return None
@@ -702,7 +703,20 @@ def serialize_car_for_api(
     for k, v in c.items():
         if k in ("kbb_snapshot_json", "internal_notes", "marked_for_review", "price_provenance_json"):
             continue
-        if k in ("gallery", "history_highlights"):
+        if k == "gallery":
+            if isinstance(v, list):
+                out[k] = filter_spyne_gallery_variants(v)
+            elif isinstance(v, str):
+                try:
+                    import json as _json
+                    parsed = _json.loads(v)
+                    out[k] = filter_spyne_gallery_variants(parsed) if isinstance(parsed, list) else v
+                except Exception:
+                    out[k] = v
+            else:
+                out[k] = v
+            continue
+        if k == "history_highlights":
             out[k] = v
             continue
         if k == "packages":
@@ -825,6 +839,25 @@ def serialize_car_for_api(
     )
 
     _attach_kbb_listing_summary(c, out)
+
+    # Build package_names list for client-side filtering
+    _pkg_names: list[str] = []
+    _pkg_raw = out.get("packages")
+    if _pkg_raw:
+        try:
+            _p = json.loads(_pkg_raw) if isinstance(_pkg_raw, str) else _pkg_raw
+            for _entry in (_p.get("packages_normalized") or []):
+                if isinstance(_entry, dict):
+                    _n = (_entry.get("canonical_name") or _entry.get("name") or "").strip()
+                    if _n:
+                        _pkg_names.append(_n)
+            for _n in (_p.get("possible_packages") or []):
+                if isinstance(_n, str) and _n.strip():
+                    _pkg_names.append(_n.strip())
+        except Exception:
+            pass
+    out["package_names"] = _pkg_names
+
     return out
 
 

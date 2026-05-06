@@ -1,0 +1,38 @@
+FROM python:3.12-slim
+
+# Install Node.js 20 LTS
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates gnupg && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+# System deps for Puppeteer and Playwright (Chromium)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget git \
+    # Shared Chromium libs
+    libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 \
+    libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2 \
+    libpango-1.0-0 libpangocairo-1.0-0 libgtk-3-0 libx11-xcb1 libxcb-dri3-0 \
+    gcc g++ libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install Python deps
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install Playwright browser for Python scanner
+RUN playwright install chromium && playwright install-deps chromium
+
+# Install Node deps for scanner.js (Puppeteer downloads its own Chromium)
+COPY backend/scanner/package.json backend/scanner/package-lock.json ./backend/scanner/
+RUN cd backend/scanner && npm ci --omit=dev && \
+    # Confirm Puppeteer's Chromium installed
+    node -e "require('puppeteer-extra')"
+
+# Copy application code
+COPY . .
+
+# Default: run the Python scanner (override CMD to run Node scanner.js instead)
+CMD ["python", "scanner.py"]

@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dealership-scanner
+  namespace: dealership
+spec:
+  # Run every 4 hours
+  schedule: "0 */4 * * *"
+  # Never run two scanner jobs at once (SQLite single-writer)
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      # Retry once on failure
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            app: dealership-scanner
+        spec:
+          nodeSelector:
+            role: data-node
+          restartPolicy: OnFailure
+          containers:
+            - name: scanner
+              image: REGISTRY/dealership-scanner:latest
+              imagePullPolicy: Always
+              command: ["python", "scanner.py", "--dealer", "all"]
+              envFrom:
+                - configMapRef:
+                    name: dealership-config
+                - secretRef:
+                    name: dealership-secret
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+              resources:
+                requests:
+                  memory: "1Gi"
+                  cpu: "500m"
+                limits:
+                  memory: "4Gi"
+                  cpu: "2000m"
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: dealership-data-pvc

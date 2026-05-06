@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.ZIP_COORDS = readJsonScript("ds-listings-zip-coords", {});
         window.DEALER_COORDS = readJsonScript("ds-listings-dealer-coords", {});
         window.INITIAL_GRID_CARS = readJsonScript("ds-listings-initial-grid", []);
+        window.PACKAGE_ROWS = readJsonScript("ds-listings-package-rows", []);
     })();
 
     // Haversine formula: calculate distance in miles between two lat/lon points
@@ -118,16 +119,19 @@ document.addEventListener("DOMContentLoaded", () => {
             .filter(v => seen.has(v) ? false : seen.add(v));
     }
 
-    function compatibleRows(excluding) {
-        const makes  = excluding === "make"       ? [] : checked("make");
-        const models = excluding === "model"      ? [] : checked("model");
-        const trims  = excluding === "trim"       ? [] : checked("trim");
-        const fuels  = excluding === "fuel_type"  ? [] : checked("fuel_type");
-        const drives = excluding === "drivetrain" ? [] : checked("drivetrain");
-        const bodies = excluding === "body_style" ? [] : checked("body_style");
-        const cyls   = excluding === "cylinders"  ? [] : checked("cylinders");
+    let RADIUS_CAR_ROWS = null; // non-null when ZIP+radius are active; cascade uses this subset
 
-        return CAR_ROWS.filter(r => {
+    function compatibleRows(excluding, alsoExclude = []) {
+        const skip = v => v === excluding || alsoExclude.includes(v);
+        const makes  = skip("make")       ? [] : checked("make");
+        const models = skip("model")      ? [] : checked("model");
+        const trims  = skip("trim")       ? [] : checked("trim");
+        const fuels  = skip("fuel_type")  ? [] : checked("fuel_type");
+        const drives = skip("drivetrain") ? [] : checked("drivetrain");
+        const bodies = skip("body_style") ? [] : checked("body_style");
+        const cyls   = skip("cylinders")  ? [] : checked("cylinders");
+
+        return (RADIUS_CAR_ROWS || CAR_ROWS).filter(r => {
             if (makes.length  && !valueInListCI(makes, r.make))        return false;
             if (models.length && !valueInListCI(models, r.model))      return false;
             if (trims.length  && !valueInListCI(trims, r.trim))        return false;
@@ -149,7 +153,8 @@ document.addEventListener("DOMContentLoaded", () => {
         cascadeMakeByCountry();
         cascadeParam("model",       r => r.model,       ["options-model",       "acc-options-model"]);
         cascadeParam("trim",        r => r.trim,        ["options-trim",        "acc-options-trim"]);
-        cascadeParam("fuel_type",   r => r.fuel,        ["options-fuel_type",   "acc-options-fuel_type"]);
+        // Exclude model from fuel_type compat so selecting an electric model doesn't hide gas options
+        cascadeParam("fuel_type",   r => r.fuel,        ["options-fuel_type",   "acc-options-fuel_type"], ["model"]);
         cascadeParam("drivetrain",  r => r.drive,       ["options-drivetrain",  "acc-options-drivetrain"]);
         cascadeParam(
             "body_style",
@@ -157,6 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ["options-body_style", "acc-options-body_style"]
         );
         cascadeParam("cylinders",   r => String(r.cyl), ["options-cylinders",   "acc-options-cylinders"]);
+        cascadePackages();
         updateCylinders();
         updateAllCounts();
     }
@@ -191,8 +197,38 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function cascadeParam(param, rowKey, containerIds) {
-        const compatible = new Set(compatibleRows(param).map(rowKey));
+    function cascadePackages() {
+        const activeMakes  = checked("make").map(s => s.toLowerCase());
+        const activeModels = checked("model").map(s => s.toLowerCase());
+        // Packages to show: those belonging to any selected make AND model (or all if none selected)
+        let visibleNames;
+        if (activeMakes.length || activeModels.length) {
+            visibleNames = new Set(
+                PACKAGE_ROWS
+                    .filter(r =>
+                        (!activeMakes.length  || activeMakes.includes(r.make.toLowerCase())) &&
+                        (!activeModels.length || activeModels.includes(r.model.toLowerCase()))
+                    )
+                    .map(r => r.name.toLowerCase())
+            );
+        } else {
+            visibleNames = new Set(PACKAGE_ROWS.map(r => r.name.toLowerCase()));
+        }
+        for (const cid of ["options-package", "acc-options-package"]) {
+            const container = document.getElementById(cid);
+            if (!container) continue;
+            for (const label of container.querySelectorAll("label.filter-option")) {
+                const input = label.querySelector("input");
+                if (!input) continue;
+                const hidden = visibleNames.size > 0 && !visibleNames.has(input.value.toLowerCase());
+                label.style.display = hidden ? "none" : "";
+                if (hidden && input.checked) { input.checked = false; }
+            }
+        }
+    }
+
+    function cascadeParam(param, rowKey, containerIds, alsoExclude = []) {
+        const compatible = new Set(compatibleRows(param, alsoExclude).map(rowKey));
         containerIds.forEach(id => {
             const container = document.getElementById(id);
             if (!container) return;
@@ -210,6 +246,10 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateCylinders() {
         const rows = compatibleRows("cylinders");
         const allElectric = rows.length > 0 && rows.every(r => r.cyl === 0);
+        // Only show the "Electric" collapsed state when no model is explicitly chosen;
+        // if the user picked a specific electric model they can still browse other fuel types.
+        const noModelsSelected = checked("model").length === 0;
+        const showElectricMode = allElectric && noModelsSelected;
 
         // Update both pill trigger and accordion trigger
         ["trigger-cylinders", "acc-trigger-cylinders"].forEach(id => {
@@ -221,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!trigger || !labelEl) return;
 
-            if (allElectric) {
+            if (showElectricMode) {
                 labelEl.textContent = "Electric";
                 trigger.classList.add("electric-mode");
                 trigger.disabled = true;
@@ -238,9 +278,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Auto-check the 0-cyl box when all-electric, uncheck otherwise if mixed
+        // Auto-check the 0-cyl box only when at make level (no model selected) and all-electric
         document.querySelectorAll("input[name='cylinders']").forEach(cb => {
-            if (allElectric) cb.checked = (cb.value === "0");
+            if (showElectricMode) cb.checked = (cb.value === "0");
         });
     }
 
@@ -292,7 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateAllCounts() {
         ["country", "make", "model", "trim", "fuel_type", "cylinders",
-         "transmission", "drivetrain", "body_style", "exterior_color", "interior_color"]
+         "transmission", "drivetrain", "body_style", "exterior_color", "interior_color", "package"]
             .forEach(updateCount);
 
         // Sidebar total badge
@@ -330,8 +370,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.querySelectorAll(".pill-select, .sidebar-select, .pill-zip, .sidebar-input").forEach(el => {
-        el.addEventListener("change", renderResults);
-        el.addEventListener("input",  renderResults);
+        const isGeo = el.name === "zip_code" || el.name === "radius";
+        el.addEventListener("change", isGeo ? refreshRadiusAndRender : renderResults);
+        el.addEventListener("input",  isGeo ? refreshRadiusAndRender : renderResults);
     });
 
     // ── Live results renderer ──────────────────────────────────────────
@@ -431,26 +472,53 @@ document.addEventListener("DOMContentLoaded", () => {
         }).join("");
     }
 
+    function syncUrl() {
+        const params = new URLSearchParams();
+        const multiParams = ["make", "model", "trim", "fuel_type", "cylinders", "transmission",
+                             "drivetrain", "body_style", "exterior_color", "interior_color", "country", "package"];
+        for (const name of multiParams) {
+            const seen = new Set();
+            document.querySelectorAll(`input[name="${name}"]:checked`).forEach(cb => {
+                const opt = cb.closest(".filter-option");
+                if (opt && opt.style.display === "none") return;
+                if (!seen.has(cb.value)) {
+                    seen.add(cb.value);
+                    params.append(name, cb.value);
+                }
+            });
+        }
+        for (const name of ["zip_code", "radius", "max_price", "max_mileage", "engine_l_min", "engine_l_max"]) {
+            const val = scalarVal(name);
+            if (val) params.set(name, val);
+        }
+        const smartIn = document.getElementById("smart-search-input");
+        const q = smartIn ? (smartIn.value || "").trim() : "";
+        if (q) params.set("q", q);
+        const qs = params.toString();
+        history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : ""));
+    }
+
     function renderResults() {
         if (!resultsGrid) return;
 
         const smartIn = document.getElementById("smart-search-input");
         if (smartIn && (smartIn.value || "").trim()) return;
 
+        syncUrl();
+
         const makes       = checked("make");
         const models      = checked("model");
         const zipCode     = scalarVal("zip_code");
         const radiusMi    = parseFloat(scalarVal("radius"))      || null;
 
-        // Require either (make or model) OR (zip code + radius)
-        const hasLocationFilter = zipCode && radiusMi;
-        const hasMakeModelFilter = makes.length > 0 || models.length > 0;
+        // Require: ZIP, positive radius, and at least one make
+        const hasAllRequired = zipCode && radiusMi && radiusMi > 0 && makes.length > 0;
 
-        if (!hasMakeModelFilter && !hasLocationFilter) {
+        if (!hasAllRequired) {
             resultsGrid.innerHTML = "";
             if (emptyState) {
                 emptyState.style.display = "";
-                emptyState.querySelector(".no-results").textContent = "Select a make/model or enter a zip code + radius to browse listings";
+                emptyState.querySelector(".no-results").textContent = "Enter a ZIP code, radius, and make to search";
                 emptyState.querySelector(".no-results-sub").textContent = "";
             }
             if (resultsCount) resultsCount.textContent = "";
@@ -469,6 +537,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const maxMileage  = parseInt(scalarVal("max_mileage"))   || null;
         const engLMin     = parseFloat(scalarVal("engine_l_min")) || null;
         const engLMax     = parseFloat(scalarVal("engine_l_max")) || null;
+        const pkgs        = checked("package");
 
         function parseEngineLiters(c) {
             const raw = c.engine_l;
@@ -508,6 +577,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (bodies.length     && !valueInListCI(bodies, c.body_style)) return false;
             if (extColors.length  && !carMatchesPaintFamilyBuckets(c, "exterior_color", extColors)) return false;
             if (intColors.length  && !carMatchesPaintFamilyBuckets(c, "interior_color", intColors)) return false;
+            if (pkgs.length) {
+                const carPkgs = (c.package_names || []).map(n => n.toLowerCase());
+                if (!pkgs.some(p => carPkgs.includes(p.toLowerCase()))) return false;
+            }
             if (maxPrice    && c.price   > maxPrice)   return false;
             if (maxMileage  && c.mileage > maxMileage) return false;
             if (engLMin != null || engLMax != null) {
@@ -521,12 +594,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (zipCode && radiusMi && typeof haversineJS === "function") {
             const applyRadius = (origin) => {
-                if (!origin) { renderCarGrid(cars); return; }
+                if (!origin) {
+                    resultsGrid.innerHTML = "";
+                    if (emptyState) {
+                        emptyState.style.display = "";
+                        emptyState.querySelector(".no-results").textContent = "ZIP code not found — no results shown.";
+                        emptyState.querySelector(".no-results-sub").textContent = "Check the ZIP and try again.";
+                    }
+                    if (resultsCount) resultsCount.textContent = "";
+                    return;
+                }
                 const filtered = cars.filter(c => {
-                    const dealerCoords = (typeof DEALER_COORDS === "object" && c.dealer_url)
-                        ? DEALER_COORDS[String(c.dealer_url).trim()] : null;
-                    if (!dealerCoords) return false;
-                    return haversineJS(origin[0], origin[1], dealerCoords[0], dealerCoords[1]) <= radiusMi;
+                    // Primary: dealer's geocoded lat/lon from dealer_geopoints
+                    let coords = (typeof DEALER_COORDS === "object" && c.dealer_url)
+                        ? (DEALER_COORDS[String(c.dealer_url).trim()] || null) : null;
+                    // Fallback: car's own zip_code (for dealers not yet geocoded)
+                    if (!coords && c.zip_code && typeof ZIP_COORDS === "object") {
+                        coords = ZIP_COORDS[String(c.zip_code).trim()] || null;
+                    }
+                    if (!coords) return false;
+                    return haversineJS(origin[0], origin[1], coords[0], coords[1]) <= radiusMi;
                 });
                 renderCarGrid(filtered);
             };
@@ -551,17 +638,89 @@ document.addEventListener("DOMContentLoaded", () => {
     window.__DS_renderCarGrid = renderCarGrid;
     window.__DS_runFilterRender = renderResults;
 
-    runCascade();
+    // ── Radius-aware cascade ───────────────────────────────────────────
+    // Build a make/model/trim/etc. row set restricted to cars within the
+    // active ZIP+radius so that filter dropdowns only show options that
+    // actually have inventory nearby.
+
+    function _buildCarRowsFromCars(cars) {
+        const seen = new Set();
+        const rows = [];
+        for (const c of cars) {
+            const key = [c.make, c.model, c.trim, c.fuel_type,
+                         c.cylinders, c.drivetrain, c.body_style].join("\x00");
+            if (seen.has(key)) continue;
+            seen.add(key);
+            rows.push({
+                make:       c.make        || "",
+                model:      c.model       || "",
+                trim:       c.trim        || null,
+                fuel:       c.fuel_type   || null,
+                cyl:        c.cylinders != null ? Number(c.cylinders) : null,
+                drive:      c.drivetrain  || null,
+                body_style: c.body_style  || null,
+            });
+        }
+        return rows;
+    }
+
+    function _setRadiusCarRows(origin, radiusMi) {
+        if (!origin || !radiusMi) {
+            RADIUS_CAR_ROWS = null;
+            return;
+        }
+        const nearby = ALL_CARS.filter(c => {
+            let coords = (typeof DEALER_COORDS === "object" && c.dealer_url)
+                ? (DEALER_COORDS[String(c.dealer_url).trim()] || null) : null;
+            if (!coords && c.zip_code && typeof ZIP_COORDS === "object") {
+                coords = ZIP_COORDS[String(c.zip_code).trim()] || null;
+            }
+            if (!coords) return false;
+            return haversineJS(origin[0], origin[1], coords[0], coords[1]) <= radiusMi;
+        });
+        RADIUS_CAR_ROWS = _buildCarRowsFromCars(nearby);
+    }
+
+    function refreshRadiusAndRender() {
+        const zipCode  = scalarVal("zip_code");
+        const radiusMi = parseFloat(scalarVal("radius")) || null;
+
+        if (!zipCode || !radiusMi) {
+            RADIUS_CAR_ROWS = null;
+            runCascade();
+            renderResults();
+            return;
+        }
+
+        const origin = zipCoordsJS(zipCode);
+        if (origin) {
+            _setRadiusCarRows(origin, radiusMi);
+            runCascade();
+            renderResults();
+        } else {
+            fetch(`/api/zip-coords?zip=${encodeURIComponent(zipCode)}`, { credentials: "same-origin" })
+                .then(r => r.ok ? r.json() : null)
+                .then(data => {
+                    const o = data && data.lat != null ? [data.lat, data.lon] : null;
+                    _setRadiusCarRows(o, radiusMi);
+                    runCascade();
+                    renderResults();
+                })
+                .catch(() => {
+                    _setRadiusCarRows(null, radiusMi);
+                    runCascade();
+                    renderResults();
+                });
+        }
+    }
+
     if (typeof INITIAL_GRID_CARS !== "undefined" && Array.isArray(INITIAL_GRID_CARS) && INITIAL_GRID_CARS.length) {
+        runCascade();
         renderCarGrid(INITIAL_GRID_CARS);
     } else {
-        // Show "select make/model or zip code" message on initial load instead of loading all cars
-        const emptyState = document.getElementById("empty-state");
-        if (emptyState) {
-            emptyState.style.display = "";
-            emptyState.querySelector(".no-results").textContent = "Select a make/model or enter a zip code + radius to browse listings";
-            emptyState.querySelector(".no-results-sub").textContent = "";
-        }
+        // refreshRadiusAndRender builds the radius-filtered cascade row set first,
+        // then runs cascade + renderResults — picks up URL-param pre-checked filters too.
+        refreshRadiusAndRender();
     }
 
     // ── Pill dropdown open/close ───────────────────────────────────────

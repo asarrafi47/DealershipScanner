@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dealership-config
+  namespace: dealership
+data:
+  # Application mode
+  FLASK_ENV: "production"
+
+  # SQLite paths — all under the shared /data PVC mount
+  INVENTORY_DB_PATH: "/data/inventory.db"
+  DEALER_PORTAL_DB_PATH: "/data/dealer_portal.db"
+  USERS_DB_PATH: "/data/users.db"
+  DEV_USERS_DB_PATH: "/data/dev_users.db"
+
+  # Image storage
+  SCANNER_VDP_IMAGE_DOWNLOAD_DIR: "/data/vdp_images"
+
+  # App settings
+  LISTINGS_INCLUDE_INCOMPLETE_CARS: "0"
+  APP_ADMIN_USERNAMES: "asarrafi"
+
+  # Redis (optional — enables QR-code MFA across processes; remove if not deployed)
+  # REDIS_URL: "redis://redis-service:6379/0"
+
+  # Postgres / pgvector (optional — enables semantic search; remove if not deployed)
+  # DATABASE_URL: "postgresql://user:pass@postgres-service:5432/dealership"

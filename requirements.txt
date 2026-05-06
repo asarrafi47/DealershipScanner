@@ -1,4 +1,5 @@
 flask
+gunicorn[gthread]>=21
 python-dotenv>=1.0
 pydantic>=2
 requests

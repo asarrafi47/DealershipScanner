@@ -603,15 +603,15 @@ def get_dealership_issue_stats(limit: int = 10) -> list[dict[str, Any]]:
                 dealer_name,
                 dealer_id,
                 COUNT(*) as total_cars,
-                SUM(CASE WHEN public_incomplete = 1 THEN 1 ELSE 0 END) as incomplete_count,
-                SUM(CASE WHEN missing_field_count > 0 THEN 1 ELSE 0 END) as missing_fields_count,
+                SUM(CASE WHEN missing_field_count > 0 THEN 1 ELSE 0 END) as incomplete_count,
+                SUM(CASE WHEN marked_for_review = 1 THEN 1 ELSE 0 END) as flagged_count,
                 ROUND(AVG(COALESCE(data_quality_score, 0)), 2) as avg_quality_score,
                 SUM(CASE WHEN price IS NULL OR price = 0 THEN 1 ELSE 0 END) as no_price_count
             FROM cars
             WHERE dealer_name IS NOT NULL AND TRIM(dealer_name) != ''
             GROUP BY dealer_id, dealer_name
-            HAVING incomplete_count > 0 OR missing_fields_count > 0
-            ORDER BY incomplete_count DESC, missing_fields_count DESC
+            HAVING incomplete_count > 0 OR flagged_count > 0
+            ORDER BY incomplete_count DESC, flagged_count DESC
             LIMIT ?
         """, (limit,))
 
@@ -622,7 +622,7 @@ def get_dealership_issue_stats(limit: int = 10) -> list[dict[str, Any]]:
                 "dealer_id": row[1],
                 "total_cars": row[2],
                 "incomplete_count": row[3] or 0,
-                "missing_fields_count": row[4] or 0,
+                "flagged_count": row[4] or 0,
                 "avg_quality_score": row[5] or 0.0,
                 "no_price_count": row[6] or 0,
             })
@@ -926,21 +926,34 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
 
     if zip_code and radius_miles:
         origin = zip_to_coords(zip_code)
-        if origin:
-            filtered = []
-            for car in results:
-                dest = zip_to_coords(car.get("zip_code", ""))
-                if dest:
-                    dist = haversine(origin[0], origin[1], dest[0], dest[1])
-                    if dist <= radius_miles:
-                        car["distance_miles"] = round(dist, 1)
-                        filtered.append(car)
-            for c in filtered:
-                _parse_car_gallery(c)
-                _parse_car_history_highlights(c)
-            base = filtered if inc else [c for c in filtered if not is_car_incomplete(c)]
-            complete = _post_sql_filters(base)
-            return sorted(complete, key=lambda c: c["distance_miles"])
+        if origin is None:
+            return []
+        # Build dealer_url → coords lookup for fallback (cars with null zip_code)
+        dealer_geo: dict[str, tuple] = {}
+        with db_conn() as _gc:
+            for _url, _lat, _lon in _gc.execute(
+                "SELECT dealer_url, lat, lon FROM dealer_geopoints WHERE lat IS NOT NULL AND lon IS NOT NULL"
+            ).fetchall():
+                if _url:
+                    dealer_geo[str(_url).strip()] = (float(_lat), float(_lon))
+        filtered = []
+        for car in results:
+            dest = zip_to_coords(car.get("zip_code", "") or "")
+            if not dest:
+                # Fallback: dealer geocoords
+                du = str(car.get("dealer_url") or "").strip()
+                dest = dealer_geo.get(du)
+            if dest:
+                dist = haversine(origin[0], origin[1], dest[0], dest[1])
+                if dist <= radius_miles:
+                    car["distance_miles"] = round(dist, 1)
+                    filtered.append(car)
+        for c in filtered:
+            _parse_car_gallery(c)
+            _parse_car_history_highlights(c)
+        base = filtered if inc else [c for c in filtered if not is_car_incomplete(c)]
+        complete = _post_sql_filters(base)
+        return sorted(complete, key=lambda c: c["distance_miles"])
 
     for c in results:
         _parse_car_gallery(c)
@@ -948,6 +961,42 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     base = results if inc else [c for c in results if not is_car_incomplete(c)]
     complete = _post_sql_filters(base)
     return _sort_cars_by_price(complete)
+
+
+def save_car(user_id: int, car_id: int) -> None:
+    with db_conn() as conn:
+        conn.execute(
+            "INSERT OR IGNORE INTO saved_cars (user_id, car_id) VALUES (?, ?)",
+            (int(user_id), int(car_id)),
+        )
+        conn.commit()
+
+
+def unsave_car(user_id: int, car_id: int) -> None:
+    with db_conn() as conn:
+        conn.execute(
+            "DELETE FROM saved_cars WHERE user_id = ? AND car_id = ?",
+            (int(user_id), int(car_id)),
+        )
+        conn.commit()
+
+
+def get_saved_car_ids(user_id: int) -> list[int]:
+    with db_conn() as conn:
+        rows = conn.execute(
+            "SELECT car_id FROM saved_cars WHERE user_id = ? ORDER BY saved_at DESC",
+            (int(user_id),),
+        ).fetchall()
+    return [int(r[0]) for r in rows]
+
+
+def is_car_saved(user_id: int, car_id: int) -> bool:
+    with db_conn() as conn:
+        row = conn.execute(
+            "SELECT 1 FROM saved_cars WHERE user_id = ? AND car_id = ? LIMIT 1",
+            (int(user_id), int(car_id)),
+        ).fetchone()
+    return row is not None
 
 
 def get_car_by_id(car_id, *, include_inactive: bool = True):
@@ -1244,6 +1293,42 @@ def get_filter_options():
         interior_colors = sort_paint_family_ids(int_facet_ids)
         body_styles_list = distinct_title_cased("body_style")
 
+        # Extract packages per make/model for filter cascade
+        package_rows: list[dict[str, str]] = []
+        all_package_names: list[str] = []
+        _seen_pkg_keys: set[tuple] = set()
+        _seen_pkg_names: set[str] = set()
+        cursor.execute(
+            f"SELECT make, model, packages FROM cars "
+            f"WHERE {active} AND packages IS NOT NULL "
+            f"AND packages NOT IN ('{{}}', '[]', 'null', '')"
+        )
+        for _make, _model, _pkg_raw in cursor.fetchall():
+            if not _make or not _model:
+                continue
+            try:
+                _p = json.loads(_pkg_raw)
+            except Exception:
+                continue
+            _names: list[str] = []
+            for _entry in (_p.get("packages_normalized") or []):
+                if isinstance(_entry, dict):
+                    _n = (_entry.get("canonical_name") or _entry.get("name") or "").strip()
+                    if _n:
+                        _names.append(_n)
+            for _n in (_p.get("possible_packages") or []):
+                if isinstance(_n, str) and _n.strip():
+                    _names.append(_n.strip())
+            for _n in _names:
+                _key = (_make.lower(), _model.lower(), _n.lower())
+                if _key not in _seen_pkg_keys:
+                    _seen_pkg_keys.add(_key)
+                    package_rows.append({"make": _make, "model": _model, "name": _n})
+                if _n.lower() not in _seen_pkg_names:
+                    _seen_pkg_names.add(_n.lower())
+                    all_package_names.append(_n)
+        all_package_names.sort()
+
         # Full relationship rows — every unique combo of all filterable dims.
         # The frontend embeds these as data-* on each checkbox so it can filter
         # any dropdown based on any combination of other active filters.
@@ -1351,6 +1436,8 @@ def get_filter_options():
         "body_styles":     body_styles_list,
         "exterior_colors": exterior_colors,
         "interior_colors": interior_colors,
+        "package_rows":    package_rows,
+        "all_package_names": all_package_names,
         "countries":       countries,
         "country_to_makes": country_to_makes,
         # Full relationship table for cascade engine
