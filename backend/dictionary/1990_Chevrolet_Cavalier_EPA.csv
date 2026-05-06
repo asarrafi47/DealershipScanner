@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1990,Chevrolet,Cavalier,Cavalier,2.2L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.2,22,30,25,,,,,
+1990,Chevrolet,Cavalier,Cavalier,2.2L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.2,22,33,26,,,,,
+1990,Chevrolet,Cavalier,Cavalier,3.1L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,3.1,18,25,20,,,,,
+1990,Chevrolet,Cavalier,Cavalier,3.1L V6 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,3.1,17,26,20,,,,,
+1990,Chevrolet,Cavalier,Wagon,2.2L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.2,21,29,24,,,,,
+1990,Chevrolet,Cavalier,Wagon,2.2L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.2,22,33,26,,,,,
+1990,Chevrolet,Cavalier,Wagon,3.1L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,6,3.1,18,25,20,,,,,
+1990,Chevrolet,Cavalier,Wagon,3.1L V6 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,6,3.1,17,26,20,,,,,

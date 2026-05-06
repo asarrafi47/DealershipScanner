@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1996,Nissan,300ZX,300ZX,3.0L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,16,22,18,,,,,
+1996,Nissan,300ZX,300ZX,"3.0L V6 ((FFS,TRBO))",Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,16,22,18,,,,,
+1996,Nissan,300ZX,300ZX,3.0L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,17,22,19,,,,,
+1996,Nissan,300ZX,300ZX,"3.0L V6 ((FFS,TRBO))",Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.0,16,22,18,,,,,
+1996,Nissan,300ZX,2x2,3.0L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,22,18,,,,,
+1996,Nissan,300ZX,2x2,3.0L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,17,22,19,,,,,

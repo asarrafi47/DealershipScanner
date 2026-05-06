@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1986,Dodge,W100/W150 Pickup,4WD,3.7L V6,Manual 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,3.7,14,15,14,,,,,
+1986,Dodge,W100/W150 Pickup,4WD,5.2L V8,Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.2,11,12,11,,,,,
+1986,Dodge,W100/W150 Pickup,4WD,5.2L V8 ((FFS)),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.2,11,13,12,,,,,
+1986,Dodge,W100/W150 Pickup,4WD,5.2L V8,Manual 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.2,10,15,12,,,,,
+1986,Dodge,W100/W150 Pickup,4WD,5.2L V8 ((FFS)),Manual 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.2,11,14,12,,,,,
+1986,Dodge,W100/W150 Pickup,4WD,5.9L V8,Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.9,9,11,10,,,,,
+1986,Dodge,W100/W150 Pickup,4WD,5.9L V8,Manual 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.9,10,12,11,,,,,

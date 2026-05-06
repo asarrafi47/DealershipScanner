@@ -58,8 +58,11 @@ Infinite scroll:
   and briefly waits for qualifying JSON responses between scrolls.
 
 Failure diagnostics:
+  SCANNER_SHARD_COUNT — optional; split manifest across parallel workers (with SCANNER_SHARD_INDEX or
+  Kubernetes JOB_COMPLETION_INDEX from an Indexed Job). Same manifest order on every worker.
+
   SCANNER_FAILURE_HAR — when truthy (default), zero-vehicle runs for ``dealer_dot_com`` / ``dealer_on``
-    dealers write ``workspace/debug/fail_<dealer_id>_<epoch>.har`` (may contain cookies / auth headers;
+  dealers write ``workspace/debug/fail_<dealer_id>_<epoch>.har`` (may contain cookies / auth headers;
     keep out of git — see SEC-066).
 
 Warmup (first dealer base URL load):
@@ -188,6 +191,7 @@ from backend.scanner.bmw_enhancer import (
 from backend.scanner.dealer_site_url import dealer_inventory_base_url
 from backend.scanner.vdp import _max_vdp_concurrency, enrich_vehicles_vdp
 
+from backend.db.inventory_pg import is_inventory_postgres
 from backend.scanner.database import upsert_vehicles
 from backend.parsers import parse
 from backend.utils.gallery_merge import gallery_https_bin_histogram
@@ -689,6 +693,84 @@ def filter_manifest_by_dealer_id(dealers: list, dealer_id: str) -> list:
     if not want:
         return []
     return [d for d in dealers if (d.get("dealer_id") or "").strip() == want]
+
+
+def filter_manifest_by_shard(
+    dealers: list[Any], shard_index: int, shard_count: int
+) -> list[Any]:
+    """Split *dealers* into *shard_count* disjoint slices using stable list order.
+
+    Dealer at manifest position ``i`` runs on shard ``i % shard_count``.
+    Use the same manifest and shard parameters on every worker so partitions do not overlap.
+    """
+    if shard_count <= 1:
+        return list(dealers)
+    if shard_index < 0 or shard_index >= shard_count:
+        raise ValueError(f"shard_index must satisfy 0 <= index < {shard_count}, got {shard_index}")
+    return [d for i, d in enumerate(dealers) if i % shard_count == shard_index]
+
+
+def _resolve_shard_cli_and_env(args: argparse.Namespace) -> tuple[int, int]:
+    """Return ``(shard_index, shard_count)``. ``shard_count == 1`` means no shard filter."""
+
+    cli_idx = getattr(args, "shard_index", None)
+    cli_cnt = getattr(args, "shard_count", None)
+    if cli_idx is not None or cli_cnt is not None:
+        if cli_idx is None or cli_cnt is None:
+            logger.error("--shard-index and --shard-count must be provided together.")
+            sys.exit(2)
+        if cli_cnt < 1:
+            logger.error("--shard-count must be >= 1 (got %s).", cli_cnt)
+            sys.exit(2)
+        if cli_idx < 0 or cli_idx >= cli_cnt:
+            logger.error(
+                "--shard-index must satisfy 0 <= index < --shard-count (got index=%s count=%s).",
+                cli_idx,
+                cli_cnt,
+            )
+            sys.exit(2)
+        return (cli_idx, cli_cnt)
+
+    raw_cnt = (os.environ.get("SCANNER_SHARD_COUNT") or "").strip()
+    if not raw_cnt:
+        return (0, 1)
+    try:
+        shard_count = int(raw_cnt)
+    except ValueError:
+        logger.error("SCANNER_SHARD_COUNT must be an integer (got %r).", raw_cnt)
+        sys.exit(2)
+    if shard_count < 1:
+        logger.error("SCANNER_SHARD_COUNT must be >= 1 (got %s).", shard_count)
+        sys.exit(2)
+    if shard_count == 1:
+        return (0, 1)
+
+    raw_idx = (
+        os.environ.get("SCANNER_SHARD_INDEX") or os.environ.get("JOB_COMPLETION_INDEX") or ""
+    ).strip()
+    if not raw_idx:
+        logger.error(
+            "SCANNER_SHARD_COUNT=%s requires SCANNER_SHARD_INDEX or JOB_COMPLETION_INDEX (e.g. Indexed Job).",
+            shard_count,
+        )
+        sys.exit(2)
+    try:
+        shard_index = int(raw_idx)
+    except ValueError:
+        logger.error(
+            "Shard index must be an integer (SCANNER_SHARD_INDEX / JOB_COMPLETION_INDEX got %r).",
+            raw_idx,
+        )
+        sys.exit(2)
+    if shard_index < 0 or shard_index >= shard_count:
+        logger.error(
+            "Shard index %s out of range for SCANNER_SHARD_COUNT=%s (expected 0 .. %s).",
+            shard_index,
+            shard_count,
+            shard_count - 1,
+        )
+        sys.exit(2)
+    return (shard_index, shard_count)
 
 
 def _playwright_inventory_json_predicate(dealer_base_url: str):
@@ -1640,6 +1722,23 @@ def run_cli_entry() -> None:
         help="Limit the number of dealerships to scan.",
     )
     ap.add_argument(
+        "--shard-index",
+        type=int,
+        default=None,
+        metavar="N",
+        help=(
+            "0-based shard for parallel scans (requires --shard-count). "
+            "Dealer at manifest position i runs on shard (i %% count) == N."
+        ),
+    )
+    ap.add_argument(
+        "--shard-count",
+        type=int,
+        default=None,
+        metavar="M",
+        help="Number of shards / parallel workers (requires --shard-index when using CLI).",
+    )
+    ap.add_argument(
         "--provider",
         type=str,
         default=None,
@@ -1697,6 +1796,10 @@ def run_cli_entry() -> None:
         help="After post-scan repair: backfill missing specs (EPA/vPIC → listing-page HTML via Playwright → DDG for mechanical only). Condition from listing sites only. Or set SCANNER_POST_LISTING_GAP_FILL=1.",
     )
     args = ap.parse_args()
+    if is_inventory_postgres():
+        from backend.db.inventory_db import init_inventory_db
+
+        init_inventory_db()
     to_run = load_manifest()
     if args.dealer_id:
         to_run = filter_manifest_by_dealer_id(to_run, args.dealer_id)
@@ -1731,6 +1834,24 @@ def run_cli_entry() -> None:
         before = len(to_run)
         to_run = to_run[: args.limit]
         logger.info("Limit %d: scanning %d of %d dealer(s).", args.limit, len(to_run), before)
+
+    shard_index, shard_count = _resolve_shard_cli_and_env(args)
+    if shard_count > 1:
+        before_shard = len(to_run)
+        to_run = filter_manifest_by_shard(to_run, shard_index, shard_count)
+        logger.info(
+            "Shard %d/%d: %d of %d dealer(s) after prior filters.",
+            shard_index,
+            shard_count,
+            len(to_run),
+            before_shard,
+        )
+        if not to_run:
+            logger.warning(
+                "Shard %d/%d selected zero dealers — check manifest size vs shard count.",
+                shard_index,
+                shard_count,
+            )
 
     do_repair = not args.no_post_repair and post_repair_env_enabled()
     do_listing = not args.no_post_listing_description and post_listing_description_env_enabled()
@@ -1776,6 +1897,7 @@ __all__ = [
     "DEBUG_DIR",
     "MANIFEST_PATH",
     "filter_manifest_by_dealer_id",
+    "filter_manifest_by_shard",
     "load_manifest",
     "main",
     "run_cli_entry",

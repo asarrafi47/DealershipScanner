@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1993,Subaru,Justy,Justy,1.2L I3 ((FFS)),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,3,1.2,28,32,30,,,,,
+1993,Subaru,Justy,Justy,1.2L I3 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,3,1.2,28,33,30,,,,,
+1993,Subaru,Justy,AWD,1.2L I3 ((FFS)),Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Subcompact Cars,3,1.2,27,29,27,,,,,
+1993,Subaru,Justy,AWD,1.2L I3 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Subcompact Cars,3,1.2,24,29,26,,,,,

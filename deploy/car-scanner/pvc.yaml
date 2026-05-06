@@ -1,0 +1,15 @@
+# Legacy: PVC for scanner SQLite on local-path (single-node friendly).
+# If you moved inventory to PostgreSQL (deploy/postgres/postgres.yaml), you do not need this for CronJob pods.
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: car-scanner-data
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 1Gi

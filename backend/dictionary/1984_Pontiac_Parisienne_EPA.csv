@@ -1,0 +1,10 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1984,Pontiac,Parisienne,Parisienne,3.8L V6 ((GM-BUICK)),Automatic 3-spd,,Regular Gasoline,Large Cars,6,3.8,15,20,17,,,,,
+1984,Pontiac,Parisienne,Parisienne,5.0L V8 ((GM-CHEV)),Automatic 4-spd,,Regular Gasoline,Large Cars,8,5.0,14,20,16,,,,,
+1984,Pontiac,Parisienne,Parisienne,Diesel 5.7L V8 ((350 V8) (DIESEL)) Diesel,Automatic 3-spd,,Diesel,Large Cars,8,5.7,18,25,21,,,,,
+1984,Pontiac,Parisienne,Parisienne,Diesel 5.7L V8 ((350 V8) (DIESEL)) Diesel,Automatic 4-spd,,Diesel,Large Cars,8,5.7,18,27,21,,,,,
+1984,Pontiac,Parisienne,Wagon,5.0L V8 ((GM-CHEV)),Automatic 4-spd,,Regular Gasoline,Midsize-Large Station Wagons,8,5.0,13,18,15,,,,,
+1984,Pontiac,Parisienne,Wagon,Diesel 5.7L V8 ((350 V8) (DIESEL)) Diesel,Automatic 4-spd,,Diesel,Midsize-Large Station Wagons,8,5.7,18,26,21,,,,,
+1984,Pontiac,Parisienne,Parisienne,3.8L V6 ((GM-BUICK) CA model),Automatic 3-spd,,Regular Gasoline,Large Cars,6,3.8,15,20,17,,,,,
+1984,Pontiac,Parisienne,Parisienne,5.0L V8 ((GM-CHEV) CA model),Automatic 4-spd,,Regular Gasoline,Large Cars,8,5.0,15,21,17,,,,,
+1984,Pontiac,Parisienne,Wagon,5.0L V8 ((GM-CHEV) CA model),Automatic 4-spd,,Regular Gasoline,Midsize-Large Station Wagons,8,5.0,14,19,16,,,,,

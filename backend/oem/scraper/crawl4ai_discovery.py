@@ -10,7 +10,7 @@ Logs belong on stderr only.
 
 Install Chromium for patchright (used by Crawl4AI 0.8), e.g.:
   python3 -m patchright install chromium
-or run ./scripts/install_scraper_browsers.sh from the repo root.
+or run ./backend/scripts/install_scraper_browsers.sh from the repo root.
 """
 
 from __future__ import annotations

@@ -83,3 +83,19 @@ def test_model_year_2024_used_inferred_from_used_inventory_url() -> None:
     }
     out = serialize_car_for_api(row, include_verified=False)
     assert out.get("condition") == "Used"
+
+
+def test_cvt_bucket_ignored_when_transmission_is_geared_automatic() -> None:
+    """DMS transmission_type='CVT' with explicit multi-speed automatic text → not CVT."""
+    row = {
+        "vin": "5UXKT0C31H0S81466",
+        "year": 2017,
+        "make": "BMW",
+        "model": "X5 xDrive40e",
+        "trim": "xDrive40e iPerformance",
+        "title": "2017 BMW X5 xDrive40e iPerformance",
+        "transmission_type": "CVT",
+        "transmission": "8-Speed Automatic",
+    }
+    out = serialize_car_for_api(row, include_verified=False)
+    assert out.get("transmission_display") == "8-Speed Automatic"

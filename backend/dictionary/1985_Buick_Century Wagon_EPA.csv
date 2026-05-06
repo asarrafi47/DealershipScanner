@@ -1,0 +1,10 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1985,Buick,Century Wagon,Century Wagon,3.0L V6 ((FFS) CA model),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,3.0,15,20,17,,,,,
+1985,Buick,Century Wagon,Century Wagon,3.0L V6 ((FFS) CA model),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,3.0,15,23,18,,,,,
+1985,Buick,Century Wagon,Century Wagon,3.8L V6 ((FFS) CA model),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,3.8,16,23,19,,,,,
+1985,Buick,Century Wagon,Century Wagon,Diesel 4.3L V6 (CA model) Diesel,Automatic 3-spd,Front-Wheel Drive,Diesel,Midsize-Large Station Wagons,6,4.3,23,31,26,,,,,
+1985,Buick,Century Wagon,Century Wagon,2.5L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.5,19,26,22,,,,,
+1985,Buick,Century Wagon,Century Wagon,3.0L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,3.0,15,21,17,,,,,
+1985,Buick,Century Wagon,Century Wagon,3.0L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,3.0,16,23,19,,,,,
+1985,Buick,Century Wagon,Century Wagon,3.8L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,3.8,16,24,19,,,,,
+1985,Buick,Century Wagon,Century Wagon,Diesel 4.3L V6 Diesel,Automatic 3-spd,Front-Wheel Drive,Diesel,Midsize-Large Station Wagons,6,4.3,23,32,26,,,,,

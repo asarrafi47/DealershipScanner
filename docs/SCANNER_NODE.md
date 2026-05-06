@@ -4,16 +4,17 @@ The inventory scraper can run as **Node.js + Puppeteer** (stealth) while the web
 
 ## Setup
 
-Install **npm dependencies once** (required; otherwise `Cannot find module 'fs-extra'`):
+Install **npm dependencies once** (required; otherwise `Cannot find module 'fs-extra'`). Dependencies and lockfile live under **`backend/scanner/`**:
 
 ```bash
-cd /path/to/DealershipScanner
-npm install
+cd /path/to/DealershipScanner/backend/scanner
+npm ci
 ```
 
 ## Run
 
 ```bash
+cd /path/to/DealershipScanner/backend/scanner
 node scanner.js
 # or
 npm run scan
@@ -22,12 +23,14 @@ npm run scan
 Web app (unchanged):
 
 ```bash
+cd /path/to/DealershipScanner
 python run.py
 ```
 
 Set a custom DB path (optional):
 
 ```bash
+cd /path/to/DealershipScanner/backend/scanner
 export INVENTORY_DB_PATH=/absolute/path/to/inventory.db
 node scanner.js
 ```
@@ -35,6 +38,7 @@ node scanner.js
 Optional: cap inventory API page size (default **500**):
 
 ```bash
+cd /path/to/DealershipScanner/backend/scanner
 export INVENTORY_PAGE_SIZE=500
 node scanner.js
 ```
@@ -85,7 +89,8 @@ The Node `INSERT ... ON CONFLICT` matches `backend/database.py` `upsert_vehicles
 - **Manual EPA import** (one-time / periodic):
 
 ```bash
-python scripts/import_epa_master.py
+cd /path/to/DealershipScanner
+PYTHONPATH=. python backend/scripts/import_epa_master.py
 ```
 
 Downloads `vehicles.csv` from fueleconomy.gov and fills **`epa_master`** (same DB as `inventory.db`).

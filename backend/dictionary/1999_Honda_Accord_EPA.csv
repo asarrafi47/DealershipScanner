@@ -1,0 +1,6 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1999,Honda,Accord,Accord,2.3L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,20,27,22,,,,,
+1999,Honda,Accord,Accord,2.3L I4 (VTEC),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,20,28,23,,,,,
+1999,Honda,Accord,Accord,2.3L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,21,28,24,,,,,
+1999,Honda,Accord,Accord,2.3L I4 (VTEC),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,22,28,24,,,,,
+1999,Honda,Accord,Accord,3.0L V6 (VTEC),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.0,18,26,21,,,,,

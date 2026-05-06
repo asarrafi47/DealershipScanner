@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1995,Mercedes-Benz,SL-Class,SL320,3.2L V6 ((FFS)),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.2,15,22,18,,,,,
+1995,Mercedes-Benz,SL-Class,SL500,5.0L V8 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,5.0,15,20,16,,,,,
+1995,Mercedes-Benz,SL-Class,SL600,6.0L V12 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,12,6.0,12,16,13,,,,,

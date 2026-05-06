@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Install Chromium for Puppeteer (playwright package) and for Crawl4ai (patchright).
-# Run from repo root after: pip install -r requirements.txt
+# Run after: pip install -r requirements.txt (cwd does not matter; script cds to repo root).
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
 PY="${PYTHON:-${PYTHON3:-python3}}"
 echo "Using: $PY"

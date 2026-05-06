@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1987,Pontiac,Sunbird,Convertible,"2.0L I4 ((FFS,TRBO))",Automatic 3-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,18,24,20,,,,,
+1987,Pontiac,Sunbird,Convertible,"2.0L I4 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,18,28,22,,,,,
+1987,Pontiac,Sunbird,Convertible,2.0L I4 ((122) (FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,21,27,24,,,,,
+1987,Pontiac,Sunbird,Convertible,2.0L I4 ((122) (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,23,33,26,,,,,
+1987,Pontiac,Sunbird,Sunbird,"2.0L I4 ((FFS,TRBO))",Automatic 3-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,18,25,21,,,,,
+1987,Pontiac,Sunbird,Sunbird,2.0L I4 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,30,25,,,,,
+1987,Pontiac,Sunbird,Sunbird,"2.0L I4 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,18,29,22,,,,,
+1987,Pontiac,Sunbird,Sunbird,2.0L I4 ((122) (FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,29,25,,,,,
+1987,Pontiac,Sunbird,Sunbird,2.0L I4 ((122) (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,23,33,26,,,,,
+1987,Pontiac,Sunbird,Wagon,2.0L I4 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,22,30,25,,,,,
+1987,Pontiac,Sunbird,Wagon,2.0L I4 ((122) (FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,22,29,25,,,,,
+1987,Pontiac,Sunbird,Wagon,2.0L I4 ((122) (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,2.0,23,33,26,,,,,

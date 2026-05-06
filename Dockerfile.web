@@ -17,8 +17,9 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir gunicorn[gthread] -r requirements.txt
 
-# Install Playwright browser binaries
-RUN playwright install chromium && playwright install-deps chromium
+# Browser binaries: Playwright (Python) + Patchright (Crawl4AI 0.8)
+RUN playwright install chromium && playwright install-deps chromium && \
+    patchright install chromium && patchright install-deps chromium
 
 # Copy application code
 COPY . .

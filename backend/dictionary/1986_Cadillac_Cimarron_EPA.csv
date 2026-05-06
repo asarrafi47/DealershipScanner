@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1986,Cadillac,Cimarron,Cimarron,2.0L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,19,25,21,,,,,
+1986,Cadillac,Cimarron,Cimarron,2.0L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,21,29,24,,,,,
+1986,Cadillac,Cimarron,Cimarron,2.8L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,16,23,19,,,,,
+1986,Cadillac,Cimarron,Cimarron,2.8L V6 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,15,20,17,,,,,

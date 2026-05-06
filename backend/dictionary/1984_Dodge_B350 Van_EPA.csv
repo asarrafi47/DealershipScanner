@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1984,Dodge,B350 Van,2WD,5.2L V8,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",8,5.2,11,14,12,,,,,
+1984,Dodge,B350 Van,2WD,5.2L V8,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",8,5.2,11,11,11,,,,,
+1984,Dodge,B350 Van,2WD,5.9L V8,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",8,5.9,10,12,11,,,,,
+1984,Dodge,B350 Van,2WD,5.2L V8 ((FFS) CA model),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Cargo Type",8,5.2,11,14,12,,,,,

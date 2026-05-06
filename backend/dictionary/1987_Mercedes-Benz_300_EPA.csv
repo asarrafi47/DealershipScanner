@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1987,Mercedes-Benz,300,D,"Diesel 3.0L V6 ((DSL,TRBO) (NO-CAT)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Compact Cars,6,3.0,22,27,24,,,,,
+1987,Mercedes-Benz,300,E,3.0L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,16,20,18,,,,,
+1987,Mercedes-Benz,300,SDL,"Diesel 3.0L V6 ((DSL,TRBO) (NO-CAT)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Midsize Cars,6,3.0,19,21,20,,,,,
+1987,Mercedes-Benz,300,TD,"Diesel 3.0L V6 ((DSL,TRBO) (NO-CAT)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Midsize-Large Station Wagons,6,3.0,21,25,22,,,,,

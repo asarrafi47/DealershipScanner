@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1994,Porsche,968,968,3.0L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Two Seaters,4,3.0,15,23,18,,,,,
+1994,Porsche,968,968,3.0L I4 ((FFS)),Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Two Seaters,4,3.0,15,24,18,,,,,
+1994,Porsche,968,968,3.0L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Minicompact Cars,4,3.0,15,23,18,,,,,
+1994,Porsche,968,968,3.0L I4 ((FFS)),Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Minicompact Cars,4,3.0,15,24,18,,,,,

@@ -78,10 +78,10 @@ python backend/scripts/rebuild_listings_index.py --fast
 
 ### 8. Optional: Node (scanner JS / tooling)
 
-If you use the Node-side scanner or frontend build steps:
+If you use the Node-side scanner (`backend/scanner/`):
 
 ```bash
-cd backend && npm ci
+cd backend/scanner && npm ci
 ```
 
 ### 9. Run the app

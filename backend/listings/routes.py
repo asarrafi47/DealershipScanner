@@ -1,6 +1,7 @@
-from flask import render_template, request
+from flask import render_template, request, session
 
 from backend.db.inventory_db import get_filter_options, serialize_car_for_listings_grid
+from backend.listings.geo_session import persist_listings_geo_from_request
 from backend.utils.hybrid_search import (
     flask_request_to_search_cars_kwargs,
     hybrid_search_with_kwargs,
@@ -8,6 +9,7 @@ from backend.utils.hybrid_search import (
 
 
 def listings_page(*, listings_poll_ms: int = 0):
+    persist_listings_geo_from_request(request, session)
     g = request.args.getlist
 
     def scalar(key: str) -> str:

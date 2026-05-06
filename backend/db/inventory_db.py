@@ -7,6 +7,8 @@ from contextlib import contextmanager
 from typing import Any, Iterator
 from urllib.parse import urlparse
 
+from backend.db.inventory_pg import is_inventory_postgres
+
 # Default SQLite location for the public scanned inventory. Prefer ``backend/inventory.db``
 # when that file exists (common dev layout next to ``backend/incomplete_listings.db``); otherwise
 # ``<repo>/inventory.db``. Always set ``INVENTORY_DB_PATH`` in production if ambiguous.
@@ -102,7 +104,7 @@ def delete_cars_with_dummy_placeholder_vins() -> dict[str, Any]:
         ph = ",".join("?" * len(ids))
         try:
             cur.execute(f"DELETE FROM saved_cars WHERE car_id IN ({ph})", ids)
-        except sqlite3.Error:
+        except Exception:
             _log.debug("saved_cars delete for dummy VINs skipped (table missing?)")
         cur.execute(f"DELETE FROM cars WHERE id IN ({ph})", ids)
         conn.commit()
@@ -113,6 +115,8 @@ def delete_cars_with_dummy_placeholder_vins() -> dict[str, Any]:
 
 def ensure_cars_table_columns(cursor) -> None:
     """Add optional listing / quality columns (idempotent ALTERs)."""
+    if is_inventory_postgres():
+        return
     cursor.execute("PRAGMA table_info(cars)")
     existing = {row[1] for row in cursor.fetchall()}
     for col, ctype in [
@@ -158,6 +162,8 @@ def ensure_cars_table_columns(cursor) -> None:
 
 def ensure_scan_runs_table(cursor: sqlite3.Cursor) -> None:
     """Append-only scanner run summaries for store admin sync reliability (inventory.db)."""
+    if is_inventory_postgres():
+        return
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS scan_runs (
@@ -275,6 +281,8 @@ def ensure_nhtsa_vpic_cache_table(conn: sqlite3.Connection) -> None:
     Full API document is stored in ``response_json`` (same shape as HTTP ``format=json``);
     provenance for row patches stays on ``cars.spec_source_json`` only.
     """
+    if is_inventory_postgres():
+        return
     cur = conn.cursor()
     cur.execute(
         """
@@ -337,12 +345,8 @@ MAKE_TO_COUNTRY = {
 }
 
 
-def get_conn():
-    """
-    New connection with WAL, extended lock wait (``INVENTORY_SQLITE_LOCK_TIMEOUT_SEC``, default 60s)
-    to avoid spurious ``database is locked`` when the scraper, Flask, or a CLI tool overlaps
-    the same ``inventory.db``.
-    """
+def _sqlite_connect_raw() -> sqlite3.Connection:
+    """SQLite inventory connection (WAL + busy_timeout); used only when not on PostgreSQL."""
     lock_s = _inventory_sqlite_lock_wait_sec()
     conn = sqlite3.connect(DB_PATH, timeout=lock_s)
     try:
@@ -354,10 +358,20 @@ def get_conn():
     return conn
 
 
-@contextmanager
-def db_conn(*, row_factory: Any = None) -> Iterator[sqlite3.Connection]:
+def get_conn():
     """
-    Open an inventory SQLite connection and always close it (avoids leaks on error paths).
+    Inventory DB connection: PostgreSQL (``DATABASE_URL`` / ``INVENTORY_DATABASE_URL``) via
+    psycopg3 when configured; otherwise SQLite with WAL and extended lock wait.
+    """
+    from backend.db.inventory_compat import open_inventory_connection
+
+    return open_inventory_connection()
+
+
+@contextmanager
+def db_conn(*, row_factory: Any = None) -> Iterator[Any]:
+    """
+    Open an inventory connection and always close it (avoids leaks on error paths).
     When *row_factory* is set, assign ``conn.row_factory = row_factory`` before *yield*.
     """
     conn = get_conn()
@@ -370,6 +384,23 @@ def db_conn(*, row_factory: Any = None) -> Iterator[sqlite3.Connection]:
 
 
 def init_inventory_db():
+    if is_inventory_postgres():
+        from backend.db.inventory_pg import init_postgres_inventory, pg_connect
+
+        conn = pg_connect()
+        try:
+            init_postgres_inventory(conn)
+        finally:
+            conn.close()
+        seed_cars()
+        try:
+            from backend.db import incomplete_listings_db as ild
+
+            ild.ensure_incomplete_index_built()
+        except Exception:
+            _log.exception("incomplete_listings index bootstrap failed")
+        return
+
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute("""

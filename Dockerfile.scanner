@@ -22,8 +22,9 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Playwright browser for Python scanner
-RUN playwright install chromium && playwright install-deps chromium
+# Playwright + Patchright (Crawl4AI) Chromium
+RUN playwright install chromium && playwright install-deps chromium && \
+    patchright install chromium && patchright install-deps chromium
 
 # Install Node deps for scanner.js (Puppeteer downloads its own Chromium)
 COPY backend/scanner/package.json backend/scanner/package-lock.json ./backend/scanner/

@@ -6,6 +6,7 @@ Smart URL import, scanner jobs, dealership registry tools.
 from __future__ import annotations
 
 import glob
+import ipaddress
 import json
 import logging
 import os
@@ -124,6 +125,40 @@ def _safe_dev_next_url(next_url: str, *, default_endpoint: str = "dev.dev_dashbo
     return raw
 
 
+def _dev_client_ip_allowed(req) -> bool:
+    """Optional IP allowlist for ``/dev`` (VPN or bastion); uses :func:`client_ip` (proxy-aware)."""
+    raw = (os.environ.get("DEV_IP_ALLOWLIST") or "").strip()
+    if not raw:
+        return True
+    ip_str = (client_ip(req) or "").strip()
+    if not ip_str or ip_str == "unknown":
+        return False
+    if "%" in ip_str:
+        ip_str = ip_str.split("%", 1)[0]
+    try:
+        addr = ipaddress.ip_address(ip_str)
+    except ValueError:
+        return False
+    for part in raw.split(","):
+        token = part.strip()
+        if not token:
+            continue
+        if "/" in token:
+            try:
+                net = ipaddress.ip_network(token, strict=False)
+                if addr in net:
+                    return True
+            except ValueError:
+                pass
+            continue
+        try:
+            if addr == ipaddress.ip_address(token):
+                return True
+        except ValueError:
+            continue
+    return False
+
+
 @dev_bp.before_request
 def _dev_require_admin() -> Any:
     from backend.utils.csrf import validate_csrf_form, validate_csrf_header
@@ -132,6 +167,13 @@ def _dev_require_admin() -> Any:
     # Legacy /dev/mfa/* URLs (2FA removed): always allow through to the redirect handler.
     if ep == "dev.dev_mfa_gone":
         return None
+    if not _dev_client_ip_allowed(request):
+        if request.path.startswith("/dev/api"):
+            return jsonify({"ok": False, "error": "forbidden", "reason": "dev_ip_allowlist"}), 403
+        from werkzeug.exceptions import Forbidden
+
+        raise Forbidden()
+
     if request.method in ("POST", "PUT", "PATCH", "DELETE"):
         if ep in ("dev.admin_login", "dev.admin_register", "dev.admin_logout"):
             validate_csrf_form()

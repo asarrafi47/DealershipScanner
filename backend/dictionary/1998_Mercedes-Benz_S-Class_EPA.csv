@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1998,Mercedes-Benz,S-Class,S320,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,6,3.2,15,22,18,,,,,
+1998,Mercedes-Benz,S-Class,S320,5.0L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,6,5.0,15,22,18,,,,,
+1998,Mercedes-Benz,S-Class,S320,5.0L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,6,5.0,15,22,18,,,,,
+1998,Mercedes-Benz,S-Class,S320,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,6,3.2,15,22,18,,,,,
+1998,Mercedes-Benz,S-Class,S420,4.2L V8,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,4.2,14,20,16,,,,,
+1998,Mercedes-Benz,S-Class,S500,5.0L V8,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,13,20,16,,,,,
+1998,Mercedes-Benz,S-Class,S600,6.0L V12,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,12,6.0,11,17,13,,,,,

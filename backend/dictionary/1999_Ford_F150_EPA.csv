@@ -1,0 +1,12 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1999,Ford,F150,Pickup 2WD,4.2L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,4.2,14,18,16,,,,,
+1999,Ford,F150,Pickup 2WD,4.2L V6,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,4.2,15,20,17,,,,,
+1999,Ford,F150,Pickup 2WD,4.6L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,4.6,13,18,15,,,,,
+1999,Ford,F150,Pickup 2WD,4.6L V8,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,4.6,13,17,14,,,,,
+1999,Ford,F150,Pickup 2WD,5.4L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.4,12,16,14,,,,,
+1999,Ford,F150,Pickup 4WD,4.2L V6,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,4.2,13,16,15,,,,,
+1999,Ford,F150,Pickup 4WD,4.2L V6,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,6,4.2,13,17,15,,,,,
+1999,Ford,F150,Pickup 4WD,4.6L V8,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,4.6,12,16,14,,,,,
+1999,Ford,F150,Pickup 4WD,4.6L V8,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,4.6,12,16,14,,,,,
+1999,Ford,F150,Pickup 4WD,5.4L V8,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.4,11,15,13,,,,,
+1999,Ford,F150,Pickup 2WD,5.4L V8 (5.4E-R FFS MPFI),Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Standard Pickup Trucks 2WD,8,5.4,12,15,13,,,,,

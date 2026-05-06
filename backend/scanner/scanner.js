@@ -2154,7 +2154,7 @@ function looksLikeDomainOrSlugName(name, pageUrl) {
 
 /**
  * Optional Crawl4AI (Python) pass — better JSON-LD / footer capture on some DMS sites.
- * Requires: pip install crawl4ai; then ./scripts/install_scraper_browsers.sh
+ * Requires: pip install crawl4ai; then ./backend/scripts/install_scraper_browsers.sh
  * (or: python3 -m playwright install chromium && python3 -m patchright install chromium).
  * Disable with DISABLE_CRAWL4AI=1.
  */

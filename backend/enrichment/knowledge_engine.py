@@ -564,6 +564,17 @@ def format_transmission_display(trany: str | None) -> str | None:
     return s
 
 
+def _transmission_has_gear_detail(trany: str | None) -> bool:
+    """True if *trany* encodes a gear count (dealer phrase or EPA Auto(Sn) style after formatting)."""
+    if not trany:
+        return False
+    s = str(trany).strip()
+    if re.search(r"\b\d+[-\s]?speed\b", s, re.I):
+        return True
+    fmt = format_transmission_display(s)
+    return bool(fmt and re.search(r"\b\d+[-\s]?speed\b", fmt, re.I))
+
+
 def _fmt_liter(displ: float | None, default_liters: str) -> str:
     if displ is not None and displ > 0:
         return f"{displ:.1f}L"
@@ -639,18 +650,8 @@ def build_master_engine_string(
 
     cyl = epa.get("cylinders")
     disp = epa_displ
-    if cyl is not None and int(cyl) > 0 and disp is not None and float(disp) > 0:
-        n = int(cyl)
-        layout = {3: "I3", 4: "I4", 5: "I5", 6: "V6", 8: "V8", 10: "V10", 12: "V12"}.get(
-            n, f"{n}-cyl"
-        )
-        return f"{float(disp):.1f}L {layout} (EPA mode aggregate)"
-    if cyl is not None and int(cyl) > 0:
-        n = int(cyl)
-        layout = {3: "I3", 4: "I4", 5: "I5", 6: "V6", 8: "V8", 10: "V10", 12: "V12"}.get(
-            n, f"{n}-cyl"
-        )
-        return f"{layout} (EPA mode aggregate)"
+    if disp is not None and float(disp) > 0:
+        return f"{float(disp):.1f}L"
     return None
 
 
@@ -1236,14 +1237,39 @@ def merge_verified_specs(car: dict[str, Any]) -> dict[str, Any]:
     if _trans_hint and not epa.get("transmission") and not (dealer_trans and not _is_na_spec(dealer_trans)):
         trans_raw = _trans_hint
     else:
-        trans_raw = epa.get("transmission") or (
+        epa_trany = epa.get("transmission")
+        trans_raw = epa_trany or (
             dealer_trans if dealer_trans and not _is_na_spec(dealer_trans) else None
         )
+        # EPA aggregate is often generic "Automatic" while the VDP lists "8-Speed Automatic".
+        dealer_ok = dealer_trans and not _is_na_spec(dealer_trans)
+        if (
+            dealer_ok
+            and _transmission_has_gear_detail(dealer_trans)
+            and not _transmission_has_gear_detail(epa_trany or "")
+        ):
+            trans_raw = dealer_trans
         if not trans_raw and vpic.get("transmission"):
             trans_raw = vpic["transmission"]
         if not trans_raw and dict_specs and dict_specs.get("transmission"):
             trans_raw = str(dict_specs["transmission"]).strip()
     trans_ver = format_transmission_display(trans_raw) or trans_raw
+
+    # Trim decoder often knows "8-Speed Automatic" while EPA row is generic "Automatic".
+    _dec_hint = regex.get("transmission_hint")
+    if (
+        _dec_hint
+        and _transmission_has_gear_detail(_dec_hint)
+        and not _transmission_has_gear_detail(str(trans_ver or ""))
+    ):
+        trans_ver = format_transmission_display(_dec_hint) or _dec_hint
+    elif gears_ver is not None and str(trans_ver or "").strip().lower() in ("automatic", "auto"):
+        try:
+            _ng = int(gears_ver)
+            if _ng > 0:
+                trans_ver = f"{_ng}-Speed Automatic"
+        except (TypeError, ValueError):
+            pass
 
     dealer_cyl_i = _int_or_none(dealer_cyl)
     # Prefer dealer when present and valid; else regex/EPA aggregate

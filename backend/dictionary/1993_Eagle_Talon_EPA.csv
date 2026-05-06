@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1993,Eagle,Talon,Talon,1.8L I4 (SOHC (FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,21,28,23,,,,,
+1993,Eagle,Talon,Talon,1.8L I4 (SOHC (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,21,29,24,,,,,
+1993,Eagle,Talon,Talon,"2.0L I4 (DOHC TURBO (FFS,TRBO))",Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,17,22,19,,,,,
+1993,Eagle,Talon,Talon,"2.0L I4 (DOHC TURBO (FFS,TRBO))",Automatic 4-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,16,20,18,,,,,
+1993,Eagle,Talon,Talon,2.0L I4 (DOHC (FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,19,25,21,,,,,
+1993,Eagle,Talon,Talon,"2.0L I4 (DOHC TURBO (FFS,TRBO))",Manual 5-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,18,23,20,,,,,
+1993,Eagle,Talon,Talon,"2.0L I4 (DOHC TURBO (FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,19,26,21,,,,,
+1993,Eagle,Talon,Talon,2.0L I4 (DOHC (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,19,26,22,,,,,

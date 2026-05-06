@@ -58,8 +58,11 @@
         {% if recommendations %}
         <section class="db-section" id="reco-section">
             <div class="db-section-header">
-                <p class="db-eyebrow">Based on your history</p>
-                <h2 class="db-section-title">Recommended for You</h2>
+                <p class="db-eyebrow">{{ recommendations_eyebrow or "Based on your history" }}</p>
+                <h2 class="db-section-title">{{ recommendations_title or "Recommended for You" }}</h2>
+                {% if recommendations_hint %}
+                <p class="db-section-hint">{{ recommendations_hint }}</p>
+                {% endif %}
             </div>
             <div class="reco-carousel-wrap">
                 <div class="reco-track-outer">

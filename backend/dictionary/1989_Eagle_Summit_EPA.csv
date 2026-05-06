@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1989,Eagle,Summit,Summit,1.5L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.5,23,27,25,,,,,
+1989,Eagle,Summit,Summit,1.5L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.5,25,32,28,,,,,
+1989,Eagle,Summit,Summit,1.6L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,21,26,23,,,,,
+1989,Eagle,Summit,Summit,1.6L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,21,26,23,,,,,

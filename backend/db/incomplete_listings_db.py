@@ -13,6 +13,7 @@ import sqlite3
 from datetime import datetime, timezone
 
 from backend.db.inventory_db import DB_PATH as _INVENTORY_DB_PATH
+from backend.db.inventory_pg import is_inventory_postgres
 from backend.utils.listing_completeness import listing_missing_field_codes
 
 logger = logging.getLogger(__name__)
@@ -25,7 +26,12 @@ DB_PATH = os.environ.get(
 _META_BOOTSTRAP_KEY = "index_bootstrap_v1"
 
 
-def get_conn() -> sqlite3.Connection:
+def get_conn():
+    """Incomplete-listings index: same PostgreSQL DB as inventory when configured; else sidecar SQLite."""
+    if is_inventory_postgres():
+        from backend.db.inventory_db import get_conn as inv_get_conn
+
+        return inv_get_conn()
     conn = sqlite3.connect(DB_PATH)
     try:
         conn.execute("PRAGMA journal_mode=WAL")

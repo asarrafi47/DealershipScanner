@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1998,Ford,E150 Club Wagon,E150 Club Wagon,4.2L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.2,12,17,14,,,,,
+1998,Ford,E150 Club Wagon,E150 Club Wagon,4.6L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,4.6,13,17,14,,,,,
+1998,Ford,E150 Club Wagon,E150 Club Wagon,5.4L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.4,11,16,13,,,,,

@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1986,Hyundai,Pony Excel,Pony Excel,1.5L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,23,26,24,,,,,
+1986,Hyundai,Pony Excel,Pony Excel,1.5L I4 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,24,28,26,,,,,
+1986,Hyundai,Pony Excel,Pony Excel,1.5L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,25,31,27,,,,,

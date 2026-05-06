@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1999,Toyota,Paseo,Paseo,1.5L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,4,1.5,24,29,26,,,,,
+1999,Toyota,Paseo,Paseo,1.5L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,4,1.5,28,37,31,,,,,
+1999,Toyota,Paseo,Convertible,1.5L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,4,1.5,24,29,26,,,,,
+1999,Toyota,Paseo,Convertible,1.5L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,4,1.5,28,37,31,,,,,

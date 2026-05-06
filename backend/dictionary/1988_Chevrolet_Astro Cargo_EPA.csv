@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1988,Chevrolet,Astro Cargo,Astro 2WD (cargo),2.5L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.5,18,23,20,,,,,
+1988,Chevrolet,Astro Cargo,Astro 2WD (cargo),2.5L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.5,19,26,22,,,,,
+1988,Chevrolet,Astro Cargo,Astro 2WD (cargo),4.3L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,20,17,,,,,
+1988,Chevrolet,Astro Cargo,Astro 2WD (cargo),4.3L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,22,18,,,,,

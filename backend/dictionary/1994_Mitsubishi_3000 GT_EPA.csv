@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1994,Mitsubishi,3000 GT,3000 GT,3.0L V6 (DOHC (FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.0,16,22,18,,,,,
+1994,Mitsubishi,3000 GT,3000 GT,3.0L V6 (DOHC (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.0,17,23,19,,,,,
+1994,Mitsubishi,3000 GT,3000 GT,"3.0L V6 ((DOHC) (FFS,TRBO))",Manual 6-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,22,18,,,,,

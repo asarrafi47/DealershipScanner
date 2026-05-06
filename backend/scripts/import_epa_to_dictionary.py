@@ -6,13 +6,13 @@ That directory is the canonical EPA-based reference for enrichment
 (``backend/dictionary/enrich_from_dictionary.py``). Wikipedia / NHTSA ``*Complete_Options.csv`` output
 from ``car_data_scraper.py`` lives under ``csv_out*`` and is a different dataset.
 
-Downloads all make/model/trim/engine data for model years 2020+
-and writes one CSV per Year+Make+Model, matching the DICTIONARY format.
+Downloads all make/model/trim/engine data for model years 1950+
+(default ``--min-year``) and writes one CSV per Year+Make+Model, matching the DICTIONARY format.
 
 Usage:
   python import_epa_to_dictionary.py
   python import_epa_to_dictionary.py --epa-csv /path/to/vehicles.csv
-  python import_epa_to_dictionary.py --min-year 2000
+  python import_epa_to_dictionary.py --min-year 2020
 """
 import argparse
 import csv
@@ -50,10 +50,24 @@ def normalize_drive(drive: str) -> str:
     return DRIVE_MAP.get(drive.strip(), drive.strip())
 
 
+def _cylinder_count(cyl: str) -> int | None:
+    """EPA sometimes uses 'NA', blanks, or non-numeric placeholders for cylinders."""
+    if not cyl:
+        return None
+    s = cyl.strip()
+    if s in ("0", "", "NA", "N/A", "-", "—", "null"):
+        return None
+    try:
+        n = int(float(s))
+    except (ValueError, TypeError):
+        return None
+    return n if n > 0 else None
+
+
 def build_engine_desc(row: dict) -> str:
     parts = []
     displ = row.get("displ", "").strip()
-    cyl = row.get("cylinders", "").strip()
+    cyl = (row.get("cylinders") or "").strip()
     eng = row.get("eng_dscr", "").strip()
     atv = row.get("atvType", "").strip()
     fuel = row.get("fuelType1", "").strip()
@@ -63,8 +77,9 @@ def build_engine_desc(row: dict) -> str:
 
     if displ and displ not in ("0", "0.0", ""):
         parts.append(f"{displ}L")
-    if cyl and cyl not in ("0", ""):
-        parts.append(f"I{cyl}" if int(float(cyl)) <= 4 else f"V{cyl}")
+    cyl_n = _cylinder_count(cyl)
+    if cyl_n is not None:
+        parts.append(f"I{cyl_n}" if cyl_n <= 4 else f"V{cyl_n}")
     if eng:
         # strip noisy tokens
         eng = re.sub(r'\s+', ' ', eng).strip()
@@ -171,7 +186,7 @@ def process_epa_csv(epa_csv: Path, min_year: int, dictionary_dir: Path):
 def main():
     ap = argparse.ArgumentParser(description="Import EPA vehicles.csv into DICTIONARY/")
     ap.add_argument("--epa-csv", default=str(DEFAULT_EPA_CSV), help="Path to EPA vehicles.csv")
-    ap.add_argument("--min-year", type=int, default=2020, help="Minimum model year (default 2020)")
+    ap.add_argument("--min-year", type=int, default=1950, help="Minimum model year (default 1950)")
     ap.add_argument("--dictionary", default=str(DICTIONARY), help="Output DICTIONARY directory")
     args = ap.parse_args()
 

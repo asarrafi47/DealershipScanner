@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1991,GMC,Suburban,R1500 Suburban 2WD,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.7,11,16,13,,,,,
+1991,GMC,Suburban,R1500 Suburban 2WD,Diesel 6.2L V8 ((NO-CAT)) Diesel,Automatic 4-spd,Rear-Wheel Drive,Diesel,Special Purpose Vehicles,8,6.2,15,20,17,,,,,
+1991,GMC,Suburban,V1500 4WD,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.7,11,15,12,,,,,
+1991,GMC,Suburban,V1500 4WD,Diesel 6.2L V8 ((NO-CAT)) Diesel,Automatic 4-spd,All-Wheel Drive,Diesel,Special Purpose Vehicles,8,6.2,14,20,16,,,,,

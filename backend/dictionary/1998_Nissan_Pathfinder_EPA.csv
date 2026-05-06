@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1998,Nissan,Pathfinder,2WD,3.3L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,6,3.3,14,18,16,,,,,
+1998,Nissan,Pathfinder,2WD,3.3L V6,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,6,3.3,15,18,16,,,,,
+1998,Nissan,Pathfinder,4WD,3.3L V6,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,6,3.3,14,17,15,,,,,
+1998,Nissan,Pathfinder,4WD,3.3L V6,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,6,3.3,14,16,15,,,,,

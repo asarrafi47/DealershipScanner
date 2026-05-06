@@ -1,0 +1,11 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1986,Peugeot,505,Sedan,2.0L I4 ((FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,18,22,19,,,,,
+1986,Peugeot,505,Sedan,2.0L I4 ((FFS) (MPFI)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,18,22,19,,,,,
+1986,Peugeot,505,Sedan,2.2L I4 ((FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.2,17,20,18,,,,,
+1986,Peugeot,505,Sedan,2.2L I4 ((FFS) (MPFI)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.2,17,22,19,,,,,
+1986,Peugeot,505,Sedan,"Diesel 2.5L I4 ((DSL,TRBO) (MPFI) (NO-CAT)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Compact Cars,4,2.5,21,24,22,,,,,
+1986,Peugeot,505,Sedan,"Diesel 2.5L I4 ((DSL,TRBO) (MPFI) (NO-CAT)) Diesel",Manual 5-spd,Rear-Wheel Drive,Diesel,Compact Cars,4,2.5,24,30,26,,,,,
+1986,Peugeot,505,Station Wagon,2.0L I4 ((FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.0,18,22,19,,,,,
+1986,Peugeot,505,Station Wagon,2.0L I4 ((FFS) (MPFI)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.0,18,22,19,,,,,
+1986,Peugeot,505,Station Wagon,2.2L I4 ((FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Midsize-Large Station Wagons,4,2.2,17,20,18,,,,,
+1986,Peugeot,505,Station Wagon,"Diesel 2.5L I4 ((DSL,TRBO) (MPFI) (NO-CAT)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Midsize-Large Station Wagons,4,2.5,21,24,22,,,,,

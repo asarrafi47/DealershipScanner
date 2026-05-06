@@ -141,6 +141,67 @@ def _dealer_spec_wins(dealer_val: Any) -> bool:
     return True
 
 
+_EPA_MODE_AGGREGATE_RE = re.compile(
+    r"\(?\s*EPA\s+mode\s+aggregate\s*\)?",
+    re.IGNORECASE,
+)
+
+
+def _strip_epa_aggregate_label(s: str) -> str:
+    if not s:
+        return s
+    return _EPA_MODE_AGGREGATE_RE.sub("", s).strip().strip(",").strip()
+
+
+def _extract_liters_from_engine_text(s: str | None) -> float | None:
+    """Pull a positive displacement from Monroney-style or dealer engine copy."""
+    if not isinstance(s, str):
+        return None
+    t = _strip_epa_aggregate_label(_normalize_engine_description(s.strip()))
+    if not t:
+        return None
+    m = re.search(r"(\d+\.\d+|\d+)\s*[lL]\b", t)
+    if not m:
+        return None
+    try:
+        v = float(m.group(1))
+        return v if v > 0 else None
+    except ValueError:
+        return None
+
+
+def _transmission_line_has_gear_count(s: Any) -> bool:
+    if s is None:
+        return False
+    raw = str(s).strip()
+    if not raw:
+        return False
+    if re.search(r"\b\d+[-\s]?speed\b", raw, re.I):
+        return True
+    if re.match(r"Auto(?:matic)?\s*\(\s*S\d+\s*\)", raw, re.I):
+        return True
+    if re.match(r"Auto(?:matic)?\s*\(\s*AM-S\d+\s*\)", raw, re.I):
+        return True
+    if re.match(r"Auto(?:matic)?\s*\(\s*A\d+\s*\)", raw, re.I):
+        return True
+    return False
+
+
+def _transmission_phrase_prefer_detail(td_src: Any, td_norm: str | None) -> Any:
+    """
+    If the source string names a gear count (e.g. '8-Speed Automatic'), show that phrase
+    instead of collapsing to the bucket label 'Automatic' / 'Manual'.
+    """
+    if td_src is None:
+        return td_norm if td_norm else td_src
+    raw = str(td_src).strip()
+    if not raw:
+        return td_norm if td_norm else td_src
+    if td_norm in ("Automatic", "Manual") and re.search(r"\b\d+[-\s]?speed\b", raw, re.I):
+        return raw
+    return td_norm if td_norm else td_src
+
+
 # Dealer DMS boilerplate → treat as missing in UI/API
 _MANUFACTURER_SPEC_RE = re.compile(
     r"see\s+manufacturer|manufacturer\s+specifications|refer\s+to\s+manufacturer",
@@ -482,75 +543,29 @@ def car_matches_engine_displacement_l_range(
 
 def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | None = None) -> str:
     """
-    Priority: rich ``engine_description`` (not manufacturer boilerplate, not displacement-only)
-    → inferred ``master_engine_string`` (same rules) →
-    ``{liters}L`` + layout (e.g. ``2.0L I4``, ``4.4L V8``) using ``engine_l`` / thin description
-    plus effective cylinder count (dealer row, else ``cylinders_display`` / ``cylinders`` from
-    verified specs) → partial → —.
-
-    Displacement-only strings (e.g. ``2``, ``2.0``, ``2.0L``) are never shown alone when verified
-    specs supply a positive cylinder count — common for BMW VDP rows missing an explicit layout.
+    Buyer-facing engine line: **displacement only** (e.g. ``2.0L``, ``4.4L``), or ``Electric``
+    when cylinder count is zero. EPA aggregate labels and cylinder layout tokens are not shown.
     """
     c = clean_car_row_dict(car)
     dash = DISPLAY_DASH
     vs = verified_specs or {}
-    mes = vs.get("master_engine_string") if isinstance(vs.get("master_engine_string"), str) else None
 
-    ed = c.get("engine_description")
-    if isinstance(ed, str) and ed.strip() and not is_effectively_empty(ed):
-        ed_norm = _normalize_engine_description(ed)
-        if not _MANUFACTURER_SPEC_RE.search(ed_norm) and not _is_displacement_only_engine_text(ed_norm):
-            return format_display_value(ed_norm, dash=dash)
-        # Fall through with normalized value for downstream displacement merge.
-        ed = ed_norm
-
-    if isinstance(mes, str) and mes.strip():
-        if not _is_displacement_only_engine_text(mes):
-            fd = format_display_value(mes, dash=dash)
-            if fd != dash:
-                return fd
-
-    eng_l = c.get("engine_l")
     cyl_i = _effective_cylinder_count(c, vs)
-
     if cyl_i == 0:
         return "Electric"
 
-    lit = None
-    if eng_l is not None and str(eng_l).strip():
-        s = str(eng_l).strip()
-        if s.lower() in ("electric", "phev"):
-            return "Electric" if s.lower() == "electric" else "Plug-in hybrid"
-        try:
-            f = float(s.replace("L", "").strip())
-            if f > 0:
-                lit = f"{f:.1f}L"
-        except (TypeError, ValueError):
-            if not is_effectively_empty(s):
-                return format_display_value(s, dash=dash)
+    lit_f = parse_engine_displacement_liters(c)
+    if lit_f is None:
+        mes = vs.get("master_engine_string")
+        if isinstance(mes, str) and mes.strip():
+            lit_f = _extract_liters_from_engine_text(mes)
+    if lit_f is None:
+        ed = c.get("engine_description")
+        if isinstance(ed, str) and ed.strip() and not is_effectively_empty(ed):
+            lit_f = _extract_liters_from_engine_text(ed)
 
-    if lit is None and isinstance(ed, str) and ed.strip() and _is_displacement_only_engine_text(ed):
-        try:
-            f = float(re.sub(r"(?i)l\s*$", "", ed.strip()))
-            if f > 0:
-                lit = f"{f:.1f}L"
-        except (TypeError, ValueError):
-            pass
-
-    layout_hints: tuple[str | None, ...] = ()
-    if isinstance(ed, str) and ed.strip():
-        layout_hints = (ed.strip(),)
-    if cyl_i is not None and cyl_i > 0:
-        layout = _cylinder_layout_token(cyl_i, *layout_hints, mes)
-    else:
-        layout = ""
-
-    if lit and layout:
-        return f"{lit} {layout}"
-    if lit:
-        return lit
-    if layout:
-        return layout
+    if lit_f is not None and lit_f > 0:
+        return f"{lit_f:.1f}L"
 
     return dash
 
@@ -774,18 +789,57 @@ def serialize_car_for_api(
             out["cylinders"] = vcyl
 
     # Prefer persisted transmission_type bucket when present; else dealer text / EPA / normalize.
+    # Feeds sometimes label geared automatics (incl. many PHEVs) as "CVT"; trust detailed transmission
+    # when it clearly normalizes to a non-CVT bucket.
+    from backend.utils.transmission_normalize import normalize_transmission_standard
+
     stored_tt = c.get("transmission_type")
-    if isinstance(stored_tt, str) and stored_tt.strip() in ("Automatic", "Manual", "CVT"):
-        td = format_display_value(stored_tt.strip())
+    dealer_t = c.get("transmission")
+    y_int = c.get("year") if isinstance(c.get("year"), int) else None
+    ignore_stored_cvt_bucket = False
+    if (
+        isinstance(stored_tt, str)
+        and stored_tt.strip() == "CVT"
+        and _dealer_spec_wins(dealer_t)
+    ):
+        d_norm, _d_weak = normalize_transmission_standard(
+            dealer_t,
+            make=c.get("make"),
+            model=c.get("model"),
+            trim=c.get("trim"),
+            title=c.get("title"),
+            year=y_int,
+            vin=c.get("vin"),
+            log_weak=False,
+        )
+        if d_norm and d_norm != "CVT":
+            ignore_stored_cvt_bucket = True
+
+    if (
+        isinstance(stored_tt, str)
+        and stored_tt.strip() in ("Automatic", "Manual", "CVT")
+        and not ignore_stored_cvt_bucket
+    ):
+        bucket = stored_tt.strip()
+        inferred_td = vs.get("transmission_display")
+        if bucket == "Automatic" and isinstance(inferred_td, str) and _transmission_line_has_gear_count(
+            inferred_td
+        ):
+            td = format_display_value(inferred_td.strip())
+        elif bucket in ("Automatic", "Manual") and _dealer_spec_wins(dealer_t):
+            raw_d = str(dealer_t).strip()
+            if raw_d and re.search(r"\b\d+[-\s]?speed\b", raw_d, re.I):
+                td = format_display_value(raw_d)
+            else:
+                td = format_display_value(bucket)
+        else:
+            td = format_display_value(bucket)
     else:
-        dealer_t = c.get("transmission")
         inferred_t = vs.get("transmission_display")
         if _dealer_spec_wins(dealer_t):
             td_src = dealer_t
         else:
             td_src = inferred_t or dealer_t
-
-        from backend.utils.transmission_normalize import normalize_transmission_standard
 
         td_norm, _td_weak = normalize_transmission_standard(
             td_src,
@@ -793,10 +847,11 @@ def serialize_car_for_api(
             model=c.get("model"),
             trim=c.get("trim"),
             title=c.get("title"),
-            year=c.get("year"),
+            year=y_int,
             vin=c.get("vin"),
         )
-        td = format_display_value(td_norm if td_norm else td_src)
+        pick = _transmission_phrase_prefer_detail(td_src, td_norm)
+        td = format_display_value(pick if pick is not None else td_src)
 
     dealer_d = coerce_drivetrain_stored(c.get("drivetrain"))
     inferred_dd = vs.get("drivetrain_display")

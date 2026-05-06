@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1985,Oldsmobile,Custom Cruiser,Wagon,5.0L V8 ((GM-OLDS) (FFS) CA model),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,8,5.0,15,20,17,,,,,
+1985,Oldsmobile,Custom Cruiser,Wagon,5.0L V8 ((GM-OLDS) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,8,5.0,15,21,17,,,,,
+1985,Oldsmobile,Custom Cruiser,Wagon,Diesel 5.7L V8 ((350 V8)) Diesel,Automatic 4-spd,Rear-Wheel Drive,Diesel,Midsize-Large Station Wagons,8,5.7,18,26,21,,,,,

@@ -472,6 +472,37 @@ document.addEventListener("DOMContentLoaded", () => {
         }).join("");
     }
 
+    let _listingsGeoPersistTimer = null;
+    let _listingsGeoLastSent = null;
+    function schedulePersistListingsGeoSession() {
+        const zip = scalarVal("zip_code");
+        const radius = scalarVal("radius");
+        if (!zip || !radius) return;
+        const r = parseFloat(radius);
+        if (!Number.isFinite(r) || r <= 0) return;
+        const payload = `${zip.trim()}|${radius}`;
+        if (payload === _listingsGeoLastSent) return;
+        clearTimeout(_listingsGeoPersistTimer);
+        _listingsGeoPersistTimer = setTimeout(() => {
+            const m = document.querySelector('meta[name="csrf-token"]');
+            const csrf = m && m.content ? m.content : "";
+            fetch("/api/session/listings-geo", {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(csrf ? { "X-CSRF-Token": csrf } : {}),
+                },
+                body: JSON.stringify({ zip_code: zip.trim(), radius }),
+            })
+                .then((res) => (res.ok ? res.json() : null))
+                .then((data) => {
+                    if (data && data.ok) _listingsGeoLastSent = payload;
+                })
+                .catch(() => {});
+        }, 500);
+    }
+
     function syncUrl() {
         const params = new URLSearchParams();
         const multiParams = ["make", "model", "trim", "fuel_type", "cylinders", "transmission",
@@ -496,6 +527,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (q) params.set("q", q);
         const qs = params.toString();
         history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : ""));
+        schedulePersistListingsGeoSession();
     }
 
     function renderResults() {

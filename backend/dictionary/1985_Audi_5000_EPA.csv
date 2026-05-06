@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1985,Audi,5000,S,"2.1L V5 ((FFS,TRBO) CA model)",Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,5,2.1,15,19,17,,,,,
+1985,Audi,5000,S,"2.1L V5 ((FFS,TRBO))",Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,5,2.1,15,20,17,,,,,
+1985,Audi,5000,S,2.2L V5 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,5,2.2,15,20,17,,,,,
+1985,Audi,5000,S,2.2L V5 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,5,2.2,17,23,19,,,,,
+1985,Audi,5000,S Wagon,2.2L V5 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,5,2.2,15,20,17,,,,,
+1985,Audi,5000,S Wagon,2.2L V5 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,5,2.2,17,23,19,,,,,

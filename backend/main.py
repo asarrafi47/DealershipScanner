@@ -4,6 +4,8 @@ from backend.utils.project_env import load_project_dotenv
 
 load_project_dotenv()
 
+import inspect
+import logging
 import os
 import secrets
 import sqlite3
@@ -51,12 +53,23 @@ from backend.utils.hybrid_search import (
     hybrid_search_with_kwargs,
 )
 from backend.enrichment.knowledge_engine import prepare_car_detail_context
+from backend.listings.geo_session import (
+    apply_listings_geo_to_session,
+    listings_geo_kwargs_from_session,
+    persist_listings_geo_from_request,
+)
 from backend.listings.routes import listings_page
 from backend.utils.car_serialize import format_display_value, serialize_car_for_api
 from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS, listing_missing_field_codes
 from backend.utils.oem_links import mopar_vin_lookup_url
 from backend.utils.client_ip import client_ip as _client_ip_from_request
 from backend.utils.csrf import ensure_csrf_token, validate_csrf_form, validate_csrf_header
+
+if not (validate_csrf_header.__code__.co_flags & inspect.CO_VARARGS):
+    raise ImportError(
+        "backend.utils.csrf.validate_csrf_header must be defined with *args (see repo csrf.py). "
+        "Restart the server after git pull; check PYTHONPATH is not shadowing backend/utils/csrf.py."
+    )
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.query_parser import parse_natural_query
 from backend.utils.registration_validation import registration_form_error
@@ -79,6 +92,36 @@ from backend.utils.roles import (
 )
 
 _MIN_PASSWORD_LEN = max(8, int(os.environ.get("MIN_PASSWORD_LENGTH", "8")))
+_logger = logging.getLogger(__name__)
+
+
+def _socketio_cors_allowed_origins() -> str | list[str]:
+    """Socket.IO browser origins. Production defaults avoid wildcard CORS (SEC-063)."""
+    raw = (os.environ.get("SOCKETIO_CORS_ORIGINS") or "").strip()
+    if raw == "*":
+        if is_production_env():
+            _logger.warning(
+                "SOCKETIO_CORS_ORIGINS=* in production allows any browser origin for Socket.IO; "
+                "prefer a comma-separated allowlist."
+            )
+        return "*"
+    if raw:
+        return [x.strip() for x in raw.split(",") if x.strip()]
+    if not is_production_env():
+        return "*"
+    origins: list[str] = []
+    for key in ("PUBLIC_BASE_URL", "MFA_QR_BASE_URL"):
+        base = (os.environ.get(key) or "").strip().rstrip("/")
+        if base and base not in origins:
+            origins.append(base)
+    if origins:
+        return origins
+    _logger.warning(
+        "Production Socket.IO: SOCKETIO_CORS_ORIGINS unset and no PUBLIC_BASE_URL/MFA_QR_BASE_URL; "
+        "using an empty CORS allowlist (tightest same-site behavior). If phone QR or Socket.IO fail, "
+        "set SOCKETIO_CORS_ORIGINS to your public app origin(s), comma-separated."
+    )
+    return []
 
 
 def _listings_client_poll_ms() -> int:
@@ -243,7 +286,7 @@ def _csrf_mutating_requests():
         validate_csrf_form()
     elif ep and str(ep).startswith("store_admin."):
         validate_csrf_form()
-    elif ep in ("api_search_smart", "api_car_chat"):
+    elif ep in ("api_search_smart", "api_car_chat", "api_toggle_save", "api_session_listings_geo"):
         validate_csrf_header()
 
 
@@ -990,13 +1033,46 @@ def mfa_qr():
     return Response(raw, mimetype="image/png")
 
 
-def _recommendations_for_user(user_id: int, limit: int = 20) -> list[dict]:
+def _similar_recommendation_rows(
+    seen_mm: list[tuple[str, str]],
+    viewed_id_set: set[int],
+    limit: int,
+    geo_kw: dict,
+) -> list[dict]:
+    """Cars matching recent make/model, excluding viewed ids; optional ZIP radius via ``geo_kw``."""
+    seen_rec: set[int] = set()
+    recs: list[dict] = []
+    for make, model in seen_mm[:5]:
+        for c in search_cars(makes=[make], models=[model], **geo_kw):
+            cid = c.get("id")
+            if cid and cid not in viewed_id_set and cid not in seen_rec:
+                seen_rec.add(cid)
+                recs.append(c)
+                if len(recs) >= limit:
+                    return recs
+    return recs
+
+
+def _recommendations_for_user(user_id: int, limit: int = 20, **geo_kw: object) -> tuple[list[dict], dict[str, str]]:
+    """Return serialized carousel rows and heading copy for the dashboard."""
+    default_heading = {
+        "eyebrow": "Based on your history",
+        "title": "Recommended for You",
+        "hint": "",
+    }
     viewed_ids = get_recent_viewed_car_ids(user_id, limit=30)
     if not viewed_ids:
-        return []
+        return [], default_heading
+
     viewed_cars = get_cars_by_ids(viewed_ids)
     if not viewed_cars:
-        return []
+        return [], default_heading
+
+    by_id: dict[int, dict] = {}
+    for c in viewed_cars:
+        cid = c.get("id")
+        if cid is not None:
+            by_id[int(cid)] = c
 
     seen_mm: list[tuple[str, str]] = []
     seen_mm_set: set[tuple[str, str]] = set()
@@ -1009,22 +1085,66 @@ def _recommendations_for_user(user_id: int, limit: int = 20) -> list[dict]:
                 seen_mm_set.add(key)
                 seen_mm.append((make, model))
 
-    if not seen_mm:
-        return []
-
     viewed_id_set = set(viewed_ids)
-    seen_rec: set[int] = set()
-    recs: list[dict] = []
-    for make, model in seen_mm[:5]:
-        for c in search_cars(makes=[make], models=[model]):
-            cid = c.get("id")
-            if cid and cid not in viewed_id_set and cid not in seen_rec:
-                seen_rec.add(cid)
-                recs.append(c)
-        if len(recs) >= limit:
-            break
+    heading = dict(default_heading)
+    raw_recs: list[dict] = []
+    geo_kw_dict = dict(geo_kw)
+    geo_active = bool(geo_kw_dict.get("zip_code") and geo_kw_dict.get("radius_miles"))
 
-    return [serialize_car_for_listings_grid(c) for c in recs[:limit]]
+    if seen_mm:
+        if geo_active:
+            raw_recs = _similar_recommendation_rows(seen_mm, viewed_id_set, limit, geo_kw_dict)
+            if not raw_recs:
+                heading["eyebrow"] = "Outside your search radius"
+                heading["title"] = "Recommended & recently viewed"
+                raw_recs = _similar_recommendation_rows(seen_mm, viewed_id_set, limit, {})
+                if raw_recs:
+                    heading["hint"] = (
+                        "No similar listings near your saved ZIP and radius. "
+                        "Showing similar inventory beyond that area and cars you opened recently."
+                    )
+                else:
+                    heading["hint"] = (
+                        "No close matches in inventory right now. Here are cars you opened recently."
+                    )
+        else:
+            raw_recs = _similar_recommendation_rows(seen_mm, viewed_id_set, limit, {})
+    else:
+        heading["eyebrow"] = "Your history"
+        heading["title"] = "Recently viewed"
+        heading["hint"] = ""
+
+    out_cars: list[dict] = []
+    seen_out: set[int] = set()
+    for c in raw_recs:
+        if len(out_cars) >= limit:
+            break
+        cid = c.get("id")
+        if cid is None:
+            continue
+        cid_i = int(cid)
+        if cid_i not in seen_out:
+            seen_out.add(cid_i)
+            out_cars.append(c)
+
+    for vid in viewed_ids:
+        if len(out_cars) >= limit:
+            break
+        vid_i = int(vid)
+        if vid_i in seen_out:
+            continue
+        row = by_id.get(vid_i)
+        if row:
+            out_cars.append(row)
+            seen_out.add(vid_i)
+
+    if not out_cars:
+        return [], default_heading
+
+    return (
+        [serialize_car_for_listings_grid(c) for c in out_cars[:limit]],
+        heading,
+    )
 
 
 @app.route("/dashboard")
@@ -1034,9 +1154,15 @@ def dashboard():
     user_id = session.get("user_id")
     recommendations = []
     saved_cars_list = []
+    recommendations_eyebrow = ""
+    recommendations_title = ""
+    recommendations_hint = ""
     if user_id:
         uid = int(user_id)
-        recommendations = _recommendations_for_user(uid)
+        recommendations, rec_heading = _recommendations_for_user(uid, **listings_geo_kwargs_from_session(session))
+        recommendations_eyebrow = rec_heading.get("eyebrow") or ""
+        recommendations_title = rec_heading.get("title") or "Recommended for You"
+        recommendations_hint = rec_heading.get("hint") or ""
         saved_ids = get_saved_car_ids(uid)
         raw_saved = get_cars_by_ids(saved_ids)
         saved_cars_list = [serialize_car_for_listings_grid(c) for c in raw_saved]
@@ -1044,11 +1170,15 @@ def dashboard():
         "dashboard.html",
         saved_cars=saved_cars_list,
         recommendations=recommendations,
+        recommendations_eyebrow=recommendations_eyebrow,
+        recommendations_title=recommendations_title,
+        recommendations_hint=recommendations_hint,
     )
 
 
 @app.route("/search")
 def search():
+    persist_listings_geo_from_request(request, session)
     g = request.args.getlist
 
     def scalar(key):
@@ -1108,6 +1238,22 @@ def search():
         initial_grid_cars=initial_grid_cars,
         listings_poll_ms=_listings_client_poll_ms(),
     )
+
+
+@app.route("/api/session/listings-geo", methods=["POST"])
+def api_session_listings_geo():
+    """Remember ZIP + radius for dashboard recommendations (session cookie)."""
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return jsonify({"ok": False, "error": "json_object"}), 400
+    zip_code = str(body.get("zip_code") or "").strip()
+    try:
+        radius_mi = float(body.get("radius"))
+    except (TypeError, ValueError):
+        return jsonify({"ok": False, "error": "bad_radius"}), 400
+    if not apply_listings_geo_to_session(session, zip_code, radius_mi):
+        return jsonify({"ok": False, "error": "invalid_zip_or_radius"}), 400
+    return jsonify({"ok": True})
 
 
 @app.route("/api/listings/cars")
@@ -1185,9 +1331,10 @@ def car_detail(car_id):
 
 @app.route("/api/cars/<int:car_id>/save", methods=["POST"])
 def api_toggle_save(car_id):
-    if not validate_csrf_header(request):
-        return jsonify({"ok": False, "error": "csrf"}), 403
-    uid = session.get("user_id")
+    try:
+        uid = session["user_id"]
+    except KeyError:
+        uid = None
     if not uid:
         return jsonify({"ok": False, "error": "not_logged_in"}), 401
     uid = int(uid)
@@ -1247,7 +1394,20 @@ def api_search_smart():
     filters = parse_natural_query(q)
     from backend.utils.hybrid_search import hybrid_smart_search
 
-    results, search_meta = hybrid_smart_search(q, filters, vector_top_k=100)
+    geo_kw = {}
+    zc = str(data.get("zip_code") or data.get("zip") or "").strip()
+    rad_raw = data.get("radius")
+    if zc and rad_raw is not None and str(rad_raw).strip() != "":
+        try:
+            rm = float(rad_raw)
+            if rm > 0:
+                geo_kw = {"zip_code": zc, "radius_miles": rm}
+        except (TypeError, ValueError):
+            pass
+
+    results, search_meta = hybrid_smart_search(
+        q, filters, vector_top_k=100, listing_geo_kwargs=geo_kw if geo_kw else None
+    )
     safe_results = [serialize_car_for_listings_grid(c) for c in results]
     return jsonify(
         {
@@ -1292,11 +1452,11 @@ def api_car_chat(car_id: int):
 # Realtime (QR sign-in) + same-process Socket.IO for /mfa/qr-wait
 from flask_socketio import SocketIO  # noqa: E402
 
-_cors = (os.environ.get("SOCKETIO_CORS_ORIGINS") or "*").strip() or "*"
+_socketio_cors = _socketio_cors_allowed_origins()
 socketio = SocketIO(
     app,
     async_mode="threading",
-    cors_allowed_origins=_cors,
+    cors_allowed_origins=_socketio_cors,
     manage_session=True,
 )
 if getattr(app, "extensions", None) is None:

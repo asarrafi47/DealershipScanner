@@ -1,0 +1,9 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1992,Chevrolet,Blazer,S10 Blazer 2WD,4.3L V6 ((FFS) (SPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.3,15,20,17,,,,,
+1992,Chevrolet,Blazer,S10 Blazer 2WD,4.3L V6 ((FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.3,15,21,17,,,,,
+1992,Chevrolet,Blazer,S10 Blazer 2WD,4.3L V6 ((FFS) (SPFI)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.3,15,20,17,,,,,
+1992,Chevrolet,Blazer,1500 4WD,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.7,11,16,13,,,,,
+1992,Chevrolet,Blazer,1500 4WD,5.7L V8 ((350 V8) (FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.7,11,16,13,,,,,
+1992,Chevrolet,Blazer,S10 Blazer 4WD,4.3L V6 ((FFS) (MPFI)),Automatic 4-spd,All-Wheel Drive,Premium Gasoline,Special Purpose Vehicles,6,4.3,14,20,16,,,,,
+1992,Chevrolet,Blazer,S10 Blazer 4WD,4.3L V6 ((FFS) (SPFI)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.3,14,20,16,,,,,
+1992,Chevrolet,Blazer,S10 Blazer 4WD,4.3L V6 ((FFS) (SPFI)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.3,14,19,16,,,,,

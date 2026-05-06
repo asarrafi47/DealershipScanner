@@ -19,6 +19,10 @@ _DEDUPE_THRESHOLD = 88
 
 
 def ensure_dealerships_table(cursor: sqlite3.Cursor) -> None:
+    from backend.db.inventory_pg import is_inventory_postgres
+
+    if is_inventory_postgres():
+        return
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS dealerships (

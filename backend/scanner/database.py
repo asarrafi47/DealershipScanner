@@ -5,9 +5,8 @@ import json
 import logging
 import os
 import re
-import sqlite3
 from datetime import datetime
-from pathlib import Path
+from typing import Any
 
 from backend.db.inventory_db import ensure_cars_table_columns
 from backend.utils.analytics_ep import apply_ep_from_scanner_dict
@@ -26,6 +25,13 @@ def get_conn():
 
 
 def _ensure_schema(conn):
+    from backend.db.inventory_pg import init_postgres_inventory, is_inventory_postgres
+
+    if is_inventory_postgres():
+        raw = getattr(conn, "_raw", conn)
+        init_postgres_inventory(raw)
+        return
+
     cursor = conn.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS cars (
@@ -124,7 +130,6 @@ def _ensure_schema(conn):
             cursor.execute(f"ALTER TABLE epa_master ADD COLUMN {col} {ctype}")
             conn.commit()
     conn.commit()
-    conn.close()
 
 
 def upsert_vehicles(vehicles: list[dict]) -> int:
@@ -141,232 +146,233 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
             by_vin[vin] = v
     vehicles = list(by_vin.values())
     conn = get_conn()
-    _ensure_schema(conn)
-    conn = get_conn()
-    cursor = conn.cursor()
-    now = datetime.utcnow().isoformat() + "Z"
     count = 0
-    for raw in vehicles:
-        merged = apply_ep_from_scanner_dict(dict(raw))
-        v = clean_car_row_dict(merged)
-        if is_effectively_empty(v.get("engine_l")):
-            _eng = infer_engine_l_for_db(v)
-            if _eng is not None:
-                v["engine_l"] = _eng
-        vin = (v.get("vin") or "").strip()
-        if not vin:
-            continue
-        title = (
-            v.get("title")
-            or f"{v.get('year') or ''} {v.get('make') or ''} {v.get('model') or ''} {v.get('trim') or ''}".strip()
-            or "Unknown vehicle"
-        )
-        # Price: ensure number (strip $ and , already done in parser); store as int/float
-        try:
-            price = v.get("price")
-            price = int(round(float(price))) if price is not None and str(price).strip() != "" else 0
-        except (TypeError, ValueError):
-            price = 0
-        # Mileage: ensure integer
-        try:
-            mileage = v.get("mileage")
-            mileage = int(mileage) if mileage is not None and str(mileage).strip() != "" else 0
-        except (TypeError, ValueError):
-            mileage = 0
-        try:
-            msrp_val = v.get("msrp")
-            msrp = int(round(float(msrp_val))) if msrp_val is not None and str(msrp_val).strip() != "" else None
-            if msrp is not None and msrp <= 0:
-                msrp = None
-        except (TypeError, ValueError):
-            msrp = None
-        # Gallery: SQLite stores arrays as JSON string; always use json.dumps(list)
-        gallery = v.get("gallery")
-        if isinstance(gallery, list):
-            gallery_json = json.dumps(gallery)
-        elif gallery is not None and isinstance(gallery, str):
+    try:
+        _ensure_schema(conn)
+        cursor = conn.cursor()
+        now = datetime.utcnow().isoformat() + "Z"
+        for raw in vehicles:
+            merged = apply_ep_from_scanner_dict(dict(raw))
+            v = clean_car_row_dict(merged)
+            if is_effectively_empty(v.get("engine_l")):
+                _eng = infer_engine_l_for_db(v)
+                if _eng is not None:
+                    v["engine_l"] = _eng
+            vin = (v.get("vin") or "").strip()
+            if not vin:
+                continue
+            title = (
+                v.get("title")
+                or f"{v.get('year') or ''} {v.get('make') or ''} {v.get('model') or ''} {v.get('trim') or ''}".strip()
+                or "Unknown vehicle"
+            )
+            # Price: ensure number (strip $ and , already done in parser); store as int/float
             try:
-                json.loads(gallery)
-                gallery_json = gallery
+                price = v.get("price")
+                price = int(round(float(price))) if price is not None and str(price).strip() != "" else 0
             except (TypeError, ValueError):
+                price = 0
+            # Mileage: ensure integer
+            try:
+                mileage = v.get("mileage")
+                mileage = int(mileage) if mileage is not None and str(mileage).strip() != "" else 0
+            except (TypeError, ValueError):
+                mileage = 0
+            try:
+                msrp_val = v.get("msrp")
+                msrp = int(round(float(msrp_val))) if msrp_val is not None and str(msrp_val).strip() != "" else None
+                if msrp is not None and msrp <= 0:
+                    msrp = None
+            except (TypeError, ValueError):
+                msrp = None
+            # Gallery: stored as JSON string; always use json.dumps(list)
+            gallery = v.get("gallery")
+            if isinstance(gallery, list):
+                gallery_json = json.dumps(gallery)
+            elif gallery is not None and isinstance(gallery, str):
+                try:
+                    json.loads(gallery)
+                    gallery_json = gallery
+                except (TypeError, ValueError):
+                    gallery_json = "[]"
+            else:
                 gallery_json = "[]"
-        else:
-            gallery_json = "[]"
-        highlights = v.get("history_highlights")
-        highlights_json = json.dumps(highlights) if isinstance(highlights, list) else (highlights if isinstance(highlights, str) else "[]")
-        img = v.get("image_url")
-        if not img or not str(img).strip().startswith("http"):
-            img = "/static/placeholder.svg"
-        preview = {
-            **v,
-            "vin": vin,
-            "title": title,
-            "price": price,
-            "mileage": mileage,
-            "image_url": img,
-        }
-        dq = compute_data_quality_score(preview)
-        interior_buckets_json = interior_color_buckets_json(v.get("interior_color"), v.get("make"))
-        spec_src = v.get("spec_source_json")
-        if isinstance(spec_src, dict):
-            spec_src = json.dumps(spec_src, ensure_ascii=False)
-        elif spec_src is not None and not isinstance(spec_src, str):
-            spec_src = str(spec_src)
-        pkg_raw = v.get("packages")
-        if isinstance(pkg_raw, dict):
-            packages_json = json.dumps(pkg_raw, ensure_ascii=False)
-        elif isinstance(pkg_raw, str) and pkg_raw.strip() not in ("", "{}", "[]", "null"):
-            packages_json = pkg_raw.strip()
-        else:
-            packages_json = None
-        cursor.execute(
-            """
-            INSERT INTO cars (
-                vin, title, year, make, model, trim, price, mileage,
-                image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-                zip_code, fuel_type, cylinders, transmission, drivetrain,
-                exterior_color, interior_color, interior_color_buckets, stock_number, gallery, carfax_url, history_highlights, msrp,
-                dealership_registry_id,
-                source_url, body_style, engine_description, engine_l, condition, description, data_quality_score,
-                mpg_city, mpg_highway, is_cpo, model_full_raw,
-                packages,
-                listing_active, listing_removed_at, spec_source_json,
-                first_seen_at, last_price_change_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT(vin) DO UPDATE SET
-                title=CASE
-                    WHEN NULLIF(TRIM(excluded.title),'') IS NOT NULL AND excluded.title != 'Unknown vehicle'
-                    THEN excluded.title
-                    ELSE COALESCE(NULLIF(TRIM(cars.title),''), excluded.title)
-                END,
-                year=CASE WHEN IFNULL(excluded.year,0)!=0 THEN excluded.year ELSE COALESCE(cars.year,excluded.year) END,
-                make=COALESCE(NULLIF(TRIM(excluded.make),''), cars.make),
-                model=COALESCE(NULLIF(TRIM(excluded.model),''), cars.model),
-                trim=COALESCE(excluded.trim, trim),
-                price=CASE WHEN IFNULL(excluded.price,0) > 0 THEN excluded.price ELSE COALESCE(NULLIF(cars.price,0), 0) END,
-                mileage=CASE WHEN IFNULL(excluded.mileage,0) > 0 THEN excluded.mileage ELSE COALESCE(NULLIF(cars.mileage,0), 0) END,
-                image_url=CASE
-                    WHEN excluded.image_url LIKE 'http%' THEN excluded.image_url
-                    WHEN cars.image_url LIKE 'http%' THEN cars.image_url
-                    ELSE excluded.image_url
-                END,
-                dealer_name=excluded.dealer_name, dealer_url=excluded.dealer_url,
-                dealer_id=excluded.dealer_id, scraped_at=excluded.scraped_at,
-                zip_code=excluded.zip_code,
-                fuel_type=COALESCE(excluded.fuel_type, fuel_type),
-                cylinders=COALESCE(excluded.cylinders, cylinders),
-                transmission=COALESCE(excluded.transmission, transmission),
-                drivetrain=COALESCE(excluded.drivetrain, drivetrain),
-                exterior_color=COALESCE(NULLIF(TRIM(excluded.exterior_color), ''), exterior_color),
-                interior_color=COALESCE(NULLIF(TRIM(excluded.interior_color), ''), interior_color),
-                interior_color_buckets=CASE
-                    WHEN NULLIF(TRIM(excluded.interior_color), '') IS NOT NULL THEN excluded.interior_color_buckets
-                    ELSE cars.interior_color_buckets
-                END,
-                stock_number=COALESCE(NULLIF(excluded.stock_number, ''), stock_number),
-                gallery=COALESCE(
-                    NULLIF(NULLIF(TRIM(excluded.gallery), ''), '[]'),
-                    cars.gallery
-                ),
-                carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights,
-                msrp=excluded.msrp,
-                dealership_registry_id=COALESCE(excluded.dealership_registry_id, dealership_registry_id),
-                source_url=COALESCE(excluded.source_url, source_url),
-                body_style=COALESCE(excluded.body_style, body_style),
-                engine_description=COALESCE(excluded.engine_description, engine_description),
-                engine_l=COALESCE(NULLIF(TRIM(excluded.engine_l), ''), engine_l),
-                condition=COALESCE(NULLIF(TRIM(excluded.condition), ''), condition),
-                description=COALESCE(excluded.description, description),
-                data_quality_score=excluded.data_quality_score,
-                mpg_city=COALESCE(excluded.mpg_city, mpg_city),
-                mpg_highway=COALESCE(excluded.mpg_highway, mpg_highway),
-                is_cpo=COALESCE(excluded.is_cpo, is_cpo),
-                model_full_raw=COALESCE(excluded.model_full_raw, model_full_raw),
-                packages=COALESCE(NULLIF(TRIM(excluded.packages), ''), cars.packages),
-                listing_active=1,
-                listing_removed_at=NULL,
-                spec_source_json=CASE
-                    WHEN excluded.spec_source_json IS NOT NULL AND length(trim(excluded.spec_source_json)) > 0
-                    THEN excluded.spec_source_json
-                    ELSE cars.spec_source_json
-                END,
-                first_seen_at=COALESCE(cars.first_seen_at, excluded.scraped_at),
-                last_price_change_at=CASE
-                    WHEN IFNULL(cars.price, -1e12) != IFNULL(excluded.price, -1e12) THEN excluded.scraped_at
-                    ELSE COALESCE(cars.last_price_change_at, cars.first_seen_at, excluded.scraped_at)
-                END,
-                internal_notes=cars.internal_notes,
-                marked_for_review=cars.marked_for_review
-            """,
-            (
-                vin,
-                title,
-                v.get("year"),
-                v.get("make") or "",
-                v.get("model") or "",
-                v.get("trim"),
-                price,
-                mileage,
-                img,
-                v.get("dealer_name") or "",
-                v.get("dealer_url"),
-                v.get("dealer_id") or "",
-                now,
-                v.get("zip_code"),
-                v.get("fuel_type"),
-                v.get("cylinders"),
-                v.get("transmission"),
-                v.get("drivetrain"),
-                v.get("exterior_color"),
-                v.get("interior_color"),
-                interior_buckets_json,
-                v.get("stock_number") or "",
-                gallery_json,
-                v.get("carfax_url"),
-                highlights_json,
-                msrp,
-                v.get("dealership_registry_id"),
-                v.get("source_url"),
-                v.get("body_style"),
-                v.get("engine_description"),
-                v.get("engine_l"),
-                v.get("condition"),
-                v.get("description"),
-                dq,
-                v.get("mpg_city"),
-                v.get("mpg_highway"),
-                v.get("is_cpo"),
-                v.get("model_full_raw"),
-                packages_json,
-                1,
-                None,
-                spec_src,
-                now,
-                now,
-            ),
-        )
-        count += 1
-        trace_vin = (os.environ.get("SCANNER_TRACE_VIN") or "").strip().upper()
-        if trace_vin and vin.upper() == trace_vin[:17]:
+            highlights = v.get("history_highlights")
+            highlights_json = json.dumps(highlights) if isinstance(highlights, list) else (highlights if isinstance(highlights, str) else "[]")
+            img = v.get("image_url")
+            if not img or not str(img).strip().startswith("http"):
+                img = "/static/placeholder.svg"
+            preview = {
+                **v,
+                "vin": vin,
+                "title": title,
+                "price": price,
+                "mileage": mileage,
+                "image_url": img,
+            }
+            dq = compute_data_quality_score(preview)
+            interior_buckets_json = interior_color_buckets_json(v.get("interior_color"), v.get("make"))
+            spec_src = v.get("spec_source_json")
+            if isinstance(spec_src, dict):
+                spec_src = json.dumps(spec_src, ensure_ascii=False)
+            elif spec_src is not None and not isinstance(spec_src, str):
+                spec_src = str(spec_src)
+            pkg_raw = v.get("packages")
+            if isinstance(pkg_raw, dict):
+                packages_json = json.dumps(pkg_raw, ensure_ascii=False)
+            elif isinstance(pkg_raw, str) and pkg_raw.strip() not in ("", "{}", "[]", "null"):
+                packages_json = pkg_raw.strip()
+            else:
+                packages_json = None
             cursor.execute(
-                "SELECT transmission, drivetrain, interior_color, exterior_color, fuel_type, "
-                "body_style, engine_description, cylinders, mpg_city, mpg_highway, trim "
-                "FROM cars WHERE vin = ?",
-                (vin,),
+                """
+                INSERT INTO cars (
+                    vin, title, year, make, model, trim, price, mileage,
+                    image_url, dealer_name, dealer_url, dealer_id, scraped_at,
+                    zip_code, fuel_type, cylinders, transmission, drivetrain,
+                    exterior_color, interior_color, interior_color_buckets, stock_number, gallery, carfax_url, history_highlights, msrp,
+                    dealership_registry_id,
+                    source_url, body_style, engine_description, engine_l, condition, description, data_quality_score,
+                    mpg_city, mpg_highway, is_cpo, model_full_raw,
+                    packages,
+                    listing_active, listing_removed_at, spec_source_json,
+                    first_seen_at, last_price_change_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(vin) DO UPDATE SET
+                    title=CASE
+                        WHEN NULLIF(TRIM(excluded.title),'') IS NOT NULL AND excluded.title != 'Unknown vehicle'
+                        THEN excluded.title
+                        ELSE COALESCE(NULLIF(TRIM(cars.title),''), excluded.title)
+                    END,
+                    year=CASE WHEN IFNULL(excluded.year,0)!=0 THEN excluded.year ELSE COALESCE(cars.year,excluded.year) END,
+                    make=COALESCE(NULLIF(TRIM(excluded.make),''), cars.make),
+                    model=COALESCE(NULLIF(TRIM(excluded.model),''), cars.model),
+                    trim=COALESCE(excluded.trim, trim),
+                    price=CASE WHEN IFNULL(excluded.price,0) > 0 THEN excluded.price ELSE COALESCE(NULLIF(cars.price,0), 0) END,
+                    mileage=CASE WHEN IFNULL(excluded.mileage,0) > 0 THEN excluded.mileage ELSE COALESCE(NULLIF(cars.mileage,0), 0) END,
+                    image_url=CASE
+                        WHEN excluded.image_url LIKE 'http%' THEN excluded.image_url
+                        WHEN cars.image_url LIKE 'http%' THEN cars.image_url
+                        ELSE excluded.image_url
+                    END,
+                    dealer_name=excluded.dealer_name, dealer_url=excluded.dealer_url,
+                    dealer_id=excluded.dealer_id, scraped_at=excluded.scraped_at,
+                    zip_code=excluded.zip_code,
+                    fuel_type=COALESCE(excluded.fuel_type, fuel_type),
+                    cylinders=COALESCE(excluded.cylinders, cylinders),
+                    transmission=COALESCE(excluded.transmission, transmission),
+                    drivetrain=COALESCE(excluded.drivetrain, drivetrain),
+                    exterior_color=COALESCE(NULLIF(TRIM(excluded.exterior_color), ''), exterior_color),
+                    interior_color=COALESCE(NULLIF(TRIM(excluded.interior_color), ''), interior_color),
+                    interior_color_buckets=CASE
+                        WHEN NULLIF(TRIM(excluded.interior_color), '') IS NOT NULL THEN excluded.interior_color_buckets
+                        ELSE cars.interior_color_buckets
+                    END,
+                    stock_number=COALESCE(NULLIF(excluded.stock_number, ''), stock_number),
+                    gallery=COALESCE(
+                        NULLIF(NULLIF(TRIM(excluded.gallery), ''), '[]'),
+                        cars.gallery
+                    ),
+                    carfax_url=excluded.carfax_url, history_highlights=excluded.history_highlights,
+                    msrp=excluded.msrp,
+                    dealership_registry_id=COALESCE(excluded.dealership_registry_id, dealership_registry_id),
+                    source_url=COALESCE(excluded.source_url, source_url),
+                    body_style=COALESCE(excluded.body_style, body_style),
+                    engine_description=COALESCE(excluded.engine_description, engine_description),
+                    engine_l=COALESCE(NULLIF(TRIM(excluded.engine_l), ''), engine_l),
+                    condition=COALESCE(NULLIF(TRIM(excluded.condition), ''), condition),
+                    description=COALESCE(excluded.description, description),
+                    data_quality_score=excluded.data_quality_score,
+                    mpg_city=COALESCE(excluded.mpg_city, mpg_city),
+                    mpg_highway=COALESCE(excluded.mpg_highway, mpg_highway),
+                    is_cpo=COALESCE(excluded.is_cpo, is_cpo),
+                    model_full_raw=COALESCE(excluded.model_full_raw, model_full_raw),
+                    packages=COALESCE(NULLIF(TRIM(excluded.packages), ''), cars.packages),
+                    listing_active=1,
+                    listing_removed_at=NULL,
+                    spec_source_json=CASE
+                        WHEN excluded.spec_source_json IS NOT NULL AND length(trim(excluded.spec_source_json)) > 0
+                        THEN excluded.spec_source_json
+                        ELSE cars.spec_source_json
+                    END,
+                    first_seen_at=COALESCE(cars.first_seen_at, excluded.scraped_at),
+                    last_price_change_at=CASE
+                        WHEN IFNULL(cars.price, -1e12) != IFNULL(excluded.price, -1e12) THEN excluded.scraped_at
+                        ELSE COALESCE(cars.last_price_change_at, cars.first_seen_at, excluded.scraped_at)
+                    END,
+                    internal_notes=cars.internal_notes,
+                    marked_for_review=cars.marked_for_review
+                """,
+                (
+                    vin,
+                    title,
+                    v.get("year"),
+                    v.get("make") or "",
+                    v.get("model") or "",
+                    v.get("trim"),
+                    price,
+                    mileage,
+                    img,
+                    v.get("dealer_name") or "",
+                    v.get("dealer_url"),
+                    v.get("dealer_id") or "",
+                    now,
+                    v.get("zip_code"),
+                    v.get("fuel_type"),
+                    v.get("cylinders"),
+                    v.get("transmission"),
+                    v.get("drivetrain"),
+                    v.get("exterior_color"),
+                    v.get("interior_color"),
+                    interior_buckets_json,
+                    v.get("stock_number") or "",
+                    gallery_json,
+                    v.get("carfax_url"),
+                    highlights_json,
+                    msrp,
+                    v.get("dealership_registry_id"),
+                    v.get("source_url"),
+                    v.get("body_style"),
+                    v.get("engine_description"),
+                    v.get("engine_l"),
+                    v.get("condition"),
+                    v.get("description"),
+                    dq,
+                    v.get("mpg_city"),
+                    v.get("mpg_highway"),
+                    v.get("is_cpo"),
+                    v.get("model_full_raw"),
+                    packages_json,
+                    1,
+                    None,
+                    spec_src,
+                    now,
+                    now,
+                ),
             )
-            rb = cursor.fetchone()
-            logger.info(
-                "UPSERT VERIFY VIN %s mem: tr=%r drv=%r int=%r ext=%r fuel=%r | DB: %s",
-                vin[:17],
-                v.get("transmission"),
-                v.get("drivetrain"),
-                v.get("interior_color"),
-                v.get("exterior_color"),
-                v.get("fuel_type"),
-                rb,
-            )
-    conn.commit()
-    conn.close()
+            count += 1
+            trace_vin = (os.environ.get("SCANNER_TRACE_VIN") or "").strip().upper()
+            if trace_vin and vin.upper() == trace_vin[:17]:
+                cursor.execute(
+                    "SELECT transmission, drivetrain, interior_color, exterior_color, fuel_type, "
+                    "body_style, engine_description, cylinders, mpg_city, mpg_highway, trim "
+                    "FROM cars WHERE vin = ?",
+                    (vin,),
+                )
+                rb = cursor.fetchone()
+                logger.info(
+                    "UPSERT VERIFY VIN %s mem: tr=%r drv=%r int=%r ext=%r fuel=%r | DB: %s",
+                    vin[:17],
+                    v.get("transmission"),
+                    v.get("drivetrain"),
+                    v.get("interior_color"),
+                    v.get("exterior_color"),
+                    v.get("fuel_type"),
+                    rb,
+                )
+        conn.commit()
+    finally:
+        conn.close()
     logger.info("Upserted %d vehicles", count)
     if count > 0:
         try:
@@ -495,7 +501,7 @@ def _infer_drivetrain_from_trim(trim: str | None, title: str | None) -> str | No
 
 def apply_model_specs_corrections(
     vins: list[str] | None = None,
-    conn: sqlite3.Connection | None = None,
+    conn: Any | None = None,
     *,
     dry_run: bool = False,
 ) -> int:

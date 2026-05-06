@@ -84,6 +84,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    function formScalar(name) {
+        const vals = [...document.querySelectorAll(`#search-form [name="${name}"]`)]
+            .map((el) => (el.value || "").trim())
+            .filter(Boolean);
+        return vals[0] || "";
+    }
+
     function runSmartSearch() {
         const q = (input.value || "").trim();
         if (!q) {
@@ -97,11 +104,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const headers = { "Content-Type": "application/json" };
         const t = listingsCsrfToken();
         if (t) headers["X-CSRF-Token"] = t;
+        const zip_code = formScalar("zip_code");
+        const radius = formScalar("radius");
+        const payload = { query: q };
+        if (zip_code) payload.zip_code = zip_code;
+        if (radius) payload.radius = radius;
         fetch("/api/search/smart", {
             method: "POST",
             headers,
             credentials: "same-origin",
-            body: JSON.stringify({ query: q }),
+            body: JSON.stringify(payload),
         })
             .then((r) => {
                 if (!r.ok) throw new Error("search failed");

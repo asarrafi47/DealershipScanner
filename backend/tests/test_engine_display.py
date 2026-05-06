@@ -1,4 +1,4 @@
-"""Engine display (liters + layout) and displacement range search."""
+"""Engine display (displacement-only) and displacement range search."""
 
 from __future__ import annotations
 
@@ -18,18 +18,18 @@ from backend.utils.car_serialize import (
 )
 
 
-def test_build_engine_display_combines_liters_and_layout() -> None:
+def test_build_engine_display_displacement_only_from_engine_l() -> None:
     car = {
         "engine_description": None,
         "engine_l": "4.4",
         "cylinders": 8,
         "fuel_type": "Gas",
     }
-    assert build_engine_display(car, {}) == "4.4L V8"
+    assert build_engine_display(car, {}) == "4.4L"
 
 
-def test_displacement_only_description_merges_verified_cylinders() -> None:
-    """BMW listings often store ``2.0`` / ``2`` without layout — fold in EPA/decoder cylinders."""
+def test_displacement_only_description_merges_verified_cylinders_for_parse() -> None:
+    """Verified cylinders do not add layout text — only help infer liters when missing."""
     car = {
         "engine_description": "2.0",
         "engine_l": None,
@@ -37,10 +37,10 @@ def test_displacement_only_description_merges_verified_cylinders() -> None:
         "fuel_type": "Gasoline",
     }
     vs = {"cylinders": 4, "cylinders_display": 4}
-    assert build_engine_display(car, vs) == "2.0L I4"
+    assert build_engine_display(car, vs) == "2.0L"
 
 
-def test_displacement_only_numeric_engine_l_uses_verified_cylinders() -> None:
+def test_displacement_only_numeric_engine_l() -> None:
     car = {
         "engine_description": None,
         "engine_l": "2",
@@ -48,22 +48,20 @@ def test_displacement_only_numeric_engine_l_uses_verified_cylinders() -> None:
         "fuel_type": "Gas",
     }
     vs = {"cylinders_display": 4}
-    assert build_engine_display(car, vs) == "2.0L I4"
+    assert build_engine_display(car, vs) == "2.0L"
 
 
-def test_rich_engine_description_still_wins() -> None:
+def test_rich_engine_description_yields_displacement_only() -> None:
     car = {
         "engine_description": "2.0L BMW TwinPower Turbo inline 4-cylinder",
         "engine_l": None,
         "cylinders": None,
         "fuel_type": "Gas",
     }
-    out = build_engine_display(car, {"cylinders": 4})
-    assert "TwinPower" in out or "inline" in out.lower()
+    assert build_engine_display(car, {"cylinders": 4}) == "2.0L"
 
 
-def test_build_engine_display_respects_i_in_description() -> None:
-    """Dealer ``engine_description`` wins when present (full string); layout token still used when absent."""
+def test_master_engine_string_epa_aggregate_stripped_to_liters() -> None:
     car = {
         "engine_l": "3.0",
         "cylinders": 6,
@@ -71,8 +69,7 @@ def test_build_engine_display_respects_i_in_description() -> None:
         "fuel_type": "Gas",
     }
     vs = {"master_engine_string": "3.0L I6 (EPA mode aggregate)"}
-    out = build_engine_display(car, vs)
-    assert out == "3.0L I6 (EPA mode aggregate)"
+    assert build_engine_display(car, vs) == "3.0L"
 
 
 def test_parse_engine_displacement_from_engine_l() -> None:

@@ -262,9 +262,16 @@ def hybrid_smart_search(
     filters: dict[str, Any],
     *,
     vector_top_k: int = 100,
+    listing_geo_kwargs: dict[str, Any] | None = None,
 ) -> tuple[list[dict], dict[str, Any]]:
-    """API smart search: natural-language *filters* from ``parse_natural_query`` + vector recall."""
+    """API smart search: natural-language *filters* from ``parse_natural_query`` + vector recall.
+
+    ``listing_geo_kwargs``: optional ``zip_code`` + ``radius_miles`` from the listings form so
+    smart search respects the same radius as the facet grid (must match ``search_cars`` geo filter).
+    """
     sql_kwargs = filters_dict_to_search_cars_kwargs(filters or {})
+    if listing_geo_kwargs:
+        sql_kwargs = {**sql_kwargs, **listing_geo_kwargs}
     meta_extra = {"parsed_filters": dict(filters) if filters else {}}
     rows, meta = hybrid_search_with_kwargs(query_text, sql_kwargs, vector_top_k=vector_top_k)
     meta.update(meta_extra)

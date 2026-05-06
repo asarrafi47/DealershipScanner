@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1993,Buick,Regal,Regal,3.1L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.1,17,25,20,,,,,
+1993,Buick,Regal,Regal,3.1L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.1,17,27,20,,,,,
+1993,Buick,Regal,Regal,3.8L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.8,17,26,20,,,,,

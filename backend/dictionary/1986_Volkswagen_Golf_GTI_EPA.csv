@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1986,Volkswagen,Golf/GTI,Golf,Diesel 1.6L I4 ((NO-CAT)) Diesel,Manual 5-spd,Front-Wheel Drive,Diesel,Compact Cars,4,1.6,31,40,35,,,,,
+1986,Volkswagen,Golf/GTI,Golf,1.8L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,21,25,22,,,,,
+1986,Volkswagen,Golf/GTI,Golf,1.8L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,23,31,26,,,,,
+1986,Volkswagen,Golf/GTI,GTI,1.8L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,23,29,25,,,,,

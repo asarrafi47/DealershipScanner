@@ -301,6 +301,20 @@
                     </div>
                     {% endmacro %}
 
+                    <div class="acc-plain-group sidebar-location-group">
+                        <div class="acc-plain-label">Zip Code</div>
+                        <input type="text" name="zip_code" placeholder="e.g. 28202" maxlength="5"
+                            value="{{ active.zip_code if active else '' }}" class="sidebar-input">
+                    </div>
+                    <div class="acc-plain-group sidebar-location-group">
+                        <div class="acc-plain-label">Radius</div>
+                        <select name="radius" class="sidebar-select">
+                            {% for r in [10, 25, 50, 100, 200, 500] %}
+                            <option value="{{ r }}" {% if active and active.radius == r|string %}selected{% elif (not active or not active.radius) and r == 25 %}selected{% endif %}>{{ r }} miles</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
                     {% call acc("Country", "country") %}
                     <div class="acc-options" id="acc-options-country">
                         {% for country in options.countries %}
@@ -483,19 +497,6 @@
                             <option value="" {% if not active or not active.engine_l_max %}selected{% endif %}>Any</option>
                             {% for e in ["2.0", "2.5", "3.0", "3.5", "4.0", "4.4", "5.0", "5.2", "6.0", "6.2", "8.0"] %}
                             <option value="{{ e }}" {% if active and active.engine_l_max == e %}selected{% endif %}>Up to {{ e }} L</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="acc-plain-group">
-                        <div class="acc-plain-label">Zip Code</div>
-                        <input type="text" name="zip_code" placeholder="e.g. 28202" maxlength="5"
-                            value="{{ active.zip_code if active else '' }}" class="sidebar-input">
-                    </div>
-                    <div class="acc-plain-group">
-                        <div class="acc-plain-label">Radius</div>
-                        <select name="radius" class="sidebar-select">
-                            {% for r in [10, 25, 50, 100, 200, 500] %}
-                            <option value="{{ r }}" {% if active and active.radius == r|string %}selected{% elif (not active or not active.radius) and r == 25 %}selected{% endif %}>{{ r }} miles</option>
                             {% endfor %}
                         </select>
                     </div>

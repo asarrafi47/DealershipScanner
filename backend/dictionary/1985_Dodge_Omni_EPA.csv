@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1985,Dodge,Omni,Omni,1.6L I4 ((FFS) CA model),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,27,36,30,,,,,
+1985,Dodge,Omni,Omni,2.2L I4 ((FFS) CA model),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.2,19,24,21,,,,,
+1985,Dodge,Omni,Omni,2.2L I4 ((FFS) CA model),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.2,22,31,25,,,,,
+1985,Dodge,Omni,Omni,2.2L I4 ((FFS) CA model),Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.2,18,27,21,,,,,
+1985,Dodge,Omni,Omni,1.6L I4 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,26,36,30,,,,,
+1985,Dodge,Omni,Omni,1.6L I4 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,26,36,30,,,,,
+1985,Dodge,Omni,Omni,1.6L I4 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,24,30,27,,,,,
+1985,Dodge,Omni,Omni,2.2L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.2,21,26,23,,,,,
+1985,Dodge,Omni,Omni,2.2L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.2,22,33,26,,,,,
+1985,Dodge,Omni,Omni,2.2L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.2,23,33,27,,,,,
+1985,Dodge,Omni,Omni,2.2L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.2,18,27,21,,,,,
+1985,Dodge,Omni,Omni,"2.2L I4 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.2,17,26,20,,,,,

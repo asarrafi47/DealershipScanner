@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1988,Toyota,Tercel,Tercel,1.5L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,24,29,26,,,,,
+1988,Toyota,Tercel,Tercel,1.5L I4 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,26,32,29,,,,,
+1988,Toyota,Tercel,Tercel,1.5L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,26,33,29,,,,,
+1988,Toyota,Tercel,EZ,1.5L I4 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,30,37,33,,,,,
+1988,Toyota,Tercel,Wagon,1.5L I4 ((FFS)),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.5,21,23,22,,,,,
+1988,Toyota,Tercel,Wagon,1.5L I4 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.5,23,28,25,,,,,

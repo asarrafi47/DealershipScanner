@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1988,Oldsmobile,Cutlass Cruiser,Cutlass Cruiser,2.5L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.5,19,26,22,,,,,
+1988,Oldsmobile,Cutlass Cruiser,Cutlass Cruiser,2.8L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,2.8,18,27,21,,,,,
+1988,Oldsmobile,Cutlass Cruiser,Cutlass Cruiser,3.8L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,3.8,17,26,20,,,,,

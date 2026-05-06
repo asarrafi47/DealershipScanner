@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1984,Mazda,B Pickup,B2000/B2200 Pickup 2WD,2.0L I4,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.0,18,20,19,,,,,
+1984,Mazda,B Pickup,B2000/B2200 Pickup 2WD,2.0L I4,Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.0,21,25,22,,,,,
+1984,Mazda,B Pickup,B2000/B2200 Pickup 2WD,2.0L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.0,21,26,23,,,,,
+1984,Mazda,B Pickup,B2000/B2200 Pickup 2WD,Diesel 2.2L I4 ((DIESEL)) Diesel,Manual 5-spd,Front-Wheel Drive,Diesel,Small Pickup Trucks 2WD,4,2.2,25,29,26,,,,,
+1984,Mazda,B Pickup,B2000/B2200 Pickup 2WD,2.0L I4 ((CALIF) CA model),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.0,17,19,18,,,,,
+1984,Mazda,B Pickup,B2000/B2200 Pickup 2WD,2.0L I4 ((CALIF) CA model),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.0,21,26,23,,,,,
+1984,Mazda,B Pickup,B2000/B2200 Pickup 2WD,Diesel 2.2L I4 ((CALIF) CA model) Diesel,Manual 5-spd,Front-Wheel Drive,Diesel,Small Pickup Trucks 2WD,4,2.2,25,26,26,,,,,

@@ -1,0 +1,7 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1987,Jeep,Cherokee/Wagoneer,4WD,"Diesel 2.1L I4 ((DSL,TRBO) (NO-CAT)) Diesel",Manual 5-spd,All-Wheel Drive,Diesel,Special Purpose Vehicles,4,2.1,24,26,25,,,,,
+1987,Jeep,Cherokee/Wagoneer,4WD,2.5L I4 ((FFS) (SPFI)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.5,17,21,18,,,,,
+1987,Jeep,Cherokee/Wagoneer,4WD,2.5L I4 ((FFS) (SPFI)),Manual 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.5,19,23,20,,,,,
+1987,Jeep,Cherokee/Wagoneer,4WD,2.5L I4 ((FFS) (SPFI)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.5,18,22,19,,,,,
+1987,Jeep,Cherokee/Wagoneer,4WD,4.0L V6 ((FFS) (MPFI)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,15,20,17,,,,,
+1987,Jeep,Cherokee/Wagoneer,4WD,4.0L V6 ((FFS) (MPFI)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,16,21,18,,,,,

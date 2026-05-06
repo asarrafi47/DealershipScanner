@@ -1,0 +1,116 @@
+# CronJob: daily dealership scan using image from local insecure registry.
+#
+# Registry threat model: plain HTTP pulls are convenient on a trusted LAN but are readable/trivially
+# spoofable by anyone who can MITM that segment. Prefer TLS on the registry, a signed pull-through
+# cache, or network isolation; re-audit node registries.yaml and firewall rules when the fleet changes.
+#
+# Insecure registry (HTTP):
+#   Kubernetes does NOT read Docker Desktop's ~/.docker/registries.yaml. Each node's
+#   container runtime must trust the registry, for example:
+#
+#   **containerd** (common on kubeadm / generic clusters): add to config.toml under
+#   [plugins."io.containerd.grpc.v1.cri".registry.mirrors] / configs, or use
+#   hosts.toml in /etc/containerd/certs.d/100.72.195.102:5005/ with:
+#     server = "http://100.72.195.102:5005"
+#   and enable plain-http for that host per containerd docs.
+#
+#   **k3s**: edit /etc/rancher/k3s/registries.yaml with mirrors + config for the host.
+#
+#   **microk8s**: microk8s ctr registry configure /etc/docker/registries or addons docs.
+#
+# After changing runtime config, restart containerd/kubelet as required.
+#
+# Database:
+#   - DATABASE_URL comes from Secret scanner-database-url (PostgreSQL service postgres-service:5432).
+#   - Application code must implement Postgres-backed inventory reads/writes; until then keep SQLite
+#     mounts or complete the migration (see deploy/postgres/postgres.yaml header comments).
+#
+# Parallelism (3 workers):
+#   - completionMode Indexed + completions/parallelism 3 runs three pods, each with a distinct
+#     batch.kubernetes.io/job-completion-index (injected as SCANNER_SHARD_INDEX).
+#   - The scanner partitions dealers.json by list index: position i → shard (i % 3).
+#   - nodeSelector scanner-worker=true + podAntiAffinity (app=car-scanner): one pod per worker node;
+#     spread across machines (e.g. Aorus / MSI / Briefcase) when those nodes carry the label.
+#
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: car-scanner-daily
+  namespace: default
+spec:
+  # Once per day at 07:00 UTC (change as needed)
+  schedule: "0 7 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      # Three parallel pods, each must succeed once (Indexed = distinct completion index per pod).
+      completionMode: Indexed
+      completions: 3
+      parallelism: 3
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            app: car-scanner
+        spec:
+          restartPolicy: OnFailure
+          nodeSelector:
+            scanner-worker: "true"
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchLabels:
+                      app: car-scanner
+                  topologyKey: kubernetes.io/hostname
+          containers:
+            - name: scanner
+              image: 100.72.195.102:5005/car-scanner:v1
+              imagePullPolicy: IfNotPresent
+              args: []
+              # Default CMD from image: python scanner.py
+              env:
+                # Shared inventory DB (PostgreSQL). Create Secret scanner-database-url first.
+                - name: DATABASE_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: scanner-database-url
+                      key: DATABASE_URL
+                # Optional: pgvector tier can use the same DSN when extension is enabled on the DB.
+                # - name: PGVECTOR_URL
+                #   valueFrom:
+                #     secretKeyRef:
+                #       name: scanner-database-url
+                #       key: DATABASE_URL
+                # Optional: disable HAR writes if you don't mount workspace/debug
+                - name: SCANNER_FAILURE_HAR
+                  value: "0"
+                # Split dealers.json across pods (must match completions / parallelism above).
+                - name: SCANNER_SHARD_COUNT
+                  value: "3"
+                - name: SCANNER_SHARD_INDEX
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['batch.kubernetes.io/job-completion-index']
+                # Add secrets via Secret + envFrom as needed (KBB, Ollama URLs, etc.)
+              volumeMounts:
+                - name: scanner-workspace
+                  mountPath: /app/workspace
+                - name: scanner-debug
+                  mountPath: /app/debug
+              # 2Gi request: avoid packing Playwright scans into tiny memory gaps on busy clusters.
+              resources:
+                requests:
+                  cpu: "500m"
+                  memory: "2Gi"
+                limits:
+                  cpu: "4"
+                  memory: "8Gi"
+          volumes:
+            - name: scanner-workspace
+              emptyDir: {}
+            - name: scanner-debug
+              emptyDir: {}

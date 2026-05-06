@@ -1,0 +1,4 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1997,Chrysler,Cirrus,Cirrus,2.4L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.4,18,28,21,,,,,
+1997,Chrysler,Cirrus,Cirrus,2.5L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,2.5,18,26,21,,,,,
+1997,Chrysler,Cirrus,Cirrus,2.5L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,2.5,18,26,21,,,,,

@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1988,Mazda,323,323,1.6L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,21,27,24,,,,,
+1988,Mazda,323,323,1.6L I4 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,23,27,25,,,,,
+1988,Mazda,323,323,"1.6L I4 ((FFS,TRBO))",Manual 5-spd,All-Wheel Drive,Premium Gasoline,Compact Cars,4,1.6,19,22,20,,,,,
+1988,Mazda,323,323,"1.6L I4 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Compact Cars,4,1.6,19,25,22,,,,,
+1988,Mazda,323,323,1.6L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,24,30,27,,,,,
+1988,Mazda,323,Wagon,1.6L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.6,21,26,23,,,,,
+1988,Mazda,323,Wagon,1.6L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Small Station Wagons,4,1.6,24,30,27,,,,,

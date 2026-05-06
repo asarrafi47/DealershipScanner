@@ -455,6 +455,12 @@ def enrich_car(car: dict, dry_run: bool = False, fill_all: bool = False, *, use_
     return updates
 
 
+# SQL: common DMS placeholder strings — align with _is_empty()
+_SQL_JUNK_TEXT_IN = (
+    "'unknown','n/a','na','null','none','--','-','—','tbd','not specified','unspecified','undefined'"
+)
+
+
 def main():
     ap = argparse.ArgumentParser(description="Enrich cars from DICTIONARY EPA data")
     ap.add_argument("--all", action="store_true", help="Reapply to all cars (not just those with gaps)")
@@ -472,22 +478,30 @@ def main():
     if args.all:
         query = "SELECT * FROM cars WHERE make IS NOT NULL AND model IS NOT NULL ORDER BY id"
     else:
-        # Include common listing placeholders so we overwrite "unknown"/dashes with EPA or parsed text.
+        # Cars with any gap in dictionary-fillable fields. Per-field updates still respect _is_empty /
+        # fill_all inside enrich_car — we never overwrite real values here.
+        junk = _SQL_JUNK_TEXT_IN
         query = (
-            "SELECT * FROM cars WHERE make IS NOT NULL AND model IS NOT NULL "
+            "SELECT * FROM cars WHERE make IS NOT NULL AND TRIM(IFNULL(make,''))!='' "
+            "AND model IS NOT NULL AND TRIM(IFNULL(model,''))!='' "
+            "AND year IS NOT NULL AND IFNULL(year,0)!=0 "
             "AND ("
-            " transmission IS NULL OR TRIM(transmission)='' "
-            " OR LOWER(TRIM(IFNULL(transmission,''))) IN ("
-            "   'unknown','n/a','na','null','none','--','-','—','tbd','not specified','unspecified'"
-            " )"
-            " OR drivetrain IS NULL OR TRIM(drivetrain)='' "
-            " OR fuel_type IS NULL OR TRIM(fuel_type)='' "
+            " transmission IS NULL OR TRIM(IFNULL(transmission,''))='' "
+            f" OR LOWER(TRIM(IFNULL(transmission,''))) IN ({junk})"
+            " OR drivetrain IS NULL OR TRIM(IFNULL(drivetrain,''))='' "
+            f" OR LOWER(TRIM(IFNULL(drivetrain,''))) IN ({junk})"
+            " OR fuel_type IS NULL OR TRIM(IFNULL(fuel_type,''))='' "
+            f" OR LOWER(TRIM(IFNULL(fuel_type,''))) IN ({junk})"
             " OR cylinders IS NULL OR cylinders=0 "
+            " OR engine_l IS NULL OR TRIM(COALESCE(CAST(engine_l AS TEXT),'')) IN ('','0','0.0') "
             " OR mpg_city IS NULL OR mpg_city=0 "
-            " OR exterior_color IS NULL OR TRIM(exterior_color)='' "
-            " OR LOWER(TRIM(IFNULL(exterior_color,''))) IN ("
-            "   'unknown','n/a','na','null','none','--','-','—','tbd','not specified','unspecified'"
-            " )"
+            " OR mpg_highway IS NULL OR mpg_highway=0 "
+            " OR body_style IS NULL OR TRIM(IFNULL(body_style,''))='' "
+            f" OR LOWER(TRIM(IFNULL(body_style,''))) IN ({junk})"
+            " OR engine_description IS NULL OR TRIM(IFNULL(engine_description,''))='' "
+            f" OR LOWER(TRIM(IFNULL(engine_description,''))) IN ({junk})"
+            " OR exterior_color IS NULL OR TRIM(IFNULL(exterior_color,''))='' "
+            f" OR LOWER(TRIM(IFNULL(exterior_color,''))) IN ({junk})"
             ") ORDER BY id"
         )
 

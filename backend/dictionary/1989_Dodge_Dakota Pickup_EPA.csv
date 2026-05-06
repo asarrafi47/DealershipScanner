@@ -1,0 +1,8 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1989,Dodge,Dakota Pickup,2WD,2.5L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,4,2.5,18,24,20,,,,,
+1989,Dodge,Dakota Pickup,2WD,2.5L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,4,2.5,19,26,22,,,,,
+1989,Dodge,Dakota Pickup,2WD,3.9L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,3.9,14,18,15,,,,,
+1989,Dodge,Dakota Pickup,2WD,3.9L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,3.9,15,20,17,,,,,
+1989,Dodge,Dakota Pickup,2WD,5.2L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,8,5.2,12,16,14,,,,,
+1989,Dodge,Dakota Pickup,4WD,3.9L V6 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,3.9,13,17,14,,,,,
+1989,Dodge,Dakota Pickup,4WD,3.9L V6 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,3.9,14,18,15,,,,,

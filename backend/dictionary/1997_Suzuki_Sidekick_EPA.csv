@@ -1,0 +1,13 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1997,Suzuki,Sidekick,Sport 2WD,1.8L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.8,19,22,20,,,,,
+1997,Suzuki,Sidekick,Sport 2WD,1.8L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.8,19,23,21,,,,,
+1997,Suzuki,Sidekick,2Door 2WD,1.6L I4 ((FFS)),Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,21,22,21,,,,,
+1997,Suzuki,Sidekick,2Door 2WD,1.6L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,21,24,22,,,,,
+1997,Suzuki,Sidekick,4Door 2WD,1.6L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,19,23,21,,,,,
+1997,Suzuki,Sidekick,4Door 2WD,1.6L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,21,24,22,,,,,
+1997,Suzuki,Sidekick,Sport 4WD,1.8L I4 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.8,19,22,20,,,,,
+1997,Suzuki,Sidekick,Sport 4WD,1.8L I4 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.8,19,23,21,,,,,
+1997,Suzuki,Sidekick,2Door 4WD,1.6L I4 ((FFS)),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,21,22,21,,,,,
+1997,Suzuki,Sidekick,2Door 4WD,1.6L I4 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,21,24,22,,,,,
+1997,Suzuki,Sidekick,4Door 4WD,1.6L I4 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,19,23,21,,,,,
+1997,Suzuki,Sidekick,4Door 4WD,1.6L I4 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,1.6,21,24,22,,,,,

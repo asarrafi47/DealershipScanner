@@ -27,7 +27,8 @@ def validate_csrf_form() -> None:
         abort(403)
 
 
-def validate_csrf_header() -> None:
+def validate_csrf_header(*_args: object, **_kwargs: object) -> None:
+    """Header must match session token (extra positional/keyword args ignored; legacy callers passed ``request``)."""
     expected = session.get(_SESSION_KEY)
     supplied = (request.headers.get("X-CSRF-Token") or "").strip()
     if not expected or not supplied:

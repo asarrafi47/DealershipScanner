@@ -96,7 +96,7 @@
                             data-car-id="{{ car.id }}"
                             aria-label="{% if car_is_saved %}Saved{% else %}Save{% endif %}"
                             title="{% if car_is_saved %}Remove from saved{% else %}Save this car{% endif %}">
-                            <svg class="save-icon" viewBox="0 0 24 24" width="20" fill="{% if car_is_saved %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <svg class="save-icon" viewBox="0 0 24 24" width="20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                             </svg>
                             <span class="save-btn-label">{% if car_is_saved %}Saved{% else %}Save{% endif %}</span>
@@ -331,7 +331,7 @@
 
         <section class="car-chat-section" id="car-chat-section" data-car-id="{{ car.id }}">
             <h2 class="car-chat-heading">Ask about this car</h2>
-            <p class="car-chat-hint">Answers use your local Ollama server (<code>LLM_BASE_URL</code> / <code>LLM_MODEL</code>).</p>
+            <p class="car-chat-hint">AI-generated answers may be incorrect or incomplete. Do not rely on them for VIN verification, pricing, financing, or compliance. They are not from the dealer or from official vehicle records. This feature uses your configured model (<code>LLM_BASE_URL</code> / <code>LLM_MODEL</code>).</p>
             <div id="car-chat-messages" class="car-chat-messages" aria-live="polite"></div>
             <div class="car-chat-input-row">
                 <input type="text" id="car-chat-input" class="car-chat-input" placeholder="e.g. Is this AWD? What engine?" autocomplete="off" />
@@ -354,7 +354,7 @@
             btn.disabled = true;
             fetch(`/api/cars/${btn.dataset.carId}/save`, {
                 method: "POST",
-                headers: { "X-CSRFToken": csrf, "Content-Type": "application/json" },
+                headers: { "X-CSRF-Token": csrf, "Content-Type": "application/json" },
                 credentials: "same-origin",
             })
             .then(r => r.ok ? r.json() : Promise.reject())
@@ -365,8 +365,6 @@
                 btn.setAttribute("aria-label", saved ? "Saved" : "Save");
                 btn.setAttribute("title", saved ? "Remove from saved" : "Save this car");
                 btn.querySelector(".save-btn-label").textContent = saved ? "Saved" : "Save";
-                const icon = btn.querySelector(".save-icon");
-                if (icon) icon.setAttribute("fill", saved ? "currentColor" : "none");
             })
             .catch(() => {})
             .finally(() => { btn.disabled = false; });

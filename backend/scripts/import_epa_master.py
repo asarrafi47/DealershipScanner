@@ -2,8 +2,8 @@
 """
 Download EPA fueleconomy.gov vehicles.csv and import into SQLite table `epa_master`.
 
-Usage (from project root):
-  python scripts/import_epa_master.py
+Usage (from repo root):
+  PYTHONPATH=. python backend/scripts/import_epa_master.py
 
 Requires: inventory.db (or INVENTORY_DB_PATH). Creates `epa_master` if missing.
 

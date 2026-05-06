@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1997,BMW,5 Series,528i,2.8L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.8,17,24,19,,,,,
+1997,BMW,5 Series,528i,2.8L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.8,18,26,21,,,,,
+1997,BMW,5 Series,540i,4.4L V8 ((FFS)),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,4.4,16,22,18,,,,,
+1997,BMW,5 Series,540i,4.4L V8 ((GUZZLER) (FFS)),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,4.4,14,22,16,,,,,

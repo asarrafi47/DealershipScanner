@@ -1,0 +1,5 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1985,Maserati,Biturbo,Biturbo,2.5L V6 ((GUZZLER) (TURBO) CA model),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Minicompact Cars,6,2.5,12,18,14,,,,,
+1985,Maserati,Biturbo,Biturbo,2.5L V6 ((GUZZLER) (TURBO)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,2.5,12,18,14,,,,,
+1985,Maserati,Biturbo,Biturbo,2.5L V6 ((GUZZLER) (TURBO)),Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Minicompact Cars,6,2.5,11,13,12,,,,,
+1985,Maserati,Biturbo,Biturbo,2.5L V6 ((GUZZLER) (TURBO)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Minicompact Cars,6,2.5,12,17,14,,,,,

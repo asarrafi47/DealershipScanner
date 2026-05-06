@@ -541,6 +541,10 @@ h1 {
     border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* ZIP and radius always appear first in the pill row */
+.filter-controls-row .pill-group:has(input[name="zip_code"]) { order: -2; }
+.filter-controls-row .pill-group:has(select[name="radius"])  { order: -1; }
+
 .smart-search-label {
     position: absolute;
     width: 1px;
@@ -979,6 +983,16 @@ h1 {
 .acc-plain-group {
     padding: 10px 0 4px 0;
     border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Location group at top of sidebar — subtle highlight to distinguish */
+.acc-plain-group.sidebar-location-group {
+    background: rgba(255,255,255,0.03);
+    border-bottom-color: rgba(255,255,255,0.08);
+}
+
+.acc-plain-group.sidebar-location-group .acc-plain-label {
+    color: rgba(255,255,255,0.45);
 }
 
 .acc-plain-label {
@@ -1752,6 +1766,14 @@ h1 {
     font-weight: 600;
 }
 
+.db-section-hint {
+    font-size: 14px;
+    line-height: 1.45;
+    color: #777;
+    margin-top: 10px;
+    max-width: 42rem;
+}
+
 /* Find Cars card */
 
 .find-cars-card {
@@ -1917,40 +1939,54 @@ h1 {
 .save-btn {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 8px 16px;
+    gap: 8px;
+    padding: 11px 22px;
     border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.14);
-    background: transparent;
-    color: #999;
-    font-size: 13px;
-    font-weight: 500;
+    border: 1.5px solid rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.07);
+    color: #e0e0e0;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    letter-spacing: 0.01em;
+    transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.12s;
     flex-shrink: 0;
 }
 
 .save-btn:hover {
-    background: rgba(255,255,255,0.06);
-    border-color: rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.13);
+    border-color: rgba(255,255,255,0.4);
     color: #fff;
+    transform: scale(1.03);
+}
+
+.save-btn .save-icon {
+    fill: none;
+    transition: fill 0.18s;
 }
 
 .save-btn--saved {
-    background: rgba(239, 68, 68, 0.12);
-    border-color: rgba(239, 68, 68, 0.4);
-    color: #f87171;
+    background: #e11d48;
+    border-color: #e11d48;
+    color: #fff;
+    box-shadow: 0 0 18px rgba(225, 29, 72, 0.45);
+}
+
+.save-btn--saved .save-icon {
+    fill: currentColor;
 }
 
 .save-btn--saved:hover {
-    background: rgba(239, 68, 68, 0.2);
-    border-color: rgba(239, 68, 68, 0.6);
-    color: #fca5a5;
+    background: #be123c;
+    border-color: #be123c;
+    box-shadow: 0 0 24px rgba(225, 29, 72, 0.6);
+    transform: scale(1.03);
 }
 
 .save-btn:disabled {
     opacity: 0.5;
     cursor: default;
+    transform: none;
 }
 
 /* ── Recommendations carousel ── */

@@ -1,0 +1,10 @@
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
+1984,GMC,Caballero Pickup,2WD,3.8L V6 ((GM-CHEV)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,3.8,15,19,17,,,,,
+1984,GMC,Caballero Pickup,2WD,3.8L V6 ((GM-CHEV)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,3.8,15,22,18,,,,,
+1984,GMC,Caballero Pickup,2WD,5.0L V8 ((GM-CHEV)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.0,14,18,15,,,,,
+1984,GMC,Caballero Pickup,2WD,5.0L V8 ((GM-CHEV)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.0,15,20,17,,,,,
+1984,GMC,Caballero Pickup,2WD,Diesel 5.7L V8 ((350 V8) (DIESEL)) Diesel,Automatic 3-spd,Front-Wheel Drive,Diesel,Standard Pickup Trucks 2WD,8,5.7,18,24,20,,,,,
+1984,GMC,Caballero Pickup,2WD,Diesel 5.7L V8 ((350 V8) (DIESEL)) Diesel,Automatic 4-spd,Front-Wheel Drive,Diesel,Standard Pickup Trucks 2WD,8,5.7,18,26,21,,,,,
+1984,GMC,Caballero Pickup,2WD,3.8L V6 ((GM-BUICK) CA model),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,6,3.8,15,19,17,,,,,
+1984,GMC,Caballero Pickup,2WD,5.0L V8 ((GM-CHEV) CA model),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.0,14,17,15,,,,,
+1984,GMC,Caballero Pickup,2WD,5.0L V8 ((GM-CHEV) CA model),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.0,15,20,17,,,,,

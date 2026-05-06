@@ -42,12 +42,14 @@
 | `/mfa/choose` | **Yes** — `mfa_pending_user_id` in session (post-password) | CSRF on **POST**; user selects **email**, **TOTP** (if enabled), or **phone QR** (when `REDIS_URL` or in-memory in non-prod; see **SEC-063**); **POST** sends the email OTP when applicable |
 | `/mfa/qr-wait`, `/mfa/qr-approve-png`, `POST /mfa/qr/complete` | **Yes** — same `mfa_pending_user_id` + `mfa_qr_attempt_id` (desktop) | `POST /mfa/qr/complete` is CSRF-protected; desktop Socket.IO `mfa_qr_subscribe` requires matching session + attempt; PNG only for the session that created the attempt |
 | `GET/POST /mfa/qr-confirm/<token>` | **No** (browser on phone) | **Unguessable** `token` in URL + **per-view** `ap_nonce` in POST (no session CSRF); per-IP rate limit; state in **Redis** (or in-memory in dev; production needs `REDIS_URL`) with short TTL |
-| `/socket.io/*` (Flask-SocketIO) | Same-origin to app | CORS from `SOCKETIO_CORS_ORIGINS` (default `*` in dev; restrict in prod); `mfa_qr_subscribe` is session-bound before `join_room` |
+| `/socket.io/*` (Flask-SocketIO) | Same-origin to app | Production defaults: explicit origins from `SOCKETIO_CORS_ORIGINS`, else `PUBLIC_BASE_URL` / `MFA_QR_BASE_URL`, else empty allowlist (see SEC-063); dev unset → `*`. `SOCKETIO_CORS_ORIGINS=*` in prod logs a warning. `mfa_qr_subscribe` is session-bound before `join_room` |
 | `/mfa/qr` (TOTP setup image) | **Yes** during pending TOTP setup | `otpauth://` QR as PNG (**Segno**); no public data beyond what the user’s session already holds |
 | `/login`, `/register` | N/A | CSRF on POST; bcrypt passwords; per-IP rate limits on POST; **general** accounts (no org) use these; **dealership** sign-up with org uses `/dealer/register` + `/dealer/login` |
-| `/dev/login`, `/dev/register` | N/A | CSRF on POST; bcrypt; per-IP rate limits; `/dev/register` gated in production |
+| `/dev/login`, `/dev/register` | N/A | CSRF on POST; bcrypt; per-IP rate limits; `/dev/register` gated in production; optional `DEV_IP_ALLOWLIST` (comma IPs / CIDRs) restricts all `/dev/*` when set |
 | `/api/search/smart` | No | CSRF header (`X-CSRF-Token`) + per-IP rate limit (see SEC-043) |
+| `POST /api/session/listings-geo` | No | CSRF header; stores last listings ZIP + radius in the Flask session (for dashboard recommendations) |
 | `/api/car/<id>/chat` | No | CSRF header + per-IP rate limit + max message/body size |
+| `POST /api/cars/<id>/save` | **Yes** — `session['user_id']` | CSRF header (`X-CSRF-Token`, same token as meta `csrf-token`) |
 | `/dev/*` (dashboard, APIs) | **Yes** — `admin_users` in `dev_users.db` (password at `/dev/login` only; **no** 2FA on `/dev` currently) | CSRF on forms + `X-CSRF-Token` on API; POST `/dev/logout`; includes `POST /dev/api/cars/<id>/spec-backfill` (optional Google CSE env for search tier) and `POST /dev/api/cars/<id>/kbb-refresh` (optional `KBB_API_KEY` for IDWS) |
 | `/dev/manifest`, `/api/dev/*` | `DEV_CONSOLE` + optional `DEV_CONSOLE_SECRET` | CSRF on mutations; safe `next` under `/dev/manifest` |
 
@@ -84,7 +86,8 @@
 | `MFA_QR_INMEMORY` | Optional | When `1`/`true`, use in-process attempt store in **production** (intended for tests; not for multi-server) |
 | `MFA_QR_ATTEMPT_TTL_SECONDS` / `MFA_QR_APPROVED_TTL_SECONDS` | Optional | Defaults 120; Redis key TTLs for scan + desktop finalize window |
 | `PUBLIC_BASE_URL` or `MFA_QR_BASE_URL` | **Recommended** behind reverse proxy | Base URL used **inside the QR** for `https://…/mfa/qr-confirm/…` so phones hit the public hostname |
-| `SOCKETIO_CORS_ORIGINS` | Optional | Comma list or `*`; default `*` (same origin in typical deployments) |
+| `SOCKETIO_CORS_ORIGINS` | Optional | Comma-separated origins or `*`. **Dev:** unset → `*`. **Production:** unset → `PUBLIC_BASE_URL` + `MFA_QR_BASE_URL` (deduped), else `[]` (tight; set explicitly if QR Socket.IO breaks). `*` in prod logs a warning. |
+| `DEV_IP_ALLOWLIST` | Optional hardening | Comma-separated client IPs or CIDRs (`10.0.0.0/8`). When set, `/dev/*` allows only those addresses (uses `client_ip`; enable `TRUST_PROXY_HEADERS` behind a trusted proxy). Complements VPN/firewall controls. |
 | `DEALER_PORTAL_DB_PATH` | Optional | Default `dealer_portal.db` (dealer-managed inventory) |
 | `DEALER_UPLOAD_ROOT` | Optional | Absolute or cwd-relative root for dealer photo files (default `uploads/dealer`) |
 | `DEALER_UPLOAD_MAX_BYTES` | Optional | Per-file cap (default 8 MiB) |
@@ -168,10 +171,10 @@
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/utils/csrf.py`, `backend/main.py`, `backend/dev_routes.py`, `backend/dev_console.py`, templates, `frontend/static/{dev.js,listings.js,car_chat.js,dev_console.js}` |
-| **Outcome** | Form POSTs use hidden `csrf_token` (incl. `POST /logout`); JSON / DELETE use `X-CSRF-Token` (same session token). |
-| **Validation** | Replay POST without token → 403; with token from same session → success; `python -m pytest tests/test_app_security_basics.py` (logout 403/405). |
-| **Last verified** | 2026-04-22 |
+| **Scope** | `backend/utils/csrf.py`, `backend/main.py` (incl. `POST /api/session/listings-geo`), `backend/dev/routes.py`, `backend/dev/console.py`, templates (incl. `car.html`), `frontend/static/{dev.js,listings.js,car_chat.js,dev_console.js,main.js}` |
+| **Outcome** | Form POSTs use hidden `csrf_token` (incl. `POST /logout`); JSON / DELETE use `X-CSRF-Token` (same session token). `POST /api/cars/<id>/save` and `POST /api/session/listings-geo` use the same header check in `_csrf_mutating_requests`; `validate_csrf_header` accepts ignored `*args`/`**kwargs` so legacy `validate_csrf_header(request)` cannot raise `TypeError`. |
+| **Validation** | Replay POST without token → 403; with token from same session → success; `python -m pytest backend/tests/test_app_security_basics.py -q` (logout 403/405). |
+| **Last verified** | 2026-05-06 |
 
 ### SEC-060 — App `/logout` POST + CSRF
 
@@ -218,10 +221,10 @@
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/mfa_qr.py`, `backend/utils/mfa_qr_store.py`, `backend/utils/qr_segno.py`, `backend/main.py` (MFA choose/verify, `/mfa/qr` TOTP PNG, Socket.IO init), `run.py`, `frontend/templates/mfa_choose.html`, `frontend/templates/mfa_qr_*.html`, `requirements.txt` |
-| **Outcome** | Optional second factor: user picks **phone QR** on `/mfa/choose`; **Redis** (or in-process in non-prod) stores a short-lived `mfa_qr:attempt:*` with `user_id` + `mfa_intent`; **Segno** renders a PNG of `PUBLIC_BASE_URL`/`MFA_QR_BASE_URL` + `/mfa/qr-confirm/<token>`; phone approves with **per-view `ap_nonce`**; **Flask-SocketIO** `mfa_qr_approved` notifies the browser; `POST /mfa/qr/complete` (CSRF) + `mfa_qr_consume_approved` finalizes the app session. TOTP-enrollment QRs also use **Segno** (no `qrcode` dep). |
-| **Validation** | `python -m pytest tests/test_mfa_qr.py -q`; set `REDIS_URL` in production; run `python run.py` and walk scan + approve. |
-| **Last verified** | 2026-04-25 |
+| **Scope** | `backend/mfa_qr.py`, `backend/utils/mfa_qr_store.py`, `backend/utils/qr_segno.py`, `backend/main.py` (MFA choose/verify, `/mfa/qr` TOTP PNG, Socket.IO via `_socketio_cors_allowed_origins`), `run.py`, `frontend/templates/mfa_choose.html`, `frontend/templates/mfa_qr_*.html`, `requirements.txt` |
+| **Outcome** | Optional second factor: user picks **phone QR** on `/mfa/choose`; **Redis** (or in-process in non-prod) stores a short-lived `mfa_qr:attempt:*` with `user_id` + `mfa_intent`; **Segno** renders a PNG of `PUBLIC_BASE_URL`/`MFA_QR_BASE_URL` + `/mfa/qr-confirm/<token>`; phone approves with **per-view `ap_nonce`**; **Flask-SocketIO** `mfa_qr_approved` notifies the browser; `POST /mfa/qr/complete` (CSRF) + `mfa_qr_consume_approved` finalizes the app session. TOTP-enrollment QRs also use **Segno** (no `qrcode` dep). **Production** Socket.IO CORS does not default to `*` (see `SOCKETIO_CORS_ORIGINS` / `PUBLIC_BASE_URL`). |
+| **Validation** | `python -m pytest tests/test_mfa_qr.py -q`; set `REDIS_URL` in production; run `python run.py` and walk scan + approve; if Socket.IO fails in prod after upgrade, set explicit `SOCKETIO_CORS_ORIGINS`. |
+| **Last verified** | 2026-05-06 |
 
 ### SEC-062 — Resend (email) for MFA; SMS removed
 
@@ -257,11 +260,11 @@
 
 | Field | Content |
 |-------|---------|
-| **Status** | In progress |
+| **Status** | Done |
 | **Scope** | `backend/main.py` (register/login gates), `backend/db/users_db.py` (org + role schema), `backend/billing/stripe_billing.py`, `backend/billing/routes.py`, templates (`register.html`, billing screens) |
-| **Outcome** | One Stripe subscription per org (dealership). New registrations either create an org (owner) or join via invite; non-admin users require an active org subscription to access paid surfaces. Stripe webhook is signature-verified and is the only source of truth for subscription activation. Admin users bypass Stripe and gates via env-driven bootstrap (no hard-coded accounts). |
-| **Validation** | (1) With billing enabled, register non-admin → redirected to Stripe Checkout; no access to paid routes until webhook marks subscription active. (2) Replay webhook with invalid signature → 400/403 and no state change. (3) With `APP_ADMIN_EMAILS` containing a user email, that user registers/logs in without Stripe redirect and can access gated routes. (4) Confirm no Stripe secrets are logged or rendered to templates. |
-| **Last verified** | 2026-04-25 |
+| **Outcome** | One Stripe subscription per org (dealership). New registrations either create an org (owner) or join via invite; non-admin users require an active org subscription to access paid surfaces. Stripe webhook is signature-verified and is the only source of truth for subscription activation. Admin users bypass Stripe and gates via env-driven bootstrap (no hard-coded accounts). Billing templates expose only org display name and navigation links — no Stripe secrets. |
+| **Validation** | `python -m pytest backend/tests/test_billing_gate.py -q` (gates + `test_stripe_webhook_rejects_invalid_signature` + disabled webhook 404). Manual spot-check: `rg -n 'STRIPE_SECRET|STRIPE_WEBHOOK|sk_live|sk_test' frontend/templates` → no secret literals in templates. |
+| **Last verified** | 2026-05-06 |
 
 ### SEC-065 — Env-only app admin usernames (`APP_ADMIN_USERNAMES`)
 
@@ -370,10 +373,10 @@
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` |
-| **Outcome** | Per IP+car rate limit (default 40/min); max message length; max JSON body bytes. User messages remain **untrusted** (prompt injection); model output is advisory only. |
-| **Validation** | Oversized body → 413; long message → `message_too_long`; flood → 429. |
-| **Last verified** | 2026-04-18 |
+| **Scope** | `backend/main.py`, `frontend/templates/car.html` (chat disclosure copy) |
+| **Outcome** | Per IP+car rate limit (default 40/min); max message length; max JSON body bytes. User messages remain **untrusted** (prompt injection); model output is advisory only. Car page states AI answers may be wrong and must not be used for VIN verification, pricing, financing, or compliance. |
+| **Validation** | Oversized body → 413; long message → `message_too_long`; flood → 429; car template includes non-authoritative AI disclaimer adjacent to chat. |
+| **Last verified** | 2026-05-06 |
 
 ### SEC-042 — LLM key & data exfiltration review
 
@@ -454,10 +457,10 @@
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/dev_routes.py`, `backend/db/admin_users_db.py` (`save_dev_admin_user`, `dev_public_registration_allowed`), `backend/utils/registration_validation.py`, `frontend/templates/{admin_login,dev_register,dev}.html`, `frontend/static/style.css` |
-| **Outcome** | Shared field validation for dev register; production self-register only if `ALLOW_DEV_PUBLIC_REGISTER`; non-production closed if `DEV_DISABLE_PUBLIC_REGISTER`; sliding-window limits on `/dev/login` and `/dev/register`; logout is POST with CSRF. |
-| **Validation** | Register with duplicate username → friendly error; login flood → 429; `GET /dev/logout` → 405. |
-| **Last verified** | 2026-04-18 |
+| **Scope** | `backend/dev_routes.py` (`DEV_IP_ALLOWLIST`, `_dev_client_ip_allowed`), `backend/db/admin_users_db.py` (`save_dev_admin_user`, `dev_public_registration_allowed`), `backend/utils/registration_validation.py`, `frontend/templates/{admin_login,dev_register,dev}.html`, `frontend/static/style.css` |
+| **Outcome** | Shared field validation for dev register; production self-register only if `ALLOW_DEV_PUBLIC_REGISTER`; non-production closed if `DEV_DISABLE_PUBLIC_REGISTER`; sliding-window limits on `/dev/login` and `/dev/register`; logout is POST with CSRF. Optional **`DEV_IP_ALLOWLIST`** (IPs / CIDRs, comma-separated) returns **403** for non-matching clients on all `/dev/*` (API JSON includes `reason: dev_ip_allowlist`). Operators should still use VPN, firewall, or separate admin ingress for `/dev` — this env is defense in depth. |
+| **Validation** | Register with duplicate username → friendly error; login flood → 429; `GET /dev/logout` → 405; `python -m pytest backend/tests/test_dev_ip_allowlist.py -q`. |
+| **Last verified** | 2026-05-06 |
 
 ### SEC-054 — Dev manifest login `next` URL allowlist
 
@@ -556,6 +559,9 @@
 | 2026-04-29 | **SEC-064 (follow-up):** Also excluded `csv_out_cleaned_main/` + `csv_out_rejected_main/` (~2.3k paths) and repo-root `data/chroma/` from tracking; same regeneration story as other `csv_out*` trees. |
 | 2026-05-02 | **Hygiene (docs):** Removed obsolete `backend/routes/` shims and corrected **SEC-065** scope row to `backend/dealer/routes.py` (dealer portal blueprint). |
 | 2026-05-02 | **SEC-066:** Documented + gated scanner failure **HAR** capture under `workspace/debug/` (sensitive network artifacts); `.gitignore` excludes that directory. Validation: `python -m pytest backend/tests/test_scanner_intercept_filter.py -q`. |
+| 2026-05-06 | **SEC-011 / SEC-013:** Car save `POST /api/cars/<id>/save` — CSRF via `_csrf_mutating_requests` + `validate_csrf_header(*args, **kwargs)` (ignores legacy `request` positional); import-time check in `main.py` fails fast if an old `csrf` module is loaded; `api_toggle_save` uses `session[\"user_id\"]` (avoids odd `.get` edge cases); `car.html` uses `X-CSRF-Token`. Validation: `python -m pytest backend/tests/test_app_security_basics.py -q`. |
+| 2026-05-06 | **SEC-011 / SEC-013:** `POST /api/session/listings-geo` (CSRF header) persists last listings ZIP + radius for dashboard “Recommended for You” geo filtering; `GET /search` and `/listings` also refresh session when query params include a valid ZIP + radius. Validation: `python -m pytest backend/tests/test_app_security_basics.py -q`. |
+| 2026-05-06 | **SEC-059:** Stripe billing marked **Done** — webhook signature failure → HTTP 400 JSON (`invalid_signature`); billing disabled → webhook **404**; gate tests in `backend/tests/test_billing_gate.py`; templates reviewed for Stripe secret leakage. **SEC-063 / SEC-053:** Production Socket.IO CORS no longer defaults to `*` (`_socketio_cors_allowed_origins` in `backend/main.py`). **`DEV_IP_ALLOWLIST`** optional IP/CIDR gate for `/dev` (`backend/dev/routes.py`). **SEC-041:** Car chat AI non-authoritative disclosure on `car.html`. **Cluster ops:** Registry threat-model note in `deploy/car-scanner/cronjob.yaml`. Validation: `python -m pytest backend/tests/test_billing_gate.py backend/tests/test_dev_ip_allowlist.py backend/tests/test_app_security_basics.py -q`. |
 
 **Done items** stay in their phase table with **Status: Done** and **Last verified** — do not duplicate into a second list.
 
