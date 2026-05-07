@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 from typing import Any
 
 BASE = "https://www.fueleconomy.gov/ws/rest/vehicle"
-DEFAULT_UA = "DealershipScanner/1.0 (+https://example.local; vehicle reference ingest)"
+DEFAULT_UA = "SarrafiCollection/1.0 (+https://example.local; vehicle reference ingest)"
 
 
 def _local_tag(tag: str) -> str:

@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function listingsFilterUrl(registryId) {
-        const u = new URL("/search", window.location.origin);
+        const u = new URL("/listings", window.location.origin);
         u.searchParams.set("dealership_registry_id", String(registryId));
         return u.pathname + u.search;
     }

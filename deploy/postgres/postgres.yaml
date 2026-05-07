@@ -1,32 +1,11 @@
-# PostgreSQL for shared scanner inventory (multi-node CronJob workers).
-#
-# Prerequisites:
-#   1) Longhorn installed; StorageClass "longhorn" exists.
-#   2) Create credentials BEFORE Deployment/CronJob:
-#        kubectl create secret generic postgres-credentials \
-#          --namespace default \
-#          --from-literal=POSTGRES_USER=dealership \
-#          --from-literal=POSTGRES_PASSWORD='YOUR_STRONG_PASSWORD' \
-#          --from-literal=POSTGRES_DB=dealership
-#   3) Scanner CronJob needs DATABASE_URL (see deploy/car-scanner/cronjob.yaml). Example:
-#        kubectl create secret generic scanner-database-url \
-#          --namespace default \
-#          --from-literal=DATABASE_URL='postgresql://dealership:YOUR_STRONG_PASSWORD@postgres-service:5432/dealership'
-#
-# Note: DealershipScanner inventory code is still largely SQLite-oriented. Using Postgres end-to-end
-# requires a migration of backend/db/inventory_db.py (and related modules). This stack gives you the
-# cluster database service; wire application support separately.
-#
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-data
-  namespace: default
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: longhorn
+  storageClassName: local-path 
   resources:
     requests:
       storage: 10Gi
@@ -51,9 +30,12 @@ spec:
       labels:
         app: postgres
     spec:
+      nodeSelector:
+        purpose: database
       containers:
         - name: postgres
           image: postgres:16-bookworm
+          imagePullPolicy: IfNotPresent  # <--- Crucial for local images
           ports:
             - containerPort: 5432
               name: postgres

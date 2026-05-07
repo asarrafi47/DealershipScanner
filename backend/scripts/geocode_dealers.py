@@ -35,7 +35,7 @@ logging.basicConfig(
 log = logging.getLogger("geocode_dealers")
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
-USER_AGENT = "DealershipScanner/1.0 (arman@khash.com)"
+USER_AGENT = "SarrafiCollection/1.0 (arman@khash.com)"
 RATE_LIMIT_SEC = 1.1  # OSM Nominatim: max 1 req/sec
 
 # Domain-fragment → (city, state, zip) for dealers Nominatim can't find.

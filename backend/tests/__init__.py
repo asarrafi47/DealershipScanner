@@ -1,1 +1,1 @@
-"""Test package for DealershipScanner."""
+"""Test package for Sarrafi Collection."""

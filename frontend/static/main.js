@@ -50,46 +50,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (typeof CAR_ROWS === "undefined") return;
 
-    // ── Dock filter bar (Motion.dev animates content sliding right when filter appears) ──
-    const filterBar  = document.getElementById("filter-bar");
-    const page       = document.querySelector(".page");
     const dashContent = document.getElementById("dash-content");
-    const DOCK_AT    = 60;
-    const UNDOCK_AT  = 20;
-    let isDocked     = false;
+    const filterTopRow = document.getElementById("filter-top-row");
 
-    import("https://esm.sh/motion@latest").then(({ animate }) => {
-        const dockedInner = document.getElementById("filter-docked-inner");
-        const DOCK_MARGIN = 248;
-        const DURATION    = 0.35;
-        const EASING      = [0.4, 0, 0.2, 1];
+    // ── Listings: smooth compact header (same pills/search UI — no sidebar swap / layout jump) ──
+    const COMPACT_AT = 52;
+    const EXPAND_AT = 28;
+    let listingsCompact = false;
 
-        function setDocked(on) {
-            if (isDocked === on) return;
-            isDocked = on;
-            filterBar.classList.toggle("docked", on);
-            page.classList.toggle("docked", on);
-            if (on) {
-                dockedInner.style.pointerEvents = "all";
-                animate(dockedInner, { opacity: 1, x: 0 }, { duration: DURATION, ease: EASING });
-                animate(dashContent, { marginLeft: `${DOCK_MARGIN}px` }, { duration: DURATION, ease: EASING });
-            } else {
-                animate(dockedInner, { opacity: 0, x: -20 }, { duration: DURATION, ease: EASING }).finished.then(() => {
-                    dockedInner.style.pointerEvents = "none";
-                });
-                animate(dashContent, { marginLeft: 0 }, { duration: DURATION, ease: EASING }).finished.then(() => {
-                    dashContent.style.marginLeft = "";
-                });
-            }
-        }
+    function setListingsCompact(on) {
+        if (listingsCompact === on) return;
+        listingsCompact = on;
+        if (filterTopRow) filterTopRow.classList.toggle("listings-filters-compact", on);
+    }
 
-        function onScroll() {
-            if (!isDocked && window.scrollY > DOCK_AT)   setDocked(true);
-            if (isDocked  && window.scrollY < UNDOCK_AT) setDocked(false);
-        }
+    /** Sidebar layout: spacing comes from CSS — clear any legacy inline padding from older builds. */
+    function syncListingsMainPadding() {
+        if (!dashContent || !document.body.classList.contains("listings-page")) return;
+        dashContent.style.marginLeft = "";
+        dashContent.style.paddingTop = "";
+    }
 
-        window.addEventListener("scroll", onScroll, { passive: true });
-    });
+    function onListingsScrollCompact() {
+        if (!filterTopRow || !document.body.classList.contains("listings-page")) return;
+        const y = window.scrollY;
+        if (!listingsCompact && y > COMPACT_AT) setListingsCompact(true);
+        if (listingsCompact && y < EXPAND_AT) setListingsCompact(false);
+    }
+
+    if (document.body.classList.contains("listings-page") && filterTopRow && dashContent) {
+        window.addEventListener(
+            "scroll",
+            () => {
+                onListingsScrollCompact();
+            },
+            { passive: true },
+        );
+        requestAnimationFrame(() => {
+            onListingsScrollCompact();
+            syncListingsMainPadding();
+        });
+    }
 
     // ── Helpers ────────────────────────────────────────────────────────
 
@@ -550,8 +551,9 @@ document.addEventListener("DOMContentLoaded", () => {
             resultsGrid.innerHTML = "";
             if (emptyState) {
                 emptyState.style.display = "";
-                emptyState.querySelector(".no-results").textContent = "Enter a ZIP code, radius, and make to search";
-                emptyState.querySelector(".no-results-sub").textContent = "";
+                emptyState.querySelector(".no-results").textContent = "Set your area and choose a make";
+                emptyState.querySelector(".no-results-sub").textContent =
+                    "Enter a ZIP and radius, then select at least one make above. Results appear here when vehicles match.";
             }
             if (resultsCount) resultsCount.textContent = "";
             return;

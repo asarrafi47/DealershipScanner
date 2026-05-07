@@ -31,7 +31,7 @@ warnings.filterwarnings(
     message=r".*doesn't match a supported version.*",
 )
 
-# Repo root: …/DealershipScanner (file is …/backend/scripts/<this>.py).
+# Repo root of this checkout (file is …/backend/scripts/<this>.py).
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))

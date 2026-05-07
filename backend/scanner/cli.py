@@ -273,7 +273,7 @@ def _log_gallery_bins(dealer_name: str, phase: str, vehicles: list[dict[str, Any
     )
 
 
-MANIFEST_PATH = ROOT / "dealers.json"
+MANIFEST_PATH = Path(os.environ.get("DEALERS_MANIFEST_PATH") or (ROOT / "dealers.json"))
 DEBUG_DIR = ROOT / "debug"
 WORKSPACE_DEBUG_DIR = ROOT / "workspace" / "debug"
 

@@ -60,3 +60,16 @@ def test_csp_enforce_header_when_enabled(monkeypatch) -> None:
     assert "default-src" in csp
     assert "script-src" in csp
     assert "nonce-" in csp
+
+
+def test_search_url_redirects_to_listings_with_query() -> None:
+    """Canonical inventory search is ``/listings``; ``/search`` is a compatibility alias."""
+    from backend.main import app
+
+    with app.test_client() as c:
+        rv = c.get("/search?zip_code=90210&radius=50", follow_redirects=False)
+    assert rv.status_code == 302
+    loc = rv.headers.get("Location") or ""
+    assert "/listings" in loc
+    assert "zip_code=90210" in loc
+    assert "radius=50" in loc

@@ -16,6 +16,9 @@ data:
   # Image storage
   SCANNER_VDP_IMAGE_DOWNLOAD_DIR: "/data/vdp_images"
 
+  # Dealer manifest — written by discovery CronJob, read by scanner CronJob
+  DEALERS_MANIFEST_PATH: "/data/dealers.json"
+
   # App settings
   LISTINGS_INCLUDE_INCOMPLETE_CARS: "0"
   APP_ADMIN_USERNAMES: "asarrafi"

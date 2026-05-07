@@ -3,17 +3,17 @@
 <head>
     <title>My inventory</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
 </head>
 <body>
 
 <div class="page">
 
     <nav class="topbar">
-        <div class="logo">Dealership Scanner</div>
+        <div class="logo">Sarrafi Collection</div>
         <div class="nav-links">
             <a href="/dashboard">Dashboard</a>
-            <a href="/listings">Listings</a>
+            <a href="{{ url_for('listings') }}">Listings</a>
             <a href="/inventory" class="nav-link-active">My inventory</a>
             {% include "_app_logout.html" %}
         </div>

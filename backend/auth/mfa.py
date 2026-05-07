@@ -105,7 +105,7 @@ def mfa_qr_confirm_get(attempt_id: str):
     nonce = mfa_qr_set_form_nonce(aid)
     if not nonce:
         return render_template("mfa_qr_error.html", error="This link expired or is invalid.", title="Link invalid"), 404
-    return render_template("mfa_qr_confirm.html", attempt_id=aid, ap_nonce=nonce, site_name="DealershipScanner")
+    return render_template("mfa_qr_confirm.html", attempt_id=aid, ap_nonce=nonce, site_name="Sarrafi Collection")
 
 
 @bp.post("/mfa/qr-confirm/<path:attempt_id>")

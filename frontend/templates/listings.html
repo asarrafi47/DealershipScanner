@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Listings</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search inventory — Sarrafi Collection</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
 </head>
-<body data-listings-poll-ms="{{ listings_poll_ms | default(0) | int }}">
+<body class="listings-page" data-listings-poll-ms="{{ listings_poll_ms | default(0) | int }}">
 
 <script type="application/json" id="ds-listings-car-rows" nonce="{{ csp_nonce }}">{{ options.car_rows | tojson }}</script>
 <script type="application/json" id="ds-listings-all-cars" nonce="{{ csp_nonce }}">{{ options.all_cars | tojson }}</script>
@@ -17,11 +19,10 @@
 
 <div class="page">
 
-    <nav class="topbar">
-        <div class="logo">Dealership Scanner</div>
+    <nav class="topbar listings-topbar">
+        <a href="{{ url_for('home') }}" class="logo logo--link">Sarrafi Collection</a>
         <div class="nav-links">
-            <a href="/dashboard">Dashboard</a>
-            <a href="/listings">Listings</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
             {% if logged_in_user %}
             <a href="/inventory">My inventory</a>
             {% endif %}
@@ -29,22 +30,38 @@
         </div>
     </nav>
 
-    {# ── Filter bar — starts centered, docks left on scroll ── #}
-    <div class="filter-bar" id="filter-bar">
-        <form method="GET" action="/search" id="search-form">
+    {# ── Filters in left sidebar; results grid in main column ── #}
+    <div class="filter-bar listings-filter-shell" id="filter-bar">
+        <form method="GET" action="{{ url_for('listings') }}" id="search-form">
             <input type="hidden" name="q" id="form-q-sync" value="{{ active.get('q', '') if active else '' }}">
             <input type="hidden" name="dealership_registry_id" id="dealership-registry-id"
                 value="{{ active.dealership_registry_id if active and active.get('dealership_registry_id') else '' }}">
 
-            {# TOP MODE: search row + controls row (wraps cleanly) #}
+            <div class="listings-layout">
+            <aside class="listings-sidebar" aria-label="Search filters">
+            {# Search + pill filters (compact vertical strip) #}
             <div class="filter-top-row" id="filter-top-row">
+                <div class="listings-filter-inner">
+                <header class="listings-intro" aria-labelledby="listings-intro-heading">
+                    <p class="listings-intro-eyebrow">Inventory search</p>
+                    <h2 class="listings-intro-heading" id="listings-intro-heading">Browse live listings</h2>
+                    <p class="listings-intro-sub">Filter by location and make, or describe what you want in plain English.</p>
+                </header>
+
+                <p class="smart-search-hint" id="smart-search-hint">
+                    <span class="smart-search-hint__label">Example</span>
+                    white BMW X5 under $70k · or paste a VIN
+                </p>
+
+                <div class="listings-search-card">
                 <div class="filter-search-row">
                     <div class="smart-search-wrap">
                         <label class="smart-search-label" for="smart-search-input">Smart search</label>
                         <input type="search" id="smart-search-input" class="smart-search-input"
-                            placeholder="VIN, listing #, or natural language (e.g. white X5 under 70k)"
+                            placeholder="Keywords, budget, or VIN"
                             value="{{ active.get('q', '') if active else '' }}"
-                            autocomplete="off" spellcheck="false">
+                            autocomplete="off" spellcheck="false"
+                            aria-describedby="smart-search-hint">
                         <div id="smart-parse-chips" class="smart-parse-chips" aria-live="polite"></div>
                     </div>
                 </div>
@@ -270,12 +287,35 @@
                 </div>
 
                 <div class="pill-actions">
-                    <a href="/listings" class="pill-clear-btn">Clear</a>
+                    <a href="{{ url_for('listings') }}" class="pill-clear-btn">Clear all</a>
+                </div>
+                </div>
                 </div>
                 </div>
             </div>
+            </aside>
 
-            {# DOCKED MODE: vertical accordion (shown when scrolled) #}
+            <main class="listings-main-column">
+                {# ── Main content — rendered entirely by JS ── #}
+                <div class="dash-content listings-main" id="dash-content">
+                    <p class="results-count" id="results-count"></p>
+                    <div class="results-grid" id="results-grid"></div>
+                    <div class="empty-state" id="empty-state" style="display:none" role="status">
+                        <div class="listings-empty-card">
+                            <div class="listings-empty-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/>
+                                </svg>
+                            </div>
+                            <p class="no-results">No vehicles matched your filters.</p>
+                            <p class="no-results-sub">Try removing some filters to broaden your search.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            </div>
+
+            {# DOCKED MODE: vertical accordion (legacy duplicate; hidden on listings) #}
             <div class="filter-docked-inner" id="filter-docked-inner">
 
                 <div class="docked-header">
@@ -503,21 +543,11 @@
                 </div>
 
                 <div class="docked-footer">
-                    <a href="/listings" class="secondary-button docked-clear-btn">Clear</a>
+                    <a href="{{ url_for('listings') }}" class="secondary-button docked-clear-btn">Clear</a>
                 </div>
             </div>
 
         </form>
-    </div>
-
-    {# ── Main content — rendered entirely by JS ── #}
-    <div class="dash-content" id="dash-content">
-        <p class="results-count" id="results-count"></p>
-        <div class="results-grid" id="results-grid"></div>
-        <div class="empty-state" id="empty-state" style="display:none">
-            <p class="no-results">No vehicles matched your filters.</p>
-            <p class="no-results-sub">Try removing some filters to broaden your search.</p>
-        </div>
     </div>
 
 </div>

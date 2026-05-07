@@ -1,6 +1,6 @@
 # Security Master Todo
 
-**Single source of truth** for security hardening in DealershipScanner.  
+**Single source of truth** for security hardening in the Sarrafi Collection project.  
 **Policy:** Security-related work is **not complete** until this document reflects reality: statuses, validation evidence, and the [Changelog](#changelog) are updated in the **same change** as the code or config.
 
 ---

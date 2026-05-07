@@ -16,8 +16,7 @@ logger = logging.getLogger(__name__)
 
 DDG_INSTANT_URL = "https://api.duckduckgo.com/"
 USER_AGENT = (
-    "DealershipScanner/1.0 (+https://github.com/ DealershipScanner; "
-    "dealer website lookup)"
+    "SarrafiCollection/1.0 (+https://example.local; dealer website lookup)"
 )
 MAX_DD_TIMEOUT_S = 15.0
 

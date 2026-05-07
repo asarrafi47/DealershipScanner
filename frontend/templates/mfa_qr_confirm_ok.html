@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ title or "Done" }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
 </head>
 <body>
 <div class="page" style="max-width: 480px; margin: 0 auto; padding: 2rem 1.25rem;">

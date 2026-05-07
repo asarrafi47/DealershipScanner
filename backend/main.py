@@ -1,4 +1,4 @@
-"""DealershipScanner Flask application."""
+"""Sarrafi Collection — Flask web application."""
 
 from backend.utils.project_env import load_project_dotenv
 
@@ -47,10 +47,6 @@ from backend.db.users_db import (
     save_user,
     set_user_totp,
     sync_env_admin_user_row,
-)
-from backend.utils.hybrid_search import (
-    flask_request_to_search_cars_kwargs,
-    hybrid_search_with_kwargs,
 )
 from backend.enrichment.knowledge_engine import prepare_car_detail_context
 from backend.listings.geo_session import (
@@ -142,7 +138,7 @@ _LOGIN_RPM = int(os.environ.get("RATE_LIMIT_LOGIN_PER_MIN", "30"))
 _REGISTER_RPM = int(os.environ.get("RATE_LIMIT_REGISTER_PER_MIN", "10"))
 _MFA_VERIFY_RPM = int(os.environ.get("RATE_LIMIT_MFA_VERIFY_PER_MIN", "20"))
 _MFA_TOTP_ENROLL_RPM = int(os.environ.get("RATE_LIMIT_MFA_TOTP_ENROLL_PER_MIN", "10"))
-_MFA_ISSUER = (os.environ.get("MFA_ISSUER") or "DealershipScanner").strip() or "DealershipScanner"
+_MFA_ISSUER = (os.environ.get("MFA_ISSUER") or "Sarrafi Collection").strip() or "Sarrafi Collection"
 
 
 def _client_ip() -> str:
@@ -230,12 +226,18 @@ def inject_csrf_and_flags():
         (session.get("user_dealer_id") or "").strip() or (session.get("user_dealership_registry_id") or "").strip()
     )
     nav_store_admin = bool(session.get("user_id")) and (role == "admin" or has_scope)
+    static_ver = "1"
+    try:
+        static_ver = str(int(Path(app.static_folder).resolve().joinpath("style.css").stat().st_mtime))
+    except OSError:
+        pass
     return {
         "csrf_token": ensure_csrf_token(),
         "csp_nonce": getattr(g, "csp_nonce", "") or "",
         "is_production": is_production_env(),
         "logged_in_user": session.get("username"),
         "nav_store_admin": nav_store_admin,
+        "static_cache_ver": static_ver,
     }
 
 
@@ -395,7 +397,10 @@ def serve_car_image(filename):
 
 @app.route("/")
 def home():
-    return redirect("/login")
+    if session.get("user_id"):
+        return redirect("/dashboard")
+    from datetime import datetime
+    return render_template("landing.html", now=datetime.utcnow())
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -1178,66 +1183,12 @@ def dashboard():
 
 @app.route("/search")
 def search():
-    persist_listings_geo_from_request(request, session)
-    g = request.args.getlist
-
-    def scalar(key):
-        vals = [v.strip() for v in request.args.getlist(key) if v.strip()]
-        return vals[-1] if vals else ""
-
-    zip_code = scalar("zip_code")
-    radius = scalar("radius")
-    max_price = scalar("max_price")
-    max_mileage = scalar("max_mileage")
-    reg_id_raw = scalar("dealership_registry_id")
-
-    dealership_registry_id = None
-    if reg_id_raw:
-        try:
-            dealership_registry_id = int(reg_id_raw)
-        except ValueError:
-            dealership_registry_id = None
-
-    q_text = scalar("q") or scalar("search")
-    sql_kwargs = flask_request_to_search_cars_kwargs(request)
-    if q_text:
-        results, _ = hybrid_search_with_kwargs(q_text, sql_kwargs, vector_top_k=100)
-    else:
-        results = search_cars(**sql_kwargs)
-
-    initial_grid_cars = []
-    if q_text:
-        initial_grid_cars = [serialize_car_for_listings_grid(c) for c in results]
-
-    active = {
-        "make": g("make"),
-        "model": g("model"),
-        "trim": g("trim"),
-        "fuel_type": g("fuel_type"),
-        "cylinders": g("cylinders"),
-        "transmission": g("transmission"),
-        "drivetrain": g("drivetrain"),
-        "body_style": g("body_style"),
-        "exterior_color": g("exterior_color"),
-        "interior_color": g("interior_color"),
-        "country": g("country"),
-        "max_price": max_price,
-        "max_mileage": max_mileage,
-        "engine_l_min": scalar("engine_l_min") or scalar("engine_displacement_l_min"),
-        "engine_l_max": scalar("engine_l_max") or scalar("engine_displacement_l_max"),
-        "zip_code": zip_code,
-        "radius": radius,
-        "dealership_registry_id": reg_id_raw,
-        "q": q_text,
-    }
-
-    return render_template(
-        "listings.html",
-        active=active,
-        options=get_filter_options(),
-        initial_grid_cars=initial_grid_cars,
-        listings_poll_ms=_listings_client_poll_ms(),
-    )
+    """Backward-compatible alias: inventory search lives at ``/listings``."""
+    dest = url_for("listings")
+    qs = request.query_string.decode("utf-8")
+    if qs:
+        dest = f"{dest}?{qs}"
+    return redirect(dest, code=302)
 
 
 @app.route("/api/session/listings-geo", methods=["POST"])

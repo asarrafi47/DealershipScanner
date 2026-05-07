@@ -28,7 +28,7 @@ from backend.scanner.utils.vdp_spec_parse import parse_condition_from_listing_ht
 logger = logging.getLogger(__name__)
 
 USER_AGENT = (
-    "DealershipScanner/1.0 (+https://github.com/DealershipScanner; listing gap-fill)"
+    "SarrafiCollection/1.0 (+https://example.local; listing gap-fill)"
 )
 DDG_INSTANT_URL = "https://api.duckduckgo.com/"
 

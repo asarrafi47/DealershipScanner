@@ -3,17 +3,17 @@
 <head>
     <title>{{ car.title }}</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
 </head>
 <body>
 
     <div class="page">
 
         <nav class="topbar">
-            <div class="logo">Dealership Scanner</div>
+            <div class="logo">Sarrafi Collection</div>
             <div class="nav-links">
                 <a href="/dashboard">Dashboard</a>
-                <a href="/listings">Listings</a>
+                <a href="{{ url_for('listings') }}">Listings</a>
                 {% if logged_in_user %}
                 <a href="/inventory">My inventory</a>
                 {% endif %}
@@ -195,99 +195,6 @@
                             <span class="spec-label">Stock #</span>
                             <span class="spec-value">{{ car.stock_number | fmt_spec }}</span>
                         </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="listing-packages-panel" role="region" aria-label="Packages and equipment">
-                        <h2 class="listing-packages-heading">Packages &amp; equipment</h2>
-                        <p class="listing-packages-lead">Structured package names and features from the dealer listing, optional vision-assisted cabin notes, and normalized equipment when available — not the full marketing page.</p>
-                        {% if listing_monroney_options or listing_monroney_standard %}
-                        <details class="listing-package-disclosure" open>
-                            <summary class="listing-package-summary">
-                                <span class="listing-package-title">Window sticker (Monroney)</span>
-                                <span class="spec-source-badge" title="Read from label photo or VDP text">Sticker data</span>
-                            </summary>
-                            {% if listing_monroney_options %}
-                            <h3 class="listing-packages-sub-heading">Optional equipment</h3>
-                            <ul class="listing-package-features">
-                                {% for line in listing_monroney_options %}
-                                <li>{{ line }}</li>
-                                {% endfor %}
-                            </ul>
-                            {% endif %}
-                            {% if listing_monroney_standard %}
-                            <h3 class="listing-packages-sub-heading">Standard equipment highlights</h3>
-                            <ul class="listing-package-features">
-                                {% for line in listing_monroney_standard %}
-                                <li>{{ line }}</li>
-                                {% endfor %}
-                            </ul>
-                            {% endif %}
-                        </details>
-                        {% endif %}
-                        {% if llava_interior_section %}
-                        <details class="listing-package-disclosure">
-                            <summary class="listing-package-summary">
-                                <span class="listing-package-title">Interior (cabin vision)</span>
-                                <span class="spec-source-badge">Vision assist</span>
-                            </summary>
-                            {% if llava_interior_section.get('guess') %}
-                            <p class="listing-vision-guess">{{ llava_interior_section.guess }}</p>
-                            {% endif %}
-                            {% if llava_interior_section.get('buckets') %}
-                            <ul class="listing-package-features">
-                                {% for b in llava_interior_section.buckets %}
-                                <li>{{ b }}</li>
-                                {% endfor %}
-                            </ul>
-                            {% endif %}
-                            {% if llava_interior_section.get('evidence') %}
-                            <p class="listing-vision-evidence">{{ llava_interior_section.evidence }}</p>
-                            {% endif %}
-                        </details>
-                        {% endif %}
-                        {% for pkg in listing_packages_sections %}
-                        <details class="listing-package-disclosure">
-                            <summary class="listing-package-summary">
-                                <span class="listing-package-title">{{ pkg.name }}</span>
-                                {% if pkg.features %}
-                                <span class="spec-source-badge" title="{{ pkg.features|length }} feature{{ 's' if pkg.features|length != 1 else '' }}">{{ pkg.features|length }} {% if pkg.features|length == 1 %}item{% else %}items{% endif %}</span>
-                                {% endif %}
-                                {% if pkg.get('from_vision') %}
-                                <span class="spec-source-badge">Vision assist</span>
-                                {% elif pkg.get('from_listing_description') %}
-                                <span class="spec-source-badge">From listing description</span>
-                                {% endif %}
-                            </summary>
-                            {% if pkg.features %}
-                            <ul class="listing-package-features">
-                                {% for feat in pkg.features %}
-                                <li>{{ feat }}</li>
-                                {% endfor %}
-                            </ul>
-                            {% else %}
-                            <p class="listing-packages-sub-heading">No details extracted yet</p>
-                            {% endif %}
-                        </details>
-                        {% endfor %}
-                        {% if listing_standalone_features %}
-                        <h3 class="listing-packages-sub-heading">Also noted in listing</h3>
-                        <ul class="listing-package-features listing-package-inline-list">
-                            {% for feat in listing_standalone_features %}
-                            <li>{{ feat }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                        {% if listing_observed_features %}
-                        <h3 class="listing-packages-sub-heading">Observed on vehicle</h3>
-                        <ul class="listing-package-features listing-package-inline-list">
-                            {% for feat in listing_observed_features %}
-                            <li>{{ feat }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                        {% if not packages_panel_has_content %}
-                        <p class="listing-packages-empty">No structured package data yet.</p>
                         {% endif %}
                     </div>
 

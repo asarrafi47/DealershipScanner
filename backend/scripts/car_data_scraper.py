@@ -162,7 +162,7 @@ def fetch_models_for_make_year(api_make: str, year: int, *, timeout_sec: float =
     """
     enc = quote(api_make, safe="")
     url = f"https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/{enc}/modelyear/{year}?format=json"
-    req = Request(url, headers={"User-Agent": "DealershipScannerCarDataScraper/1.1"})
+    req = Request(url, headers={"User-Agent": "SarrafiCollectionCarDataScraper/1.1"})
     try:
         with urlopen(req, timeout=timeout_sec) as resp:
             raw = resp.read().decode("utf-8", errors="replace")
@@ -190,7 +190,7 @@ def fetch_makes_for_vehicle_type(vehicle_type: str, *, timeout_sec: float = 45.0
     """Call NHTSA GetMakesForVehicleType for one VPIC vehicle type string."""
     enc = quote(vehicle_type, safe="")
     url = f"https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/{enc}?format=json"
-    req = Request(url, headers={"User-Agent": "DealershipScannerCarDataScraper/1.1"})
+    req = Request(url, headers={"User-Agent": "SarrafiCollectionCarDataScraper/1.1"})
     try:
         with urlopen(req, timeout=timeout_sec) as resp:
             raw = resp.read().decode("utf-8", errors="replace")

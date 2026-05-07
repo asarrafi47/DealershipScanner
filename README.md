@@ -1,4 +1,4 @@
-# DealershipScanner
+# Sarrafi Collection
 
 Flask app + inventory scanner for dealership listings, enrichment (EPA / specs), and hybrid (SQL + pgvector) search.
 
@@ -7,8 +7,8 @@ Flask app + inventory scanner for dealership listings, enrichment (EPA / specs),
 ### 1. Clone and Python environment
 
 ```bash
-git clone <your-remote-url> DealershipScanner
-cd DealershipScanner
+git clone <your-remote-url> <repo-directory>
+cd <repo-directory>
 python3 -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt

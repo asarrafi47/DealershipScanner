@@ -85,7 +85,7 @@ def _session() -> requests.Session:
     s.headers.update(
         {
             "Accept": "application/json",
-            "User-Agent": "DealershipScanner/1.0 (+https://github.com/)",
+            "User-Agent": "SarrafiCollection/1.0 (+https://example.local)",
             **_auth_headers(),
         }
     )

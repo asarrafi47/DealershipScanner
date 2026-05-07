@@ -8,7 +8,7 @@ import sys
 
 
 def main() -> int:
-    p = argparse.ArgumentParser(description="pgvector indexes for DealershipScanner")
+    p = argparse.ArgumentParser(description="pgvector indexes for Sarrafi Collection")
     p.add_argument("command", nargs="?", default="reindex", choices=("reindex",))
     args = p.parse_args()
     if args.command == "reindex":

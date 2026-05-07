@@ -107,7 +107,7 @@ def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any
 
 
 def flask_request_to_search_cars_kwargs(request: Any) -> dict[str, Any]:
-    """Build ``search_cars`` kwargs from a Flask ``request`` (GET /search)."""
+    """Build ``search_cars`` kwargs from a Flask ``request`` (GET ``/listings`` query string)."""
     g = request.args.getlist
 
     def scalar(key: str) -> str:

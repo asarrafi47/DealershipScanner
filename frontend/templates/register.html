@@ -1,19 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Register</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
 </head>
-<body>
+<body class="lp-body">
 
     <div class="page">
 
-        <nav class="topbar">
-            <div class="logo">Dealership Scanner</div>
-            <div class="nav-links">
-                <a href="/login">Login</a>
-            </div>
-        </nav>
+        {% set nav_active = "register" %}
+        {% include "_nav_public.html" %}
 
         <section class="auth-section">
             <div class="auth-card">

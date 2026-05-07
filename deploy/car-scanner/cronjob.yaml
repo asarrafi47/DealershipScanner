@@ -48,8 +48,8 @@ spec:
     spec:
       # Three parallel pods, each must succeed once (Indexed = distinct completion index per pod).
       completionMode: Indexed
-      completions: 3
-      parallelism: 3
+      completions: 4
+      parallelism: 4
       backoffLimit: 1
       template:
         metadata:

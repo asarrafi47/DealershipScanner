@@ -28,8 +28,7 @@ DEFAULT_OVERPASS_FALLBACKS: tuple[str, ...] = (
     "https://overpass.openstreetmap.fr/api/interpreter",
 )
 USER_AGENT = (
-    "DealershipScanner/1.0 (+https://github.com/ DealershipScanner; "
-    "dealership discovery batch query)"
+    "SarrafiCollection/1.0 (+https://example.local; dealership discovery batch query)"
 )
 
 

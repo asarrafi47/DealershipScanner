@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard — Sarrafi Collection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
 </head>
-<body>
+<body class="db-page">
 
 <div class="page">
 
     <nav class="topbar">
-        <div class="logo">Dealership Scanner</div>
+        <div class="logo">Sarrafi Collection</div>
         <div class="nav-links">
             <a href="/dashboard">Dashboard</a>
-            <a href="/listings">Listings</a>
+            <a href="{{ url_for('listings') }}">Listings</a>
             {% if logged_in_user %}
             <a href="/inventory">My inventory</a>
             {% endif %}
@@ -23,15 +25,39 @@
         </div>
     </nav>
 
+    <header class="db-welcome db-reveal">
+        <div class="db-welcome-glow" aria-hidden="true"></div>
+        <div class="db-welcome-inner">
+            <p class="db-welcome-eyebrow">Your garage</p>
+            <h1 class="db-welcome-title">
+                {% if logged_in_user %}
+                Welcome back, {{ logged_in_user }}
+                {% else %}
+                Welcome back
+                {% endif %}
+            </h1>
+            <p class="db-welcome-sub">
+                Search live inventory, skim picks tailored to you, and keep saved cars in one place.
+            </p>
+            <div class="db-welcome-actions">
+                <a href="{{ url_for('listings') }}" class="primary-button db-welcome-cta">
+                    Enter listings
+                    <svg class="db-welcome-cta-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+                <a href="#saved-section" class="secondary-button db-welcome-secondary">Saved cars</a>
+            </div>
+        </div>
+    </header>
+
     <div class="db-layout">
 
         {# ── Find Cars ── #}
-        <section class="db-section">
+        <section class="db-section db-reveal" id="browse-section">
             <div class="db-section-header">
                 <p class="db-eyebrow">Browse Inventory</p>
                 <h2 class="db-section-title">Find Cars</h2>
             </div>
-            <a href="/listings" class="find-cars-card">
+            <a href="{{ url_for('listings') }}" class="find-cars-card">
                 <div class="find-cars-card-inner">
                     <div class="find-cars-text">
                         <p class="find-cars-label">Ready to search?</p>
@@ -56,7 +82,7 @@
 
         {# ── Recommendations ── #}
         {% if recommendations %}
-        <section class="db-section" id="reco-section">
+        <section class="db-section db-reveal" id="reco-section">
             <div class="db-section-header">
                 <p class="db-eyebrow">{{ recommendations_eyebrow or "Based on your history" }}</p>
                 <h2 class="db-section-title">{{ recommendations_title or "Recommended for You" }}</h2>
@@ -94,7 +120,7 @@
         {% endif %}
 
         {# ── Saved Cars ── #}
-        <section class="db-section">
+        <section class="db-section db-reveal" id="saved-section">
             <div class="db-section-header">
                 <p class="db-eyebrow">Your List</p>
                 <h2 class="db-section-title">Saved Cars</h2>
@@ -118,7 +144,7 @@
             <div class="saved-empty">
                 <p class="saved-empty-title">No saved cars yet.</p>
                 <p class="saved-empty-sub">When you find a car you like, save it and it will appear here.</p>
-                <a href="/listings" class="primary-button" style="margin-top: 20px; display: inline-block;">Browse Listings</a>
+                <a href="{{ url_for('listings') }}" class="primary-button saved-empty-cta">Browse listings</a>
             </div>
             {% endif %}
         </section>

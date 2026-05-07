@@ -5,17 +5,17 @@
     <meta name="csrf-token" content="{{ csrf_token }}">
     <meta name="application-path-prefix" content="{{ request.script_root or '' }}">
     <title>Developer Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
 </head>
 <body>
 
 <div class="page">
 
     <nav class="topbar">
-        <div class="logo">Dealership Scanner</div>
+        <div class="logo">Sarrafi Collection</div>
         <div class="nav-links">
             <a href="/dashboard">Dashboard</a>
-            <a href="/listings">Listings</a>
+            <a href="{{ url_for('listings') }}">Listings</a>
             {% if admin_username %}
             <span class="nav-links-meta">Admin: {{ admin_username }}</span>
             <form method="post" action="{{ url_for('dev.admin_logout') }}" class="dev-logout-form">
@@ -30,7 +30,7 @@
         <header class="dev-hero">
             <p class="db-eyebrow">Internal tools</p>
             <h1 class="dev-title">Developer Dashboard</h1>
-            <p class="dev-sub">Paste one dealer URL per line for Smart Import (discovery + full inventory scrape; registry row when city/state resolve). Project-root <code>dealers.json</code> updates after a successful inventory persist so <code>python scanner.py --dealer-id …</code> works even if the registry row still needs a manual geocode. The public <a href="/listings">Listings</a> page hides incomplete cars. Sign in at <code>/dev/login</code>. Bulk jobs run sequentially; the log shows the active job.</p>
+            <p class="dev-sub">Paste one dealer URL per line for Smart Import (discovery + full inventory scrape; registry row when city/state resolve). Project-root <code>dealers.json</code> updates after a successful inventory persist so <code>python scanner.py --dealer-id …</code> works even if the registry row still needs a manual geocode. The public <a href="{{ url_for('listings') }}">Listings</a> page hides incomplete cars. Sign in at <code>/dev/login</code>. Bulk jobs run sequentially; the log shows the active job.</p>
         </header>
 
         <section class="db-section dev-section">
@@ -146,7 +146,7 @@
                     <button type="button" class="secondary-button" id="dev-refresh-incomplete">Refresh</button>
                 </div>
             </div>
-            <p class="dev-hint">Indexed in <code>incomplete_listings.db</code> when the car detail spec sheet (year through VIN) has a gap. Public <a href="/listings">listings</a> hide rows that fail the shorter public checklist (see <code>listing_completeness.py</code>). MPG is not part of this index.</p>
+            <p class="dev-hint">Indexed in <code>incomplete_listings.db</code> when the car detail spec sheet (year through VIN) has a gap. Public <a href="{{ url_for('listings') }}">listings</a> hide rows that fail the shorter public checklist (see <code>listing_completeness.py</code>). MPG is not part of this index.</p>
 
             {% if incomplete_cars %}
             <div class="dev-incomplete-toolbar-panel">
@@ -296,7 +296,7 @@
                         {% for stat in dealership_stats %}
                         <tr>
                             <td>
-                                <a href="/listings?dealer={{ stat.dealer_id }}" target="_blank" class="dev-table-link">
+                                <a href="{{ url_for('listings', dealer=stat.dealer_id) }}" target="_blank" class="dev-table-link">
                                     {{ stat.dealer_name or 'Unknown' }}
                                 </a>
                             </td>

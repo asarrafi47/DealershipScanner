@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Developer console — disabled</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='dev_console.css') }}">
 </head>
 <body>
 <div class="page">
     <nav class="topbar">
-        <div class="logo">Dealership Scanner</div>
+        <div class="logo">Sarrafi Collection</div>
         <div class="nav-links"><a href="/">App home</a></div>
     </nav>
     <main class="dev-main">

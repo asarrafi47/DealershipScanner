@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>{{ title or "Sign-in" }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
 </head>
 <body>
 <div class="page" style="max-width: 560px; margin: 0 auto; padding: 2rem 1.25rem;">

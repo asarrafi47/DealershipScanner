@@ -339,7 +339,7 @@ def fetch_decode_vin_values_extended(
     def _default_get(url: str) -> dict[str, Any]:
         req = urllib.request.Request(
             url,
-            headers={"User-Agent": "DealershipScanner-structured-spec-backfill/1.0"},
+            headers={"User-Agent": "SarrafiCollection-structured-spec-backfill/1.0"},
             method="GET",
         )
         with urllib.request.urlopen(req, timeout=timeout_s) as resp:

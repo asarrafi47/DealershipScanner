@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dealership-discovery
+  namespace: dealership
+spec:
+  # Weekly on Sunday at 1 AM — Overture data refreshes monthly, daily runs waste quota
+  schedule: "0 1 * * 0"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      # No retry — Overture S3 queries are expensive; bad env should alert, not loop
+      backoffLimit: 0
+      activeDeadlineSeconds: 7200
+      template:
+        metadata:
+          labels:
+            app: dealership-discovery
+        spec:
+          # --- TARGETING THE AORUS ---
+          nodeSelector:
+            purpose: database
+          restartPolicy: Never
+          containers:
+            - name: discovery
+              # Match the exact name found in 'k3s ctr images list'
+              image: docker.io/library/dealership-scanner:latest
+              # Tell K8s to use the 10.7GB image on the NVMe drive, not Docker Hub
+              imagePullPolicy: IfNotPresent
+              command:
+                - bash
+                - -c
+                - |
+                  python run_nationwide_discovery.py \
+                    --manifest "${DEALERS_MANIFEST_PATH:-/data/dealers.json}" \
+                    --verbose
+              envFrom:
+                - configMapRef:
+                    name: dealership-config
+                - secretRef:
+                    name: dealership-secret
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+              resources:
+                requests:
+                  memory: "1Gi"
+                  cpu: "500m"
+                limits:
+                  memory: "6Gi"   # DuckDB loads GeoParquet into memory
+                  cpu: "2000m"
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: dealership-data-pvc

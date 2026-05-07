@@ -1,7 +1,7 @@
 ---
 name: security-master-todo
 description: >-
-  Enforces DealershipScanner security workflow using docs/SECURITY_MASTER_TODO.md.
+  Enforces Sarrafi Collection security workflow using docs/SECURITY_MASTER_TODO.md.
   Use when the user or task involves security, auth, secrets, XSS, CSRF, sessions,
   admin/dev routes, rate limits, LLM/chat APIs, or subprocess safety. Instructs
   the agent to read the master todo, add SEC- items if missing, implement changes,

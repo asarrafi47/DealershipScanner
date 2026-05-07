@@ -1,0 +1,22 @@
+{# Public marketing/auth nav. Optional: set nav_active to "login" | "register" before include. #}
+<nav class="topbar topbar--public">
+    <a href="/" class="logo logo--link">Sarrafi Collection</a>
+    <div class="nav-links">
+        <a href="{{ url_for('listings') }}">Browse Listings</a>
+        {% if logged_in_user %}
+        <a href="/dashboard">Dashboard</a>
+        {% include "_app_logout.html" %}
+        {% else %}
+        {% if nav_active == "login" %}
+        <a href="/login" aria-current="page">Sign in</a>
+        {% else %}
+        <a href="/login">Sign in</a>
+        {% endif %}
+        {% if nav_active == "register" %}
+        <a href="/register" class="nav-link-cta" aria-current="page">Get started</a>
+        {% else %}
+        <a href="/register" class="nav-link-cta">Get started</a>
+        {% endif %}
+        {% endif %}
+    </div>
+</nav>

@@ -87,7 +87,7 @@ def google_custom_search_links(query: str, *, num: int = 5) -> list[dict[str, st
             "https://www.googleapis.com/customsearch/v1",
             params=params,
             timeout=22,
-            headers={"User-Agent": "DealershipScannerSpecBackfill/1.0"},
+            headers={"User-Agent": "SarrafiCollectionSpecBackfill/1.0"},
         )
         r.raise_for_status()
         data = r.json()
@@ -179,7 +179,7 @@ def fetch_url_html(url: str, *, timeout: int = 25) -> str | None:
         r = requests.get(
             url,
             timeout=timeout,
-            headers={"User-Agent": "DealershipScannerSpecBackfill/1.0"},
+            headers={"User-Agent": "SarrafiCollectionSpecBackfill/1.0"},
         )
         r.raise_for_status()
         return r.text

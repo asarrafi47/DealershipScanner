@@ -726,7 +726,7 @@ def _sqlite_car_row_json_safe(row: dict[str, Any]) -> dict[str, Any]:
 def _incomplete_export_text_body(*, issue: str, ordered_rows: list[dict[str, Any]]) -> str:
     """Human-readable dump of raw ``cars`` columns (one block per row)."""
     header = [
-        "# DealershipScanner — incomplete listing export (SQLite ``cars`` columns)",
+        "# Sarrafi Collection — incomplete listing export (SQLite ``cars`` columns)",
         f"# missing_field_code: {issue}",
         f"# row_count: {len(ordered_rows)}",
         f"# exported_at_utc: {datetime.now(timezone.utc).isoformat()}",

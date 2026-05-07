@@ -38,7 +38,7 @@ def _send_resend(
         {
             "from": from_addr,
             "to": [to_email],
-            "subject": subject or "Your DealershipScanner verification code",
+            "subject": subject or "Your Sarrafi Collection verification code",
             "text": _email_plain_body(code),
         }
     )
@@ -148,7 +148,7 @@ def send_email_code(
         return
 
     msg = EmailMessage()
-    msg["Subject"] = "Your DealershipScanner verification code"
+    msg["Subject"] = "Your Sarrafi Collection verification code"
     msg["From"] = from_addr
     msg["To"] = to_email
     msg.set_content(_email_plain_body(code))
