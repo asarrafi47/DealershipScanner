@@ -29,7 +29,9 @@ gracefully to the inventory-only system prompt.
 
 from __future__ import annotations
 
+import ipaddress
 import logging
+import os
 import random
 import re
 import time
@@ -101,6 +103,88 @@ _BLOCKED_HREF_SUBSTRINGS: tuple[str, ...] = (
     "reddit.com",       # often paywalled / low-density content
 )
 
+
+def allowed_hosts_from_env() -> frozenset[str] | None:
+    """
+    Optional comma-separated ``WEB_RESEARCH_ALLOWED_HOSTS``.
+
+    When non-empty, result navigation is limited to these hosts (case-insensitive),
+    plus optional ``*.example.com`` patterns. When unset/empty, only the built-in
+    blocklist + private-host guard apply.
+    """
+    raw = (os.environ.get("WEB_RESEARCH_ALLOWED_HOSTS") or "").strip()
+    if not raw:
+        return None
+    parts = [x.strip().lower() for x in raw.split(",") if x.strip()]
+    return frozenset(parts) if parts else None
+
+
+def _host_matches_allowlist(hostname: str, allowlist: frozenset[str]) -> bool:
+    h = hostname.lower().rstrip(".")
+    if h in allowlist:
+        return True
+    for pat in allowlist:
+        if pat.startswith("*."):
+            root = pat[2:]
+            if h == root or h.endswith("." + root):
+                return True
+    return False
+
+
+def _destination_host_blocked(hostname: str) -> bool:
+    """Block localhost, obvious SSRF literals, and RFC-private / special-use IPs."""
+    if not hostname:
+        return True
+    hl = hostname.strip().lower().rstrip(".")
+    if hl == "localhost" or hl.endswith(".localhost"):
+        return True
+    if hl.endswith(".local"):
+        return True
+    try:
+        ip = ipaddress.ip_address(hl)
+        return bool(
+            ip.is_private
+            or ip.is_loopback
+            or ip.is_link_local
+            or ip.is_multicast
+            or ip.is_reserved
+            or ip.is_unspecified
+        )
+    except ValueError:
+        return False
+
+
+def href_is_acceptable_result(
+    href: str,
+    *,
+    allowed_hosts: frozenset[str] | None,
+) -> bool:
+    """
+    Return True if *href* may be opened as a Brave search result target.
+
+    Applies substring blocklist, private/special host guard, and optional
+    ``WEB_RESEARCH_ALLOWED_HOSTS`` allowlist when configured.
+    """
+    if not href or not href.startswith("http"):
+        return False
+    try:
+        parsed = urlparse(href)
+    except Exception:
+        return False
+    host = (parsed.hostname or "").strip()
+    if not host or _destination_host_blocked(host):
+        return False
+    low = href.lower()
+    if any(blocked in low for blocked in _BLOCKED_HREF_SUBSTRINGS):
+        return False
+    if allowed_hosts is not None:
+        if len(allowed_hosts) == 0:
+            return False
+        if not _host_matches_allowlist(host, allowed_hosts):
+            return False
+    return True
+
+
 # ── Content extraction: semantic selectors (priority order) ───────────────
 
 _CONTENT_SELECTORS = [
@@ -144,9 +228,17 @@ class WebResearcher:
     (or reuse across a request scope); do NOT share across threads.
     """
 
-    def __init__(self, timeout_ms: int = 25_000, max_text_chars: int = 2_000) -> None:
+    def __init__(
+        self,
+        timeout_ms: int = 25_000,
+        max_text_chars: int = 2_000,
+        *,
+        allowed_result_hosts: frozenset[str] | None = None,
+    ) -> None:
         self.timeout_ms = timeout_ms
         self.max_text_chars = max_text_chars
+        # None → use ``WEB_RESEARCH_ALLOWED_HOSTS`` (and built-in filters) per request
+        self._allowed_result_hosts = allowed_result_hosts
 
     # ── Browser setup ─────────────────────────────────────────────────────
 
@@ -164,9 +256,8 @@ class WebResearcher:
                 or "executable" in msg.lower()
                 or "not found" in msg.lower()
             ):
-                print(
-                    "CRITICAL: Playwright Chromium binary not found. "
-                    "Run: python -m playwright install chromium"
+                logger.error(
+                    "Playwright Chromium binary not found. Run: python -m playwright install chromium"
                 )
             raise
 
@@ -185,19 +276,10 @@ class WebResearcher:
 
     # ── Link filtering ────────────────────────────────────────────────────
 
-    @staticmethod
-    def _href_ok(href: str) -> bool:
-        """
-        Return True if *href* is an acceptable result URL.
-
-        Rules:
-          1. Must be an absolute HTTP/HTTPS URL.
-          2. Must not contain any blocked domain substring.
-        """
-        if not href or not href.startswith("http"):
-            return False
-        low = href.lower()
-        return not any(blocked in low for blocked in _BLOCKED_HREF_SUBSTRINGS)
+    def _effective_allowed_hosts(self) -> frozenset[str] | None:
+        if self._allowed_result_hosts is not None:
+            return self._allowed_result_hosts
+        return allowed_hosts_from_env()
 
     def _find_result_links(self, page, max_results: int = 3) -> list[str]:
         """
@@ -207,21 +289,25 @@ class WebResearcher:
         returns the first *max_results* that pass the blocklist filter.
         This approach is completely immune to search-engine layout changes.
         """
+        allow = self._effective_allowed_hosts()
         found: list[str] = []
         try:
             anchors = page.query_selector_all("a[href]")
-            print(f"[WebResearcher] Total <a href> elements on page: {len(anchors)}")
+            logger.debug("[WebResearcher] anchor count=%d", len(anchors))
             for anchor in anchors:
                 try:
                     href = (anchor.get_attribute("href") or "").strip()
-                    if self._href_ok(href) and href not in found:
+                    if (
+                        href_is_acceptable_result(href, allowed_hosts=allow)
+                        and href not in found
+                    ):
                         found.append(href)
                         if len(found) >= max_results:
                             break
                 except Exception:
                     continue
         except Exception as exc:
-            print(f"[WebResearcher] Link scan failed: {exc}")
+            logger.warning("[WebResearcher] Link scan failed: %s", exc)
 
         return found
 
@@ -305,15 +391,20 @@ class WebResearcher:
         try:
             from playwright.sync_api import sync_playwright
         except ImportError:
-            print("CRITICAL: playwright package not installed. Run: pip install playwright")
-            logger.error("[WebResearcher] playwright package not installed")
+            logger.error(
+                "playwright package not installed; run: pip install playwright && python -m playwright install chromium"
+            )
             return None
 
         search_url = _SEARCH_URL.format(query=quote_plus(query))
-        print(f"[WebResearcher] ── search_and_summarize ──────────────────────────")
-        print(f"[WebResearcher] query      = {query!r}")
-        print(f"[WebResearcher] search URL = {search_url}")
-        logger.info("[WebResearcher] Starting research | query=%r", query)
+        logger.info(
+            "[WebResearcher] starting | query_len=%d allowed_hosts=%s",
+            len(query),
+            "env"
+            if self._allowed_result_hosts is None
+            else "override",
+        )
+        logger.debug("[WebResearcher] search_url=%s", search_url)
 
         with sync_playwright() as pw:
             browser, ctx = self._make_context(pw)
@@ -321,7 +412,7 @@ class WebResearcher:
                 page = ctx.new_page()
 
                 # ── 1. Load Brave Search results ──────────────────────────
-                print("[WebResearcher] Loading Brave Search …")
+                logger.debug("[WebResearcher] loading Brave search results …")
                 try:
                     page.goto(
                         search_url,
@@ -335,38 +426,34 @@ class WebResearcher:
                             "networkidle",
                             timeout=12_000,
                         )
-                        print("[WebResearcher] networkidle reached — results should be in DOM.")
+                        logger.debug("[WebResearcher] networkidle reached")
                     except Exception:
                         # networkidle can time out on busy pages; continue anyway
                         delay = random.uniform(1.5, 2.5)
-                        print(
-                            f"[WebResearcher] networkidle timed out; waiting {delay:.1f}s instead."
+                        logger.debug(
+                            "[WebResearcher] networkidle timed out; waiting %.1fs", delay
                         )
                         time.sleep(delay)
 
                 except Exception as exc:
-                    print(f"[WebResearcher] Brave Search navigation FAILED: {exc}")
-                    logger.warning("[WebResearcher] Search navigation failed: %s", exc)
+                    logger.warning("[WebResearcher] Brave Search navigation failed: %s", exc)
                     return None
 
                 # ── 2. Collect organic result URLs ────────────────────────
                 candidates = self._find_result_links(page, max_results=3)
-                print(f"[WebResearcher] Organic candidates: {candidates}")
+                logger.debug("[WebResearcher] candidates=%d", len(candidates))
 
                 if not candidates:
-                    print(f"[WebResearcher] No results found for query={query!r}")
-                    logger.warning("[WebResearcher] No results | query=%r", query)
+                    logger.warning("[WebResearcher] No acceptable result links (query_len=%d)", len(query))
                     return None
 
                 result_url   = candidates[0]
                 result_title = ""
-                print(f"[WebResearcher] Selected URL: {result_url}")
-                logger.info("[WebResearcher] Selected result: %s", result_url)
+                logger.info("[WebResearcher] selected host=%s", urlparse(result_url).hostname or "")
 
                 # ── 3. Navigate to the result page ────────────────────────
                 result_page = ctx.new_page()
                 try:
-                    print("[WebResearcher] Fetching result page …")
                     result_page.goto(
                         result_url,
                         wait_until="domcontentloaded",
@@ -375,39 +462,30 @@ class WebResearcher:
                     # Brief pause for lazy-loaded content
                     time.sleep(random.uniform(0.8, 1.4))
                     result_title = result_page.title() or ""
-                    print(f"[WebResearcher] Page loaded: {result_title!r}")
+                    logger.debug("[WebResearcher] page title len=%d", len(result_title))
                 except Exception as exc:
-                    print(f"[WebResearcher] Result page FAILED ({result_url}): {exc}")
                     logger.warning(
                         "[WebResearcher] Result page navigation failed for %s: %s",
-                        result_url, exc,
+                        result_url,
+                        exc,
                     )
                     return None
 
                 # ── 4. Extract + clean text ───────────────────────────────
                 raw_text = self._extract_content(result_page)
                 clean    = self._clean_text(raw_text)
-                print(f"[WebResearcher] Extracted {len(clean)} chars of content.")
+                logger.debug("[WebResearcher] extracted raw_chars=%d", len(clean))
 
                 if len(clean) < 80:
-                    print(
-                        f"[WebResearcher] Content too short ({len(clean)} chars) — skipping."
-                    )
                     logger.warning(
                         "[WebResearcher] Content too short (%d chars) at %s",
-                        len(clean), result_url,
+                        len(clean),
+                        result_url,
                     )
                     return None
 
                 snippet = clean[: self.max_text_chars]
-                print(
-                    f"[WebResearcher] SUCCESS — returning {len(snippet)} chars "
-                    f"from {result_url}"
-                )
-                logger.info(
-                    "[WebResearcher] Done | chars=%d | url=%s",
-                    len(clean), result_url,
-                )
+                logger.info("[WebResearcher] success chars=%d", len(snippet))
                 return ResearchResult(
                     text=snippet,
                     url=result_url,

@@ -18,13 +18,15 @@ spec:
       labels:
         app: dealership-web
     spec:
-      # Pin to the node that owns the PVC data
+      # Pin to the Aorus (silversurfer) which owns the PVC data and the local image
       nodeSelector:
-        role: data-node
+        purpose: database
       containers:
         - name: web
-          image: REGISTRY/dealership-web:latest
-          imagePullPolicy: Always
+          # Match the exact name in the k8s.io namespace on silversurfer
+          image: docker.io/library/dealership-scanner:latest
+          # Tell K8s to use the local 10.7GB image instead of checking a registry
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
           envFrom:

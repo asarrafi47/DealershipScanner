@@ -12,6 +12,8 @@
 3. **After** work: update **Status**, **Last verified** (date), **Validation** notes if the procedure changed, and append **Changelog**.
 4. **New** risks or follow-ups: add a row under the right phase; do not rely on chat-only tracking.
 
+**Validation runbook (same PR as code):** When you change **auth / sessions**, **CSRF**, **CSP**, **LLM or chat APIs** (e.g. `POST /api/car/<id>/chat`, `POST /api/search/smart`), **rate limits**, **subprocess** (e.g. `scanner.py`, operator CLIs), or **templates/JS** that affect those surfaces, re-run the **Validation** column for every touched **SEC-xxx** row, set **Last verified** to the run date, and add a one-line **Changelog** entry. The document is the contract; chat-only “done” is not enough.
+
 **Status values:** `Done` | `In progress` | `Blocked` | `Not started`
 
 ---
@@ -48,7 +50,7 @@
 | `/dev/login`, `/dev/register` | N/A | CSRF on POST; bcrypt; per-IP rate limits; `/dev/register` gated in production; optional `DEV_IP_ALLOWLIST` (comma IPs / CIDRs) restricts all `/dev/*` when set |
 | `/api/search/smart` | No | CSRF header (`X-CSRF-Token`) + per-IP rate limit (see SEC-043) |
 | `POST /api/session/listings-geo` | No | CSRF header; stores last listings ZIP + radius in the Flask session (for dashboard recommendations) |
-| `/api/car/<id>/chat` | No | CSRF header + per-IP rate limit + max message/body size |
+| `/api/car/<id>/chat` | No | CSRF header + **layered** rate limits (per deployment, per IP, per IP+car; see **SEC-041**) + max message/body size; **Playwright web research** for chat is **off for anonymous users in production** by default (`CAR_CHAT_WEB_RESEARCH=auto`); model-knowledge **cache** may still be read. Optional: `WEB_RESEARCH_ALLOWED_HOSTS` destination allowlist. |
 | `POST /api/cars/<id>/save` | **Yes** — `session['user_id']` | CSRF header (`X-CSRF-Token`, same token as meta `csrf-token`) |
 | `/dev/*` (dashboard, APIs) | **Yes** — `admin_users` in `dev_users.db` (password at `/dev/login` only; **no** 2FA on `/dev` currently) | CSRF on forms + `X-CSRF-Token` on API; POST `/dev/logout`; includes `POST /dev/api/cars/<id>/spec-backfill` (optional Google CSE env for search tier) and `POST /dev/api/cars/<id>/kbb-refresh` (optional `KBB_API_KEY` for IDWS) |
 | `/dev/manifest`, `/api/dev/*` | `DEV_CONSOLE` + optional `DEV_CONSOLE_SECRET` | CSRF on mutations; safe `next` under `/dev/manifest` |
@@ -70,7 +72,12 @@
 | `USERS_DB_CONNECT_TIMEOUT_S` | Optional | Default `30` (SQLite `connect` wait; reduces `database is locked` under dev reload / concurrency) |
 | `USERS_DB_BUSY_TIMEOUT_MS` | Optional | Default `30000` (SQLite `busy_timeout` per query) |
 | `RATE_LIMIT_SMART_SEARCH_PER_MIN` | Optional | Default 90 |
-| `RATE_LIMIT_CAR_CHAT_PER_MIN` | Optional | Default 40 |
+| `RATE_LIMIT_CAR_CHAT_PER_MIN` | Optional | Per **IP + car** window; default **24**/min (sliding) |
+| `RATE_LIMIT_CAR_CHAT_PER_IP_PER_MIN` | Optional | Per-IP cap across all cars; default **48**/min |
+| `RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN` | Optional | Default **0** (disabled). When positive, shared cap for all `POST /api/car/*/chat` (e.g. **200** in prod; use with `RATE_LIMIT_SQLITE_PATH` for multi-worker) |
+| `CAR_CHAT_WEB_RESEARCH` | Optional | `auto` (default when unset): dev allows Playwright; **production** allows Playwright only for signed-in users unless `CAR_CHAT_WEB_RESEARCH_PUBLIC=1`. `0`/`1` = force off/on for all. |
+| `CAR_CHAT_WEB_RESEARCH_PUBLIC` | Optional | When `1` and `CAR_CHAT_WEB_RESEARCH` is `auto` in **production**, anonymous users may trigger Playwright (higher cost/abuse risk). |
+| `WEB_RESEARCH_ALLOWED_HOSTS` | Optional | Comma-separated hostnames; when set, Brave result links must match (exact or `*.domain`). Always applies blocklist + private-IP/localhost guard. Unset = blocklist + private guard only. |
 | `TRUST_PROXY_HEADERS` | Optional (`1` / `true`) | When set, rate limits use first `X-Forwarded-For` hop (use only behind a trusted proxy) |
 | `RATE_LIMIT_LOGIN_PER_MIN` | Optional | Default 30 (`/login` POST) |
 | `RATE_LIMIT_REGISTER_PER_MIN` | Optional | Default 10 (`/register` POST) |
@@ -373,9 +380,9 @@
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py`, `frontend/templates/car.html` (chat disclosure copy) |
-| **Outcome** | Per IP+car rate limit (default 40/min); max message length; max JSON body bytes. User messages remain **untrusted** (prompt injection); model output is advisory only. Car page states AI answers may be wrong and must not be used for VIN verification, pricing, financing, or compliance. |
-| **Validation** | Oversized body → 413; long message → `message_too_long`; flood → 429; car template includes non-authoritative AI disclaimer adjacent to chat. |
+| **Scope** | `backend/main.py`, `backend/utils/car_chat_policy.py`, `backend/intelligence/ai/agent.py`, `backend/utils/web_researcher.py`, `frontend/templates/car.html` (chat disclosure copy) |
+| **Outcome** | **Layered rate limits:** optional deployment-wide key (`RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN`, default off); per-IP (`RATE_LIMIT_CAR_CHAT_PER_IP_PER_MIN`, default 48/min); per IP+car (`RATE_LIMIT_CAR_CHAT_PER_MIN`, default 24/min). Max message length and JSON body bytes unchanged. **Playwright web research** (`CAR_CHAT_WEB_RESEARCH`): production + `auto` allows live browser research only for **signed-in** users unless `CAR_CHAT_WEB_RESEARCH_PUBLIC=1`; pgvector model-knowledge cache may still be read when keywords match. **Logging:** car chat no longer `print`s full user text; use DEBUG for operator detail. **Web research URLs:** `WEB_RESEARCH_ALLOWED_HOSTS` optional allowlist; blocklist + private/loopback host guard in `web_researcher.href_is_acceptable_result`. User messages remain **untrusted**; model output is advisory only. Car page states AI may be wrong; signed-out users see a line about signing in for full web research when the server allows it. |
+| **Validation** | `python -m pytest backend/tests/test_app_security_basics.py backend/tests/test_car_chat_policy.py -q` (413/429 paths, global chat limit, policy + URL guard). Oversized body → 413; long message → `message_too_long`; flood → 429. |
 | **Last verified** | 2026-05-06 |
 
 ### SEC-042 — LLM key & data exfiltration review
@@ -562,6 +569,7 @@
 | 2026-05-06 | **SEC-011 / SEC-013:** Car save `POST /api/cars/<id>/save` — CSRF via `_csrf_mutating_requests` + `validate_csrf_header(*args, **kwargs)` (ignores legacy `request` positional); import-time check in `main.py` fails fast if an old `csrf` module is loaded; `api_toggle_save` uses `session[\"user_id\"]` (avoids odd `.get` edge cases); `car.html` uses `X-CSRF-Token`. Validation: `python -m pytest backend/tests/test_app_security_basics.py -q`. |
 | 2026-05-06 | **SEC-011 / SEC-013:** `POST /api/session/listings-geo` (CSRF header) persists last listings ZIP + radius for dashboard “Recommended for You” geo filtering; `GET /search` and `/listings` also refresh session when query params include a valid ZIP + radius. Validation: `python -m pytest backend/tests/test_app_security_basics.py -q`. |
 | 2026-05-06 | **SEC-059:** Stripe billing marked **Done** — webhook signature failure → HTTP 400 JSON (`invalid_signature`); billing disabled → webhook **404**; gate tests in `backend/tests/test_billing_gate.py`; templates reviewed for Stripe secret leakage. **SEC-063 / SEC-053:** Production Socket.IO CORS no longer defaults to `*` (`_socketio_cors_allowed_origins` in `backend/main.py`). **`DEV_IP_ALLOWLIST`** optional IP/CIDR gate for `/dev` (`backend/dev/routes.py`). **SEC-041:** Car chat AI non-authoritative disclosure on `car.html`. **Cluster ops:** Registry threat-model note in `deploy/car-scanner/cronjob.yaml`. Validation: `python -m pytest backend/tests/test_billing_gate.py backend/tests/test_dev_ip_allowlist.py backend/tests/test_app_security_basics.py -q`. |
+| 2026-05-06 | **SEC-041 (hardening):** Layered chat rate limits + optional global budget; production disables Playwright web research for anonymous sessions (`CAR_CHAT_WEB_RESEARCH` / `CAR_CHAT_WEB_RESEARCH_PUBLIC`); structured logging in `agent.py` / `web_researcher.py` (no full user message at INFO); optional `WEB_RESEARCH_ALLOWED_HOSTS` + SSRF-style host blocks on research URLs; validation runbook note under **How to use**. Validation: `python -m pytest backend/tests/test_app_security_basics.py backend/tests/test_car_chat_policy.py -q`. |
 
 **Done items** stay in their phase table with **Status: Done** and **Last verified** — do not duplicate into a second list.
 

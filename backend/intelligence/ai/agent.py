@@ -5,9 +5,12 @@ Requires OPENAI_API_KEY. Tool: verify_car_data(vin).
 from __future__ import annotations
 
 import json
+import logging
 import os
 import re
 from typing import Any
+
+_logger = logging.getLogger(__name__)
 
 from backend.db.inventory_db import get_car_by_vin
 from backend.enrichment.knowledge_engine import decode_trim_logic, lookup_epa_aggregate, prepare_car_detail_context
@@ -423,14 +426,21 @@ def _history_highlights_snippet(car: dict[str, Any]) -> str:
     return ""
 
 
-def run_car_page_chat(car: dict[str, Any], user_message: str) -> dict[str, Any]:
+def run_car_page_chat(
+    car: dict[str, Any],
+    user_message: str,
+    *,
+    allow_web_research: bool = True,
+) -> dict[str, Any]:
     """
     Car detail chatbot: Ollama (OpenAI-compatible) via llm.providers.ollama_client.
 
     When the question touches reliability, reviews, market value, comparisons,
-    or other topics that aren't in inventory.db, we transparently run a
-    Playwright web-research pass (WebResearcher) and inject the snippet into
-    the system prompt as [Internet Research Data] before calling the LLM.
+    or other topics that aren't in inventory.db, we may run a Playwright
+    web-research pass (WebResearcher) when ``allow_web_research`` is True,
+    then inject the snippet into the system prompt before calling the LLM.
+    Model-knowledge cache (pgvector) may still be read when keywords match,
+    even when live web research is disabled.
 
     ``car`` should be the full SQLite row dict from get_car_by_id.
     """
@@ -506,7 +516,12 @@ def run_car_page_chat(car: dict[str, Any], user_message: str) -> dict[str, Any]:
     if verified:
         verified_snip = json.dumps(verified, indent=1, default=str)[:2500]
 
-    print(f"\n[CHAT] message={msg!r}  car={listing_head[:80]!r}")
+    _logger.debug(
+        "car_chat listing_preview=%r msg_len=%d allow_web_research=%s",
+        (listing_head[:80] + ("…" if len(listing_head) > 80 else "")),
+        len(msg),
+        allow_web_research,
+    )
 
     research_text = ""
     research_url = ""
@@ -517,14 +532,14 @@ def run_car_page_chat(car: dict[str, Any], user_message: str) -> dict[str, Any]:
     get_model_knowledge_fn = None
 
     if kw_hit:
-        print("[CHAT] keyword_trigger=True — knowledge cache / web research allowed")
+        _logger.debug("car_chat keyword_trigger=True (cache + optional Playwright)")
         try:
             from backend.vector.pgvector_service import (
                 add_model_knowledge as add_model_knowledge_fn,
                 get_model_knowledge as get_model_knowledge_fn,
             )
         except ImportError as exc:
-            print(f"[CHAT] pgvector knowledge import failed (non-fatal): {exc}")
+            _logger.debug("pgvector knowledge unavailable: %s", exc)
 
         if get_model_knowledge_fn is not None:
             try:
@@ -537,9 +552,9 @@ def run_car_page_chat(car: dict[str, Any], user_message: str) -> dict[str, Any]:
                     research_used = True
                     cache_hit = True
             except Exception as exc:
-                print(f"[CHAT] knowledge cache lookup failed (non-fatal): {exc}")
+                _logger.warning("[ai_agent] knowledge cache lookup failed (non-fatal): %s", exc)
 
-        if not cache_hit:
+        if not cache_hit and allow_web_research:
             try:
                 from backend.utils.web_researcher import WebResearcher
 
@@ -561,11 +576,9 @@ def run_car_page_chat(car: dict[str, Any], user_message: str) -> dict[str, Any]:
                                 trim=trim_kw or "",
                             )
                         except Exception as exc_store:
-                            print(f"[CHAT] knowledge cache write EXCEPTION: {exc_store}")
+                            _logger.warning("[ai_agent] knowledge cache write failed: %s", exc_store)
             except Exception as exc:
-                import logging as _logging
-
-                _logging.getLogger(__name__).warning("[ai_agent] WebResearcher failed: %s", exc)
+                _logger.warning("[ai_agent] WebResearcher failed: %s", exc)
 
     system_parts: list[str] = [
         "You answer questions about one dealership listing. Follow the evidence blocks in order; "

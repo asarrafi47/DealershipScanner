@@ -238,7 +238,7 @@
 
         <section class="car-chat-section" id="car-chat-section" data-car-id="{{ car.id }}">
             <h2 class="car-chat-heading">Ask about this car</h2>
-            <p class="car-chat-hint">AI-generated answers may be incorrect or incomplete. Do not rely on them for VIN verification, pricing, financing, or compliance. They are not from the dealer or from official vehicle records. This feature uses your configured model (<code>LLM_BASE_URL</code> / <code>LLM_MODEL</code>).</p>
+            <p class="car-chat-hint">AI-generated answers may be incorrect or incomplete. Do not rely on them for VIN verification, pricing, financing, or compliance. They are not from the dealer or from official vehicle records. This feature uses your configured model (<code>LLM_BASE_URL</code> / <code>LLM_MODEL</code>).{% if not session.get('user_id') %} Sign in to allow live web research for comparison-style questions on this site (when the server enables it).{% endif %}</p>
             <div id="car-chat-messages" class="car-chat-messages" aria-live="polite"></div>
             <div class="car-chat-input-row">
                 <input type="text" id="car-chat-input" class="car-chat-input" placeholder="e.g. Is this AWD? What engine?" autocomplete="off" />

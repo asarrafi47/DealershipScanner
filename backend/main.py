@@ -58,6 +58,7 @@ from backend.listings.routes import listings_page
 from backend.utils.car_serialize import format_display_value, serialize_car_for_api
 from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS, listing_missing_field_codes
 from backend.utils.oem_links import mopar_vin_lookup_url
+from backend.utils.car_chat_policy import car_chat_rate_limits, web_research_playwright_allowed
 from backend.utils.client_ip import client_ip as _client_ip_from_request
 from backend.utils.csrf import ensure_csrf_token, validate_csrf_form, validate_csrf_header
 
@@ -133,7 +134,6 @@ _CHAT_MAX_BODY = int(os.environ.get("CHAT_MAX_BODY_BYTES", "65536"))
 _DEFAULT_MAX_CONTENT = max(9 * 1024 * 1024, _CHAT_MAX_BODY * 2)
 _MAX_REQUEST_BODY = int(os.environ.get("MAX_REQUEST_BODY_BYTES", str(_DEFAULT_MAX_CONTENT)))
 _SMART_SEARCH_RPM = int(os.environ.get("RATE_LIMIT_SMART_SEARCH_PER_MIN", "90"))
-_CHAT_RPM = int(os.environ.get("RATE_LIMIT_CAR_CHAT_PER_MIN", "40"))
 _LOGIN_RPM = int(os.environ.get("RATE_LIMIT_LOGIN_PER_MIN", "30"))
 _REGISTER_RPM = int(os.environ.get("RATE_LIMIT_REGISTER_PER_MIN", "10"))
 _MFA_VERIFY_RPM = int(os.environ.get("RATE_LIMIT_MFA_VERIFY_PER_MIN", "20"))
@@ -1373,7 +1373,19 @@ def api_search_smart():
 @app.route("/api/car/<int:car_id>/chat", methods=["POST"])
 def api_car_chat(car_id: int):
     ip = _client_ip()
-    if not allow_request(f"chat:{ip}:{car_id}", max_events=_CHAT_RPM, window_seconds=60.0):
+    rpm_pair, rpm_ip, rpm_global = car_chat_rate_limits()
+
+    if rpm_global > 0 and not allow_request(
+        "chat:global",
+        max_events=rpm_global,
+        window_seconds=60.0,
+    ):
+        return jsonify({"ok": False, "error": "rate_limited"}), 429
+
+    if not allow_request(f"chat:ip:{ip}", max_events=rpm_ip, window_seconds=60.0):
+        return jsonify({"ok": False, "error": "rate_limited"}), 429
+
+    if not allow_request(f"chat:{ip}:{car_id}", max_events=rpm_pair, window_seconds=60.0):
         return jsonify({"ok": False, "error": "rate_limited"}), 429
 
     if request.content_length is not None and request.content_length > _CHAT_MAX_BODY:
@@ -1389,7 +1401,8 @@ def api_car_chat(car_id: int):
     if len(message) > _CHAT_MAX_MESSAGE:
         return jsonify({"ok": False, "error": "message_too_long"}), 400
 
-    out = run_car_page_chat(car_raw, message)
+    allow_playwright = web_research_playwright_allowed(session.get("user_id"))
+    out = run_car_page_chat(car_raw, message, allow_web_research=allow_playwright)
     err = out.get("error")
     return jsonify(
         {

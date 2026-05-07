@@ -7,24 +7,28 @@ data:
   # Application mode
   FLASK_ENV: "production"
 
-  # SQLite paths — all under the shared /data PVC mount
+  # Shared Storage Paths (PVC)
   INVENTORY_DB_PATH: "/data/inventory.db"
   DEALER_PORTAL_DB_PATH: "/data/dealer_portal.db"
   USERS_DB_PATH: "/data/users.db"
-  DEV_USERS_DB_PATH: "/data/dev_users.db"
-
-  # Image storage
+  DEALERS_MANIFEST_PATH: "/data/dealers.json"
   SCANNER_VDP_IMAGE_DOWNLOAD_DIR: "/data/vdp_images"
 
-  # Dealer manifest — written by discovery CronJob, read by scanner CronJob
-  DEALERS_MANIFEST_PATH: "/data/dealers.json"
+  # Database Connection (Postgres)
+  # Using the Service name 'postgres-service' defined in your postgres.yaml
+  # Credentials are pulled from the secret, but the host/DB name goes here
+  DATABASE_URL: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres-service:5432/dealership_scanner"
+
+  # LLM / Ollama Integration
+  # Point this to the internal K8s service name we will create
+  OLLAMA_BASE_URL: "http://ollama-service:11434"
+  OLLAMA_MODEL: "llama3" # Or whichever model you've pulled
 
   # App settings
   LISTINGS_INCLUDE_INCOMPLETE_CARS: "0"
   APP_ADMIN_USERNAMES: "asarrafi"
 
-  # Redis (optional — enables QR-code MFA across processes; remove if not deployed)
-  # REDIS_URL: "redis://redis-service:6379/0"
-
-  # Postgres / pgvector (optional — enables semantic search; remove if not deployed)
-  # DATABASE_URL: "postgresql://user:pass@postgres-service:5432/dealership"
+  # Car chat cost / web research (optional; defaults are safe — see docs/SECURITY_MASTER_TODO.md SEC-041)
+  # RATE_LIMIT_SQLITE_PATH: "/data/rate_limit.sqlite"
+  # RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN: "200"
+  # WEB_RESEARCH_ALLOWED_HOSTS: "edmunds.com,kbb.com"
