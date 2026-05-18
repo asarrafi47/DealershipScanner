@@ -25,8 +25,8 @@
             <a href="{{ url_for('dashboard') }}">Dashboard</a>
             {% if logged_in_user %}
             <a href="/inventory">My inventory</a>
-            {% endif %}
             {% include "_app_logout.html" %}
+            {% endif %}
         </div>
     </nav>
 
