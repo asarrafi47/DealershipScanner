@@ -30,7 +30,14 @@ logger = logging.getLogger(__name__)
 USER_AGENT = (
     "SarrafiCollection/1.0 (+https://example.local; listing gap-fill)"
 )
-DDG_INSTANT_URL = "https://api.duckduckgo.com/"
+_DDG_SPEC_HTML_UA = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/124.0.0.0 Safari/537.36"
+)
+DDG_HTML_URL = "https://html.duckduckgo.com/html/"
+
+_ddg_html_spec_banned: bool = False
 
 
 def _max_vins_per_run() -> int:
@@ -99,68 +106,128 @@ def fetch_listing_html(url: str) -> str | None:
     return _playwright_fetch_html(url)
 
 
-def _ddg_abstract_specs(car: dict[str, Any]) -> dict[str, Any]:
+def _ddg_html_search_specs(car: dict[str, Any]) -> dict[str, Any]:
     """
-    Weak fallback: parse DuckDuckGo Instant Answer abstract for transmission/drivetrain/fuel keywords.
+    DDG HTML search fallback for spec gaps. Parses real organic snippet text for
+    transmission / drivetrain / fuel_type / body_style / cylinders.
     Never sets condition.
     """
+    global _ddg_html_spec_banned
+    if _ddg_html_spec_banned:
+        return {}
+
     year = car.get("year")
     make = (car.get("make") or "").strip()
     model = (car.get("model") or "").strip()
     trim = (car.get("trim") or "").strip()
     if not make or not model:
         return {}
-    q = f"{year} {make} {model} {trim}".strip() + " specifications transmission drivetrain"
+
+    parts = [str(year) if year else None, make, model, trim or None, "specifications"]
+    q = " ".join(p for p in parts if p)
     try:
         r = requests.get(
-            DDG_INSTANT_URL,
-            params={"q": q, "format": "json", "no_html": "1", "skip_disambig": "1"},
-            headers={"User-Agent": USER_AGENT, "Accept": "application/json"},
-            timeout=min(15.0, float(os.environ.get("LISTING_GAP_FILL_DDG_TIMEOUT") or "12")),
+            DDG_HTML_URL,
+            params={"q": q},
+            headers={
+                "User-Agent": _DDG_SPEC_HTML_UA,
+                "Accept": "text/html,application/xhtml+xml",
+                "Accept-Language": "en-US,en;q=0.9",
+            },
+            timeout=float(os.environ.get("LISTING_GAP_FILL_DDG_TIMEOUT") or "15"),
         )
-        r.raise_for_status()
-        data = r.json()
-    except (requests.RequestException, ValueError) as e:
-        logger.debug("DDG supplement failed: %s", e)
+    except requests.RequestException as e:
+        logger.debug("DDG HTML spec search failed: %s", e)
         return {}
 
-    abstract = str(data.get("AbstractText") or "")
-    if len(abstract) < 40:
+    if r.status_code in (403, 429):
+        _ddg_html_spec_banned = True
+        logger.warning("DDG HTML spec search blocked (%d) — disabling for this run", r.status_code)
         return {}
-    low = abstract.lower()
+    if r.status_code == 202:
+        logger.debug("DDG HTML spec search rate-limited (202)")
+        return {}
+
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(r.text, "html.parser")
+    snippets: list[str] = []
+    for sel in (".result__snippet", ".result__body", ".result-snippet"):
+        for el in soup.select(sel)[:8]:
+            t = el.get_text(" ", strip=True)
+            if t:
+                snippets.append(t)
+    if not snippets:
+        for el in soup.select(".result")[:6]:
+            t = el.get_text(" ", strip=True)
+            if t:
+                snippets.append(t)
+    text = " ".join(snippets)
+    low = text.lower()
+    if not low:
+        return {}
+
     out: dict[str, Any] = {}
-    # Transmission
+    from backend.scanner.utils.vdp_spec_parse import _cylinders_from_engine_blob
+
     if is_effectively_empty(car.get("transmission")):
-        if "continuously variable" in low or "cvt" in low:
+        if "continuously variable" in low or " cvt" in low:
             out["transmission"] = "CVT"
         else:
-            m_spd = re.search(r"\b(\d{1,2}-speed)\s+automatic\b", low)
+            m_spd = re.search(r"(\d{1,2})-speed\s+automatic", low)
+            m_man = re.search(r"(\d)-speed\s+manual", low)
             if m_spd:
-                out["transmission"] = m_spd.group(0).title()
-            elif "automatic" in low and "manual" not in low[:200]:
+                out["transmission"] = f"{m_spd.group(1)}-Speed Automatic"
+            elif m_man:
+                out["transmission"] = f"{m_man.group(1)}-Speed Manual"
+            elif re.search(r"\bmanual\s+transmission\b", low):
+                out["transmission"] = "Manual"
+            elif "automatic" in low and "manual" not in low:
                 out["transmission"] = "Automatic"
             elif "manual" in low:
                 out["transmission"] = "Manual"
-    # Drivetrain
+
     if is_effectively_empty(car.get("drivetrain")):
-        if "all-wheel" in low or "awd" in low:
+        if re.search(r"\ball-wheel\b|\bawd\b", low):
             out["drivetrain"] = "AWD"
-        elif "four-wheel" in low or "4wd" in low:
+        elif re.search(r"\bfour-wheel\b|\b4wd\b|\b4x4\b", low):
             out["drivetrain"] = "4WD"
-        elif "front-wheel" in low or "fwd" in low:
+        elif re.search(r"\bfront-wheel\b|\bfwd\b", low):
             out["drivetrain"] = "FWD"
-        elif "rear-wheel" in low or "rwd" in low:
+        elif re.search(r"\brear-wheel\b|\brwd\b", low):
             out["drivetrain"] = "RWD"
-    # Fuel
+
     if is_effectively_empty(car.get("fuel_type")):
-        if "plug-in hybrid" in low or "phev" in low:
+        if re.search(r"\bplug.in hybrid\b|\bphev\b", low):
             out["fuel_type"] = "Plug-In Hybrid"
-        elif "hybrid" in low:
+        elif re.search(r"\bmild hybrid\b", low):
             out["fuel_type"] = "Hybrid"
-        elif "electric" in low and "gasoline" not in low[:120]:
+        elif re.search(r"\bhybrid\b", low):
+            out["fuel_type"] = "Hybrid"
+        elif re.search(r"\belectric\b|\bbev\b|\ball.electric\b", low) and "gasoline" not in low[:300]:
             out["fuel_type"] = "Electric"
-        elif "diesel" in low:
+        elif re.search(r"\bdiesel\b", low):
             out["fuel_type"] = "Diesel"
+        elif re.search(r"\bgasoline\b|\bgas\b|\bpetrol\b", low):
+            out["fuel_type"] = "Gasoline"
+
+    if is_effectively_empty(car.get("body_style")):
+        for phrase, canonical in (
+            ("sport utility vehicle", "SUV"), ("suv", "SUV"),
+            ("crossover", "Crossover"), ("pickup truck", "Truck"),
+            ("pickup", "Truck"), ("minivan", "Minivan"),
+            ("convertible", "Convertible"), ("hatchback", "Hatchback"),
+            ("wagon", "Wagon"), ("coupe", "Coupe"),
+            ("sedan", "Sedan"), ("van", "Van"),
+        ):
+            if phrase in low:
+                out["body_style"] = canonical
+                break
+
+    if is_effectively_empty(car.get("cylinders")):
+        c = _cylinders_from_engine_blob(text[:1000])
+        if c is not None:
+            out["cylinders"] = c
+
     return out
 
 
@@ -228,7 +295,8 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
         html: str | None = None
 
         need_page = "condition" in missing or (
-            {"transmission", "drivetrain", "fuel_type", "body_style", "cylinders"} & set(missing)
+            {"transmission", "drivetrain", "fuel_type", "body_style", "cylinders",
+             "mpg_city", "mpg_highway"} & set(missing)
         )
         if url and need_page:
             html = fetch_listing_html(url)
@@ -245,6 +313,10 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
                 proposed["transmission"] = str(specs["transmission"])[:200]
             if "drivetrain" in missing and specs.get("drivetrain"):
                 proposed["drivetrain"] = str(specs["drivetrain"])[:120]
+            if "fuel_type" in missing and specs.get("fuel_type"):
+                proposed["fuel_type"] = str(specs["fuel_type"])
+            if "body_style" in missing and specs.get("body_style"):
+                proposed["body_style"] = str(specs["body_style"])
             cyl = specs.get("cylinders")
             if "cylinders" in missing and cyl is not None:
                 try:
@@ -253,13 +325,23 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
                         proposed["cylinders"] = ci
                 except (TypeError, ValueError):
                     pass
+            if "mpg_city" in missing and specs.get("mpg_city") is not None:
+                try:
+                    proposed["mpg_city"] = int(specs["mpg_city"])
+                except (TypeError, ValueError):
+                    pass
+            if "mpg_highway" in missing and specs.get("mpg_highway") is not None:
+                try:
+                    proposed["mpg_highway"] = int(specs["mpg_highway"])
+                except (TypeError, ValueError):
+                    pass
 
         raw = get_car_by_id(cid, include_inactive=True)
         if not raw:
             continue
 
         if allow_ddg:
-            ddg_patch = _ddg_abstract_specs(dict(raw))
+            ddg_patch = _ddg_html_search_specs(dict(raw))
             for k, v in ddg_patch.items():
                 if k in proposed:
                     continue

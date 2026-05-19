@@ -1,9 +1,10 @@
 """
-Tiered discovery orchestration: DMV → OSM → DDG URL gap-fill.
+Tiered discovery orchestration: DMV → Google Places → DDG URL gap-fill.
 """
 from __future__ import annotations
 
 import logging
+import time
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +16,7 @@ from backend.discovery.candidate import DealerCandidate
 from backend.discovery.dmv import fetch_dmv_records
 from backend.discovery.dmv.schema import DMVRecord
 from backend.discovery.coordinate_enrich import enrich_candidate_location_fields
+from backend.discovery.google_places import fetch_google_places_dealerships
 from backend.discovery.merge import merge_and_dedupe
 from backend.discovery.normalize import (
     looks_like_dealer_website,
@@ -23,7 +25,6 @@ from backend.discovery.normalize import (
     normalize_zip,
     state_code_for_geocode,
 )
-from backend.discovery.osm import fetch_osm_dealerships
 from backend.discovery.web import ddg_find_dealer_url
 from backend.discovery.zcta_gazetteer import resolve_zip_center
 
@@ -101,23 +102,19 @@ def run_discovery(
     project_root: Path | None = None,
     gazetteer_path: Path | None = None,
     within_seed_zip_only: bool = False,
-    overpass_url: str | None = None,
-    overpass_timeout_s: float = 90.0,
     ddg_timeout_s: float = 15.0,
-    skip_osm: bool = False,
     session: Any = None,
 ) -> list[DealerCandidate]:
     """
     Discover dealerships near ``zip_code`` within ``radius_miles``.
 
     - Optional ``dmv_state``: 2-letter code with a registered loader (e.g. ``NC``).
-    - OSM tier runs unless ``skip_osm=True`` (for city-based discovery or when Overpass unavailable).
+    - Google Places tier runs when ``GOOGLE_MAPS_API_KEY`` is set.
     - ``fill_urls_via_ddg``: query DDG for HTTPS URLs when still missing after merge.
     - ``persist``: upsert each merged row via ``upsert_discovery_row``.
     - ``gazetteer_path``: optional ZCTA gazetteer file; default picks ``backend/ZIPs/*.txt``
       or ``DISCOVERY_ZCTA_GAZETTEER``. Centroids (INTPTLAT/LONG) override pgeocode when found.
     - ``within_seed_zip_only``: after enrichment, keep rows whose ZIP matches the seed ZCTA.
-    - ``skip_osm``: when True, skip OpenStreetMap tier entirely (useful for city-based discovery).
     """
     z = _validate_zip(zip_code)
     radius_miles = _validate_radius(radius_miles)
@@ -141,21 +138,10 @@ def run_discovery(
         n_dmv = len(combined)
         logger.info("DMV tier %s: %s candidates in radius", dmv_state_u, n_dmv)
 
-    n_osm = 0
-    if not skip_osm:
-        osm_list = fetch_osm_dealerships(
-            lat0,
-            lon0,
-            radius_miles,
-            overpass_url=overpass_url,
-            timeout_s=overpass_timeout_s,
-            session=sess,
-        )
-        combined.extend(osm_list)
-        n_osm = len(osm_list)
-        logger.info("OSM tier: %s POIs in radius", n_osm)
-    else:
-        logger.info("OSM tier: skipped (skip_osm=True)")
+    gp_list = fetch_google_places_dealerships(lat0, lon0, radius_miles, session=sess)
+    n_gp = len(gp_list)
+    combined.extend(gp_list)
+    logger.info("Google Places tier: %d dealers in radius", n_gp)
 
     merged = merge_and_dedupe(combined)
 
@@ -184,13 +170,16 @@ def run_discovery(
         )
 
     if fill_urls_via_ddg:
+        _ddg_calls = 0
         for c in merged:
             existing = normalize_url(c.dealer_website_url or c.website_url)
             if existing and looks_like_dealer_website(existing):
-                if existing:
-                    c.dealer_website_url = existing
-                    c.website_url = existing
+                c.dealer_website_url = existing
+                c.website_url = existing
                 continue
+            if _ddg_calls > 0:
+                time.sleep(1.2)
+            _ddg_calls += 1
             u = ddg_find_dealer_url(
                 c.name, c.city, c.state, timeout_s=ddg_timeout_s, session=sess
             )
@@ -214,17 +203,17 @@ def run_discovery(
     n_with_url = sum(1 for c in final if _candidate_has_url(c))
     n_missing_url = len(final) - n_with_url
     logger.info(
-        "Discovery tiers done (DMV=%s, OSM=%d POIs): %d candidates in output radius, "
-        "%d with a URL string after DMV+OSM+%s.",
+        "Discovery tiers done (DMV=%s, GooglePlaces=%d): %d candidates in output radius, "
+        "%d with a URL string after DMV+GooglePlaces+%s.",
         n_dmv if dmv_state else 0,
-        n_osm,
+        n_gp,
         len(final),
         n_with_url,
         "DDG" if fill_urls_via_ddg else "no DDG",
     )
     if n_missing_url:
         logger.info(
-            "%d candidates still have no URL (OSM often lacks website=; DDG Instant Answer is not full web search). "
+            "%d candidates still have no URL after gap-fill. "
             "dealers.json merge will skip those rows until a URL exists.",
             n_missing_url,
         )

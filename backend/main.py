@@ -1259,6 +1259,14 @@ def car_detail(car_id):
         {"code": c, "label": INCOMPLETE_FIELD_LABELS.get(c, c.replace("_", " ").title())}
         for c in _missing_codes
     ]
+    dealer_info = None
+    reg_id = car_raw.get("dealership_registry_id")
+    if reg_id:
+        try:
+            from backend.db.dealerships_db import get_dealership_by_id
+            dealer_info = get_dealership_by_id(int(reg_id))
+        except Exception:
+            pass
     return render_template(
         "car.html",
         car=car,
@@ -1277,7 +1285,39 @@ def car_detail(car_id):
         packages_panel_has_content=bool(ctx.get("packages_panel_has_content")),
         llava_interior_section=ctx.get("llava_interior_section"),
         mopar_vin_lookup_url=mopar_vin_lookup_url(make=car.get("make"), vin=car.get("vin")),
+        dealer_info=dealer_info,
     )
+
+
+@app.route("/api/nearby-dealers")
+def api_nearby_dealers():
+    """Return dealerships within radius of a ZIP code (max 50 mi)."""
+    from backend.db.dealerships_db import search_dealerships_by_radius
+    from backend.db.geo import zip_to_coords
+
+    zip_code = (request.args.get("zip_code") or "").strip()
+    try:
+        radius = min(float(request.args.get("radius") or 50), 50.0)
+    except (ValueError, TypeError):
+        radius = 50.0
+    if not zip_code:
+        return jsonify({"ok": False, "dealers": []})
+    coords = zip_to_coords(zip_code)
+    if not coords:
+        return jsonify({"ok": False, "dealers": []})
+    lat, lon = coords
+    rows = search_dealerships_by_radius(lat, lon, radius)
+    dealers = [
+        {
+            "id": r["id"],
+            "name": r["name"],
+            "city": r.get("city") or "",
+            "state": r.get("state") or "",
+            "distance_miles": r.get("distance_miles"),
+        }
+        for r in rows
+    ]
+    return jsonify({"ok": True, "dealers": dealers})
 
 
 @app.route("/api/cars/<int:car_id>/save", methods=["POST"])

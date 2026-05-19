@@ -682,7 +682,53 @@ class _DealerResponseErrorBudget:
         return (self._n - self._first_n) % self._then_every == 1
 
 
+def _load_dealers_from_db() -> list[dict]:
+    """Load active dealerships with URLs from the registry DB (alternative to dealers.json)."""
+    from backend.db.dealerships_db import get_conn, ensure_dealerships_table
+    import sqlite3
+
+    conn = get_conn()
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    ensure_dealerships_table(cur)
+    cur.execute(
+        """
+        SELECT id, name, dealer_website_url, website_url, city, state, zip_code
+        FROM dealerships
+        WHERE is_active = 1 AND duplicate_of_id IS NULL
+          AND (
+            (dealer_website_url IS NOT NULL AND TRIM(dealer_website_url) != '')
+            OR (website_url IS NOT NULL AND TRIM(website_url) != '')
+          )
+        ORDER BY id ASC
+        """
+    )
+    rows = cur.fetchall()
+    conn.close()
+    out = []
+    for r in rows:
+        url = (r["dealer_website_url"] or r["website_url"] or "").strip()
+        if not url:
+            continue
+        slug = str(r["id"])
+        out.append({
+            "name": r["name"] or "",
+            "url": url,
+            "dealer_id": "db-" + slug,
+            "dealership_registry_id": r["id"],
+            "provider": "google_places",
+            "city": r["city"] or "",
+            "state": r["state"] or "",
+        })
+    return out
+
+
 def load_manifest():
+    use_db = (os.environ.get("DEALERS_FROM_DB") or "").strip().lower() in ("1", "true", "yes")
+    if use_db:
+        dealers = _load_dealers_from_db()
+        logger.info("Loaded %d dealers from DB (DEALERS_FROM_DB=1)", len(dealers))
+        return dealers
     with open(MANIFEST_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -1003,17 +1049,19 @@ async def _scrape_inventory_path(
 
 def _apply_gallery_vision_filter_to_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, int]:
     """
-    Mutate each vehicle's ``gallery`` and ``image_url`` to drop images LLaVA classifies as not
-    vehicle exterior, interior, or window sticker. Requires Ollama (``OLLAMA_HOST``) and a vision
-    model (default ``llava:13b`` via ``OLLAMA_VISION_MODEL``).
+    Mutate each vehicle's ``gallery`` and ``image_url`` to drop non-vehicle images.
+    Uses Claude Haiku vision when ANTHROPIC_API_KEY is set; returns URLs as-is otherwise.
     """
-    from backend.vision import ollama_llava as _llv
+    anthropic_key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
+    if anthropic_key:
+        from backend.vision import claude_vision as _vis
+        _filter_fn = _vis.filter_gallery_urls_for_vehicle_listing
+        logger.info("Gallery vision filter: using Claude Haiku")
+    else:
+        logger.info("Gallery vision filter: ANTHROPIC_API_KEY not set — returning URLs as-is (no filtering)")
+        def _filter_fn(urls, *, page_referer=None, **kw):  # type: ignore[misc]
+            return [u for u in urls if isinstance(u, str) and u.strip().lower().startswith("http")]
 
-    raw = (os.environ.get("SCANNER_GALLERY_VISION_MAX_WORKERS") or "1").strip()
-    try:
-        max_w = max(1, int(raw))
-    except ValueError:
-        max_w = 1
     total_before = 0
     total_after = 0
     for v in vehicles:
@@ -1035,9 +1083,7 @@ def _apply_gallery_vision_filter_to_vehicles(vehicles: list[dict[str, Any]]) -> 
         total_before += n_before
         ref = str(v.get("_detail_url") or v.get("detail_url") or "").strip()
         page_referer = ref if ref.lower().startswith("http") else None
-        filtered = _llv.filter_gallery_urls_for_vehicle_listing(
-            urls, max_workers=max_w, page_referer=page_referer
-        )
+        filtered = _filter_fn(urls, page_referer=page_referer)
         seen_f: set[str] = set()
         n_after = 0
         for u in filtered:
@@ -1057,65 +1103,14 @@ def _apply_gallery_vision_filter_to_vehicles(vehicles: list[dict[str, Any]]) -> 
 
 def _apply_monroney_vision_to_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, Any]:
     """
-    LLaVA read of window-sticker images (URL heuristics) plus VDP ``_monroney_page_texts`` snippets.
-    Mutates vehicles; pops ``_monroney_page_texts``. Requires Ollama (``OLLAMA_VISION_MODEL``).
+    Monroney/window-sticker vision is disabled (LLaVA removed; Claude replacement not yet
+    implemented). Pops ``_monroney_page_texts`` from each vehicle to avoid leaking internal keys
+    downstream, then returns a no-op stats dict.
     """
-    from backend.vision import ollama_llava as ol
-    from backend.vision.monroney_merge import merge_monroney_parsed_into_vehicle
-
-    stats: dict[str, Any] = {"rows_touched": 0, "sticker_image_calls": 0, "page_text_calls": 0}
+    logger.info("Monroney vision disabled (LLaVA removed) — skipping sticker image parsing")
     for v in vehicles:
-        touched = False
-        texts = v.pop("_monroney_page_texts", None)
-        if isinstance(texts, list) and texts:
-            tp = ol.analyze_monroney_from_page_texts(texts)
-            stats["page_text_calls"] += 1
-            if isinstance(tp, dict) and merge_monroney_parsed_into_vehicle(v, tp):
-                touched = True
-        hero = v.get("image_url")
-        g = v.get("gallery") if isinstance(v.get("gallery"), list) else []
-        urls_dedup: list[str] = []
-        seen_u: set[str] = set()
-        seq: list[str] = []
-        if isinstance(hero, str) and hero.strip().lower().startswith("http"):
-            seq.append(hero.strip())
-        for x in g:
-            if isinstance(x, str):
-                seq.append(x.strip())
-        for u in seq:
-            if not u.lower().startswith("http") or u in seen_u:
-                continue
-            seen_u.add(u)
-            urls_dedup.append(u)
-        sticker_urls = [u for u in urls_dedup if ol.is_probable_sticker_image_url(u)][:2]
-        merged: dict[str, Any] = {}
-        for su in sticker_urls:
-            sp = ol.analyze_monroney_sticker_from_image_url(su)
-            stats["sticker_image_calls"] += 1
-            if not isinstance(sp, dict):
-                continue
-            for k, val in sp.items():
-                if k in ("vision_model", "source"):
-                    continue
-                if isinstance(val, list) and val:
-                    cur = merged.setdefault(k, [])
-                    if not isinstance(cur, list):
-                        cur = []
-                        merged[k] = cur
-                    seenn = {str(x).strip().lower() for x in cur}
-                    for it in val:
-                        ss = str(it).strip()
-                        if ss and ss.lower() not in seenn:
-                            cur.append(ss)
-                            seenn.add(ss.lower())
-                elif val not in (None, "", []):
-                    if merged.get(k) in (None, "", []):
-                        merged[k] = val
-        if merged and merge_monroney_parsed_into_vehicle(v, merged):
-            touched = True
-        if touched:
-            stats["rows_touched"] += 1
-    return stats
+        v.pop("_monroney_page_texts", None)
+    return {"skipped": "monroney_vision_removed"}
 
 
 def _emit_dealer_run_summary(result: dict[str, Any]) -> None:
@@ -1404,6 +1399,10 @@ async def run_dealer(
                 except Exception as e:
                     logger.warning("Monroney vision failed for %s: %s", name, e)
                     result["monroney_vision"] = {"error": str(e)[:200]}
+            reg_id = dealer.get("dealership_registry_id")
+            if reg_id:
+                for v in all_vehicles:
+                    v.setdefault("dealership_registry_id", reg_id)
             count = await _upsert_vehicles_serialized(write_lock, all_vehicles)
             result["upserted"] = count
             try:

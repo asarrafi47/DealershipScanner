@@ -48,6 +48,40 @@ def _cylinders_from_engine_blob(blob: str) -> int | None:
     return None
 
 
+_FUEL_CANONICAL: dict[str, str] = {
+    "gasoline": "Gasoline", "gas": "Gasoline", "petrol": "Gasoline",
+    "regular gasoline": "Gasoline", "premium gasoline": "Gasoline",
+    "diesel": "Diesel",
+    "electric": "Electric", "battery electric": "Electric", "bev": "Electric",
+    "hybrid": "Hybrid", "mild hybrid": "Hybrid", "gas / mild hybrid": "Hybrid",
+    "plug-in hybrid": "Plug-In Hybrid", "plug in hybrid": "Plug-In Hybrid", "phev": "Plug-In Hybrid",
+    "hydrogen": "Hydrogen",
+}
+
+_BODY_STYLE_CANONICAL: dict[str, str] = {
+    "sedan": "Sedan", "coupe": "Coupe", "convertible": "Convertible",
+    "hatchback": "Hatchback", "wagon": "Wagon", "suv": "SUV",
+    "sport utility vehicle": "SUV", "crossover": "Crossover",
+    "pickup": "Truck", "pickup truck": "Truck", "truck": "Truck",
+    "minivan": "Minivan", "van": "Van", "roadster": "Roadster",
+}
+
+
+def _canonical_fuel(raw: str) -> str | None:
+    k = raw.strip().lower()
+    for phrase, canonical in _FUEL_CANONICAL.items():
+        if phrase in k or k in phrase:
+            return canonical
+    return None
+
+
+def _canonical_body(raw: str) -> str | None:
+    k = raw.strip().lower()
+    return _BODY_STYLE_CANONICAL.get(k) or next(
+        (v for phrase, v in _BODY_STYLE_CANONICAL.items() if phrase in k), None
+    )
+
+
 def _walk_json_ld(obj: Any, out: dict[str, Any]) -> None:
     if isinstance(obj, dict):
         types = obj.get("@type")
@@ -67,6 +101,16 @@ def _walk_json_ld(obj: Any, out: dict[str, Any]) -> None:
                 dw = dw.get("name") or dw.get("value")
             if isinstance(dw, str) and dw.strip():
                 out.setdefault("drivetrain", dw.strip()[:120])
+            ft = obj.get("fuelType")
+            if isinstance(ft, str) and ft.strip():
+                cf = _canonical_fuel(ft)
+                if cf:
+                    out.setdefault("fuel_type", cf)
+            bc = obj.get("bodyType") or obj.get("vehicleBodyType")
+            if isinstance(bc, str) and bc.strip():
+                cb = _canonical_body(bc)
+                if cb:
+                    out.setdefault("body_style", cb)
             eng = obj.get("vehicleEngine")
             if isinstance(eng, dict):
                 blob = str(eng.get("name") or eng.get("description") or "")[:500]
@@ -145,6 +189,14 @@ def _apply_dom_pairs(pairs: dict[str, str], out: dict[str, Any]) -> None:
             out.setdefault("transmission", val.strip()[:200])
         if re.search(r"drive|drivetrain|driveline", lk) and len(val) < 120:
             out.setdefault("drivetrain", val.strip()[:120])
+        if re.search(r"^fuel\b|fuel[\s_]type", lk) and len(val) < 120:
+            cf = _canonical_fuel(val)
+            if cf:
+                out.setdefault("fuel_type", cf)
+        if re.search(r"^body\b|body[\s_]style|body[\s_]type", lk) and len(val) < 120:
+            cb = _canonical_body(val)
+            if cb:
+                out.setdefault("body_style", cb)
 
 
 def parse_html_for_vehicle_specs(html: str) -> dict[str, Any]:

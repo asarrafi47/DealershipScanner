@@ -58,17 +58,13 @@ def post_kbb_env_enabled() -> bool:
 
 def post_listing_gap_fill_env_enabled() -> bool:
     """
-    After repair + listing parse: tier dictionary/vPIC → listing-page HTML (Playwright)
-    → optional DuckDuckGo for residual mechanical fields. Condition only from listing HTML.
+    After repair + listing parse: tier vPIC → listing-page HTML (Playwright)
+    → DDG HTML search for residual mechanical fields. Condition only from listing HTML.
 
-    Enable with ``SCANNER_POST_LISTING_GAP_FILL=1`` or ``scanner.py --post-listing-gap-fill``.
+    On by default. Disable with ``SCANNER_POST_LISTING_GAP_FILL=0``.
     """
-    return (os.environ.get("SCANNER_POST_LISTING_GAP_FILL") or "").strip().lower() in (
-        "1",
-        "true",
-        "yes",
-        "on",
-    )
+    raw = (os.environ.get("SCANNER_POST_LISTING_GAP_FILL") or "1").strip().lower()
+    return raw not in ("0", "false", "no", "off")
 
 
 def run_listing_gap_fill_stage(vins: list[str]) -> dict[str, Any]:
@@ -335,27 +331,17 @@ def _interior_vision_max_gallery_classify() -> int:
 
 def select_url_for_cabin_vision(urls: list[str]) -> str | None:
     """
-    Choose one HTTPS URL that is likely a cabin photo before running interior color LLaVA.
+    Choose one HTTPS URL that is likely a cabin photo before running interior color vision.
 
-    Order: (1) URL path hints indicating interior, (2) first N gallery URLs classified
-    as ``interior``/``cabin`` by :func:`classify_listing_image_from_url`.
+    Order: (1) URL path hints indicating interior, (2) first URL containing "interior" in path.
     If neither finds a shot, return ``None``. See :func:`pick_listing_image_for_interior_vision`
     for the default **through-windows** fallback on exterior/hero frames.
     """
-    from backend.vision import ollama_llava
-
     ordered = http_listing_urls_deduped(urls)
     if not ordered:
         return None
     for u in ordered:
         if _url_suggests_interior_cabin_image(u):
-            return u
-    cap = _interior_vision_max_gallery_classify()
-    for i, u in enumerate(ordered):
-        if i >= cap:
-            break
-        parsed = ollama_llava.classify_listing_image_from_url(u)
-        if _classify_category_is_cabin(parsed):
             return u
     return None
 
@@ -440,23 +426,150 @@ def candidate_urls_for_interior_vision(urls: list[str]) -> list[tuple[str, str]]
     return out
 
 
+_INTERIOR_BUCKET_ALLOWLIST: tuple[str, ...] = (
+    "black",
+    "gray",
+    "beige",
+    "tan",
+    "brown",
+    "white",
+    "red",
+    "blue",
+    "other",
+)
+
+_CLAUDE_INTERIOR_PROMPT = (
+    'What is the interior color of this car? '
+    'Respond with JSON only: {"interior_color_bucket": "<one of: black, gray, beige, tan, brown, white, red, blue, other>", "confidence": <0.0-1.0>}'
+)
+
+
+def _analyze_interior_with_claude(image_url: str) -> dict[str, Any] | None:
+    """
+    Call Claude Haiku vision to classify the interior color from an image URL.
+
+    Downloads the image, encodes as base64 JPEG, sends to Claude API.
+    Returns dict with interior_color_bucket / confidence / raw, or None on failure.
+    """
+    import base64
+    import json as _json
+
+    api_key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
+    if not api_key:
+        logger.warning("ANTHROPIC_API_KEY not set — interior vision skipped")
+        return None
+
+    try:
+        import requests as _req
+        from io import BytesIO
+
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+            ),
+            "Accept": "image/*",
+        }
+        r = _req.get(image_url, headers=headers, timeout=12.0)
+        r.raise_for_status()
+        raw = r.content
+        if len(raw) < 800:
+            logger.debug("Interior vision: image too small (%d bytes) for %s", len(raw), image_url[:80])
+            return None
+
+        try:
+            from PIL import Image as _PILImage
+            img = _PILImage.open(BytesIO(raw)).convert("RGB")
+            max_dim = 800
+            w, h = img.size
+            if w > max_dim or h > max_dim:
+                img.thumbnail((max_dim, max_dim), _PILImage.LANCZOS)
+            buf = BytesIO()
+            img.save(buf, format="JPEG", quality=75)
+            b64 = base64.b64encode(buf.getvalue()).decode()
+        except Exception:
+            b64 = base64.b64encode(raw[:300_000]).decode()
+
+    except Exception as e:
+        logger.debug("Interior vision: image fetch failed for %s: %s", image_url[:80], e)
+        return None
+
+    try:
+        import requests as _req
+        resp = _req.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key": api_key,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
+            },
+            json={
+                "model": "claude-haiku-4-5-20251001",
+                "max_tokens": 128,
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "image",
+                                "source": {
+                                    "type": "base64",
+                                    "media_type": "image/jpeg",
+                                    "data": b64,
+                                },
+                            },
+                            {"type": "text", "text": _CLAUDE_INTERIOR_PROMPT},
+                        ],
+                    }
+                ],
+            },
+            timeout=45.0,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        raw_text = data["content"][0]["text"].strip()
+    except Exception as e:
+        logger.warning("Interior vision: Claude API call failed: %s", e)
+        return None
+
+    try:
+        import re as _re
+        m = _re.search(r"\{[\s\S]*\}", raw_text)
+        parsed = _json.loads(m.group(0)) if m else _json.loads(raw_text)
+        bucket = str(parsed.get("interior_color_bucket") or "other").strip().lower()
+        if bucket not in _INTERIOR_BUCKET_ALLOWLIST:
+            bucket = "other"
+        try:
+            confidence = float(parsed.get("confidence", 0.5))
+        except (TypeError, ValueError):
+            confidence = 0.5
+        confidence = max(0.0, min(1.0, confidence))
+        return {
+            "interior_color_bucket": bucket,
+            "confidence": confidence,
+            "raw": raw_text,
+        }
+    except Exception as e:
+        logger.debug("Interior vision: JSON parse failed (%s) — raw: %s", e, raw_text[:200])
+        return None
+
+
 def run_interior_vision_for_vins(
     vins: list[str],
     *,
     skip_if_interior_present: bool = False,
 ) -> dict[str, Any]:
-    """Run Ollama LLaVA interior/cabin inference for each VIN.
+    """Run Claude Haiku interior/cabin color inference for each VIN.
 
-    Prefers a classified cabin image; when none exists, uses the first listing image and asks the
-    model to read the cabin **through the windows** (see ``INTERIOR_VISION_FALLBACK_THROUGH_WINDOWS``).
+    Prefers a URL whose path suggests an interior/cabin shot; otherwise falls back to the first
+    listing image (through-windows inference).
 
     When ``skip_if_interior_present`` is true, rows with a non-empty dealer ``interior_color`` are
-    skipped (saves GPU time for bulk backfills). Post-scan callers keep the default ``False`` so
-    gallery passes can still refresh buckets / provenance when a listing already had interior text.
+    skipped. Post-scan callers keep the default ``False`` so gallery passes can still refresh
+    buckets / provenance when a listing already had interior text.
     """
     from backend.db.inventory_db import get_car_by_vin, refresh_car_data_quality_score, update_car_row_partial
     from backend.utils.field_clean import is_effectively_empty
-    from backend.vision import ollama_llava
     from backend.vision.interior_vision_merge import build_updates_from_llava_result
 
     stats: dict[str, Any] = {
@@ -492,19 +605,26 @@ def run_interior_vision_for_vins(
                 reasons.get("no_cabin_image_in_gallery", 0) + 1
             )
             continue
-        llava = None
+        vision_result = None
         for primary, inference_ctx in candidates:
-            llava = ollama_llava.analyze_interior_from_image_url(
-                primary,
-                inference_context=inference_ctx,
-            )
-            if llava:
+            vision_result = _analyze_interior_with_claude(primary)
+            if vision_result:
+                # Normalize to the schema that build_updates_from_llava_result expects
+                bucket = vision_result.get("interior_color_bucket", "other")
+                vision_result = {
+                    "interior_buckets": [bucket],
+                    "interior_guess_text": bucket.title() if bucket != "other" else "",
+                    "confidence": vision_result.get("confidence", 0.5),
+                    "evidence": vision_result.get("raw", "")[:160],
+                    "model": "claude-haiku-4-5-20251001",
+                    "inference_context": inference_ctx,
+                }
                 break
-        if not llava:
+        if not vision_result:
             stats["rows_skipped"] += 1
-            reasons["llava_failed"] = reasons.get("llava_failed", 0) + 1
+            reasons["vision_failed"] = reasons.get("vision_failed", 0) + 1
             continue
-        patch = build_updates_from_llava_result(row=row, llava=llava)
+        patch = build_updates_from_llava_result(row=row, llava=vision_result)
         if not patch:
             stats["rows_skipped"] += 1
             reasons["no_merge_updates"] = reasons.get("no_merge_updates", 0) + 1

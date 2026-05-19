@@ -238,6 +238,25 @@
 
         </section>
 
+        {% if dealer_info %}
+        <section class="car-dealer-card-section">
+            <div class="car-dealer-card">
+                <h3 class="dealer-card-heading">About the Dealership</h3>
+                <p class="dealer-card-name">{{ dealer_info.name }}</p>
+                {% if dealer_info.street_address %}
+                <p class="dealer-card-address">{{ dealer_info.street_address }}</p>
+                {% endif %}
+                {% if dealer_info.city or dealer_info.state %}
+                <p class="dealer-card-location">{{ dealer_info.city }}{% if dealer_info.city and dealer_info.state %}, {% endif %}{{ dealer_info.state }}{% if dealer_info.zip_code %} {{ dealer_info.zip_code }}{% endif %}</p>
+                {% endif %}
+                {% set dealer_site = dealer_info.dealer_website_url or dealer_info.website_url %}
+                {% if dealer_site %}
+                <a href="{{ dealer_site }}" target="_blank" rel="noopener noreferrer" class="dealer-card-link">Visit Dealership Website →</a>
+                {% endif %}
+            </div>
+        </section>
+        {% endif %}
+
         <section class="car-chat-section" id="car-chat-section" data-car-id="{{ car.id }}">
             <h2 class="car-chat-heading">Ask about this car</h2>
             <p class="car-chat-hint">AI-generated answers may be incorrect or incomplete. Do not rely on them for VIN verification, pricing, financing, or compliance. They are not from the dealer or from official vehicle records. This feature uses your configured model (<code>LLM_BASE_URL</code> / <code>LLM_MODEL</code>).{% if not session.get('user_id') %} Sign in to allow live web research for comparison-style questions on this site (when the server enables it).{% endif %}</p>

@@ -3,21 +3,19 @@ Inventory enrichment — Nitro Mode (M4 Max / 48GB RAM).
 
 **Throughput target: 1,000 cars in ≤ 15 min.**
 
-* 16 ``ThreadPoolExecutor`` workers matching M4 Max core count (``OLLAMA_NUM_PARALLEL=16``).
-* Vision images resized to ``VISION_MAX_DIM=1600px`` on the longest edge — sticker-readable
-  without the 4K transfer penalty.
-* ``num_ctx=4096`` / ``num_predict=4096`` — full-context generation prevents truncation.
-* Only **one** image per car (sticker/Monroney preferred, else hero shot) — halves GPU load.
+* 16 ``ThreadPoolExecutor`` workers (default, env ``ENRICHMENT_MAX_WORKERS``).
+* Vision images resized to ``VISION_MAX_DIM=1600px`` on the longest edge.
+* Only **one** image per car (sticker/Monroney preferred, else hero shot).
 * SQLite writes are batched: rows accumulate in ``_write_buffer`` and flush every
   ``BATCH_COMMIT_SIZE=50`` vehicles, eliminating per-car I/O stalls.
 * A ``_PrefetchCache`` (8 download threads) keeps the next ``PREFETCH_AHEAD=20`` images
-  in memory while the GPU processes the current wave.
-* ``keep_alive="5m"`` on every Ollama call — model never unloads between waves.
+  in memory while workers process the current wave.
+* Vision analysis uses Claude Haiku via ``ANTHROPIC_API_KEY``.
 * Logging is one INFO line per vehicle; warnings/errors are kept.
 
 CLI::
 
-    OLLAMA_NUM_PARALLEL=16 python -m backend.enrichment.service --all --workers 16
+    python -m backend.enrichment.service --all --workers 16
     python -m backend.enrichment.service --all
     python -m backend.enrichment.service --vision-only --limit 50
 """
@@ -46,8 +44,6 @@ from backend.vector.catalog_service import MasterCatalog
 
 logger = logging.getLogger(__name__)
 
-OLLAMA_VISION_MODEL = os.environ.get("OLLAMA_VISION_MODEL", "llama3.2-vision")
-OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
 DEFAULT_MAX_WORKERS = int(os.environ.get("ENRICHMENT_MAX_WORKERS", "16"))
 BATCH_COMMIT_SIZE = 50       # flush SQLite every N vehicles
 PREFETCH_AHEAD = 20          # images to pre-download ahead of GPU
@@ -147,12 +143,6 @@ def _pick_vision_url(row: dict[str, Any]) -> str | None:
 
 
 VISION_JPEG_QUALITY = 100
-OLLAMA_VISION_OPTIONS: dict[str, Any] = {
-    "num_ctx": 4096,
-    "num_thread": 8,
-    "num_predict": 4096,   # match full context — never truncate package lists
-    "temperature": 0.1,
-}
 _DB_RETRY_ATTEMPTS = 3
 _DB_RETRY_BASE_DELAY = 0.5  # seconds; exponential backoff: 0.5, 1.0, 2.0
 
@@ -502,36 +492,53 @@ def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | No
         "Omit vision_notes."
     )
 
-    try:
-        import ollama
+    api_key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
+    if not api_key:
+        _log_vision_skipped(RuntimeError("ANTHROPIC_API_KEY not set"))
+        return None
 
-        client = ollama.Client(host=OLLAMA_HOST)
-        resp = client.chat(
-            model=OLLAMA_VISION_MODEL,
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are a JSON-only response engine. "
-                        "Never output text other than a valid JSON object. "
-                        "If you are unsure about a field, return null. "
-                        "Do not explain yourself."
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": prompt,
-                    "images": [b64],
-                },
-            ],
-            options=OLLAMA_VISION_OPTIONS,
-            keep_alive="5m",
+    try:
+        import requests as _requests
+
+        r = _requests.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key": api_key,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
+            },
+            json={
+                "model": "claude-haiku-4-5-20251001",
+                "max_tokens": 512,
+                "system": (
+                    "You are a JSON-only response engine. "
+                    "Never output text other than a valid JSON object. "
+                    "If you are unsure about a field, return null. "
+                    "Do not explain yourself."
+                ),
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "image",
+                                "source": {"type": "base64", "media_type": "image/jpeg", "data": b64},
+                            },
+                            {"type": "text", "text": prompt},
+                        ],
+                    }
+                ],
+            },
+            timeout=45.0,
         )
+        r.raise_for_status()
+        data = r.json()
+        raw_content = (data.get("content") or [{}])[0].get("text") or ""
     except Exception as e:
         _log_vision_skipped(e)
         return None
 
-    content = (resp.get("message") or {}).get("content") or ""
+    content = raw_content
     parsed = _parse_vision_json_response(content)
     if not parsed:
         _log_vision_skipped(
@@ -978,8 +985,7 @@ def main(argv: list[str] | None = None) -> int:
         type=int,
         default=DEFAULT_MAX_WORKERS,
         help=(
-            f"Parallel worker threads (default {DEFAULT_MAX_WORKERS}, env ENRICHMENT_MAX_WORKERS). "
-            "Match OLLAMA_NUM_PARALLEL on the Ollama server."
+            f"Parallel worker threads (default {DEFAULT_MAX_WORKERS}, env ENRICHMENT_MAX_WORKERS)."
         ),
     )
     args = p.parse_args(argv)

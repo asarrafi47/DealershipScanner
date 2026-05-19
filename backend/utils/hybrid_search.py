@@ -126,6 +126,20 @@ def flask_request_to_search_cars_kwargs(request: Any) -> dict[str, Any]:
         except ValueError:
             dealership_registry_id = None
 
+    dealer_registry_ids_raw = g("dealer_registry_id")
+    dealer_registry_ids = None
+    if dealer_registry_ids_raw:
+        _parsed = []
+        for v in dealer_registry_ids_raw:
+            try:
+                i = int(v.strip())
+                if i > 0:
+                    _parsed.append(i)
+            except (ValueError, AttributeError):
+                pass
+        if _parsed:
+            dealer_registry_ids = _parsed
+
     def _safe_float(raw: str) -> float | None:
         if not raw:
             return None
@@ -171,6 +185,7 @@ def flask_request_to_search_cars_kwargs(request: Any) -> dict[str, Any]:
         "zip_code": zip_code or None,
         "radius_miles": _safe_float(radius),
         "dealership_registry_id": dealership_registry_id,
+        "dealer_registry_ids": dealer_registry_ids,
         "engine_displacement_l_min": _safe_float(eng_l_min),
         "engine_displacement_l_max": _safe_float(eng_l_max),
     }

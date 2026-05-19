@@ -715,7 +715,6 @@ def run_bmw_enrichment(
     hybrid_out: Path | None = None,
 ) -> dict[str, Any]:
     """Run hybrid crawl + adjudication — same crawl behavior as SCRAPING.cli --adjudicate."""
-    from intelligence.llm.providers.ollama_client import OpenAICompatibleClient
     from intelligence.pipeline.orchestrator import run_hybrid_batch, save_hybrid_run
 
     from scraping.adjudicate_crawl import build_adjudicate_crawl_one
@@ -732,7 +731,7 @@ def run_bmw_enrichment(
             return {"error": "no_dealers_with_websites", "sent": 0}
 
         session = fetch_requests_session(timeout, verify_ssl=not insecure_ssl)
-        llm = OpenAICompatibleClient(base_url=llm_base_url)
+        llm = None
 
         browser = None
         playwright = None

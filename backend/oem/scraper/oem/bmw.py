@@ -504,9 +504,8 @@ def ingest_bmw_usa_playwright(
         ai_adjudicator = None
         if ai_selector_assist:
             try:
-                from intelligence.llm.providers.ollama_client import OpenAICompatibleClient
-
-                client = OpenAICompatibleClient(base_url=llm_base_url)
+                import anthropic as _anthropic
+                _claude = _anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
 
                 def ai_adjudicator(evidence: dict[str, Any]) -> dict[str, Any]:
                     system = (
@@ -528,12 +527,14 @@ def ingest_bmw_usa_playwright(
                         },
                         ensure_ascii=False,
                     )
-                    return client.complete_json(
+                    resp = _claude.messages.create(
+                        model="claude-haiku-4-5-20251001",
+                        max_tokens=1024,
                         system=system,
-                        user=user,
-                        model=llm_model,
-                        temperature=0.0,
+                        messages=[{"role": "user", "content": user}],
                     )
+                    raw = resp.content[0].text
+                    return json.loads(raw)
             except Exception as e:
                 bundle.notes.append(f"ai_selector_assist_unavailable:{e!s}")
                 ai_adjudicator = None

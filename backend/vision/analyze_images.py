@@ -1,21 +1,15 @@
 """
-Unified listing **image analysis** via Ollama LLaVA (and helpers tied to ``inventory.db``).
+Unified listing **image analysis** helpers (and CLI tied to ``inventory.db``).
 
 **Run from the repository root** (so ``backend`` is importable)::
 
-    python -m backend.vision.analyze_images interior --url 'https://...'
-    python -m backend.vision.analyze_images interior --vin 1HGBH41JXMN109186
-    python -m backend.vision.analyze_images classify --url 'https://...'
     python -m backend.vision.analyze_images filter-gallery 'https://a/1.jpg' 'https://a/2.jpg'
-    python -m backend.vision.analyze_images monroney --url 'https://...'
     python -m backend.vision.analyze_images backfill-interior --dry-run
 
-This module **re-exports** the low-level vision functions from :mod:`backend.vision.ollama_llava`
+This module **re-exports** URL heuristics and the Claude-based gallery filter from
+:mod:`backend.vision.claude_vision` / :mod:`backend.vision.url_heuristics`
 and adds a CLI. Inventory paths default to ``<repo>/inventory.db`` when ``INVENTORY_DB_PATH`` is
 unset (so running from ``scripts/`` still finds the DB).
-
-Requires ``OLLAMA_HOST`` (default ``http://127.0.0.1:11434``) and a pulled vision model
-(``OLLAMA_VISION_MODEL``, default ``llava:13b``).
 """
 from __future__ import annotations
 
@@ -29,45 +23,23 @@ from typing import Any
 # Repository root: backend/vision/analyze_images.py -> parents[2]
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
-# --- Re-exports: use this file as the single import surface for image analysis -----------------
-from backend.vision.ollama_llava import (  # noqa: E402
-    INTERIOR_BUCKET_ALLOWLIST,
-    OLLAMA_HOST,
-    OLLAMA_INTERIOR_VISION_TIMEOUT_S,
-    OLLAMA_VISION_MODEL,
-    analyze_interior_from_image_b64,
-    analyze_interior_from_image_url,
-    analyze_monroney_from_page_texts,
-    analyze_monroney_sticker_from_image_b64,
-    analyze_monroney_sticker_from_image_url,
-    classify_listing_image_from_image_b64,
-    classify_listing_image_from_url,
-    filter_gallery_urls_for_vehicle_listing,
-    image_bytes_to_b64_jpeg,
-    is_probable_sticker_image_url,
-    last_ollama_diagnostics,
+# Re-exports from new Claude-based modules
+from backend.vision.claude_vision import filter_gallery_urls_for_vehicle_listing  # noqa: F401
+from backend.vision.url_heuristics import (  # noqa: F401
+    heuristic_drop_gallery_listing_url,
+    dealer_lot_photo_score,
 )
 
+# Removed: OLLAMA_HOST, OLLAMA_VISION_MODEL, LLaVA analysis functions (deleted with ollama_llava.py)
+# Use backend.vision.claude_vision for gallery filtering
+# Use backend.scanner.post_pipeline.run_interior_vision_for_vins for interior classification
+
 __all__ = [
-    "INTERIOR_BUCKET_ALLOWLIST",
-    "OLLAMA_HOST",
-    "OLLAMA_INTERIOR_VISION_TIMEOUT_S",
-    "OLLAMA_VISION_MODEL",
-    "analyze_interior_from_image_b64",
-    "analyze_interior_from_image_url",
-    "analyze_monroney_from_page_texts",
-    "analyze_monroney_sticker_from_image_b64",
-    "analyze_monroney_sticker_from_image_url",
-    "apply_inventory_db_defaults",
-    "classify_listing_image_from_image_b64",
-    "classify_listing_image_from_url",
-    "collect_vins_missing_interior_with_images",
     "filter_gallery_urls_for_vehicle_listing",
-    "image_bytes_to_b64_jpeg",
-    "is_probable_sticker_image_url",
+    "heuristic_drop_gallery_listing_url",
+    "dealer_lot_photo_score",
+    "apply_inventory_db_defaults",
     "main",
-    "pick_image_for_interior_vision",
-    "run_interior_vision_for_inventory_vins",
 ]
 
 
@@ -176,62 +148,9 @@ def collect_vins_missing_interior_with_images(
     return vins, stats
 
 
-def _cmd_interior(args: argparse.Namespace) -> None:
-    if args.url:
-        ctx = "through_windows" if args.through_windows else "cabin"
-        out = analyze_interior_from_image_url(args.url.strip(), inference_context=ctx)
-        print(json.dumps(out, indent=2))
-        return
-
-    apply_inventory_db_defaults(args.db)
-    from backend.db.inventory_db import get_car_by_vin
-    from backend.scanner.post_pipeline import candidate_urls_for_interior_vision, http_listing_image_urls_for_row
-
-    row = get_car_by_vin(args.vin.strip())
-    if not row:
-        print("VIN not found in database.", file=sys.stderr)
-        sys.exit(2)
-    urls = http_listing_image_urls_for_row(row)
-    candidates = candidate_urls_for_interior_vision(urls)
-    if not candidates:
-        print("No HTTP(S) listing image on row (hero/gallery).", file=sys.stderr)
-        sys.exit(3)
-    out = None
-    tried: list[dict[str, str]] = []
-    for primary, ctx in candidates:
-        tried.append({"url": primary, "inference_context": ctx})
-        out = analyze_interior_from_image_url(primary, inference_context=ctx)
-        if out:
-            break
-    diag = None if out else last_ollama_diagnostics()
-    print(
-        json.dumps(
-            {
-                "vin": args.vin.strip(),
-                "image_url": tried[-1]["url"] if tried else None,
-                "inference_context": tried[-1]["inference_context"] if tried else None,
-                "tried": tried,
-                "result": out,
-                "diagnostics": diag,
-            },
-            indent=2,
-        )
-    )
-
-
-def _cmd_classify(args: argparse.Namespace) -> None:
-    out = classify_listing_image_from_url(args.url.strip())
-    print(json.dumps(out, indent=2))
-
-
 def _cmd_filter_gallery(args: argparse.Namespace) -> None:
     kept = filter_gallery_urls_for_vehicle_listing(args.urls, max_workers=max(1, args.workers))
     print(json.dumps(kept, indent=2))
-
-
-def _cmd_monroney(args: argparse.Namespace) -> None:
-    out = analyze_monroney_sticker_from_image_url(args.url.strip())
-    print(json.dumps(out, indent=2))
 
 
 def _cmd_backfill_interior(args: argparse.Namespace) -> None:
@@ -258,7 +177,7 @@ def _cmd_backfill_interior(args: argparse.Namespace) -> None:
     if not vins:
         print("Nothing to process.")
         return
-    print(f"\nRunning interior vision on {len(vins)} VIN(s) (Ollama LLaVA)…")
+    print(f"\nRunning interior vision on {len(vins)} VIN(s)…")
     result = run_interior_vision_for_inventory_vins(vins, skip_if_interior_present=True)
     print(json.dumps(result, indent=2))
 
@@ -266,38 +185,14 @@ def _cmd_backfill_interior(args: argparse.Namespace) -> None:
 def main(argv: list[str] | None = None) -> None:
     argv = argv if argv is not None else sys.argv[1:]
     parser = argparse.ArgumentParser(
-        description="Listing image analysis (Ollama LLaVA). Run from repo root: python -m backend.vision.analyze_images …",
+        description="Listing image analysis helpers. Run from repo root: python -m backend.vision.analyze_images …",
     )
     sub = parser.add_subparsers(dest="command", required=True)
-
-    p_i = sub.add_parser("interior", help="Infer interior colors from one image URL or a VIN row")
-    g = p_i.add_mutually_exclusive_group(required=True)
-    g.add_argument("--url", help="Direct HTTPS image URL")
-    g.add_argument("--vin", help="VIN in inventory.db (picks gallery/hero like post-scan)")
-    p_i.add_argument(
-        "--through-windows",
-        action="store_true",
-        help="With --url: treat frame as exterior and read cabin through glass (default for --url is direct cabin)",
-    )
-    p_i.add_argument(
-        "--db",
-        default=None,
-        help="inventory.db path (only for --vin; default: <repo>/inventory.db)",
-    )
-    p_i.set_defaults(_handler=_cmd_interior)
-
-    p_c = sub.add_parser("classify", help="Classify a single gallery image (keep / category)")
-    p_c.add_argument("--url", required=True)
-    p_c.set_defaults(_handler=_cmd_classify)
 
     p_f = sub.add_parser("filter-gallery", help="Filter URL list to vehicle-related images")
     p_f.add_argument("urls", nargs="+", help="Image URLs in order")
     p_f.add_argument("--workers", type=int, default=1)
     p_f.set_defaults(_handler=_cmd_filter_gallery)
-
-    p_m = sub.add_parser("monroney", help="Parse a window-sticker photo URL")
-    p_m.add_argument("--url", required=True)
-    p_m.set_defaults(_handler=_cmd_monroney)
 
     p_b = sub.add_parser(
         "backfill-interior",

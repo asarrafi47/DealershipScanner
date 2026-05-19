@@ -433,7 +433,7 @@ def run_car_page_chat(
     allow_web_research: bool = True,
 ) -> dict[str, Any]:
     """
-    Car detail chatbot: Ollama (OpenAI-compatible) via llm.providers.ollama_client.
+    Car detail chatbot: Claude Haiku via Anthropic API.
 
     When the question touches reliability, reviews, market value, comparisons,
     or other topics that aren't in inventory.db, we may run a Playwright
@@ -449,8 +449,7 @@ def run_car_page_chat(
         return {"reply": "", "error": "empty_message", "discrepancy_flags": []}
 
     try:
-        from intelligence.llm.client import LLMResponseError
-        from intelligence.llm.providers.ollama_client import OpenAICompatibleClient
+        import anthropic as _anthropic
     except ImportError as e:
         return {"reply": "", "error": f"llm_import:{e}", "discrepancy_flags": []}
 
@@ -613,16 +612,15 @@ def run_car_page_chat(
 
     system = "".join(system_parts)
 
-    client = OpenAICompatibleClient()
     try:
-        reply = client.complete_text(
+        _client = _anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
+        _resp = _client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=1024,
             system=system,
-            user=msg,
-            temperature=0.28,
-            max_tokens=280,
+            messages=[{"role": "user", "content": msg}],
         )
-    except LLMResponseError as e:
-        return {"reply": "", "error": str(e), "discrepancy_flags": []}
+        reply = _resp.content[0].text
     except Exception as e:
         return {"reply": "", "error": str(e)[:500], "discrepancy_flags": []}
 

@@ -39,6 +39,7 @@ def listings_page(*, listings_poll_ms: int = 0):
         "zip_code": zip_code,
         "radius": radius,
         "dealership_registry_id": scalar("dealership_registry_id"),
+        "dealer_registry_ids": g("dealer_registry_id"),
         "q": q_text,
     }
 

@@ -263,6 +263,25 @@ def search_dealerships_by_radius(
     return results
 
 
+def get_dealership_by_id(dealer_id: int) -> dict[str, Any] | None:
+    """Return a single dealership row by primary key, or None."""
+    conn = get_conn()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    ensure_dealerships_table(cursor)
+    cursor.execute(
+        """
+        SELECT id, name, website_url, city, state, latitude, longitude,
+               street_address, zip_code, dealer_website_url, is_active
+        FROM dealerships WHERE id = ?
+        """,
+        (dealer_id,),
+    )
+    row = cursor.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+
 def insert_dealership(row: dict[str, Any]) -> int:
     conn = get_conn()
     cursor = conn.cursor()

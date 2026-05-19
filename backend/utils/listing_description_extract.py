@@ -274,8 +274,11 @@ def _llm_extract(norm: str, context: dict[str, Any]) -> dict[str, Any] | None:
         "on",
     ):
         return None
-    host = (os.environ.get("OLLAMA_HOST") or "http://127.0.0.1:11434").rstrip("/")
-    model = (os.environ.get("LISTING_DESC_LLM_MODEL") or os.environ.get("OLLAMA_VISION_MODEL") or "llama3.2").strip()
+    api_key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
+    if not api_key:
+        logger.info("ANTHROPIC_API_KEY not set; skipping LLM listing description tier")
+        return None
+
     try:
         import requests
     except ImportError:
@@ -307,25 +310,27 @@ def _llm_extract(norm: str, context: dict[str, Any]) -> dict[str, Any] | None:
     )
     try:
         r = requests.post(
-            f"{host}/api/chat",
-            json={
-                "model": model,
-                "format": "json",
-                "stream": False,
-                "options": {"temperature": 0.1},
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You output JSON only. No prose.",
-                    },
-                    {"role": "user", "content": prompt},
-                ],
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key": api_key,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
             },
-            timeout=120,
+            json={
+                "model": "claude-haiku-4-5-20251001",
+                "max_tokens": 512,
+                "system": "You output JSON only. No prose.",
+                "messages": [{"role": "user", "content": prompt}],
+            },
+            timeout=60,
         )
         r.raise_for_status()
         body = r.json()
-        content = ((body.get("message") or {}).get("content") or "").strip()
+        content = ((body.get("content") or [{}])[0].get("text") or "").strip()
+        if content.startswith("```"):
+            content = content.split("```")[1]
+            if content.startswith("json"):
+                content = content[4:]
         data = json.loads(content)
         if not isinstance(data, dict):
             return None

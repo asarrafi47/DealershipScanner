@@ -84,7 +84,6 @@ def _empty_site_result(url: str, mode: str, err: str) -> SiteResult:
 def _run_adjudicate_mode(args: argparse.Namespace) -> int:
     """Hybrid crawl + rules + LLM adjudication + run summary artifact."""
     from scraping.canonical_groups import load_alias_table_from_json
-    from intelligence.llm.providers.ollama_client import OpenAICompatibleClient
     from intelligence.pipeline.eval_report import print_batch_eval_summary, write_hybrid_eval_csv
     from intelligence.pipeline.orchestrator import run_hybrid_batch, save_hybrid_run
 
@@ -117,7 +116,10 @@ def _run_adjudicate_mode(args: argparse.Namespace) -> int:
         rows = rows[: args.limit]
 
     session = fetch_requests_session(args.timeout, verify_ssl=not args.insecure_ssl)
-    llm = OpenAICompatibleClient(base_url=args.llm_base_url)
+    # LLM adjudication client: OpenAICompatibleClient (Ollama) has been removed.
+    # Pass None to disable AI adjudication; supply a custom LLMClient subclass to re-enable.
+    llm = None
+    logger.info("LLM adjudication disabled (Ollama client removed; llm_client=None)")
 
     browser = None
     playwright = None

@@ -52,8 +52,7 @@ except ImportError:
     pass
 
 from backend.db.inventory_db import get_conn
-from backend.vision import ollama_llava
-from backend.vision.interior_vision_merge import build_updates_from_llava_result
+from backend.vision.claude_vision import filter_gallery_urls_for_vehicle_listing as _filter_gallery
 
 logging.basicConfig(
     level=logging.INFO,
@@ -145,7 +144,7 @@ def analyze_vehicle_colors(
         if not skip_gallery_vision:
             logger.info(f"[{vin}] Filtering gallery ({len(gallery_urls)} URLs)...")
             try:
-                filtered_urls = ollama_llava.filter_gallery_urls_for_vehicle_listing(
+                filtered_urls = _filter_gallery(
                     gallery_urls, max_workers=1
                 )
                 logger.info(f"[{vin}] Gallery: {len(gallery_urls)} → {len(filtered_urls)} kept")
@@ -162,21 +161,8 @@ def analyze_vehicle_colors(
                 if not url:
                     continue
                 try:
-                    interior_result = ollama_llava.analyze_interior_from_image_url(url)
-                    if interior_result:
-                        confidence = interior_result.get("confidence", 0)
-                        if confidence > 0.4:  # Confidence threshold
-                            result["interior_color"] = interior_result.get(
-                                "interior_guess_text"
-                            )
-                            result["interior_buckets"] = interior_result.get(
-                                "interior_buckets"
-                            )
-                            result["interior_confidence"] = confidence
-                            logger.info(
-                                f"[{vin}] Interior: {result['interior_color']} (conf={confidence:.2f})"
-                            )
-                            break
+                    logger.warning("interior analysis removed")
+                    continue
                 except Exception as e:
                     logger.debug(f"[{vin}] Interior analysis failed for {url}: {e}")
                     continue
@@ -188,21 +174,8 @@ def analyze_vehicle_colors(
                 if not url:
                     continue
                 try:
-                    exterior_result = ollama_llava.analyze_exterior_color_from_image_url(url)
-                    if exterior_result:
-                        confidence = exterior_result.get("confidence", 0)
-                        if confidence > 0.4:  # Confidence threshold
-                            result["exterior_color"] = exterior_result.get(
-                                "exterior_guess_text"
-                            )
-                            result["exterior_buckets"] = exterior_result.get(
-                                "exterior_buckets"
-                            )
-                            result["exterior_confidence"] = confidence
-                            logger.info(
-                                f"[{vin}] Exterior: {result['exterior_color']} (conf={confidence:.2f})"
-                            )
-                            break
+                    logger.warning("exterior analysis removed")
+                    continue
                 except Exception as e:
                     logger.debug(f"[{vin}] Exterior analysis failed for {url}: {e}")
                     continue
@@ -211,18 +184,12 @@ def analyze_vehicle_colors(
         if not skip_monroney_vision and filtered_urls:
             logger.info(f"[{vin}] Checking for Monroney stickers...")
             for url in filtered_urls:
-                if ollama_llava.is_probable_sticker_image_url(url):
-                    try:
-                        sticker_result = ollama_llava.analyze_monroney_sticker_from_image_url(
-                            url
-                        )
-                        if sticker_result:
-                            logger.info(f"[{vin}] Found Monroney: {sticker_result}")
-                            result["monroney"] = sticker_result
-                            break
-                    except Exception as e:
-                        logger.debug(f"[{vin}] Monroney analysis failed for {url}: {e}")
-                        continue
+                try:
+                    logger.warning("monroney analysis removed")
+                    continue
+                except Exception as e:
+                    logger.debug(f"[{vin}] Monroney analysis failed for {url}: {e}")
+                    continue
 
     except Exception as e:
         result["errors"].append(str(e))
@@ -402,10 +369,7 @@ def main():
 
     db_path = os.environ.get("INVENTORY_DB_PATH", "inventory.db")
 
-    logger.info(
-        f"Image Analyzer starting — DB: {db_path}, "
-        f"Ollama: {os.environ.get('OLLAMA_HOST', 'http://127.0.0.1:11434')}"
-    )
+    logger.info(f"Image Analyzer starting — DB: {db_path}")
 
     vehicles = get_vehicles_to_analyze(
         db_path,

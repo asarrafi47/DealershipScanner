@@ -770,6 +770,7 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 max_price=None, max_mileage=None,
                 zip_code=None, radius_miles=None,
                 dealership_registry_id=None,
+                dealer_registry_ids=None,
                 candidate_ids=None,
                 packages_json_contains=None,
                 vin=None,
@@ -836,6 +837,19 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
         if dr > 0:
             query += " AND dealership_registry_id = ?"
             params.append(dr)
+
+    if dealer_registry_ids:
+        valid_ids = []
+        for x in dealer_registry_ids:
+            try:
+                i = int(x)
+                if i > 0:
+                    valid_ids.append(i)
+            except (TypeError, ValueError):
+                continue
+        if valid_ids:
+            query += f" AND dealership_registry_id IN ({_placeholders(valid_ids)})"
+            params.extend(valid_ids)
 
     if vin and str(vin).strip():
         vnorm = re.sub(r"\s+", "", str(vin).strip().upper())[:20]

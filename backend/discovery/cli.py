@@ -1,5 +1,5 @@
 """
-CLI for tiered dealership discovery (DMV → OSM → DDG URL gap-fill).
+CLI for tiered dealership discovery (DMV → Google Places → DDG URL gap-fill).
 
 Run from repository root::
 
@@ -49,13 +49,6 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
         help="Upsert rows into inventory.db dealerships table",
     )
     p.add_argument("--json", action="store_true", help="Print JSON array to stdout")
-    p.add_argument("--overpass-timeout", type=float, default=90.0, help="Overpass HTTP timeout (seconds)")
-    p.add_argument(
-        "--overpass-url",
-        default=None,
-        metavar="URL",
-        help="Primary Overpass API endpoint (default: overpass-api.de; mirrors retried on 502/504 unless DISCOVERY_OVERPASS_NO_FALLBACK=1)",
-    )
     p.add_argument("--ddg-timeout", type=float, default=15.0, help="DDG HTTP timeout (seconds)")
     p.add_argument("-v", "--verbose", action="store_true", help="Log to stderr")
     p.add_argument(
@@ -76,11 +69,6 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
         help="Include dealerships whose ZIP is not the seed ZIP after enrichment "
         "(default: keep only dealers tagged with the seed ZCTA/ZIP)",
     )
-    p.add_argument(
-        "--skip-osm",
-        action="store_true",
-        help="Skip OpenStreetMap tier (useful for city-based discovery or when Overpass unavailable)",
-    )
     return p.parse_args(argv)
 
 
@@ -91,6 +79,12 @@ def main(argv: list[str] | None = None, *, project_root: Path | None = None) -> 
         format="%(levelname)s %(name)s: %(message)s",
     )
     root = project_root or _default_project_root()
+
+    try:
+        from backend.utils.project_env import load_project_dotenv
+        load_project_dotenv()
+    except Exception:
+        pass
 
     from backend.discovery.pipeline import run_discovery
 
@@ -107,10 +101,7 @@ def main(argv: list[str] | None = None, *, project_root: Path | None = None) -> 
             project_root=root,
             gazetteer_path=gazetteer_path,
             within_seed_zip_only=not args.allow_adjacent_zips,
-            overpass_url=args.overpass_url,
-            overpass_timeout_s=args.overpass_timeout,
             ddg_timeout_s=args.ddg_timeout,
-            skip_osm=args.skip_osm,
         )
     except ValueError as e:
         print(str(e), file=sys.stderr)
@@ -122,8 +113,8 @@ def main(argv: list[str] | None = None, *, project_root: Path | None = None) -> 
         manifest_path = (root / "dealers.json").resolve()
         if not rows:
             print(
-                "WARNING: discovery returned 0 dealerships (Overpass timeout/unavailable or empty DMV/OSM). "
-                "dealers.json unchanged — retry later or set DISCOVERY_OVERPASS_URLS / increase --overpass-timeout.",
+                "WARNING: discovery returned 0 dealerships. "
+                "Check GOOGLE_MAPS_API_KEY is set and valid.",
                 file=sys.stderr,
             )
         stats = merge_candidates_into_scanner_manifest(rows, manifest_path=manifest_path)
@@ -149,9 +140,7 @@ def main(argv: list[str] | None = None, *, project_root: Path | None = None) -> 
                     "longitude": d["longitude"],
                     "url": d["dealer_website_url"] or d["website_url"],
                     "source_dmv": bool(d["source_dmv"]),
-                    "source_osm": bool(d["source_osm"]),
                     "source_web": bool(d["source_web"]),
-                    "osm_id": d.get("osm_id") or "",
                 }
             )
         print(json.dumps(payload, indent=2))
@@ -165,10 +154,8 @@ def main(argv: list[str] | None = None, *, project_root: Path | None = None) -> 
         flags = []
         if d["source_dmv"]:
             flags.append("dmv")
-        if d["source_osm"]:
-            flags.append("osm")
         if d["source_web"]:
-            flags.append("web")
+            flags.append("google")
         src = "+".join(flags) if flags else "?"
         print(f"{d['name']} | {addr} | {z} | {u} | [{src}]")
     return 0

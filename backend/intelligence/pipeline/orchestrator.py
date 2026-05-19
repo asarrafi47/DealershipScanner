@@ -10,7 +10,6 @@ from typing import Any, Callable
 
 from scraping.canonical_groups import apply_sibling_canonical_reinforcement, canonical_group_display
 from intelligence.llm.client import LLMClient
-from intelligence.llm.providers.ollama_client import OpenAICompatibleClient
 from intelligence.pipeline.adjudication import (
     compute_adjudication_skip_reason,
     compute_manual_review_reason,
@@ -253,8 +252,11 @@ def run_hybrid_batch(
     return OrchestratorResult(sites=out, summary=summary, assigned_evidence_patterns=patterns)
 
 
-def default_llm_client() -> OpenAICompatibleClient:
-    return OpenAICompatibleClient()
+def default_llm_client() -> "LLMClient":
+    raise NotImplementedError(
+        "default_llm_client: Ollama/OpenAICompatibleClient has been removed. "
+        "Provide an LLMClient instance explicitly."
+    )
 
 
 def save_hybrid_run(result: OrchestratorResult, path: str | Path) -> None:

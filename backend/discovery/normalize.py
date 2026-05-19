@@ -83,13 +83,15 @@ def state_code_for_geocode(raw: str | None) -> str:
     t = (raw or "").strip().upper()
     return t[:2] if len(t) == 2 else ""
 
-# Domains that are aggregators / search engines, not dealer sites.
+# Domains that are aggregators / search engines / directories, not dealer sites.
 _AGGREGATOR_HOSTS = frozenset(
     {
+        # Search engines
         "duckduckgo.com",
         "google.com",
         "bing.com",
         "yahoo.com",
+        # Car listing aggregators
         "cars.com",
         "cargurus.com",
         "autotrader.com",
@@ -97,25 +99,57 @@ _AGGREGATOR_HOSTS = frozenset(
         "truecar.com",
         "edmunds.com",
         "kbb.com",
-        "openstreetmap.org",
-        "osm.org",
-        "nominatim.openstreetmap.org",
-        "overpass-api.de",
-        "wikipedia.org",
-        "yelp.com",
-        "bbb.org",
+        # carmax.com / carvana.com / vroom.com intentionally NOT listed — they are
+        # actual dealers whose own websites are valid discovery targets.
+        # Dealer directory sites
+        "cardealersnc.com",
+        "cardealerdb.com",
         "dealerrater.com",
         "dealers.com",
         "dealer.com",
         "dealer-socket.com",
         "dealersocket.com",
+        "dealerfire.com",
+        "dealeron.com",
+        # Generic business directories
+        "superpages.com",
+        "yellowpages.com",
+        "yellowpages.ca",
+        "whitepages.com",
+        "bbb.org",
+        "bizapedia.com",
+        "loc8nearme.com",
+        "manta.com",
+        "chamberofcommerce.com",
+        "mapquest.com",
+        "foursquare.com",
+        # Maps / geo
+        "openstreetmap.org",
+        "osm.org",
+        "nominatim.openstreetmap.org",
+        "overpass-api.de",
+        "maps.google.com",
+        "goo.gl",
+        "maps.app.goo.gl",
+        # Social / reference
+        "wikipedia.org",
+        "yelp.com",
         "facebook.com",
         "instagram.com",
         "tiktok.com",
         "linkedin.com",
-        "maps.google.com",
-        "goo.gl",
-        "maps.app.goo.gl",
+        "twitter.com",
+        "x.com",
+        "nextdoor.com",
+        # News / review
+        "reddit.com",
+        "tripadvisor.com",
+        # Review / directory platforms (not dealer sites)
+        "birdeye.com",
+        "dealeressential.com",
+        "businessyab.com",
+        # Financial / payments (not dealer sites)
+        "capitalone.com",
     }
 )
 

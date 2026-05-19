@@ -540,6 +540,14 @@
                             {% endfor %}
                         </select>
                     </div>
+
+                    {# Dealership filter — loads nearby dealers when radius ≤ 50 mi #}
+                    <div class="acc-plain-group dealer-filter-group" id="dealer-filter-group" style="display:none">
+                        <div class="acc-plain-label">Dealership</div>
+                        <div class="dealer-filter-list" id="dealer-filter-list">
+                            <p class="dealer-filter-loading">Loading nearby dealerships…</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="docked-footer">
@@ -554,5 +562,75 @@
 
 <script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='listings.js') }}" nonce="{{ csp_nonce }}"></script>
+<script nonce="{{ csp_nonce }}">
+(function () {
+    const group = document.getElementById("dealer-filter-group");
+    const listEl = document.getElementById("dealer-filter-list");
+    if (!group || !listEl) return;
+
+    const activeIds = new Set({{ (active.dealer_registry_ids or []) | tojson }});
+
+    let lastKey = "";
+
+    function loadDealers(zip, radius) {
+        const key = zip + "|" + radius;
+        if (key === lastKey) return;
+        lastKey = key;
+
+        const r = parseFloat(radius);
+        if (!zip || isNaN(r) || r > 50) {
+            group.style.display = "none";
+            return;
+        }
+
+        listEl.innerHTML = '<p class="dealer-filter-loading">Loading…</p>';
+        group.style.display = "";
+
+        fetch("/api/nearby-dealers?zip_code=" + encodeURIComponent(zip) + "&radius=" + r)
+            .then(function (res) { return res.ok ? res.json() : null; })
+            .then(function (data) {
+                if (!data || !data.ok || !data.dealers.length) {
+                    group.style.display = "none";
+                    return;
+                }
+                let html = "";
+                data.dealers.forEach(function (d) {
+                    const checked = !activeIds.size || activeIds.has(d.id) ? "checked" : "";
+                    html += '<label class="filter-option dealer-filter-option">'
+                        + '<input type="checkbox" name="dealer_registry_id" value="' + d.id + '" ' + checked + '>'
+                        + '<span>' + (d.name || "Unknown") + (d.city ? ' <small>(' + d.city + ', ' + d.state + ')</small>' : '') + '</span>'
+                        + '</label>';
+                });
+                listEl.innerHTML = html;
+            })
+            .catch(function () { group.style.display = "none"; });
+    }
+
+    function getZipAndRadius() {
+        const zipEl = document.querySelector('[name="zip_code"]');
+        const radEl = document.querySelector('[name="radius"]');
+        return {
+            zip: zipEl ? zipEl.value.trim() : "",
+            radius: radEl ? radEl.value : "25"
+        };
+    }
+
+    const { zip, radius } = getZipAndRadius();
+    if (zip) loadDealers(zip, radius);
+
+    document.addEventListener("change", function (e) {
+        if (e.target && (e.target.name === "zip_code" || e.target.name === "radius")) {
+            const { zip: z, radius: r } = getZipAndRadius();
+            loadDealers(z, r);
+        }
+    });
+    document.addEventListener("input", function (e) {
+        if (e.target && e.target.name === "zip_code" && e.target.value.length === 5) {
+            const { radius: r } = getZipAndRadius();
+            loadDealers(e.target.value.trim(), r);
+        }
+    });
+})();
+</script>
 </body>
 </html>
