@@ -89,6 +89,7 @@ backend/dictionary/csv_out_needs_cleaning_main/
 
 # Local image caches / downloads
 car_images/
+car_window_stickers/
 vdp_images/
 
 # Docker compose runtime data (mounted into containers)

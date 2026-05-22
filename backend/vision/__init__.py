@@ -1,1 +1,1 @@
-"""Vision helpers (Ollama LLaVA, etc.)."""
+"""Vision helpers (Claude Haiku)."""

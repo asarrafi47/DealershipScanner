@@ -1,6 +1,4 @@
-"""
-Merge LLaVA Monroney / window-sticker JSON into a scanner vehicle dict (conservative fills).
-"""
+"""Merge Monroney / window-sticker JSON into a scanner vehicle dict (conservative fills)."""
 from __future__ import annotations
 
 import json

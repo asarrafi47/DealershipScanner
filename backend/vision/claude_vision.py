@@ -1,10 +1,7 @@
 """
-Claude Haiku vision gallery filter — replaces LLaVA when ANTHROPIC_API_KEY is set.
+Claude Haiku vision gallery filter. Requires ANTHROPIC_API_KEY.
 
-Batches up to BATCH_SIZE images per API call. Reuses URL heuristics from ollama_llava
-(heuristic drops, trusted-CDN passthrough, lot-photo scoring) and only replaces the
-actual vision classification step.
-
+Batches up to BATCH_SIZE images per API call, with URL heuristics for fast pre-filtering.
 Set SCANNER_GALLERY_VISION_BATCH to control images per Claude call (default: 8).
 """
 from __future__ import annotations
@@ -13,10 +10,15 @@ import base64
 import json
 import logging
 import os
+import threading
 from io import BytesIO
 from typing import Any
 
 import requests
+
+# Limit concurrent Claude gallery-classification API calls across all VDP worker threads.
+# 12 concurrent VDP workers each firing a batch = burst rate >> 50 req/min tier limit.
+_CLASSIFY_SEM = threading.Semaphore(3)
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +50,41 @@ def _batch_size() -> int:
         return max(1, min(20, int(os.environ.get("SCANNER_GALLERY_VISION_BATCH") or "8")))
     except (TypeError, ValueError):
         return 8
+
+
+def _image_is_blurry(img: Any, threshold: float = 80.0) -> bool:
+    """Laplacian variance blur check. Below threshold = too blurry to keep."""
+    try:
+        import numpy as np
+        gray = img.convert("L")
+        arr = np.array(gray, dtype=float)
+        lap = (
+            arr[:-2, 1:-1] + arr[2:, 1:-1] + arr[1:-1, :-2] + arr[1:-1, 2:]
+            - 4 * arr[1:-1, 1:-1]
+        )
+        return float(lap.var()) < threshold
+    except Exception:
+        return False
+
+
+def _image_phash(img: Any) -> int | None:
+    """8x8 perceptual hash as integer for near-duplicate detection."""
+    try:
+        import numpy as np
+        small = img.convert("L").resize((8, 8))
+        arr = np.array(small, dtype=float)
+        mean = arr.mean()
+        bits = (arr > mean).flatten()
+        val = 0
+        for b in bits:
+            val = (val << 1) | int(b)
+        return val
+    except Exception:
+        return None
+
+
+def _hamming(a: int, b: int) -> int:
+    return bin(a ^ b).count("1")
 
 
 def _fetch_image_b64(url: str, referer: str | None = None) -> str | None:
@@ -106,12 +143,9 @@ def _classify_batch(
     if not images_b64:
         return fallback
 
-    content: list[dict[str, Any]] = []
+    content: list[Any] = []
     for seq, (i, u, b64) in enumerate(images_b64):
-        content.append({
-            "type": "text",
-            "text": f"Image {seq} (idx={i}):"
-        })
+        content.append({"type": "text", "text": f"Image {seq} (idx={i}):"})
         content.append({
             "type": "image",
             "source": {"type": "base64", "media_type": "image/jpeg", "data": b64},
@@ -119,25 +153,16 @@ def _classify_batch(
     content.append({"type": "text", "text": "Classify each image as described. Return JSON array only."})
 
     try:
-        r = requests.post(
-            "https://api.anthropic.com/v1/messages",
-            headers={
-                "x-api-key": api_key,
-                "anthropic-version": "2023-06-01",
-                "content-type": "application/json",
-            },
-            json={
-                "model": _CLAUDE_MODEL,
-                "max_tokens": 512,
-                "system": _CLASSIFY_PROMPT,
-                "messages": [{"role": "user", "content": content}],
-            },
-            timeout=45.0,
-        )
-        r.raise_for_status()
-        data = r.json()
-        text = data["content"][0]["text"].strip()
-        # Strip markdown code fences if present
+        import anthropic
+        client = anthropic.Anthropic(api_key=api_key)
+        with _CLASSIFY_SEM:
+            msg = client.messages.create(
+                model=_CLAUDE_MODEL,
+                max_tokens=512,
+                system=[{"type": "text", "text": _CLASSIFY_PROMPT, "cache_control": {"type": "ephemeral"}}],
+                messages=[{"role": "user", "content": content}],
+            )
+        text = msg.content[0].text.strip()
         if text.startswith("```"):
             text = text.split("```")[1]
             if text.startswith("json"):
@@ -193,8 +218,6 @@ def filter_gallery_urls_for_vehicle_listing(
     **_kwargs: Any,
 ) -> list[str]:
     """
-    Drop-in replacement for ollama_llava.filter_gallery_urls_for_vehicle_listing.
-
     Reuses URL heuristics (heuristic_drop, passthrough trusted CDN, lot-score sort),
     then classifies ambiguous images with Claude Haiku vision in batches.
     """
@@ -244,7 +267,6 @@ def filter_gallery_urls_for_vehicle_listing(
     all_results = passthrough_results + vision_results
     kept = [(i, u, cat) for i, u, keep, cat in all_results if keep]
     if not kept:
-        # Fallback: return passthrough + heuristic-passed URLs rather than empty
         return [u for _, u, _ in sorted(passthrough_results, key=lambda t: (-dealer_lot_photo_score(t[1]), t[0]))]
 
     _CAT_PRIORITY = {
@@ -259,4 +281,32 @@ def filter_gallery_urls_for_vehicle_listing(
         return (-(dealer_lot_photo_score(u) + _CAT_PRIORITY.get(cat, 0)), i)
 
     kept.sort(key=_sort_key)
-    return [u for _, u, _ in kept]
+
+    # Blur + near-duplicate filter on kept images
+    final: list[str] = []
+    seen_hashes: list[int] = []
+    for _, u, _ in kept:
+        b64 = _fetch_image_b64(u, page_referer)
+        if b64 is None:
+            final.append(u)  # unfetchable → keep
+            continue
+        try:
+            from PIL import Image
+            raw = base64.b64decode(b64)
+            img = Image.open(BytesIO(raw)).convert("RGB")
+
+            if _image_is_blurry(img):
+                logger.debug("Dropping blurry image: %s", u[:80])
+                continue
+
+            ph = _image_phash(img)
+            if ph is not None:
+                if any(_hamming(ph, h) < 8 for h in seen_hashes):
+                    logger.debug("Dropping near-duplicate image: %s", u[:80])
+                    continue
+                seen_hashes.append(ph)
+        except Exception:
+            pass
+        final.append(u)
+
+    return final if final else [u for _, u, _ in kept]

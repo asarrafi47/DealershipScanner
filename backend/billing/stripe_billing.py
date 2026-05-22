@@ -30,6 +30,14 @@ def stripe_price_id() -> str:
     return _require_env("STRIPE_PRICE_ID")
 
 
+def stripe_premium_price_id() -> str:
+    return _require_env("STRIPE_PREMIUM_PRICE_ID")
+
+
+def stripe_premium_webhook_secret() -> str:
+    return _require_env("STRIPE_PREMIUM_WEBHOOK_SECRET")
+
+
 def base_url_from_request(request) -> str:
     forced = (os.environ.get("PUBLIC_BASE_URL") or "").strip().rstrip("/")
     if forced:
@@ -84,7 +92,39 @@ def create_checkout_session(
         },
         allow_promotion_codes=True,
     )
-    return dict(cs)
+    return cs
+
+
+def create_premium_checkout_session(
+    *,
+    request: Any,
+    user_id: int,
+    user_email: str,
+) -> dict[str, Any]:
+    if not billing_enabled():
+        raise RuntimeError("Billing is disabled.")
+    import stripe  # type: ignore
+
+    stripe.api_key = stripe_secret_key()
+    price = stripe_premium_price_id()
+    if not price:
+        raise RuntimeError("STRIPE_PREMIUM_PRICE_ID is not set.")
+    base = base_url_from_request(request)
+    success = f"{base}/billing/premium/success?session_id={{CHECKOUT_SESSION_ID}}"
+    cancel = f"{base}/premium"
+    cs = stripe.checkout.Session.create(
+        mode="payment",
+        line_items=[{"price": price, "quantity": 1}],
+        success_url=success,
+        cancel_url=cancel,
+        customer_email=(user_email or "").strip() or None,
+        metadata={
+            "user_id": str(int(user_id)),
+            "premium": "1",
+        },
+        allow_promotion_codes=True,
+    )
+    return cs
 
 
 def construct_webhook_event(payload: bytes, sig_header: str) -> dict[str, Any]:
@@ -94,6 +134,48 @@ def construct_webhook_event(payload: bytes, sig_header: str) -> dict[str, Any]:
     secret = stripe_webhook_secret()
     if not secret:
         raise RuntimeError("STRIPE_WEBHOOK_SECRET is not set.")
+    evt = stripe.Webhook.construct_event(payload=payload, sig_header=sig_header, secret=secret)
+    return dict(evt)
+
+
+def verify_premium_checkout_session(*, session_id: str, user_id: int) -> bool:
+    """
+    Confirm a Stripe Checkout Session is paid and belongs to *user_id* (consumer premium).
+
+    Returns False on any mismatch or Stripe error (caller should log).
+    """
+    sid = (session_id or "").strip()
+    if not sid or not billing_enabled():
+        return False
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return False
+    if uid <= 0:
+        return False
+    import stripe  # type: ignore
+
+    stripe.api_key = stripe_secret_key()
+    cs = stripe.checkout.Session.retrieve(sid)
+    if not isinstance(cs, dict):
+        cs = dict(cs)
+    if (cs.get("payment_status") or "").strip().lower() != "paid":
+        return False
+    md = cs.get("metadata") if isinstance(cs.get("metadata"), dict) else {}
+    if str(md.get("user_id") or "").strip() != str(uid):
+        return False
+    if str(md.get("premium") or "").strip() != "1":
+        return False
+    return True
+
+
+def construct_premium_webhook_event(payload: bytes, sig_header: str) -> dict[str, Any]:
+    import stripe  # type: ignore
+
+    stripe.api_key = stripe_secret_key()
+    secret = stripe_premium_webhook_secret()
+    if not secret:
+        raise RuntimeError("STRIPE_PREMIUM_WEBHOOK_SECRET is not set.")
     evt = stripe.Webhook.construct_event(payload=payload, sig_header=sig_header, secret=secret)
     return dict(evt)
 

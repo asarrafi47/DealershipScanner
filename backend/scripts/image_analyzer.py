@@ -22,13 +22,10 @@ Options:
   --skip-exterior-vision       Skip exterior/paint color detection
   --skip-monroney-vision       Skip Monroney sticker reading
   --workers N                  Parallel vision workers (default: 2)
-  --provider {ollama,claude}   Vision provider (default: ollama from OLLAMA_HOST)
   --dry-run                    Log what would be done, don't update DB
 
 Environment:
-  OLLAMA_HOST               Ollama server URL (default: http://127.0.0.1:11434)
-  OLLAMA_VISION_MODEL       Model name (default: llava:13b)
-  ANTHROPIC_API_KEY         For Claude vision provider
+  ANTHROPIC_API_KEY         Claude Haiku vision provider
   INVENTORY_DB_PATH         Path to inventory.db (default: ./inventory.db)
 """
 import argparse

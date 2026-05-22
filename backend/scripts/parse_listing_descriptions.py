@@ -8,8 +8,7 @@ picks up the new ``build_semantic_listing_document`` segment — e.g. run your p
 vector reindex command (see ``scripts/reindex_vectors.py`` / ``backend.vector.pgvector_service``).
 
 Environment:
-  LISTING_DESC_PARSE_USE_LLM=1  — optional second-tier extraction via local Ollama
-  OLLAMA_HOST, LISTING_DESC_LLM_MODEL (defaults per ``listing_description_extract``).
+  LISTING_DESC_PARSE_USE_LLM=1  — optional second-tier extraction via Claude Haiku (ANTHROPIC_API_KEY required).
 """
 
 from __future__ import annotations

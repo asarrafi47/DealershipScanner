@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from backend.dictionary import enrich_from_dictionary as efd
 try:
     from extract_keffer_colors import extract_color_from_description  # optional legacy script
@@ -25,17 +27,20 @@ def test_extract_transmission_cvt_in_title():
     assert efd._extract_transmission_from_description(text).upper().find("CVT") >= 0
 
 
+@pytest.mark.skipif(extract_color_from_description is None, reason="optional extract_keffer_colors module")
 def test_extract_color_labeled_exterior():
     body = "Features\nExterior color: Agate Black Metallic\nNice ride."
     assert extract_color_from_description(body) and "Agate" in (extract_color_from_description(body) or "")
 
 
+@pytest.mark.skipif(extract_color_from_description is None, reason="optional extract_keffer_colors module")
 def test_extract_color_compound_magnetic():
     text = "2023 Explorer Magnetic Gray Metallic AWD"
     c = extract_color_from_description(text)
     assert c and "Magnetic" in c
 
 
+@pytest.mark.skipif(extract_color_from_description is None, reason="optional extract_keffer_colors module")
 def test_extract_color_avoids_bare_black_when_pearlcoat_present():
     text = "Paint: Pearl White Tri-Coat"
     c = extract_color_from_description(text)

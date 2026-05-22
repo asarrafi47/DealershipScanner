@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import secrets
 
-from flask import abort, request, session
+from flask import Response, abort, redirect, request, session, url_for
 
 _SESSION_KEY = "_csrf_token"
 
@@ -18,13 +18,16 @@ def ensure_csrf_token() -> str:
     return t
 
 
-def validate_csrf_form() -> None:
+def validate_csrf_form() -> Response | None:
+    """Return a redirect response on login CSRF failure; otherwise abort(403) or return None."""
     expected = session.get(_SESSION_KEY)
     supplied = (request.form.get("csrf_token") or "").strip()
-    if not expected or not supplied:
+    if not expected or not supplied or not secrets.compare_digest(supplied, expected):
+        ep = request.endpoint or ""
+        if "login" in ep:
+            return redirect(url_for("login_page", _error="session_expired"))
         abort(403)
-    if not secrets.compare_digest(supplied, expected):
-        abort(403)
+    return None
 
 
 def validate_csrf_header(*_args: object, **_kwargs: object) -> None:

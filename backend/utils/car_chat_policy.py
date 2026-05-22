@@ -42,6 +42,14 @@ def web_research_playwright_allowed(session_user_id: int | None) -> bool:
     return session_user_id is not None
 
 
+def car_chat_listing_daily_limit() -> int:
+    """Max chat messages allowed per listing per 24h (0 = disabled)."""
+    try:
+        return max(0, int(os.environ.get("CAR_CHAT_MAX_PER_LISTING_DAILY", "10")))
+    except (TypeError, ValueError):
+        return 10
+
+
 def car_chat_rate_limits() -> tuple[int, int, int]:
     """
     Return (per_ip_and_car_per_min, per_ip_all_cars_per_min, global_per_min).

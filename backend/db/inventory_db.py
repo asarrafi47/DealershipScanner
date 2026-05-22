@@ -20,7 +20,14 @@ def _default_inventory_db_path() -> str:
     root_p = os.path.join(_REPO_ROOT, "inventory.db")
     try:
         if os.path.isfile(backend_p):
-            return backend_p
+            import sqlite3 as _sqlite3
+            _conn = _sqlite3.connect(backend_p)
+            _has_cars = bool(_conn.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='cars'"
+            ).fetchone())
+            _conn.close()
+            if _has_cars:
+                return backend_p
     except OSError:
         pass
     return root_p
@@ -429,6 +436,7 @@ def init_inventory_db():
             stock_number     TEXT,
             gallery          TEXT,
             carfax_url       TEXT,
+            window_sticker_url TEXT,
             history_highlights TEXT,
             msrp             REAL
         )
@@ -773,6 +781,7 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 dealer_registry_ids=None,
                 candidate_ids=None,
                 packages_json_contains=None,
+                trim_contains=None,
                 vin=None,
                 include_incomplete: bool | None = None):
     """
@@ -903,6 +912,13 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
         query += " AND INSTR(LOWER(IFNULL(packages, '')), ?) > 0"
         params.append(needle)
 
+    if trim_contains and str(trim_contains).strip():
+        needle = str(trim_contains).strip().lower()
+        if len(needle) > 100:
+            needle = needle[:100]
+        query += " AND INSTR(LOWER(IFNULL(trim, '')), ?) > 0"
+        params.append(needle)
+
     if min_year is not None:
         query += " AND year >= ?"
         params.append(int(min_year))
@@ -976,11 +992,24 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
         # Build dealer_url → coords lookup for fallback (cars with null zip_code)
         dealer_geo: dict[str, tuple] = {}
         with db_conn() as _gc:
-            for _url, _lat, _lon in _gc.execute(
-                "SELECT dealer_url, lat, lon FROM dealer_geopoints WHERE lat IS NOT NULL AND lon IS NOT NULL"
-            ).fetchall():
-                if _url:
-                    dealer_geo[str(_url).strip()] = (float(_lat), float(_lon))
+            try:
+                for _url, _lat, _lon in _gc.execute(
+                    "SELECT dealer_url, lat, lon FROM dealer_geopoints WHERE lat IS NOT NULL AND lon IS NOT NULL"
+                ).fetchall():
+                    if _url:
+                        dealer_geo[str(_url).strip()] = (float(_lat), float(_lon))
+            except Exception:
+                pass
+            if not dealer_geo:
+                try:
+                    for _url, _lat, _lon in _gc.execute(
+                        "SELECT website_url, latitude, longitude FROM dealerships "
+                        "WHERE latitude IS NOT NULL AND longitude IS NOT NULL"
+                    ).fetchall():
+                        if _url:
+                            dealer_geo[str(_url).strip()] = (float(_lat), float(_lon))
+                except Exception:
+                    pass
         filtered = []
         for car in results:
             dest = zip_to_coords(car.get("zip_code", "") or "")
@@ -1131,6 +1160,7 @@ _UPDATABLE_CAR_COLUMNS = frozenset(
         "stock_number",
         "gallery",
         "carfax_url",
+        "window_sticker_url",
         "history_highlights",
         "msrp",
         "dealership_registry_id",
@@ -1279,6 +1309,8 @@ def listings_grid_serialized_cars() -> list[dict[str, Any]]:
         if not inc and is_car_incomplete(c):
             continue
         out.append(serialize_car_for_listings_grid(c))
+    # Cars with images float to the top; no-image cars sink to the bottom.
+    out.sort(key=lambda c: (0 if c.get("image_url") or c.get("gallery") else 1, c.get("price") or 0))
     return out
 
 
@@ -1441,9 +1473,9 @@ def get_filter_options():
         lst.sort()
     countries = sorted(country_set)
 
-    # Build dealer_url → [lat, lon] mapping from dealer_geopoints table.
-    # Used by client-side radius filter (more accurate than zip centroids,
-    # handles dealers with no zip_code on the car row).
+    # Build dealer_url → [lat, lon] mapping.
+    # Primary: dealer_geopoints table (if it exists).
+    # Fallback: dealerships table (latitude/longitude columns, website_url as key).
     dealer_coords: dict[str, list[float]] = {}
     with db_conn() as conn:
         try:
@@ -1456,6 +1488,17 @@ def get_filter_options():
                     dealer_coords[str(dealer_url).strip()] = [float(lat), float(lon)]
         except Exception:
             pass
+        if not dealer_coords:
+            try:
+                rows = conn.execute(
+                    "SELECT website_url, latitude, longitude FROM dealerships "
+                    "WHERE latitude IS NOT NULL AND longitude IS NOT NULL"
+                ).fetchall()
+                for website_url, lat, lon in rows:
+                    if website_url:
+                        dealer_coords[str(website_url).strip()] = [float(lat), float(lon)]
+            except Exception:
+                pass
 
     # Legacy ZIP_COORDS kept for backward compat (may be empty when all car zip_codes are null).
     from backend.db.geo import zip_to_coords

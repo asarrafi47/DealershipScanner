@@ -5,20 +5,20 @@
     <meta name="csrf-token" content="{{ csrf_token }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
 </head>
-<body>
+<body class="car-detail-page">
 
     <div class="page">
 
         <nav class="topbar">
-            <div class="logo">Sarrafi Collection</div>
+            <div class="logo">Sarrafi Cars</div>
             <div class="nav-links">
-                <a href="/dashboard">Dashboard</a>
                 <a href="{{ url_for('listings') }}">Listings</a>
                 {% if logged_in %}
+                <a href="/dashboard">Dashboard</a>
                 <a href="/inventory">My inventory</a>
-                {% endif %}
-                {% if logged_in %}
                 {% include "_app_logout.html" %}
+                {% else %}
+                <a href="{{ url_for('login_page') }}">Sign in</a>
                 {% endif %}
             </div>
         </nav>
@@ -54,7 +54,7 @@
                     <div class="car-gallery-main">
                         <div class="car-gallery-hero" id="car-gallery-hero" role="region" aria-label="Vehicle photo gallery">
                             <div class="car-detail-image">
-                                <img class="car-gallery-main-img" id="car-gallery-main-img" src="{{ (gallery_images[0] if gallery_images else car.image_url) | e }}" alt="{{ car.title }} — photo gallery">
+                                <img class="car-gallery-main-img" id="car-gallery-main-img" src="{{ (gallery_images[0] if gallery_images else url_for('static', filename='placeholder.svg')) | e }}" alt="{{ car.title }} — photo gallery">
                             </div>
                             {% if gallery_images and gallery_images|length > 1 %}
                             <button type="button" class="car-gallery-arrow car-gallery-arrow-prev" id="car-gallery-prev-hero" aria-label="Previous image">‹</button>
@@ -103,8 +103,33 @@
                             </svg>
                             <span class="save-btn-label">{% if car_is_saved %}Saved{% else %}Save{% endif %}</span>
                         </button>
+                        {% else %}
+                        <a href="{{ url_for('login_page') }}" class="save-btn save-btn--guest" title="Create an account to save cars">
+                            <svg class="save-icon" viewBox="0 0 24 24" width="20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                            <span class="save-btn-label">Sign in to save</span>
+                        </a>
                         {% endif %}
                     </div>
+
+                    {% if market_intel %}
+                    <div class="car-market-panel" role="region" aria-label="Market average for this trim">
+                        <p class="car-market-eyebrow">Market intelligence</p>
+                        <p class="car-market-line">
+                            <span class="car-market-label">Avg listed price</span>
+                            <strong>{{ market_intel.avg_price_display }}</strong>
+                            <span class="car-market-samples">({{ market_intel.sample_count }} active listings)</span>
+                        </p>
+                        <p class="car-market-line">
+                            <span class="car-market-label">This listing</span>
+                            <strong>{{ market_intel.listing_price_display }}</strong>
+                        </p>
+                        <p class="car-market-vs car-market-vs--{{ market_intel.vs_market }}">{{ market_intel.vs_market_label }}</p>
+                        <p class="car-market-cohort">Cohort: {{ market_intel.cohort_label }}</p>
+                        <p class="car-market-disclaimer">Average asking price for similar listings (same make/model/trim, model year, mileage band) in your search region. Not a purchase offer or appraisal.</p>
+                    </div>
+                    {% endif %}
 
                     {% if car.kbb and car.kbb.has_data %}
                     <div class="car-kbb-panel" role="region" aria-label="KBB valuation summary">
@@ -227,10 +252,6 @@
                     {% elif dealership_view_url %}
                     <a href="{{ dealership_view_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn carfax-report-btn-secondary">Contact Dealer for History Report</a>
                     {% endif %}
-                    {% if mopar_vin_lookup_url %}
-                    <p class="oem-vin-lookup-hint">Chrysler, Dodge, Jeep, and Ram owners can look up factory specs and features on Mopar’s official site (enter this VIN on the next page).</p>
-                    <a href="{{ mopar_vin_lookup_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn carfax-report-btn-secondary">Mopar VIN lookup (Stellantis)</a>
-                    {% endif %}
                 </div>
 
             </div>
@@ -257,14 +278,183 @@
         </section>
         {% endif %}
 
+        <section class="car-packages-section" id="car-packages-section" data-car-id="{{ car.id }}" data-skip-ensure="{% if window_sticker_available %}1{% else %}0{% endif %}" data-oem-sticker-url="{{ window_sticker_oem_url or '' }}">
+            <h2 class="car-packages-heading">Packages &amp; window sticker</h2>
+            {% if billing_stripe_enabled and not has_paid_access %}
+            <p class="car-packages-hint">Factory options, colors, and the Monroney window sticker are included with a <a href="{{ url_for('premium_page') }}">premium subscription</a>. We fetch the OEM sticker PDF, analyze options, and show vision-detected equipment when a sticker is not available.</p>
+            {% else %}
+            {% if hide_photo_analysis %}
+            <p class="car-packages-hint">Options and colors from the OEM window sticker (when available) and listing data.</p>
+            {% else %}
+            <p class="car-packages-hint">Options and colors from the OEM window sticker (when available), listing data, and photo analysis.</p>
+            {% endif %}
+
+            <div id="car-packages-loading" class="car-packages-loading" {% if window_sticker_available or packages_panel_has_content %}hidden{% endif %} aria-live="polite">
+                Loading factory equipment data…
+            </div>
+
+            <div class="car-window-sticker-embed-wrap" id="car-window-sticker-wrap">
+                <div class="car-window-sticker-head">
+                    <h3 class="car-window-sticker-title">Window sticker</h3>
+                    {% if window_sticker_oem_url %}
+                    <a class="car-window-sticker-open" href="{{ window_sticker_oem_url }}" target="_blank" rel="noopener noreferrer">Open OEM PDF</a>
+                    {% endif %}
+                </div>
+                <p class="car-window-sticker-loading" id="car-window-sticker-loading" {% if window_sticker_available %}hidden{% endif %}>Loading window sticker…</p>
+                <div
+                    class="car-window-sticker-preview"
+                    id="car-window-sticker-preview"
+                    data-sticker-preview-api="{{ window_sticker_preview_api_url }}"
+                    {% if not window_sticker_available %}hidden{% endif %}
+                >
+                    <img
+                        id="car-window-sticker-img"
+                        class="car-window-sticker-img"
+                        alt="Window sticker"
+                        {% if window_sticker_preview_url %}src="{{ window_sticker_preview_url }}"{% endif %}
+                    />
+                </div>
+                <div id="car-window-sticker-analyzed" class="car-window-sticker-analyzed"{% if not sticker_spec_lines and not listing_sticker_options %} hidden{% endif %}>
+                    {% if sticker_spec_lines %}
+                    <dl class="car-window-sticker-specs">
+                        {% for row in sticker_spec_lines %}
+                        <div><dt>{{ row.label }}</dt><dd>{{ row.value }}</dd></div>
+                        {% endfor %}
+                    </dl>
+                    {% endif %}
+                    {% if listing_sticker_options %}
+                    <h4 class="car-window-sticker-sub">Optional equipment</h4>
+                    <ul class="car-window-sticker-opt-list">
+                        {% for opt in listing_sticker_options %}
+                        <li>{{ opt }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="listing-packages-panel" id="car-packages-panel" {% if not packages_panel_has_content %}hidden{% endif %}>
+                {% if sticker_exterior_color or sticker_interior_color %}
+                <div class="car-sticker-colors">
+                    {% if sticker_exterior_color %}
+                    <p><span class="car-sticker-color-label">Exterior (sticker):</span> {{ sticker_exterior_color }}</p>
+                    {% endif %}
+                    {% if sticker_interior_color %}
+                    <p><span class="car-sticker-color-label">Interior (sticker):</span> {{ sticker_interior_color }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                {% if listing_sticker_options %}
+                <h3 class="listing-packages-sub-heading">Window sticker options</h3>
+                <ul class="listing-package-inline-list">
+                    {% for opt in listing_sticker_options %}
+                    <li>{{ opt }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if listing_monroney_options %}
+                <h3 class="listing-packages-sub-heading">Factory options</h3>
+                <ul class="listing-package-inline-list">
+                    {% for opt in listing_monroney_options %}
+                    <li>{{ opt }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if listing_monroney_standard %}
+                <h3 class="listing-packages-sub-heading">Standard equipment</h3>
+                <ul class="listing-package-inline-list">
+                    {% for opt in listing_monroney_standard %}
+                    <li>{{ opt }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if listing_packages_sections %}
+                <h3 class="listing-packages-sub-heading">Packages from listing</h3>
+                {% for pkg in listing_packages_sections %}
+                {% if pkg.features or pkg.evidence %}
+                <details class="listing-package-disclosure">
+                    <summary class="listing-package-summary">{{ pkg.name }}</summary>
+                    {% if pkg.features %}
+                    <ul class="listing-package-inline-list listing-package-features">
+                        {% for f in pkg.features %}
+                        <li>{{ f }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% if pkg.evidence and not pkg.features %}
+                    <ul class="listing-package-inline-list listing-package-evidence">
+                        {% for f in pkg.evidence %}
+                        <li>{{ f }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </details>
+                {% else %}
+                <p class="listing-package-plain">{{ pkg.name }} <span class="listing-package-plain-note">— see window sticker above for full factory equipment.</span></p>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+
+                {% if listing_possible_packages and not hide_photo_analysis %}
+                <h3 class="listing-packages-sub-heading">Possible packages (photo analysis)</h3>
+                <ul class="listing-package-inline-list">
+                    {% for f in listing_possible_packages %}
+                    <li>{{ f }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if listing_observed_features and not hide_photo_analysis %}
+                <h3 class="listing-packages-sub-heading">Observed features (photo analysis)</h3>
+                <ul class="listing-package-inline-list">
+                    {% for f in listing_observed_features %}
+                    <li>{{ f }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if listing_standalone_features %}
+                <h3 class="listing-packages-sub-heading">Listing description features</h3>
+                <ul class="listing-package-inline-list">
+                    {% for f in listing_standalone_features %}
+                    <li>{{ f }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if llava_interior_section and not hide_photo_analysis %}
+                <h3 class="listing-packages-sub-heading">Interior (vision)</h3>
+                {% if llava_interior_section.guess %}
+                <p class="listing-vision-guess">{{ llava_interior_section.guess }}</p>
+                {% endif %}
+                {% if llava_interior_section.buckets %}
+                <p class="listing-vision-evidence">Buckets: {{ llava_interior_section.buckets | join(', ') }}</p>
+                {% endif %}
+                {% endif %}
+            </div>
+
+            <p class="listing-packages-empty" id="car-packages-empty" {% if packages_panel_has_content or window_sticker_available %}hidden{% endif %}>
+                No package data yet. If an OEM window sticker exists for this VIN, we will fetch and analyze it automatically.
+            </p>
+            {% endif %}
+        </section>
+
         <section class="car-chat-section" id="car-chat-section" data-car-id="{{ car.id }}">
             <h2 class="car-chat-heading">Ask about this car</h2>
+            {% if billing_stripe_enabled and not has_paid_access %}
+            <p class="car-chat-hint">Car chat is included with a <a href="{{ url_for('premium_page') }}">premium subscription</a>. Subscribe to ask questions about this vehicle.</p>
+            {% else %}
             <p class="car-chat-hint">AI-generated answers may be incorrect or incomplete. Do not rely on them for VIN verification, pricing, financing, or compliance. They are not from the dealer or from official vehicle records. This feature uses your configured model (<code>LLM_BASE_URL</code> / <code>LLM_MODEL</code>).{% if not session.get('user_id') %} Sign in to allow live web research for comparison-style questions on this site (when the server enables it).{% endif %}</p>
             <div id="car-chat-messages" class="car-chat-messages" aria-live="polite"></div>
             <div class="car-chat-input-row">
                 <input type="text" id="car-chat-input" class="car-chat-input" placeholder="e.g. Is this AWD? What engine?" autocomplete="off" />
                 <button type="button" id="car-chat-send" class="car-chat-send primary-button">Send</button>
             </div>
+            {% endif %}
         </section>
 
     </div>
@@ -272,6 +462,7 @@
     <script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='car_chat.js') }}" nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='car_page.js') }}" nonce="{{ csp_nonce }}"></script>
+    <script src="{{ url_for('static', filename='car_packages.js') }}" nonce="{{ csp_nonce }}"></script>
     <script nonce="{{ csp_nonce }}">
     (function () {
         const btn = document.getElementById("save-btn");

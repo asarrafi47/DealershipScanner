@@ -90,6 +90,27 @@ def test_merge_verified_specs_does_not_use_double_dash_as_drivetrain() -> None:
         assert td.strip().lower() not in ("--", "-", "n/a", "na")
 
 
+def test_prepare_car_detail_package_evidence_when_no_features() -> None:
+    car = {
+        "gallery": [],
+        "packages": json.dumps(
+            {
+                "packages_normalized": [
+                    {
+                        "name": "Luxury Group",
+                        "features": [],
+                        "evidence_spans": ["Leather seats", "Premium audio"],
+                    }
+                ],
+            }
+        ),
+    }
+    ctx = prepare_car_detail_context(car)
+    sections = ctx.get("listing_packages_sections") or []
+    assert len(sections) == 1
+    assert sections[0]["evidence"] == ["Leather seats", "Premium audio"]
+
+
 def test_prepare_car_detail_packages_uses_name_fallbacks_and_extras() -> None:
     """Car detail Packages panel: canonical_name / vision lists / standalone features."""
     car = {
@@ -118,6 +139,29 @@ def test_prepare_car_detail_packages_uses_name_fallbacks_and_extras() -> None:
     assert ctx.get("listing_standalone_features") == ["Panoramic roof"]
     assert ctx.get("listing_observed_features") == ["Roof rails"]
     assert ctx.get("packages_panel_has_content") is True
+
+
+def test_prepare_car_detail_hides_photo_analysis_for_jeep() -> None:
+    car = {
+        "vin": "1C4JJXSJ5MW755034",
+        "make": "Jeep",
+        "gallery": [],
+        "packages": json.dumps(
+            {
+                "possible_packages": ["Rubicon Package"],
+                "observed_features": ["Hood scoop"],
+                "llava_interior_cabin": {
+                    "interior_guess_text": "Black leather",
+                    "interior_buckets": ["black"],
+                },
+            }
+        ),
+    }
+    ctx = prepare_car_detail_context(car)
+    assert ctx.get("hide_photo_analysis") is True
+    assert ctx.get("listing_possible_packages") == []
+    assert ctx.get("listing_observed_features") == []
+    assert ctx.get("llava_interior_section") is None
 
 
 def test_prepare_car_detail_llava_interior_section() -> None:

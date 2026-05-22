@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Premium Activated — Sarrafi Cars</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+</head>
+<body class="lp-body">
+<div class="page">
+    {% include "_nav_public.html" %}
+    <section class="auth-section">
+        <div class="auth-card" style="text-align: center;">
+            {% if premium_activated %}
+            <p class="eyebrow">Payment Successful</p>
+            <h1 style="font-size: 28px; margin: 8px 0 12px;">You're Premium ✦</h1>
+            <p style="color: var(--text-secondary); margin: 0 0 28px; line-height: 1.6;">
+                AI car chat, dealership picker, and market price intelligence are now unlocked.
+                Enjoy your upgrade.
+            </p>
+            {% else %}
+            <p class="eyebrow">Checkout</p>
+            <h1 style="font-size: 28px; margin: 8px 0 12px;">Payment not confirmed</h1>
+            <p style="color: var(--text-secondary); margin: 0 0 28px; line-height: 1.6;">
+                We could not verify your payment{% if checkout_error %} ({{ checkout_error }}){% endif %}.
+                If you were charged, contact support or wait a few minutes and refresh after Stripe finishes processing.
+            </p>
+            <a href="{{ url_for('premium_page') }}" class="primary-button" style="display: inline-block;">Back to Premium</a>
+            {% endif %}
+            <a href="{{ url_for('listings') }}" class="secondary-button" style="display: inline-block; margin-left: 8px;">Browse inventory</a>
+            <p class="auth-footer" style="margin-top: 16px;">
+                <a href="{{ url_for('dashboard') }}">Go to dashboard</a>
+            </p>
+        </div>
+    </section>
+</div>
+</body>
+</html>

@@ -249,12 +249,12 @@ def main() -> int:
     ap.add_argument(
         "--llm-base-url",
         default=os.environ.get("LLM_BASE_URL", "http://127.0.0.1:11434/v1"),
-        help="OpenAI-compatible base URL (e.g. Ollama http://127.0.0.1:11434/v1)",
+        help="OpenAI-compatible base URL for dealership adjudicator (optional).",
     )
     ap.add_argument(
         "--llm-model",
-        default=os.environ.get("LLM_MODEL", "llama3.2"),
-        help="Model id for /v1/chat/completions",
+        default=os.environ.get("LLM_MODEL", ""),
+        help="Model id for adjudicator /v1/chat/completions (optional).",
     )
     ap.add_argument(
         "--known-group-aliases",

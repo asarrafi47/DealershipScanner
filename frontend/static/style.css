@@ -153,6 +153,7 @@ select option {
 
 .nav-links {
     display: flex;
+    align-items: center;
     gap: 24px;
 }
 
@@ -185,6 +186,19 @@ select option {
     color: #ffffff;
     border-color: rgba(255, 252, 248, 0.65);
     background: rgba(255, 252, 248, 0.14);
+}
+
+.nav-links a.nav-premium-btn {
+    border-color: rgba(234, 179, 8, 0.55);
+    background: rgba(234, 179, 8, 0.12);
+    color: #f5c842;
+    letter-spacing: 0.01em;
+}
+
+.nav-links a.nav-premium-btn:hover {
+    border-color: rgba(234, 179, 8, 0.8);
+    background: rgba(234, 179, 8, 0.2);
+    color: #ffd84d;
 }
 
 .nav-links a.nav-link-cta[aria-current="page"] {
@@ -226,6 +240,46 @@ select option {
     font-size: 12px;
     color: rgba(252, 250, 246, 0.55);
     align-self: center;
+}
+
+/* Guest banner */
+.guest-banner {
+    background: #1a1a2e;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 10px 20px;
+}
+.guest-banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.guest-banner-text {
+    font-size: 13px;
+    color: rgba(252, 250, 246, 0.75);
+}
+.guest-banner-text a {
+    color: #a78bfa;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+.guest-banner-text a:hover {
+    color: #c4b5fd;
+}
+.guest-banner-dismiss {
+    background: none;
+    border: none;
+    color: rgba(252, 250, 246, 0.4);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 6px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+.guest-banner-dismiss:hover {
+    color: rgba(252, 250, 246, 0.8);
 }
 
 .dev-logout-form {
@@ -649,6 +703,57 @@ h1 {
     text-decoration: underline;
 }
 
+.plan-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.plan-option {
+    flex: 1;
+    position: relative;
+}
+
+.plan-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.plan-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 14px 12px;
+    border: 2px solid var(--border-medium);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    text-align: center;
+}
+
+.plan-option input:checked + label {
+    border-color: var(--navy);
+    background: rgba(28, 53, 82, 0.06);
+}
+
+.plan-option label .plan-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.plan-option label .plan-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.plan-option input:checked + label .plan-name {
+    color: var(--navy);
+}
+
 /* Smart search (listings) — width set by .filter-search-row */
 .smart-search-wrap {
     width: 100%;
@@ -679,8 +784,6 @@ h1 {
 }
 
 /* ZIP and radius always appear first in the pill row */
-.filter-controls-row .pill-group:has(input[name="zip_code"]) { order: -2; }
-.filter-controls-row .pill-group:has(select[name="radius"])  { order: -1; }
 
 .smart-search-label {
     position: absolute;
@@ -1265,7 +1368,7 @@ body.listings-page {
     background-image:
         radial-gradient(ellipse 90% 70% at 50% -25%, rgba(28, 53, 82, 0.07) 0%, transparent 52%),
         radial-gradient(ellipse 55% 45% at 100% 10%, rgba(92, 67, 56, 0.05) 0%, transparent 48%);
-    overflow-x: hidden;
+    overflow-x: clip; /* clip avoids scroll-linked layout glitches that overflow-x:hidden causes */
 }
 
 /* Filters live in a left column; results use the remaining width — no full-width fixed strip */
@@ -1300,6 +1403,7 @@ body.listings-page .listings-sidebar {
 
 body.listings-page .listings-main-column {
     min-width: 0;
+    min-height: 100vh; /* prevents layout shift / scroll glitch when results are empty */
 }
 
 body.listings-page .filter-top-row {
@@ -2722,6 +2826,15 @@ body.db-page {
     transform: none;
 }
 
+.save-btn--guest {
+    text-decoration: none;
+    opacity: 0.75;
+}
+.save-btn--guest:hover {
+    opacity: 1;
+    text-decoration: none;
+}
+
 /* ── Recommendations carousel ── */
 
 .reco-carousel-wrap {
@@ -3526,7 +3639,7 @@ body.db-page {
     color: #fecaca;
 }
 
-/* Car detail — Ollama chat */
+/* Car detail — Claude chat */
 .car-chat-section {
     max-width: 960px;
     margin: 32px auto 48px;
@@ -3697,6 +3810,213 @@ button.back-link {
 .car-detail-dealer-link-unavailable {
     opacity: 0.55;
     pointer-events: none;
+}
+
+/* ── Car detail: packages + window sticker (premium) ── */
+.car-packages-section {
+    max-width: 960px;
+    margin: 48px auto 0;
+    padding: 0 20px 32px;
+}
+
+.car-packages-heading {
+    font-size: 1.35rem;
+    margin-bottom: 8px;
+    color: var(--navy);
+}
+
+.car-packages-hint {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.car-packages-loading {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 12px 0 20px;
+}
+
+.car-window-sticker-embed-wrap {
+    margin-bottom: 28px;
+    border: 1px solid var(--border-light);
+    border-radius: var(--main-radius);
+    overflow: hidden;
+    background: #fff;
+}
+
+.car-window-sticker-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+    padding: 10px 14px 0;
+    background: #fff;
+    border-bottom: 0;
+}
+
+.car-window-sticker-title {
+    font-size: 1rem;
+    margin: 0;
+    color: var(--navy);
+}
+
+.car-window-sticker-open {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--navy);
+    text-decoration: none;
+}
+
+.car-window-sticker-open:hover {
+    text-decoration: underline;
+}
+
+.car-window-sticker-loading {
+    margin: 0;
+    padding: 8px 14px 12px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.car-window-sticker-preview {
+    display: flex;
+    justify-content: center;
+    padding: 12px 16px 20px;
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.car-window-sticker-img {
+    display: block;
+    width: 100%;
+    max-width: 720px;
+    min-height: 120px;
+    height: auto;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+    background: #fff;
+    object-fit: contain;
+}
+
+.car-window-sticker-canvas {
+    display: block;
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+}
+
+.car-window-sticker-specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px 18px;
+    margin: 0 0 14px;
+    padding: 0;
+}
+
+.car-window-sticker-specs div {
+    margin: 0;
+}
+
+.car-window-sticker-specs dt {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 2px;
+}
+
+.car-window-sticker-specs dd {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--text);
+    line-height: 1.35;
+}
+
+.car-window-sticker-analyzed {
+    padding: 16px 16px 18px;
+    background: #fafaf8;
+}
+
+.car-window-sticker-ymm {
+    margin: 0 0 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--navy);
+}
+
+.car-window-sticker-msrp {
+    margin: 0 0 10px;
+    font-size: 0.9rem;
+}
+
+.car-window-sticker-sub {
+    margin: 10px 0 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+}
+
+.car-window-sticker-opt-list {
+    margin: 0 0 8px;
+    padding-left: 1.2rem;
+    font-size: 0.88rem;
+    line-height: 1.45;
+}
+
+.car-window-sticker-std-list {
+    color: var(--text-muted);
+}
+
+.listing-package-plain {
+    margin: 8px 0 12px;
+    font-size: 0.95rem;
+    color: var(--text);
+}
+
+.listing-package-plain-note {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+.car-sticker-colors {
+    margin-bottom: 16px;
+    font-size: 0.92rem;
+}
+
+.car-sticker-color-label {
+    font-weight: 600;
+    color: var(--navy);
+}
+
+body.car-detail-page .listing-packages-panel {
+    margin-top: 8px;
+    padding: 20px;
+    border: 1px solid var(--border-light);
+    border-radius: var(--main-radius);
+    background: var(--bg-elevated);
+}
+
+body.car-detail-page .listing-packages-sub-heading {
+    color: var(--navy);
+}
+
+body.car-detail-page .listing-package-inline-list {
+    color: var(--text);
+}
+
+body.car-detail-page .listing-packages-empty {
+    color: var(--text-muted);
 }
 
 /* ── Car detail: listing-derived packages (native disclosure) ── */
@@ -4452,14 +4772,9 @@ details[open] > .listing-package-summary::before {
 @media (prefers-reduced-motion: reduce) {
     .lp-marquee-track {
         animation: none;
-        flex-wrap: wrap;
-        justify-content: center;
-        width: 100%;
-        max-width: 960px;
-        margin: 0 auto;
-        row-gap: 10px;
-        padding: 0 16px;
-        box-sizing: border-box;
+        /* Keep single horizontal row — overflow hidden on .lp-marquee-view clips the rest */
+        flex-wrap: nowrap;
+        width: max-content;
     }
 
     .lp-marquee-wrap {
@@ -4760,4 +5075,247 @@ details[open] > .listing-package-summary::before {
 .dealer-filter-option small {
     color: var(--text-muted);
     font-size: 11px;
+}
+
+/* Location + dealership picker (below smart search, full sidebar width) */
+.listings-geo-bar {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-light);
+}
+
+.listings-geo-bar-label {
+    margin: 0 0 10px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.listings-geo-bar-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    align-items: flex-end;
+}
+
+.listings-geo-field {
+    flex: 0 1 auto;
+    min-width: 5.5rem;
+}
+
+.listings-dealer-picker {
+    position: relative;
+    flex: 1 1 100%;
+    min-width: 0;
+}
+
+.listings-dealer-picker .pill-select-label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.listings-dealer-picker-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border-medium);
+    border-radius: 12px;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.listings-dealer-picker-btn:hover {
+    border-color: var(--navy);
+    background: var(--bg-elevated);
+}
+
+.listings-dealer-picker-btn.has-selection {
+    border-color: rgba(28, 53, 82, 0.4);
+    background: rgba(28, 53, 82, 0.06);
+    color: var(--navy);
+}
+
+.listings-dealer-picker-btn.open .pill-chevron {
+    transform: rotate(180deg);
+}
+
+.listings-dealer-picker-btn-label {
+    flex: 1 1 auto;
+    text-align: left;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.listings-dealer-picker-count {
+    flex-shrink: 0;
+}
+
+.listings-dealer-picker-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 120;
+    background: var(--bg-card);
+    border: 1px solid var(--border-medium);
+    border-radius: 14px;
+    box-shadow: 0 20px 48px rgba(20, 36, 54, 0.16);
+    overflow: hidden;
+}
+
+.listings-dealer-picker-panel:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+}
+
+.listings-dealer-picker-toolbar {
+    display: flex;
+    gap: 8px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-elevated);
+}
+
+.listings-dealer-picker-tool {
+    border: none;
+    background: transparent;
+    color: var(--navy);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+}
+
+.listings-dealer-picker-tool:hover {
+    background: rgba(28, 53, 82, 0.08);
+}
+
+.listings-dealer-picker-list {
+    max-height: min(280px, 42vh);
+    overflow-y: auto;
+    padding: 6px;
+    margin: 0;
+}
+
+.listings-dealer-picker-list .dealer-filter-option span {
+    line-height: 1.35;
+}
+
+.listings-dealer-picker-meta {
+    margin: 0;
+    padding: 8px 12px 0;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--text-muted);
+}
+
+.dealer-stock-count {
+    color: var(--text-muted);
+}
+
+.dealer-filter-premium-hint,
+.dealer-filter-empty,
+.dealer-filter-loading {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 8px 12px 10px;
+    line-height: 1.45;
+}
+
+.dealer-filter-premium-hint a {
+    font-weight: 600;
+}
+
+.result-market {
+    font-size: 12px;
+    margin: -2px 0 6px;
+    line-height: 1.35;
+}
+
+.result-market--below_market {
+    color: #1a7f4c;
+}
+
+.result-market--above_market {
+    color: #b45309;
+}
+
+.result-market--near_market {
+    color: var(--text-muted);
+}
+
+.result-market-delta {
+    font-weight: 600;
+}
+
+.car-market-panel {
+    margin-top: 20px;
+    margin-bottom: 4px;
+    padding: 14px 16px;
+    border-radius: var(--main-radius);
+    border: 1px solid var(--border-medium);
+    background: var(--bg-card);
+    box-shadow: 0 4px 18px rgba(20, 36, 54, 0.06);
+    max-width: 520px;
+}
+
+.car-market-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 10px;
+}
+
+.car-market-line {
+    margin: 6px 0;
+    font-size: 0.98rem;
+    color: var(--text);
+}
+
+.car-market-label {
+    display: inline-block;
+    min-width: 9rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.car-market-samples {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-left: 6px;
+}
+
+.car-market-vs {
+    margin: 12px 0 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--navy);
+}
+
+.car-market-vs--below_market {
+    color: #1a7f4c;
+}
+
+.car-market-vs--above_market {
+    color: #b45309;
+}
+
+.car-market-cohort,
+.car-market-disclaimer {
+    margin: 8px 0 0;
+    font-size: 0.82rem;
+    color: var(--text-muted);
 }

@@ -1,4 +1,4 @@
-"""Engine display (displacement-only) and displacement range search."""
+"""Engine display (displacement + layout) and displacement range search."""
 
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ def test_build_engine_display_displacement_only_from_engine_l() -> None:
         "cylinders": 8,
         "fuel_type": "Gas",
     }
-    assert build_engine_display(car, {}) == "4.4L"
+    assert build_engine_display(car, {}) == "4.4L V8"
 
 
 def test_displacement_only_description_merges_verified_cylinders_for_parse() -> None:
@@ -37,7 +37,7 @@ def test_displacement_only_description_merges_verified_cylinders_for_parse() -> 
         "fuel_type": "Gasoline",
     }
     vs = {"cylinders": 4, "cylinders_display": 4}
-    assert build_engine_display(car, vs) == "2.0L"
+    assert build_engine_display(car, vs) == "2.0L I4"
 
 
 def test_displacement_only_numeric_engine_l() -> None:
@@ -48,7 +48,7 @@ def test_displacement_only_numeric_engine_l() -> None:
         "fuel_type": "Gas",
     }
     vs = {"cylinders_display": 4}
-    assert build_engine_display(car, vs) == "2.0L"
+    assert build_engine_display(car, vs) == "2.0L I4"
 
 
 def test_rich_engine_description_yields_displacement_only() -> None:
@@ -58,7 +58,7 @@ def test_rich_engine_description_yields_displacement_only() -> None:
         "cylinders": None,
         "fuel_type": "Gas",
     }
-    assert build_engine_display(car, {"cylinders": 4}) == "2.0L"
+    assert build_engine_display(car, {"cylinders": 4}) == "2.0L I4"
 
 
 def test_master_engine_string_epa_aggregate_stripped_to_liters() -> None:
@@ -69,7 +69,58 @@ def test_master_engine_string_epa_aggregate_stripped_to_liters() -> None:
         "fuel_type": "Gas",
     }
     vs = {"master_engine_string": "3.0L I6 (EPA mode aggregate)"}
-    assert build_engine_display(car, vs) == "3.0L"
+    assert build_engine_display(car, vs) == "3.0L I6"
+
+
+def test_build_engine_display_prefers_sticker_packages() -> None:
+    car = {
+        "engine_l": "3.6",
+        "cylinders": 6,
+        "packages": '{"sticker_engine_display": "6.4L V8"}',
+    }
+    assert build_engine_display(car, {}) == "6.4L V8"
+
+
+def test_build_engine_display_missing_cylinders_no_crash() -> None:
+    car = {
+        "engine_l": "2.0",
+        "cylinders": None,
+        "engine_description": None,
+        "fuel_type": "Gas",
+    }
+    assert build_engine_display(car, {}) == "2.0L"
+
+
+def test_build_engine_display_layout_from_description_without_cylinder_count() -> None:
+    car = {
+        "engine_l": "3.5",
+        "cylinders": None,
+        "engine_description": "3.5L V6 EcoBoost",
+        "fuel_type": "Gas",
+    }
+    assert build_engine_display(car, {}) == "3.5L V6"
+
+
+def test_build_engine_display_jeep_wrangler_392() -> None:
+    car = {
+        "make": "Jeep",
+        "model": "Wrangler",
+        "trim": "Unlimited Rubicon 392",
+        "engine_l": "3.6",
+        "cylinders": 6,
+        "fuel_type": "Gas",
+    }
+    assert build_engine_display(car, {}) == "6.4L V8"
+
+
+def test_known_oem_engine_jeep_392() -> None:
+    from backend.scanner.window_sticker import known_oem_engine_from_car
+
+    hit = known_oem_engine_from_car(
+        {"make": "Jeep", "model": "Wrangler", "trim": "Rubicon 392"}
+    )
+    assert hit.get("engine_display") == "6.4L V8"
+    assert hit.get("engine_l") == 6.4
 
 
 def test_parse_engine_displacement_from_engine_l() -> None:

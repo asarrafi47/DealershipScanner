@@ -43,4 +43,4 @@ def test_collect_row_adds_condition_when_missing() -> None:
         "transmission": None,
     }
     u = collect_row_storage_repairs(raw)
-    assert u.get("condition") == "Pre-Owned"
+    assert u.get("condition") == "Used"

@@ -89,6 +89,7 @@ def test_merge_json_export_rows_inserts(tmp_path):
 
 
 def test_is_franchised_dealer_word_boundaries():
+    pytest.importorskip("duckdb")
     from backend.discovery.overture_discovery import is_franchised_dealer
 
     assert is_franchised_dealer("Tindol Ford") is True
@@ -170,16 +171,20 @@ def test_run_discovery_overpass_timeout_returns_empty_osm(mock_ddg, mock_post):
     assert isinstance(rows, list)
 
 
-@patch("backend.discovery.osm.requests.Session.post")
-@patch("backend.discovery.pipeline.ddg_find_dealer_url")
-def test_run_discovery_osm_fixture(mock_ddg, mock_post):
-    sample = json.loads(OVERPASS_JSON.read_text(encoding="utf-8"))
-    resp = MagicMock()
-    resp.json.return_value = sample
-    resp.raise_for_status = MagicMock()
-    mock_post.return_value = resp
-    mock_ddg.return_value = None
-
+@patch("backend.discovery.pipeline.fetch_google_places_dealerships")
+def test_run_discovery_google_places_fixture(mock_gp):
+    """Pipeline uses Google Places tier (OSM Overpass removed from orchestration)."""
+    mock_gp.return_value = [
+        DealerCandidate(
+            name="Fixture Auto Sales",
+            city="Charlotte",
+            state="NC",
+            zip_code="28210",
+            latitude=35.051,
+            longitude=-80.849,
+            dealer_website_url="https://fixture-auto-example.invalid",
+        )
+    ]
     rows = run_discovery("28210", 25.0, fill_urls_via_ddg=False)
     names = {r.name for r in rows}
     assert "Fixture Auto Sales" in names
@@ -240,45 +245,26 @@ def test_resolve_zip_center_prefers_gazetteer(tmp_path):
     assert lat == 12.34 and lon == -56.78
 
 
-@patch("backend.discovery.osm.requests.Session.post")
-@patch("backend.discovery.pipeline.ddg_find_dealer_url")
-def test_run_discovery_seed_zip_scope(mock_ddg, mock_post):
-    sample = {
-        "elements": [
-            {
-                "type": "node",
-                "id": 1,
-                "lat": 35.051,
-                "lon": -80.849,
-                "tags": {
-                    "shop": "car",
-                    "name": "Inside ZIP",
-                    "addr:postcode": "28210",
-                    "addr:state": "NC",
-                    "addr:city": "Charlotte",
-                },
-            },
-            {
-                "type": "node",
-                "id": 2,
-                "lat": 35.06,
-                "lon": -80.84,
-                "tags": {
-                    "shop": "car",
-                    "name": "Adjacent ZIP",
-                    "addr:postcode": "28211",
-                    "addr:state": "NC",
-                    "addr:city": "Charlotte",
-                },
-            },
-        ]
-    }
-    resp = MagicMock()
-    resp.json.return_value = sample
-    resp.raise_for_status = MagicMock()
-    mock_post.return_value = resp
-    mock_ddg.return_value = None
-
+@patch("backend.discovery.pipeline.fetch_google_places_dealerships")
+def test_run_discovery_seed_zip_scope(mock_gp):
+    mock_gp.return_value = [
+        DealerCandidate(
+            name="Inside ZIP",
+            city="Charlotte",
+            state="NC",
+            zip_code="28210",
+            latitude=35.051,
+            longitude=-80.849,
+        ),
+        DealerCandidate(
+            name="Adjacent ZIP",
+            city="Charlotte",
+            state="NC",
+            zip_code="28211",
+            latitude=35.06,
+            longitude=-80.84,
+        ),
+    ]
     rows = run_discovery(
         "28210",
         25.0,
@@ -289,7 +275,8 @@ def test_run_discovery_seed_zip_scope(mock_ddg, mock_post):
     assert rows[0].name == "Inside ZIP"
 
 
-def test_ddg_skips_aggregator_urls():
+@patch("backend.discovery.web._ddg_html_find_dealer_url", return_value=None)
+def test_ddg_skips_aggregator_urls(mock_html):
     resp = MagicMock()
     resp.json.return_value = {
         "AbstractURL": "https://www.google.com/foo",

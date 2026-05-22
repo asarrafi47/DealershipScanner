@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """
-Run Ollama LLaVA cabin-color inference for existing inventory rows (not only a live scan).
+Run Claude cabin-color inference for existing inventory rows (not only a live scan).
 
-Requires a local Ollama host (``OLLAMA_HOST``) and a vision model (``OLLAMA_VISION_MODEL``,
-default ``llava:13b``). Cabin image selection uses URL heuristics + LLaVA gallery
+Requires ``ANTHROPIC_API_KEY``. Cabin image selection uses URL heuristics + Claude gallery
 classification (see ``backend.scanner.post_pipeline.select_url_for_cabin_vision``).
 
 By default only rows with empty/placeholder ``interior_color`` are updated (unless
@@ -85,7 +84,7 @@ def _vins_to_process(
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Backfill interior_color via LLaVA (cabin image) for existing cars rows."
+        description="Backfill interior_color via Claude vision (cabin image) for existing cars rows."
     )
     ap.add_argument(
         "--db",

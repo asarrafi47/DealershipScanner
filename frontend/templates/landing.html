@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sarrafi Collection</title>
+    <title>Sarrafi Cars</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
 </head>
 <body class="lp-body">
@@ -54,7 +54,7 @@
     {# ── About the project ── #}
     <section class="lp-vs">
         <div class="lp-vs-inner">
-            <p class="eyebrow">Why Sarrafi Collection</p>
+            <p class="eyebrow">Why Sarrafi Cars</p>
             <h2 class="lp-vs-title">A calmer way to explore<br>real dealer inventory.</h2>
             <p class="lp-about-copy">
                 We pull listings straight from dealership websites and fold in public specs and safety data
@@ -166,13 +166,13 @@
         <h2 class="lp-bottom-title">Start searching now.</h2>
         <p class="lp-bottom-sub">Free to browse. Create an account to save cars and get recommendations.</p>
         <div class="lp-cta-row lp-cta-row--center">
-            <a href="{{ url_for('listings') }}" class="primary-button lp-cta-primary">Browse inventory</a>
+            <a href="{{ url_for('listings') }}" class="primary-button">Browse inventory</a>
             <a href="/register" class="secondary-button lp-cta-secondary">Create account</a>
         </div>
     </section>
 
     <footer class="lp-footer">
-        <span class="lp-footer-copy">&copy; {{ now.year }} Sarrafi Collection</span>
+        <span class="lp-footer-copy">&copy; {{ now.year }} Sarrafi Cars</span>
     </footer>
 
 </div>

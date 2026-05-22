@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Backfill interior_color via Ollama LLaVA (wrapper).
+Backfill interior_color via Claude vision (wrapper).
 
 Preferred invocation from **repository root**::
 

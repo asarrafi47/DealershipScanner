@@ -49,9 +49,11 @@ def listings_page(*, listings_poll_ms: int = 0):
         results, _ = hybrid_search_with_kwargs(q_text, sql_kwargs, vector_top_k=100)
         initial_grid_cars = [serialize_car_for_listings_grid(c) for c in results]
 
+    options = get_filter_options()
+
     return render_template(
         "listings.html",
-        options=get_filter_options(),
+        options=options,
         active=active,
         initial_grid_cars=initial_grid_cars,
         listings_poll_ms=int(listings_poll_ms),

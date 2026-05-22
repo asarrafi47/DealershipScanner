@@ -1,9 +1,4 @@
-"""
-URL heuristics for dealer gallery listing images — extracted from ollama_llava.py.
-
-These pure-URL functions have no LLM dependency and are shared by both the
-LLaVA and Claude gallery filter implementations.
-"""
+"""URL heuristics for dealer gallery listing images. No LLM dependency."""
 from __future__ import annotations
 
 import logging
@@ -33,6 +28,26 @@ _GALLERY_HOST_DROP_SUBSTR: frozenset[str] = frozenset(
         "kbb.com",
         "kbb-",
         "kelleybluebook",
+        "gubagoo.io",
+        "pureinfluencer",
+        "idrove.it",
+    }
+)
+
+# Dealer-site UI assets scraped into gallery JSON (icons, transfer tiles, chat widgets).
+_GALLERY_PATH_JUNK_FRAGMENTS: frozenset[str] = frozenset(
+    {
+        "transferbadge",
+        "transfer_badge",
+        "directions-icon",
+        "directions_icon",
+        "photoswipe",
+        "default-skin",
+        "/customwork/",
+        "vehicle images coming soon",
+        "images coming soon",
+        "incentive+",
+        "+incentive",
     }
 )
 
@@ -151,7 +166,34 @@ def heuristic_listing_gallery_fluff_url(url: str) -> bool:
     for nd in _fi_path_needles:
         if nd in pq:
             return True
+    for frag in _GALLERY_PATH_JUNK_FRAGMENTS:
+        if frag in sl:
+            return True
     return False
+
+
+def filter_public_gallery_urls(urls: list[str] | None) -> list[str]:
+    """
+    Drop non-vehicle gallery URLs for public car pages. Prefer dealer lot photos when sorting.
+    """
+    if not urls:
+        return []
+    kept: list[str] = []
+    seen: set[str] = set()
+    for u in urls:
+        if not u or not isinstance(u, str):
+            continue
+        s = u.strip()
+        if not s or s in seen:
+            continue
+        if heuristic_listing_gallery_fluff_url(s):
+            continue
+        seen.add(s)
+        kept.append(s)
+    if not kept:
+        return []
+    kept.sort(key=dealer_lot_photo_score, reverse=True)
+    return kept
 
 
 def heuristic_drop_gallery_listing_url(url: str) -> bool:

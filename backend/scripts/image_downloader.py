@@ -9,7 +9,7 @@ every unique regular image to:
     car_images/<dealer_id>/<vin>/000_<hash>.jpg
     car_images/<dealer_id>/<vin>/manifest.json
 
-No LLaVA / LLM processing is performed.
+No LLM processing is performed.
 
 Usage:
     python image_downloader.py
@@ -767,7 +767,7 @@ async def main(
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(
-        description="Download all carousel images for every car in the DB (no LLaVA)."
+        description="Download all carousel images for every car in the DB."
     )
     ap.add_argument("--dealer-id", metavar="ID", default=None,
                     help="Only process cars from this dealer_id (e.g. kefferjeep-com).")

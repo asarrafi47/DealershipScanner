@@ -1411,9 +1411,13 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
             g = []
     if not isinstance(g, list):
         g = []
-    urls = [u for u in g if u and isinstance(u, str)]
+    from backend.vision.url_heuristics import filter_public_gallery_urls, heuristic_listing_gallery_fluff_url
+
+    urls = filter_public_gallery_urls([u for u in g if u and isinstance(u, str)])
     if not urls and car.get("image_url"):
-        urls = [car["image_url"]]
+        iu = car.get("image_url")
+        if isinstance(iu, str) and iu.strip() and not heuristic_listing_gallery_fluff_url(iu):
+            urls = [iu.strip()]
     verified = merge_verified_specs(car)
 
     listing_packages_sections: list[dict[str, Any]] = []
@@ -1421,9 +1425,26 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
     listing_observed_features: list[str] = []
     listing_monroney_options: list[str] = []
     listing_monroney_standard: list[str] = []
+    listing_sticker_options: list[str] = []
+    listing_possible_packages: list[str] = []
+    sticker_exterior_color: str | None = None
+    sticker_interior_color: str | None = None
+    sticker_interior_material: str | None = None
+    sticker_spec_lines: list[dict[str, str]] = []
     interior_from_listing_description = False
     interior_from_llava_vision = False
     llava_interior_section: dict[str, Any] | None = None
+    hide_photo_analysis = False
+
+    try:
+        from backend.scanner.window_sticker import oem_hide_photo_analysis
+
+        hide_photo_analysis = oem_hide_photo_analysis(
+            str(car.get("vin") or ""),
+            str(car.get("make") or ""),
+        )
+    except Exception:
+        hide_photo_analysis = False
 
     def _normalized_pkg_title(entry: dict[str, Any]) -> str:
         for key in ("name", "canonical_name", "name_verbatim"):
@@ -1444,7 +1465,7 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
 
     if pj is not None:
         liv = pj.get("llava_interior_cabin")
-        if isinstance(liv, dict) and liv:
+        if isinstance(liv, dict) and liv and not hide_photo_analysis:
             ib = liv.get("interior_buckets") or []
             bucket_list = [str(x).strip() for x in ib if str(x).strip()][:24]
             llava_interior_section = {
@@ -1453,6 +1474,7 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
                 "evidence": str(liv.get("evidence") or "").strip()[:400],
                 "confidence": liv.get("confidence"),
             }
+        trim_low = str(car.get("trim") or "").strip().lower()
         seen_titles: set[str] = set()
         for entry in pj.get("packages_normalized") or []:
             if not isinstance(entry, dict):
@@ -1463,13 +1485,21 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
             low = title.lower()
             if low in seen_titles:
                 continue
-            seen_titles.add(low)
             feats = entry.get("features") or []
             feat_list = [str(x).strip() for x in feats if isinstance(x, str) and str(x).strip()]
+            evidence = entry.get("evidence_spans") or []
+            evidence_list = [
+                str(x).strip() for x in evidence if isinstance(x, str) and str(x).strip()
+            ][:8]
+            # Trim names are not option packages — skip empty accordions that only repeat trim.
+            if trim_low and low == trim_low and not feat_list and not evidence_list:
+                continue
+            seen_titles.add(low)
             listing_packages_sections.append(
                 {
                     "name": title,
                     "features": feat_list[:30],
+                    "evidence": evidence_list,
                     "source": "listing",
                     "from_listing_description": True,
                     "from_vision": False,
@@ -1492,25 +1522,76 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
                     listing_monroney_standard.append(s)
         listing_monroney_standard = listing_monroney_standard[:40]
 
-        for raw in pj.get("possible_packages") or []:
-            if not isinstance(raw, str):
-                continue
-            label = raw.strip()[:200]
-            if not label:
-                continue
-            low = label.lower()
-            if low in seen_titles:
-                continue
-            seen_titles.add(low)
-            listing_packages_sections.append(
-                {
-                    "name": label,
-                    "features": [],
-                    "source": "vision_possible",
-                    "from_listing_description": False,
-                    "from_vision": True,
-                }
-            )
+        so = pj.get("sticker_options")
+        if isinstance(so, list):
+            seen_so: set[str] = set()
+            for x in so:
+                s = str(x).strip()[:200]
+                if not s:
+                    continue
+                k = s.lower()
+                if k in seen_so:
+                    continue
+                seen_so.add(k)
+                listing_sticker_options.append(s)
+        listing_sticker_options = listing_sticker_options[:80]
+
+        sec = pj.get("sticker_exterior_color")
+        if isinstance(sec, str) and sec.strip():
+            sticker_exterior_color = re.sub(r"^:\s*", "", sec.strip())[:120]
+        sic = pj.get("sticker_interior_color")
+        if isinstance(sic, str) and sic.strip():
+            sticker_interior_color = re.sub(r"^:\s*", "", sic.strip())[:120]
+        sim = pj.get("sticker_interior_material")
+        if isinstance(sim, str) and sim.strip():
+            sticker_interior_material = sim.strip()[:120]
+
+        ss = pj.get("sticker_specs")
+        if isinstance(ss, dict):
+            for label, val in ss.items():
+                if not isinstance(label, str) or not isinstance(val, str):
+                    continue
+                s = re.sub(r"^:\s*", "", val.strip())
+                if not s:
+                    continue
+                sticker_spec_lines.append({"label": label.strip()[:40], "value": s[:160]})
+        if not sticker_spec_lines:
+            for label, key in (
+                ("Engine", "sticker_engine_display"),
+                ("Transmission", "sticker_transmission"),
+                ("Drivetrain", "sticker_drivetrain"),
+                ("Doors", "sticker_doors"),
+                ("Seating", "sticker_seating"),
+                ("Tires", "sticker_tires"),
+                ("Wheels", "sticker_wheels"),
+            ):
+                val = pj.get(key)
+                if isinstance(val, str) and val.strip():
+                    v = re.sub(r"^:\s*", "", val.strip())
+                    if v:
+                        sticker_spec_lines.append({"label": label, "value": v[:160]})
+
+        if not hide_photo_analysis:
+            for raw in pj.get("possible_packages") or []:
+                if not isinstance(raw, str):
+                    continue
+                label = raw.strip()[:200]
+                if not label:
+                    continue
+                low = label.lower()
+                if low in seen_titles:
+                    continue
+                seen_titles.add(low)
+                listing_possible_packages.append(label)
+                listing_packages_sections.append(
+                    {
+                        "name": label,
+                        "features": [],
+                        "source": "vision_possible",
+                        "from_listing_description": False,
+                        "from_vision": True,
+                    }
+                )
 
         seen_sf: set[str] = set()
         sf = pj.get("standalone_features_from_description")
@@ -1526,19 +1607,20 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
                 listing_standalone_features.append(s)
         listing_standalone_features = listing_standalone_features[:40]
 
-        seen_obs: set[str] = set()
-        obs = pj.get("observed_features")
-        if isinstance(obs, list):
-            for x in obs:
-                s = str(x).strip()[:200]
-                if not s:
-                    continue
-                k = s.lower()
-                if k in seen_obs:
-                    continue
-                seen_obs.add(k)
-                listing_observed_features.append(s)
-        listing_observed_features = listing_observed_features[:40]
+        if not hide_photo_analysis:
+            seen_obs: set[str] = set()
+            obs = pj.get("observed_features")
+            if isinstance(obs, list):
+                for x in obs:
+                    s = str(x).strip()[:200]
+                    if not s:
+                        continue
+                    k = s.lower()
+                    if k in seen_obs:
+                        continue
+                    seen_obs.add(k)
+                    listing_observed_features.append(s)
+            listing_observed_features = listing_observed_features[:40]
     spec_raw = car.get("spec_source_json")
     if spec_raw and str(spec_raw).strip():
         try:
@@ -1561,6 +1643,12 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
         or listing_observed_features
         or listing_monroney_options
         or listing_monroney_standard
+        or listing_sticker_options
+        or listing_possible_packages
+        or sticker_exterior_color
+        or sticker_interior_color
+        or sticker_interior_material
+        or sticker_spec_lines
         or llava_interior_section
     )
 
@@ -1572,8 +1660,15 @@ def prepare_car_detail_context(car: dict[str, Any]) -> dict[str, Any]:
         "listing_observed_features": listing_observed_features,
         "listing_monroney_options": listing_monroney_options,
         "listing_monroney_standard": listing_monroney_standard,
+        "listing_sticker_options": listing_sticker_options,
+        "listing_possible_packages": listing_possible_packages,
+        "sticker_exterior_color": sticker_exterior_color,
+        "sticker_interior_color": sticker_interior_color,
+        "sticker_interior_material": sticker_interior_material,
+        "sticker_spec_lines": sticker_spec_lines,
         "interior_from_listing_description": interior_from_listing_description,
         "interior_from_llava_vision": interior_from_llava_vision,
         "packages_panel_has_content": packages_panel_has_content,
         "llava_interior_section": llava_interior_section,
+        "hide_photo_analysis": hide_photo_analysis,
     }

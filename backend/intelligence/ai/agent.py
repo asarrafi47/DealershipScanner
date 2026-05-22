@@ -1,6 +1,6 @@
 """
-Context-aware AI co-pilot: OpenAI GPT-4o + EPA / trim verification (Truth Engine).
-Requires OPENAI_API_KEY. Tool: verify_car_data(vin).
+Context-aware AI co-pilot powered by Claude Haiku + EPA / trim verification.
+Requires ANTHROPIC_API_KEY.
 """
 from __future__ import annotations
 
@@ -16,8 +16,6 @@ from backend.db.inventory_db import get_car_by_vin
 from backend.enrichment.knowledge_engine import decode_trim_logic, lookup_epa_aggregate, prepare_car_detail_context
 from backend.utils.car_serialize import DISPLAY_DASH, build_engine_display, format_display_value
 from backend.utils.field_clean import clean_car_row_dict, is_effectively_empty
-
-OPENAI_MODEL = os.environ.get("OPENAI_CHAT_MODEL", "gpt-4o")
 
 
 def _norm_drive_compare(s: str | None) -> str:
@@ -163,93 +161,14 @@ def verify_car_data(vin: str) -> dict[str, Any]:
     return out
 
 
-def run_ai_chat(
-    user_message: str,
-    current_vin: str | None,
-    page_hint: str | None = None,
-) -> dict[str, Any]:
-    """
-    Call OpenAI with verification context. Returns reply text + discrepancy_flags for UI.
-    """
-    api_key = os.environ.get("OPENAI_API_KEY", "").strip()
-    if not api_key:
-        return {
-            "reply": (
-                "AI co-pilot is not configured. Set the OPENAI_API_KEY environment variable "
-                "to enable GPT-4o verification against your EPA database."
-            ),
-            "discrepancy_flags": [],
-            "verification": None,
-            "error": "missing_api_key",
-        }
-
-    try:
-        from openai import OpenAI
-    except ImportError:
-        return {
-            "reply": "Install the `openai` package: pip install openai",
-            "discrepancy_flags": [],
-            "verification": None,
-            "error": "missing_openai_package",
-        }
-
-    client = OpenAI(api_key=api_key)
-    verification: dict[str, Any] | None = None
-    vin = (current_vin or "").strip()
-    if vin:
-        verification = verify_car_data(vin)
-
-    system_parts = [
-        "You are the Sarrafi Collection automotive co-pilot — a careful 'Truth Engine'. ",
-        "You reduce errors by comparing dealer listing data with EPA (epa_master) and trim-based rules. ",
-        "Be concise, friendly, and factual. If verification shows mismatches, explain them clearly ",
-        "and recommend confirming with the dealer. Never invent EPA numbers; use only the JSON given. ",
-    ]
-    if page_hint == "listings":
-        system_parts.append("The user is on the search/listings page — help them filter or understand inventory; VIN may be absent. ")
-    elif page_hint == "car":
-        system_parts.append("The user is viewing a single vehicle detail page — you have VIN context. ")
-
-    if verification:
-        system_parts.append(
-            "\n\n## Verification JSON (authoritative for this chat turn)\n"
-            + json.dumps(verification, indent=2, default=str)
-        )
-    else:
-        system_parts.append("\n\nNo VIN was provided; answer generally or ask for a vehicle context.")
-
-    system_parts.append(
-        "\n\nIf asked whether the page is correct, cite the verification mismatches array when non-empty, "
-        "otherwise say data looks consistent with EPA/trim inference."
-    )
-
-    messages: list[dict[str, Any]] = [
-        {"role": "system", "content": "".join(system_parts)},
-        {"role": "user", "content": user_message},
-    ]
-
-    resp = client.chat.completions.create(
-        model=OPENAI_MODEL,
-        messages=messages,
-        temperature=0.4,
-        max_tokens=1200,
-    )
-    reply = (resp.choices[0].message.content or "").strip()
-
-    flags = (verification or {}).get("discrepancy_flags") or []
-    return {
-        "reply": reply,
-        "discrepancy_flags": flags,
-        "verification": verification,
-        "error": None,
-    }
-
-
 # ── Web-research trigger detection ────────────────────────────────────────
 # Substrings that signal the user wants external model/market knowledge.
 # Checked against lowercased message; kept as substrings so "reliability",
 # "reliable", "unreliable" all match "reliab", etc.
 # Tight triggers: market / reliability / explicit powertrain-economy questions only.
+# Only trigger web scrape for things Claude can't answer from training:
+# market prices, live recall data, owner forum reliability threads.
+# Spec questions (HP, torque, MPG, 0-60, towing) → Claude answers from training instantly.
 _WEB_RESEARCH_TRIGGERS: tuple[str, ...] = (
     "reliab",
     "problem",
@@ -284,21 +203,6 @@ _WEB_RESEARCH_TRIGGERS: tuple[str, ...] = (
     "buy or lease",
     "should i buy",
     "is this a good",
-    " hp",
-    "horsepower",
-    "torque",
-    "powertrain",
-    "fuel economy",
-    "mpg",
-    "range",
-    "0-60",
-    "quarter mile",
-    "towing",
-    "payload",
-    "tow capacity",
-    "safety rating",
-    "crash test",
-    "warranty",
     "lemon",
     "title brand",
 )
@@ -426,6 +330,20 @@ def _history_highlights_snippet(car: dict[str, Any]) -> str:
     return ""
 
 
+def _dealer_map_line(c: dict[str, Any]) -> str:
+    addr = str(c.get("dealer_address") or "").strip()
+    lat = c.get("dealer_lat")
+    lon = c.get("dealer_lon")
+    if lat and lon:
+        gmaps = f"https://maps.google.com/?q={lat},{lon}"
+        amaps = f"https://maps.apple.com/?ll={lat},{lon}"
+        return f"Dealer map: Google Maps {gmaps} | Apple Maps {amaps}"
+    if addr:
+        q = addr.replace(" ", "+")
+        return f"Dealer map: https://maps.google.com/?q={q}"
+    return ""
+
+
 def run_car_page_chat(
     car: dict[str, Any],
     user_message: str,
@@ -478,6 +396,15 @@ def run_car_page_chat(
     ]
     listing_head = " ".join(heading_parts) if heading_parts else "Vehicle (listing identifiers incomplete)"
 
+    mpg_line = ""
+    mc, mh = c.get("mpg_city"), c.get("mpg_highway")
+    if mc and mh:
+        mpg_line = f"{mc} city / {mh} hwy"
+    elif mc:
+        mpg_line = f"{mc} city"
+    elif mh:
+        mpg_line = f"{mh} hwy"
+
     lines = [
         f"Listing heading: {listing_head}",
         _price_evidence(c.get("price")),
@@ -489,12 +416,17 @@ def run_car_page_chat(
         _evidence_line("Cylinders", c.get("cylinders")),
         _evidence_line("Transmission", verified.get("transmission_display") or c.get("transmission")),
         _evidence_line("Drivetrain", verified.get("drivetrain_display") or c.get("drivetrain")),
+        _evidence_line("MPG", mpg_line or None),
         _evidence_line("Exterior color", c.get("exterior_color")),
         _evidence_line("Interior color", c.get("interior_color")),
         _evidence_line("Body style", c.get("body_style")),
         _evidence_line("Condition", c.get("condition")),
+        _evidence_line("CARFAX URL", c.get("carfax_url")),
+        _evidence_line("Window sticker URL", c.get("window_sticker_url")),
         _evidence_line("Dealer name", c.get("dealer_name")),
         _evidence_line("Dealer URL", c.get("dealer_url")),
+        _evidence_line("Dealer address", c.get("dealer_address")),
+        _dealer_map_line(c),
     ]
     desc = (c.get("description") or "").strip() if isinstance(c.get("description"), str) else ""
     if desc and not is_effectively_empty(desc):
@@ -580,11 +512,13 @@ def run_car_page_chat(
                 _logger.warning("[ai_agent] WebResearcher failed: %s", exc)
 
     system_parts: list[str] = [
-        "You answer questions about one dealership listing. Follow the evidence blocks in order; "
-        "never treat cached model text or web snippets as facts about this VIN.\n\n"
-        "STYLE: Exactly 2–4 short sentences. Lead with the direct answer. If the listing lines say "
-        "'not shown on this listing', repeat that wording — never substitute guessed specs, packages, "
-        "or options for this VIN. Label block (4) as inferred from trim/EPA, not dealer-confirmed.\n\n"
+        "You answer questions about one dealership listing.\n\n"
+        "PRIORITY ORDER: Use block (1) first (dealer-confirmed). Block (4) is EPA/trim inferred — label it as such. "
+        "For manufacturer specs not in any block (HP, torque, 0-60, towing capacity, MPG, safety ratings, "
+        "dimensions, warranty terms) — answer directly from your training knowledge; do NOT say 'not shown on this listing' "
+        "for facts you know about this make/model/year/trim. Only say 'not shown' for listing-specific facts "
+        "(VIN options, dealer price, actual mileage, negotiated terms).\n\n"
+        "STYLE: 2–4 short sentences. Lead with the direct answer.\n\n"
         "── (1) Local listing (SQLite) ─────────────────────────────────────\n",
         local_context,
         "\n\n── (2) Listing notes / raw text ───────────────────────────────────\n",
@@ -617,7 +551,7 @@ def run_car_page_chat(
         _resp = _client.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=1024,
-            system=system,
+            system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
             messages=[{"role": "user", "content": msg}],
         )
         reply = _resp.content[0].text

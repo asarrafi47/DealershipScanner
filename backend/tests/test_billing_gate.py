@@ -45,7 +45,7 @@ def test_register_admin_bypasses_billing(monkeypatch, tmp_path):
             follow_redirects=False,
         )
         assert r.status_code in (302, 303)
-        assert r.headers["Location"].endswith("/listings")
+        assert r.headers["Location"].endswith("/dashboard")
 
         from flask import session
 
@@ -78,30 +78,13 @@ def test_register_non_admin_requires_billing(monkeypatch, tmp_path):
             follow_redirects=False,
         )
         assert r.status_code in (302, 303)
-        assert r.headers["Location"].endswith("/mfa/choose")
+        assert "/billing/required" in (r.headers.get("Location") or "")
 
         from flask import session
 
-        pending = int(session.get("mfa_pending_user_id") or 0)
-        assert pending > 0
-        client.get("/mfa/choose")
-        rc = client.post(
-            "/mfa/choose",
-            data={"csrf_token": session.get("_csrf_token"), "channel": "email"},
-            follow_redirects=False,
-        )
-        assert rc.status_code in (302, 303)
-        assert rc.headers["Location"].endswith("/mfa/verify")
-        code = session.get("mfa_test_last_code")
-        assert code
-        client.get("/mfa/verify")
-        r2 = client.post(
-            "/mfa/verify",
-            data={"csrf_token": session.get("_csrf_token"), "code": code},
-            follow_redirects=False,
-        )
-        assert r2.status_code in (302, 303)
-        assert "/billing/required" in r2.headers["Location"]
+        assert int(session.get("user_id") or 0) > 0
+        assert session.get("mfa_ok") is True
+        assert not session.get("mfa_pending_user_id")
 
 
 def test_register_admin_username_bypasses_billing(monkeypatch, tmp_path):
@@ -132,7 +115,7 @@ def test_register_admin_username_bypasses_billing(monkeypatch, tmp_path):
             follow_redirects=False,
         )
         assert r.status_code in (302, 303)
-        assert r.headers["Location"].endswith("/listings")
+        assert r.headers["Location"].endswith("/dashboard")
 
         assert int(session.get("user_id") or 0) > 0
         assert session.get("mfa_ok") is True

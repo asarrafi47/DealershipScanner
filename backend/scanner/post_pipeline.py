@@ -1,22 +1,25 @@
 """
 Post-scan SQLite repair, listing-description → packages parse, optional interior cabin vision
-(Ollama LLaVA), and optional enrichment.
+(Claude Haiku), and optional enrichment.
 
 Repair runs only for VINs touched in the scan (not the whole ``cars`` table).
 Listing description parsing fills ``packages_normalized`` / ``dealer_description_parsed`` from
 each car's ``description`` (deterministic + optional LLM; see ``listing_description_extract``).
 Interior vision runs by default after each scan; set ``SCANNER_POST_INTERIOR_VISION=0`` or
-``--no-post-interior-vision`` to skip. Requires ``OLLAMA_HOST`` and a vision model
-(default ``OLLAMA_VISION_MODEL=llava:13b``).
+``--no-post-interior-vision`` to skip. Requires ``ANTHROPIC_API_KEY``.
 Enrichment is optional and requires an indexed EPA master catalog unless ``vision_only``.
 Optional KBB IDWS valuation for touched VINs (``SCANNER_POST_KBB=1`` / ``--post-kbb``;
 requires ``KBB_API_KEY``).
+OEM window sticker PDF fetch + parse for touched VINs (``SCANNER_POST_WINDOW_STICKER=1``,
+default on; ``--no-post-window-sticker`` to skip). Reliable: Stellantis + Ford/Lincoln.
+GM: ``WINDOW_STICKER_GM_EXPERIMENTAL=1``. Stores PDF under ``car_window_stickers/``.
 """
 
 from __future__ import annotations
 
 import logging
 import os
+import time
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -46,7 +49,7 @@ def post_listing_description_env_enabled() -> bool:
 
 
 def post_interior_vision_env_enabled() -> bool:
-    """LLaVA cabin-color inference. Default on; set SCANNER_POST_INTERIOR_VISION=0 to disable."""
+    """Claude cabin-color inference. Default on; set SCANNER_POST_INTERIOR_VISION=0 to disable."""
     raw = (os.environ.get("SCANNER_POST_INTERIOR_VISION") or "1").strip().lower()
     return raw not in ("0", "false", "no", "off")
 
@@ -54,6 +57,83 @@ def post_interior_vision_env_enabled() -> bool:
 def post_kbb_env_enabled() -> bool:
     """Licensed KBB IDWS refresh for VINs touched in this scan (requires ``KBB_API_KEY``)."""
     return (os.environ.get("SCANNER_POST_KBB") or "").strip().lower() in ("1", "true", "yes", "on")
+
+
+def post_window_sticker_env_enabled() -> bool:
+    """
+    Fetch OEM Monroney PDFs for scanned VINs (Jeep, Ford, GM, etc.) and persist locally.
+
+    On by default. Disable with ``SCANNER_POST_WINDOW_STICKER=0`` or ``--no-post-window-sticker``.
+    Cap per run via ``SCANNER_POST_WINDOW_STICKER_MAX`` (0 = no cap).
+    """
+    raw = (os.environ.get("SCANNER_POST_WINDOW_STICKER") or "1").strip().lower()
+    return raw not in ("0", "false", "no", "off")
+
+
+def _window_sticker_max_per_run() -> int:
+    try:
+        return max(0, int((os.environ.get("SCANNER_POST_WINDOW_STICKER_MAX") or "0").strip()))
+    except ValueError:
+        return 0
+
+
+def run_window_sticker_for_vins(vins: list[str]) -> dict[str, Any]:
+    """
+    For each scanned VIN with a known OEM endpoint: download PDF, store on disk, merge packages.
+    """
+    from backend.db.inventory_db import get_car_by_vin
+    from backend.enrichment.window_sticker_service import (
+        car_sticker_packages_need_analysis,
+        ensure_window_sticker_for_car,
+        window_sticker_available,
+    )
+    from backend.scanner.window_sticker import get_window_sticker_url
+
+    stats: dict[str, Any] = {
+        "vins": len(vins),
+        "attempted": 0,
+        "stored": 0,
+        "already_cached": 0,
+        "reanalyzed": 0,
+        "no_oem_endpoint": 0,
+        "failed": 0,
+        "skipped_cap": 0,
+    }
+    cap = _window_sticker_max_per_run()
+    for idx, vin in enumerate(vins):
+        if cap > 0 and idx >= cap:
+            stats["skipped_cap"] = max(0, len(vins) - cap)
+            break
+        vnorm = (vin or "").strip().upper()
+        if len(vnorm) != 17:
+            continue
+        if not get_window_sticker_url(vnorm):
+            stats["no_oem_endpoint"] += 1
+            continue
+        row = get_car_by_vin(vnorm)
+        if not row:
+            continue
+        if window_sticker_available(row) and not car_sticker_packages_need_analysis(row):
+            stats["already_cached"] += 1
+            continue
+        had_local = window_sticker_available(row)
+        stats["attempted"] += 1
+        try:
+            out = ensure_window_sticker_for_car(
+                int(row["id"]),
+                allow_vision_fallback=False,
+            )
+            if out.get("fetch_error"):
+                stats["failed"] += 1
+            elif out.get("analyzed") and had_local:
+                stats["reanalyzed"] += 1
+            elif out.get("window_sticker_available") and out.get("stored"):
+                stats["stored"] += 1
+        except Exception as e:
+            stats["failed"] += 1
+            logger.debug("Post-scan window sticker failed for %s: %s", vnorm, e)
+        time.sleep(1.5)
+    return stats
 
 
 def post_listing_gap_fill_env_enabled() -> bool:
@@ -112,13 +192,13 @@ def run_dictionary_enrich_for_vins(vins: list[str]) -> dict[str, Any]:
 
 
 def gallery_vision_filter_env_enabled() -> bool:
-    """LLaVA gallery-image classification. Default on; set SCANNER_GALLERY_VISION_FILTER=0 to opt out."""
+    """Claude gallery-image classification. Default on; set SCANNER_GALLERY_VISION_FILTER=0 to opt out."""
     raw = (os.environ.get("SCANNER_GALLERY_VISION_FILTER") or "1").strip().lower()
     return raw not in ("0", "false", "no", "off")
 
 
 def monroney_vision_env_enabled() -> bool:
-    """LLaVA Monroney/sticker parsing. Default on; set SCANNER_MONRONEY_VISION=0 to opt out."""
+    """Monroney/sticker parsing. Default on; set SCANNER_MONRONEY_VISION=0 to opt out."""
     raw = (os.environ.get("SCANNER_MONRONEY_VISION") or "1").strip().lower()
     return raw not in ("0", "false", "no", "off")
 
@@ -348,7 +428,7 @@ def select_url_for_cabin_vision(urls: list[str]) -> str | None:
 
 def _exterior_through_windows_fallback_enabled() -> bool:
     """
-    When no cabin URL is found, use the first listing image and ask LLaVA to read the cabin
+    When no cabin URL is found, use the first listing image and ask Claude to read the cabin
     **through the glass** (default **on**).
 
     Disable with ``INTERIOR_VISION_NO_EXTERIOR_FALLBACK=1``. The legacy
@@ -717,6 +797,7 @@ def run_post_scan(
     post_enrich: bool,
     post_enrich_vision_only: bool,
     post_kbb: bool = False,
+    post_window_sticker: bool = True,
     enrichment_max_workers: int | None = None,
 ) -> dict[str, Any]:
     """
@@ -733,6 +814,7 @@ def run_post_scan(
         "interior_vision": None,
         "enrich": None,
         "kbb": None,
+        "window_sticker": None,
     }
     if post_repair and scanned_vins:
         logger.info("Post-scan repair: %d VIN(s) from this run", len(scanned_vins))
@@ -758,8 +840,24 @@ def run_post_scan(
     elif post_listing_description:
         logger.info("Post-scan listing description parse skipped (no VINs in this run)")
 
+    if post_window_sticker and scanned_vins:
+        logger.info("Post-scan OEM window stickers: %d VIN(s)", len(scanned_vins))
+        summary["window_sticker"] = run_window_sticker_for_vins(scanned_vins)
+        ws = summary["window_sticker"]
+        logger.info(
+            "Post-scan window stickers done: attempted=%s stored=%s reanalyzed=%s already_cached=%s failed=%s no_oem=%s",
+            ws.get("attempted"),
+            ws.get("stored"),
+            ws.get("reanalyzed"),
+            ws.get("already_cached"),
+            ws.get("failed"),
+            ws.get("no_oem_endpoint"),
+        )
+    elif post_window_sticker:
+        logger.info("Post-scan window stickers skipped (no VINs in this run)")
+
     if post_interior_vision and scanned_vins:
-        logger.info("Post-scan interior cabin vision (Ollama LLaVA): %d VIN(s)", len(scanned_vins))
+        logger.info("Post-scan interior cabin vision (Claude Haiku): %d VIN(s)", len(scanned_vins))
         summary["interior_vision"] = run_interior_vision_for_vins(scanned_vins)
         iv = summary["interior_vision"]
         logger.info(

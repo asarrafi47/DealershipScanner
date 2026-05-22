@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!input || typeof window.__DS_renderCarGrid !== "function") return;
 
     let debounceTimer = null;
+    let activeController = null;
 
     function clearHighlights() {
         document.querySelectorAll(".smart-parse-active").forEach((el) => {
@@ -94,12 +95,20 @@ document.addEventListener("DOMContentLoaded", () => {
     function runSmartSearch() {
         const q = (input.value || "").trim();
         if (!q) {
+            if (activeController) { activeController.abort(); activeController = null; }
             clearHighlights();
+            if (typeof window.__DS_applySmartFilters === "function") {
+                window.__DS_applySmartFilters({});
+            }
             if (typeof window.__DS_runFilterRender === "function") {
                 window.__DS_runFilterRender();
             }
             return;
         }
+
+        if (activeController) activeController.abort();
+        activeController = new AbortController();
+        const signal = activeController.signal;
 
         const headers = { "Content-Type": "application/json" };
         const t = listingsCsrfToken();
@@ -113,6 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
             method: "POST",
             headers,
             credentials: "same-origin",
+            signal,
             body: JSON.stringify(payload),
         })
             .then((r) => {
@@ -120,12 +130,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 return r.json();
             })
             .then((data) => {
+                activeController = null;
                 const filters = data.filters || {};
-                window.__DS_renderCarGrid(data.results || []);
+                window.__DS_renderCarGrid(data.results || [], { preserveOrder: true });
                 applyHighlights(data.highlight || []);
                 fillYearChips(filters);
+                if (typeof window.__DS_applySmartFilters === "function") {
+                    window.__DS_applySmartFilters(filters);
+                }
             })
-            .catch(() => {
+            .catch((err) => {
+                if (err.name === "AbortError") return;
+                activeController = null;
                 clearHighlights();
                 if (typeof window.__DS_runFilterRender === "function") {
                     window.__DS_runFilterRender();

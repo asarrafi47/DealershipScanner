@@ -24,13 +24,13 @@ def test_apply_inventory_db_defaults_uses_repo_inventory(tmp_path: Path, monkeyp
     assert Path(p).parent == fake_root
 
 
-def test_main_interior_url_invokes_analyze(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+def test_main_filter_gallery_invokes_filter(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
     monkeypatch.setattr(
         ai,
-        "analyze_interior_from_image_url",
-        lambda url, inference_context="cabin": {"ok": True, "url": url, "ctx": inference_context},
+        "filter_gallery_urls_for_vehicle_listing",
+        lambda urls, max_workers=1: list(urls),
     )
-    ai.main(["interior", "--url", "https://example.com/x.jpg"])
+    ai.main(["filter-gallery", "https://example.com/a.jpg", "https://example.com/b.jpg"])
     out = capsys.readouterr().out
-    assert "ok" in out
-    assert "https://example.com/x.jpg" in out
+    assert "https://example.com/a.jpg" in out
+    assert "https://example.com/b.jpg" in out

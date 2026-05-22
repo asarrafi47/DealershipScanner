@@ -55,6 +55,8 @@ def test_href_blocks_private_and_allowlist(monkeypatch: pytest.MonkeyPatch) -> N
 
 
 def test_car_chat_global_rate_limit(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Set before import: load_project_dotenv() must not re-enable billing from .env.
+    monkeypatch.setenv("BILLING_STRIPE_ENABLED", "0")
     monkeypatch.setenv("RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN", "2")
     monkeypatch.setenv("RATE_LIMIT_CAR_CHAT_PER_IP_PER_MIN", "500")
     monkeypatch.setenv("RATE_LIMIT_CAR_CHAT_PER_MIN", "500")

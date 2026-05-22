@@ -19,11 +19,17 @@
                 <h1>Create account</h1>
 
                 {% if error %}
-                <div class="error-box">{{ error }}</div>
+                <div class="error-box">
+                    {{ error }}
+                    {% if "already registered" in (error or "") %}
+                    &nbsp;<a href="/login" style="color:var(--navy);text-decoration:underline;">Log in instead</a>
+                    {% endif %}
+                </div>
                 {% endif %}
 
                 <form method="POST" action="/register" class="auth-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
                     <div class="field-group">
                         <label>Username</label>
                         <input type="text" name="username" required>
@@ -31,7 +37,7 @@
 
                     <div class="field-group">
                         <label>Email</label>
-                        <input type="text" name="email" required>
+                        <input type="email" name="email" autocomplete="email" required>
                     </div>
 
                     <div class="field-group">
@@ -39,7 +45,27 @@
                         <input type="password" name="password" required>
                     </div>
 
-                    <button type="submit" class="primary-button full-width">Register</button>
+                    <div class="field-group">
+                        <label>Plan</label>
+                        <div class="plan-toggle">
+                            <div class="plan-option">
+                                <input type="radio" name="plan" id="plan-free" value="free" checked>
+                                <label for="plan-free">
+                                    <span class="plan-name">Free</span>
+                                    <span class="plan-desc">Browse inventory</span>
+                                </label>
+                            </div>
+                            <div class="plan-option">
+                                <input type="radio" name="plan" id="plan-premium" value="premium">
+                                <label for="plan-premium">
+                                    <span class="plan-name">Premium</span>
+                                    <span class="plan-desc">Full access</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="primary-button full-width">Create Account</button>
                 </form>
 
                 <p class="auth-footer">Already have an account? <a href="/login">Login</a></p>

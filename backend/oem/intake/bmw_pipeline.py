@@ -765,7 +765,7 @@ def run_bmw_enrichment(
                 manifest,
                 use_adjudicator=True,
                 llm_client=llm,
-                llm_model=llm_model or "llama3.2",
+                llm_model=llm_model or "",
             )
         finally:
             if browser:

@@ -25,6 +25,8 @@ redis
 ollama>=0.3
 crawl4ai>=0.8,<0.9
 stripe>=8
+pypdf>=4.0
+pymupdf>=1.24
 
 # Browser binaries (not installed by pip). After pip install, run ONE of:
 #   ./backend/scripts/install_scraper_browsers.sh

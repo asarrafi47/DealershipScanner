@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sarrafi Cars Premium</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    <style>
+        .premium-page { max-width: 960px; margin: 0 auto; padding: 0 24px 80px; }
+        .premium-hero { text-align: center; padding: 72px 0 56px; }
+        .premium-hero .eyebrow { margin-bottom: 14px; }
+        .premium-hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 16px; color: var(--text-primary); }
+        .premium-hero p { font-size: 17px; color: var(--text-secondary); max-width: 540px; margin: 0 auto 36px; line-height: 1.65; }
+        .premium-cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .premium-price-note { font-size: 13px; color: var(--text-muted); margin-top: 14px; }
+
+        .premium-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 8px; }
+        .premium-feature-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 28px 24px;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .premium-feature-card:hover { border-color: var(--accent); box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+        .premium-feature-icon { font-size: 28px; margin-bottom: 14px; line-height: 1; }
+        .premium-feature-card h3 { font-size: 16px; font-weight: 600; margin: 0 0 8px; color: var(--text-primary); }
+        .premium-feature-card p { font-size: 14px; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+        .premium-feature-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 4px;
+            padding: 2px 6px;
+            margin-top: 10px;
+        }
+        .premium-feature-badge--soon { background: var(--text-muted); }
+
+        .premium-divider { border: none; border-top: 1px solid var(--border-light); margin: 56px 0; }
+        .premium-section-header { text-align: center; margin-bottom: 32px; }
+        .premium-section-header h2 { font-size: 24px; font-weight: 700; margin: 0 0 8px; color: var(--text-primary); }
+        .premium-section-header p { font-size: 15px; color: var(--text-secondary); margin: 0; }
+
+        .premium-compare { width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-light); }
+        .premium-compare th, .premium-compare td { padding: 14px 20px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--border-light); }
+        .premium-compare th { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); background: var(--surface-raised); }
+        .premium-compare tr:last-child td { border-bottom: none; }
+        .premium-compare .col-free { text-align: center; }
+        .premium-compare .col-premium { text-align: center; color: var(--accent); font-weight: 600; }
+        .check { color: #22c55e; font-size: 18px; }
+        .dash { color: var(--text-faint); }
+    </style>
+</head>
+<body class="lp-body">
+<div class="page">
+
+    {% include "_nav_public.html" %}
+
+    <div class="premium-page">
+
+        <div class="premium-hero">
+            <p class="eyebrow">Sarrafi Cars Premium</p>
+            <h1>Go deeper on every car<br>you're considering.</h1>
+            <p>Premium unlocks AI-powered tools, market price intelligence, and granular dealership control — built on the same live inventory you already browse for free.</p>
+            <div class="premium-cta-row">
+                {% if has_paid_access %}
+                <span class="primary-button" style="cursor: default; opacity: 0.7;">You have Premium access</span>
+                {% elif logged_in_user %}
+                <a href="{{ url_for('billing.premium_checkout') }}" class="primary-button">Upgrade to Premium</a>
+                <a href="{{ url_for('listings') }}" class="secondary-button">Browse listings</a>
+                {% else %}
+                <a href="/register" class="primary-button">Create account to upgrade</a>
+                <a href="{{ url_for('listings') }}" class="secondary-button">Browse listings</a>
+                {% endif %}
+            </div>
+            <p class="premium-price-note">Pricing coming soon — free during early access.</p>
+        </div>
+
+        <div class="premium-features">
+
+            <div class="premium-feature-card">
+                <div class="premium-feature-icon">💬</div>
+                <h3>AI Car Chat</h3>
+                <p>Ask any question about a specific listing — engine specs, safety ratings, ownership costs, how it compares to alternatives. Grounded in that car's actual data, not generic answers.</p>
+                <span class="premium-feature-badge">Premium</span>
+            </div>
+
+            <div class="premium-feature-card">
+                <div class="premium-feature-icon">🏢</div>
+                <h3>Dealership Picker</h3>
+                <p>Stop filtering by radius alone. Hand-pick the dealerships you trust and see only their inventory. Mix and match dealers across any area, regardless of distance.</p>
+                <span class="premium-feature-badge">Premium</span>
+            </div>
+
+            <div class="premium-feature-card">
+                <div class="premium-feature-icon">📊</div>
+                <h3>Market Price Intelligence</h3>
+                <p>See the aggregated average market price for every make/model/year/trim combination — sourced from real listings across our dealer network. Know instantly if a price is fair.</p>
+                <span class="premium-feature-badge">Premium</span>
+            </div>
+
+            <div class="premium-feature-card">
+                <div class="premium-feature-icon">📖</div>
+                <h3>KBB Estimate</h3>
+                <p>Kelley Blue Book value estimates alongside each listing, so you can compare asking price against the industry-standard valuation in a single view.</p>
+                <span class="premium-feature-badge premium-feature-badge--soon">Coming Soon</span>
+            </div>
+
+            <div class="premium-feature-card">
+                <div class="premium-feature-icon">🔔</div>
+                <h3>Price Drop Alerts</h3>
+                <p>Save any car and get notified when its price drops. Track as many listings as you want across any dealership in our network.</p>
+                <span class="premium-feature-badge premium-feature-badge--soon">Coming Soon</span>
+            </div>
+
+            <div class="premium-feature-card">
+                <div class="premium-feature-icon">⭐</div>
+                <h3>Everything Free Includes</h3>
+                <p>Full nationwide inventory search with radius filtering, smart natural-language search, spec sheets enriched with EPA and NHTSA data, and unlimited browsing — always free.</p>
+            </div>
+
+        </div>
+
+        <hr class="premium-divider">
+
+        <div class="premium-section-header">
+            <h2>Free vs Premium</h2>
+            <p>No hidden limits on free. Premium adds depth.</p>
+        </div>
+
+        <table class="premium-compare">
+            <thead>
+                <tr>
+                    <th style="width: 60%">Feature</th>
+                    <th class="col-free">Free</th>
+                    <th class="col-premium">Premium</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Full inventory search (nationwide)</td>
+                    <td class="col-free"><span class="check">✓</span></td>
+                    <td class="col-premium"><span class="check">✓</span></td>
+                </tr>
+                <tr>
+                    <td>Radius &amp; make/model filters</td>
+                    <td class="col-free"><span class="check">✓</span></td>
+                    <td class="col-premium"><span class="check">✓</span></td>
+                </tr>
+                <tr>
+                    <td>EPA specs, NHTSA safety data</td>
+                    <td class="col-free"><span class="check">✓</span></td>
+                    <td class="col-premium"><span class="check">✓</span></td>
+                </tr>
+                <tr>
+                    <td>Save cars to your list</td>
+                    <td class="col-free"><span class="check">✓</span></td>
+                    <td class="col-premium"><span class="check">✓</span></td>
+                </tr>
+                <tr>
+                    <td>AI car chat (questions about a listing)</td>
+                    <td class="col-free"><span class="dash">–</span></td>
+                    <td class="col-premium"><span class="check">✓</span></td>
+                </tr>
+                <tr>
+                    <td>Hand-pick individual dealerships</td>
+                    <td class="col-free"><span class="dash">–</span></td>
+                    <td class="col-premium"><span class="check">✓</span></td>
+                </tr>
+                <tr>
+                    <td>Market price average per trim</td>
+                    <td class="col-free"><span class="dash">–</span></td>
+                    <td class="col-premium"><span class="check">✓</span></td>
+                </tr>
+                <tr>
+                    <td>KBB estimate per listing</td>
+                    <td class="col-free"><span class="dash">–</span></td>
+                    <td class="col-premium">Coming soon</td>
+                </tr>
+                <tr>
+                    <td>Price drop alerts</td>
+                    <td class="col-free"><span class="dash">–</span></td>
+                    <td class="col-premium">Coming soon</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr class="premium-divider">
+
+        {% if not has_paid_access %}
+        <div style="text-align: center;">
+            <p class="eyebrow">Early Access</p>
+            <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 12px; color: var(--text-primary);">Free during beta.</h2>
+            <p style="font-size: 15px; color: var(--text-secondary); margin: 0 0 28px;">Create an account to lock in early access before pricing launches.</p>
+            {% if logged_in_user %}
+            <a href="{{ url_for('billing.premium_checkout') }}" class="primary-button lp-cta-primary">Upgrade to Premium</a>
+            {% else %}
+            <a href="/register" class="primary-button lp-cta-primary">Create free account</a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+</body>
+</html>

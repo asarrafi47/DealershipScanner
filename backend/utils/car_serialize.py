@@ -408,7 +408,7 @@ def _fuel_word(car: dict[str, Any]) -> str:
     return ft[:40]
 
 
-def _cylinder_layout_token(cyl_i: int, *text_hints: str | None) -> str:
+def _cylinder_layout_token(cyl_i: int | None, *text_hints: str | None) -> str:
     """
     Short layout label (e.g. ``V8``, ``I4``). Prefer tokens found in listing/EPA text;
     otherwise use common heuristics by cylinder count.
@@ -429,7 +429,11 @@ def _cylinder_layout_token(cyl_i: int, *text_hints: str | None) -> str:
             return "H6"
         if re.search(r"\bINLINE\s*-?\s*6\b", blob) or re.search(r"\bIN[-\s]?LINE\s*-?\s*6\b", blob):
             return "I6"
-    if cyl_i <= 0:
+    try:
+        count = int(cyl_i) if cyl_i is not None else 0
+    except (TypeError, ValueError):
+        count = 0
+    if count <= 0:
         return ""
     by_count = {
         1: "1-cyl",
@@ -443,7 +447,7 @@ def _cylinder_layout_token(cyl_i: int, *text_hints: str | None) -> str:
         10: "V10",
         12: "V12",
     }
-    return by_count.get(cyl_i, f"{cyl_i}-cyl")
+    return by_count.get(count, f"{count}-cyl")
 
 
 def parse_engine_displacement_liters(car: dict[str, Any]) -> float | None:
@@ -543,12 +547,20 @@ def car_matches_engine_displacement_l_range(
 
 def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | None = None) -> str:
     """
-    Buyer-facing engine line: **displacement only** (e.g. ``2.0L``, ``4.4L``), or ``Electric``
-    when cylinder count is zero. EPA aggregate labels and cylinder layout tokens are not shown.
+    Buyer-facing engine line: displacement + layout when known (e.g. ``3.6L V6``, ``6.4L V8``),
+    or ``Electric`` when cylinder count is zero.
     """
     c = clean_car_row_dict(car)
     dash = DISPLAY_DASH
     vs = verified_specs or {}
+
+    sticker_disp = _sticker_engine_display_from_packages(c)
+    if sticker_disp:
+        return sticker_disp
+
+    trim_disp = _known_trim_engine_display(c)
+    if trim_disp:
+        return trim_disp
 
     cyl_i = _effective_cylinder_count(c, vs)
     if cyl_i == 0:
@@ -564,10 +576,53 @@ def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | N
         if isinstance(ed, str) and ed.strip() and not is_effectively_empty(ed):
             lit_f = _extract_liters_from_engine_text(ed)
 
+    layout = _cylinder_layout_token(
+        cyl_i,
+        c.get("engine_description"),
+        vs.get("master_engine_string"),
+        vs.get("epa_engine_description"),
+    )
+
     if lit_f is not None and lit_f > 0:
+        if layout:
+            return f"{lit_f:.1f}L {layout}"
         return f"{lit_f:.1f}L"
 
     return dash
+
+
+def _known_trim_engine_display(car: dict[str, Any]) -> str:
+    try:
+        from backend.scanner.window_sticker import known_oem_engine_from_car
+
+        hit = known_oem_engine_from_car(car)
+        disp = hit.get("engine_display")
+        return str(disp).strip() if isinstance(disp, str) else ""
+    except Exception:
+        return ""
+
+
+def _sticker_engine_display_from_packages(car: dict[str, Any]) -> str:
+    raw = car.get("packages")
+    if not raw or is_effectively_empty(raw):
+        return ""
+    try:
+        import json
+
+        parsed = json.loads(raw) if isinstance(raw, str) else raw
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return ""
+    if not isinstance(parsed, dict):
+        return ""
+    disp = parsed.get("sticker_engine_display")
+    if isinstance(disp, str) and disp.strip():
+        return disp.strip()[:80]
+    specs = parsed.get("sticker_specs")
+    if isinstance(specs, dict):
+        eng = specs.get("Engine")
+        if isinstance(eng, str) and eng.strip():
+            return eng.strip()[:80]
+    return ""
 
 
 def _bmw_series_trim_from_motor_model(model_raw: str) -> tuple[str | None, str | None]:
@@ -849,6 +904,7 @@ def serialize_car_for_api(
             title=c.get("title"),
             year=y_int,
             vin=c.get("vin"),
+            log_weak=False,
         )
         pick = _transmission_phrase_prefer_detail(td_src, td_norm)
         td = format_display_value(pick if pick is not None else td_src)

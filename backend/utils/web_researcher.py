@@ -29,7 +29,6 @@ gracefully to the inventory-only system prompt.
 
 from __future__ import annotations
 
-import ipaddress
 import logging
 import os
 import random
@@ -37,6 +36,8 @@ import re
 import time
 from typing import NamedTuple
 from urllib.parse import urlparse, quote_plus
+
+from backend.utils.outbound_url import destination_host_blocked as _destination_host_blocked
 
 logger = logging.getLogger(__name__)
 
@@ -129,29 +130,6 @@ def _host_matches_allowlist(hostname: str, allowlist: frozenset[str]) -> bool:
             if h == root or h.endswith("." + root):
                 return True
     return False
-
-
-def _destination_host_blocked(hostname: str) -> bool:
-    """Block localhost, obvious SSRF literals, and RFC-private / special-use IPs."""
-    if not hostname:
-        return True
-    hl = hostname.strip().lower().rstrip(".")
-    if hl == "localhost" or hl.endswith(".localhost"):
-        return True
-    if hl.endswith(".local"):
-        return True
-    try:
-        ip = ipaddress.ip_address(hl)
-        return bool(
-            ip.is_private
-            or ip.is_loopback
-            or ip.is_link_local
-            or ip.is_multicast
-            or ip.is_reserved
-            or ip.is_unspecified
-        )
-    except ValueError:
-        return False
 
 
 def href_is_acceptable_result(

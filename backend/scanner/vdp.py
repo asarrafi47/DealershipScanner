@@ -759,6 +759,8 @@ PAGE_EXTRACT_JS = r"""
     jsonGalleryUrls: [],
     domVehicleHistoryUrls: [],
     domMonroneyTextSnippets: [],
+    domLocationSnippets: [],
+    pageTextSample: "",
     vdpPriceHints: [],
     scriptSrcSample: [],
     metaGenerator: "",
@@ -1002,31 +1004,54 @@ PAGE_EXTRACT_JS = r"""
       if (result.inlineJsonHits.length >= 5) break;
     }
   }
-  const specSelectors = ["dl", "dl.vehicle-specs", ".vehicle-specs", ".specifications", "table.specs", ".vdp-specs"];
+  // Expand accordion / collapsible spec sections before reading (handles + buttons like cars.com)
+  try {
+    const accordionTriggers = Array.from(document.querySelectorAll(
+      "button[aria-expanded='false'], [role='button'][aria-expanded='false'], " +
+      ".accordion-trigger:not(.active), .collapsible:not(.open), " +
+      "[class*='accordion'][class*='header'], [class*='toggle'][class*='spec'], " +
+      "summary, details:not([open]) > summary"
+    ));
+    for (const el of accordionTriggers.slice(0, 20)) {
+      try {
+        const t = (el.textContent || "").trim().toLowerCase();
+        if (/spec|feature|convenience|suspension|powertrain|body|safety|seat|entertain|lighting|dimension|equipment/i.test(t)) {
+          el.click();
+        }
+      } catch (e) {}
+    }
+  } catch (e) {}
+
+  const specSelectors = [
+    "dl", "dl.vehicle-specs", ".vehicle-specs", ".specifications",
+    "table.specs", ".vdp-specs", ".spec-list", "[class*='spec-table']",
+    "[class*='features-list']", ".vehicle-features",
+  ];
   for (const sel of specSelectors) {
     try {
-      const el = document.querySelector(sel);
-      if (!el) continue;
-      const rows = el.querySelectorAll("tr, dt");
-      rows.forEach((row) => {
-        const label = (row.querySelector("th, dt, .label, .name") || row.cells?.[0])?.textContent?.trim();
-        const val = (row.querySelector("td, dd, .value") || row.cells?.[1])?.textContent?.trim();
-        if (label && val && label.length < 80 && val.length < 400) {
-          const lk = label.toLowerCase();
-          if (/trans|drive|exterior|interior|engine|fuel|mpg|vin|stock|body/i.test(lk)) {
+      const els = document.querySelectorAll(sel);
+      els.forEach((el) => {
+        const rows = el.querySelectorAll("tr, dt, li, [class*='spec-item'], [class*='feature-item']");
+        rows.forEach((row) => {
+          const label = (row.querySelector("th, dt, .label, .name, [class*='label'], [class*='name']") || row.cells?.[0])?.textContent?.trim();
+          const val = (row.querySelector("td, dd, .value, [class*='value']") || row.cells?.[1])?.textContent?.trim();
+          if (label && val && label.length < 80 && val.length < 400) {
             result.domSpecs[label.slice(0, 60)] = val.slice(0, 300);
+          } else if (!val && label && label.length < 120) {
+            // single-column feature list item
+            result.domFeatures.push(label.slice(0, 120));
           }
-        }
+        });
       });
     } catch (e) {}
   }
-  document.querySelectorAll("[class*='feature'], .features li, ul.features li").forEach((el, idx) => {
-    if (idx > 60) return;
+  document.querySelectorAll("[class*='feature'], .features li, ul.features li, [class*='highlight'] li").forEach((el, idx) => {
+    if (idx > 100) return;
     const t = (el.textContent || "").trim();
     if (t && t.length < 200) result.domFeatures.push(t);
   });
-  document.querySelectorAll(".badge, [class*='badge'], .label-pill").forEach((el, idx) => {
-    if (idx > 25) return;
+  document.querySelectorAll(".badge, [class*='badge'], .label-pill, [class*='tag']").forEach((el, idx) => {
+    if (idx > 40) return;
     const t = (el.textContent || "").trim();
     if (t && t.length < 120) result.domBadges.push(t);
   });
@@ -1376,6 +1401,47 @@ PAGE_EXTRACT_JS = r"""
       });
     } catch (eM) {}
   }
+  result.domLocationSnippets = [];
+  const locSeen = new Set();
+  function pushLocSnippet(t) {
+    const s = (t || "").trim().replace(/\\s+/g, " ");
+    if (!s || s.length < 4 || s.length > 220) return;
+    const k = s.toLowerCase();
+    if (locSeen.has(k)) return;
+    locSeen.add(k);
+    result.domLocationSnippets.push(s);
+  }
+  try {
+    const locSelectors = [
+      "[class*='located']",
+      "[class*='dealer-loc']",
+      "[class*='vehicle-loc']",
+      "[class*='lot-loc']",
+      "[class*='store-loc']",
+      "[data-dealer-name]",
+      "[data-location-name]",
+      ".dealer-name",
+      ".dealerName",
+      ".vehicle-location",
+      ".inventory-location",
+    ];
+    for (const sel of locSelectors) {
+      document.querySelectorAll(sel).forEach((el, idx) => {
+        if (idx > 40 || result.domLocationSnippets.length >= 12) return;
+        const t = (el.textContent || el.getAttribute("data-dealer-name") || el.getAttribute("data-location-name") || "").trim();
+        if (/locat|dealer|lot|store|at\\s/i.test(t) || t.length < 80) pushLocSnippet(t);
+      });
+    }
+  } catch (eLoc) {}
+  try {
+    const bodyTxt = ((document.body && document.body.innerText) || "").slice(0, 12000);
+    result.pageTextSample = bodyTxt.slice(0, 4000);
+    const locRe = /located\\s+at\\s+([^\\n.]{4,120})/gi;
+    let lm;
+    while ((lm = locRe.exec(bodyTxt)) !== null && result.domLocationSnippets.length < 10) {
+      pushLocSnippet(lm[1]);
+    }
+  } catch (eBody) {}
   return result;
 }
 """
@@ -1962,6 +2028,8 @@ async def _vdp_visit_one(
     vin: str,
     preview_lock: asyncio.Lock,
     preview_budget: list[int],
+    *,
+    site_profile: Any = None,
 ) -> dict[str, Any]:
     """
     Visit one VDP URL on *wp*, merge analytics into *v*. Isolated per page (safe for parallel workers).
@@ -2091,6 +2159,22 @@ async def _vdp_visit_one(
             except Exception as e:
                 bundle = {"error": str(e)}
             last_bundle = bundle if isinstance(bundle, dict) else {}
+            if site_profile is not None and isinstance(last_bundle, dict):
+                try:
+                    from backend.scanner.dealer_location import apply_vdp_location_verdict
+
+                    verdict = apply_vdp_location_verdict(v, last_bundle, site_profile)
+                    if verdict == "mismatch":
+                        out["skipped"].append("sister_store_location")
+                        log.info(
+                            "VDP: %s — skipping VIN %s (off-lot location: %s)",
+                            dealer_name,
+                            vin[:17],
+                            (v.get("_lot_location") or "")[:100],
+                        )
+                        return out
+                except Exception as loc_err:
+                    log.debug("VDP location check failed for %s: %s", vin[:17], loc_err)
             await _drain_pending_tasks(pending)
             try:
                 await _vdp_mouse_jitter(wp)
@@ -2247,6 +2331,20 @@ async def _vdp_visit_one(
         _push_g(extra_loop_gallery)
         _push_g(list(response_image_urls))
 
+        # Inline gallery vision: filter images with Claude before merging into vehicle
+        if cand_gallery:
+            try:
+                from backend.vision.claude_vision import filter_gallery_urls_for_vehicle_listing
+                from backend.scanner.post_pipeline import gallery_vision_filter_env_enabled
+                if gallery_vision_filter_env_enabled():
+                    cand_gallery = await asyncio.to_thread(
+                        filter_gallery_urls_for_vehicle_listing,
+                        cand_gallery,
+                        page_referer=success_u,
+                    )
+            except Exception as _gv_err:
+                log.debug("Inline gallery vision error for %s: %s", vin[:17], _gv_err)
+
         gmerge = merge_vdp_gallery_into_vehicle(
             v,
             cand_gallery,
@@ -2273,6 +2371,57 @@ async def _vdp_visit_one(
 
         pdiag = _apply_vdp_price_hints(v, last_bundle, success_u)
         out["price_updated"] = bool(pdiag.get("updated"))
+
+        # Claude inline VDP extraction — fills missing fields from visible page text
+        try:
+            from backend.scanner.claude_vdp_extract import extract_from_page_text, _enabled as _claude_vdp_enabled
+            if _claude_vdp_enabled():
+                page_text = ""
+                try:
+                    page_text = await wp.inner_text("body")
+                except Exception:
+                    # Fallback: use domSpecText from bundle
+                    if isinstance(last_bundle, dict):
+                        page_text = str(last_bundle.get("domSpecText") or "")
+                if page_text:
+                    claude_fields = await asyncio.to_thread(
+                        extract_from_page_text, page_text, dict(v)
+                    )
+                    for field, val in claude_fields.items():
+                        if field == "packages":
+                            # Merge packages list into existing JSON packages blob
+                            try:
+                                import json as _json
+                                existing = v.get("packages")
+                                pkg: dict = _json.loads(existing) if existing else {}
+                                existing_opts = pkg.get("sticker_options") or []
+                                seen = {s.lower() for s in existing_opts}
+                                new_opts = [p for p in val if p.lower() not in seen]
+                                if new_opts:
+                                    pkg.setdefault("vdp_options", [])
+                                    pkg["vdp_options"] = list(pkg["vdp_options"]) + new_opts
+                                    v["packages"] = _json.dumps(pkg, separators=(",", ":"))
+                                    if "packages" not in filled:
+                                        filled.append("packages")
+                            except Exception:
+                                pass
+                        elif field == "description" and not v.get("description"):
+                            v["description"] = val
+                            if "description" not in filled:
+                                filled.append("description")
+                        elif field == "price" and not v.get("price"):
+                            v["price"] = val
+                            out["price_updated"] = True
+                            if "price" not in filled:
+                                filled.append("price")
+                        else:
+                            if not v.get(field):
+                                v[field] = val
+                                if field not in filled:
+                                    filled.append(field)
+                    out["filled"] = list(filled)
+        except Exception as _ce:
+            log.debug("Claude VDP inline extract error for %s: %s", vin[:17], _ce)
 
         if _vdp_download_images_enabled():
             try:
@@ -2367,6 +2516,7 @@ async def enrich_vehicles_vdp(
     dealer_name: str,
     *,
     dealer_id: str = "",
+    site_profile: Any = None,
 ) -> dict[str, Any]:
     """
     Mutates vehicles in place: runs VDP extraction and merge_analytics_ep_into_vehicle.
@@ -2482,7 +2632,10 @@ async def enrich_vehicles_vdp(
         if conc <= 1:
             for v, u, vin in work:
                 try:
-                    r = await _vdp_visit_one(page, dealer_name, v, u, vin, preview_lock, preview_budget)
+                    r = await _vdp_visit_one(
+                        page, dealer_name, v, u, vin, preview_lock, preview_budget,
+                        site_profile=site_profile,
+                    )
                     await aggregate_one(r)
                 except Exception as e:
                     log.warning("VDP: %s — visit error (continuing): %s", dealer_name, e)
@@ -2497,7 +2650,10 @@ async def enrich_vehicles_vdp(
                 v, u, vin = item
                 wp = await pool.get()
                 try:
-                    r = await _vdp_visit_one(wp, dealer_name, v, u, vin, preview_lock, preview_budget)
+                    r = await _vdp_visit_one(
+                        wp, dealer_name, v, u, vin, preview_lock, preview_budget,
+                        site_profile=site_profile,
+                    )
                     await aggregate_one(r)
                 except Exception as e:
                     log.warning("VDP: %s — visit error (continuing): %s", dealer_name, e)

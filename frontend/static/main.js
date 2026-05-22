@@ -22,6 +22,181 @@ document.addEventListener("DOMContentLoaded", () => {
         window.PACKAGE_ROWS = readJsonScript("ds-listings-package-rows", []);
     })();
 
+    window.__DS_MARKET_STATS = null;
+
+    const _MILEAGE_BANDS = ["0-25k", "25-50k", "50-75k", "75-100k", "100k+", "unknown"];
+
+    function mileageBand(mileage) {
+        const m = parseInt(mileage, 10);
+        if (!Number.isFinite(m)) return "unknown";
+        if (m < 0) return "unknown";
+        if (m <= 25000) return "0-25k";
+        if (m <= 50000) return "25-50k";
+        if (m <= 75000) return "50-75k";
+        if (m <= 100000) return "75-100k";
+        return "100k+";
+    }
+
+    function marketTrimParts(car) {
+        return [
+            String(car.make || "").trim().toLowerCase(),
+            String(car.model || "").trim().toLowerCase(),
+            String(car.trim || "").trim().toLowerCase(),
+        ];
+    }
+
+    function marketCohortKey(make, model, trim, year, band) {
+        const [mk, md, tr] = marketTrimParts({ make, model, trim });
+        const ys = year != null ? String(year) : "*";
+        return `${mk}|${md}|${tr}|${ys}|${band}`;
+    }
+
+    function weightedCohortStats(entries, minSamples) {
+        let sum = 0;
+        let n = 0;
+        for (const e of entries) {
+            if (!e) continue;
+            const count = Number(e.sample_count);
+            const avg = Number(e.avg_price);
+            if (!Number.isFinite(count) || count <= 0 || !Number.isFinite(avg)) continue;
+            sum += avg * count;
+            n += count;
+        }
+        if (n < minSamples) return null;
+        return { avg_price: sum / n, sample_count: n };
+    }
+
+    function cohortEntries(cohorts, mk, md, tr, years, bands) {
+        const out = [];
+        for (const y of years) {
+            for (const band of bands) {
+                const key = `${mk}|${md}|${tr}|${y}|${band}`;
+                if (cohorts[key]) out.push(cohorts[key]);
+            }
+        }
+        return out;
+    }
+
+    function marketIntelForCar(car) {
+        const meta = window.__DS_MARKET_STATS;
+        if (!meta || !meta.cohorts) return null;
+
+        const cohorts = meta.cohorts;
+        const minSamples = Number(meta.min_samples) > 0 ? Number(meta.min_samples) : 3;
+        const yearWindow = Number(meta.year_window) >= 0 ? Number(meta.year_window) : 1;
+        const [mk, md, tr] = marketTrimParts(car);
+        if (!mk || !md) return null;
+
+        let year = parseInt(car.year, 10);
+        year = Number.isFinite(year) ? year : null;
+        const mb = mileageBand(car.mileage);
+
+        const attempts = [];
+        if (year != null && mb !== "unknown") {
+            attempts.push({ years: [year], bands: [mb] });
+            const widen = [year];
+            for (let d = 1; d <= yearWindow; d++) {
+                widen.push(year - d, year + d);
+            }
+            attempts.push({ years: widen, bands: [mb] });
+        }
+        if (year != null) {
+            attempts.push({ years: [year], bands: _MILEAGE_BANDS });
+            const widen = [year];
+            for (let d = 1; d <= yearWindow; d++) {
+                widen.push(year - d, year + d);
+            }
+            attempts.push({ years: widen, bands: _MILEAGE_BANDS });
+        }
+        if (mb !== "unknown") {
+            const years = [];
+            for (let y = 2010; y <= 2030; y++) years.push(y);
+            attempts.push({ years, bands: [mb] });
+        }
+        {
+            const prefix = `${mk}|${md}|${tr}|`;
+            const entries = Object.entries(cohorts)
+                .filter(([k]) => k.startsWith(prefix))
+                .map(([, v]) => v);
+            attempts.push({ entries });
+        }
+
+        for (const att of attempts) {
+            const stats = att.entries
+                ? weightedCohortStats(att.entries, minSamples)
+                : weightedCohortStats(
+                    cohortEntries(cohorts, mk, md, tr, att.years, att.bands),
+                    minSamples
+                );
+            if (!stats) continue;
+
+            const price = Number(car.price);
+            const avg = Number(stats.avg_price);
+            if (!Number.isFinite(price) || price <= 0 || !Number.isFinite(avg) || avg <= 0) {
+                continue;
+            }
+            const deltaPct = Math.round(((price - avg) / avg) * 1000) / 10;
+            return {
+                avg_price_display: "$" + Math.round(avg).toLocaleString(),
+                delta_pct: deltaPct,
+                vs_market: deltaPct <= -3 ? "below_market" : deltaPct >= 3 ? "above_market" : "near_market",
+                sample_count: stats.sample_count,
+            };
+        }
+        return null;
+    }
+
+    function enrichCarsWithMarket(cars) {
+        if (!window.__DS_MARKET_STATS) return cars;
+        return cars.map((c) => {
+            const market = marketIntelForCar(c);
+            return market ? Object.assign({}, c, { market }) : c;
+        });
+    }
+
+    let _marketStatsReloadTimer = null;
+    window.__DS_reloadMarketStats = function reloadMarketStats() {
+        const el = document.getElementById("ds-listings-premium");
+        if (!el) return Promise.resolve();
+        let premium = false;
+        try {
+            premium = JSON.parse(el.textContent || "false");
+        } catch (_) {}
+        if (!premium) return Promise.resolve();
+
+        const qs = new URLSearchParams();
+        const zip = typeof scalarVal === "function" ? scalarVal("zip_code") : "";
+        const radius = typeof scalarVal === "function" ? scalarVal("radius") : "";
+        if (zip) qs.set("zip_code", zip.trim());
+        if (radius) qs.set("radius", radius);
+
+        const url = "/api/listings/market-stats" + (qs.toString() ? "?" + qs.toString() : "");
+        return fetch(url, { credentials: "same-origin" })
+            .then((r) => (r.ok ? r.json() : null))
+            .then((data) => {
+                if (!data || !data.ok || !data.cohorts) return;
+                window.__DS_MARKET_STATS = {
+                    cohorts: data.cohorts,
+                    geo_label: data.geo_label || "",
+                    min_samples: data.min_samples,
+                    year_window: data.year_window,
+                };
+                if (typeof window.__DS_runFilterRender === "function") {
+                    window.__DS_runFilterRender();
+                }
+            })
+            .catch(() => {});
+    };
+
+    function scheduleReloadMarketStats() {
+        clearTimeout(_marketStatsReloadTimer);
+        _marketStatsReloadTimer = setTimeout(() => {
+            if (typeof window.__DS_reloadMarketStats === "function") {
+                window.__DS_reloadMarketStats();
+            }
+        }, 400);
+    }
+
     // Haversine formula: calculate distance in miles between two lat/lon points
     window.haversineJS = function(lat1, lon1, lat2, lon2) {
         const R = 3958.8; // Earth's radius in miles
@@ -132,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const bodies = skip("body_style") ? [] : checked("body_style");
         const cyls   = skip("cylinders")  ? [] : checked("cylinders");
 
-        return (RADIUS_CAR_ROWS || CAR_ROWS).filter(r => {
+        return (RADIUS_CAR_ROWS !== null && RADIUS_CAR_ROWS.length > 0 ? RADIUS_CAR_ROWS : CAR_ROWS).filter(r => {
             if (makes.length  && !valueInListCI(makes, r.make))        return false;
             if (models.length && !valueInListCI(models, r.model))      return false;
             if (trims.length  && !valueInListCI(trims, r.trim))        return false;
@@ -411,8 +586,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function renderCarGrid(cars) {
+    function renderCarGrid(cars, opts) {
         if (!resultsGrid) return;
+        const preserveOrder = opts && opts.preserveOrder;
+        cars = enrichCarsWithMarket(cars);
 
         if (cars.length === 0) {
             resultsGrid.innerHTML = "";
@@ -421,12 +598,30 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        if (emptyState) emptyState.style.display = "none";
-        if (resultsCount) {
-            resultsCount.textContent = `${cars.length} vehicle${cars.length !== 1 ? "s" : ""} found`;
+        // Sink no-image cars to the bottom; for smart search results preserve server-side relevance order.
+        if (preserveOrder) {
+            const withImg = cars.filter(c => !!(c.image_url || (Array.isArray(c.gallery) && c.gallery.length)));
+            const noImg = cars.filter(c => !(c.image_url || (Array.isArray(c.gallery) && c.gallery.length)));
+            cars = [...withImg, ...noImg];
+        } else {
+            cars = cars.slice().sort((a, b) => {
+                const aHasImg = !!(a.image_url || (Array.isArray(a.gallery) && a.gallery.length));
+                const bHasImg = !!(b.image_url || (Array.isArray(b.gallery) && b.gallery.length));
+                if (aHasImg !== bHasImg) return aHasImg ? -1 : 1;
+                return (a.price || 0) - (b.price || 0);
+            });
         }
 
-        resultsGrid.innerHTML = cars.map(c => {
+        if (emptyState) emptyState.style.display = "none";
+        const DISPLAY_MAX = 300;
+        const displayed = cars.length > DISPLAY_MAX ? cars.slice(0, DISPLAY_MAX) : cars;
+        if (resultsCount) {
+            resultsCount.textContent = cars.length > DISPLAY_MAX
+                ? `Showing ${DISPLAY_MAX} of ${cars.length} vehicle${cars.length !== 1 ? "s" : ""}`
+                : `${cars.length} vehicle${cars.length !== 1 ? "s" : ""} found`;
+        }
+
+        resultsGrid.innerHTML = displayed.map(c => {
             const gallery = Array.isArray(c.gallery) ? c.gallery : [];
             const imgRaw = (gallery.length && gallery[0]) ? gallery[0] : (c.image_url || "") || "/static/placeholder.svg";
             const imgSrcQuoted = cssSingleQuotedUrl(imgRaw);
@@ -448,6 +643,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const incompletePill = c.public_incomplete
                 ? `<span class="result-incomplete-pill" title="Missing some public-listing fields">Incomplete</span>`
                 : "";
+            let marketLine = "";
+            const mkt = c.market;
+            if (mkt && mkt.avg_price_display) {
+                const sign = Number(mkt.delta_pct) > 0 ? "+" : "";
+                const vsCls = mkt.vs_market || "near_market";
+                marketLine = `<p class="result-market result-market--${escapeHtml(vsCls)}">`
+                    + `Trim avg ${escapeHtml(mkt.avg_price_display)} `
+                    + `<span class="result-market-delta">(${sign}${escapeHtml(mkt.delta_pct)}% vs avg)</span></p>`;
+            }
             return `
             <a href="/car/${idStr}" class="result-card${c.public_incomplete ? " result-card--incomplete" : ""}">
                 <div class="result-image-wrap">
@@ -461,6 +665,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                     <p class="result-trim">${escapeHtml(c.trim || "")}</p>
                     <p class="result-price">${fmtUSD(c.price)}</p>
+                    ${marketLine}
                     <p class="result-meta">
                         ${fmt(c.mileage)} mi
                         &middot; ${escapeHtml(c.fuel_type || "")}
@@ -498,10 +703,30 @@ document.addEventListener("DOMContentLoaded", () => {
             })
                 .then((res) => (res.ok ? res.json() : null))
                 .then((data) => {
-                    if (data && data.ok) _listingsGeoLastSent = payload;
+                    if (data && data.ok) {
+                        _listingsGeoLastSent = payload;
+                        scheduleReloadMarketStats();
+                    }
                 })
                 .catch(() => {});
         }, 500);
+    }
+
+    function selectedDealerRegistryIds() {
+        const zipCode = scalarVal("zip_code");
+        const radiusMi = parseFloat(scalarVal("radius")) || null;
+        if (!zipCode || !radiusMi || radiusMi > 50) return [];
+        return checked("dealer_registry_id")
+            .map(v => parseInt(v, 10))
+            .filter(n => Number.isFinite(n) && n > 0);
+    }
+
+    function passesDealerFilter(c) {
+        const ids = selectedDealerRegistryIds();
+        if (!ids.length) return true;
+        const reg = parseInt(c.dealership_registry_id, 10);
+        if (!Number.isFinite(reg) || reg <= 0) return false;
+        return ids.includes(reg);
     }
 
     function syncUrl() {
@@ -522,6 +747,16 @@ document.addEventListener("DOMContentLoaded", () => {
         for (const name of ["zip_code", "radius", "max_price", "max_mileage", "engine_l_min", "engine_l_max"]) {
             const val = scalarVal(name);
             if (val) params.set(name, val);
+        }
+        const radiusForDealers = parseFloat(scalarVal("radius")) || null;
+        if (scalarVal("zip_code") && radiusForDealers && radiusForDealers <= 50) {
+            const seenDealers = new Set();
+            document.querySelectorAll('input[name="dealer_registry_id"]:checked').forEach(cb => {
+                if (!seenDealers.has(cb.value)) {
+                    seenDealers.add(cb.value);
+                    params.append("dealer_registry_id", cb.value);
+                }
+            });
         }
         const smartIn = document.getElementById("smart-search-input");
         const q = smartIn ? (smartIn.value || "").trim() : "";
@@ -544,20 +779,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const zipCode     = scalarVal("zip_code");
         const radiusMi    = parseFloat(scalarVal("radius"))      || null;
 
-        // Require: ZIP, positive radius, and at least one make
-        const hasAllRequired = zipCode && radiusMi && radiusMi > 0 && makes.length > 0;
-
-        if (!hasAllRequired) {
-            resultsGrid.innerHTML = "";
-            if (emptyState) {
-                emptyState.style.display = "";
-                emptyState.querySelector(".no-results").textContent = "Set your area and choose a make";
-                emptyState.querySelector(".no-results-sub").textContent =
-                    "Enter a ZIP and radius, then select at least one make above. Results appear here when vehicles match.";
-            }
-            if (resultsCount) resultsCount.textContent = "";
-            return;
-        }
         const trims       = checked("trim");
         const fuels       = checked("fuel_type");
         const cyls        = checked("cylinders");
@@ -567,8 +788,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const extColors   = checked("exterior_color");
         const intColors   = checked("interior_color");
         const countries   = checked("country");
-        const maxPrice    = parseFloat(scalarVal("max_price"))   || null;
-        const maxMileage  = parseInt(scalarVal("max_mileage"))   || null;
+        const maxPriceRaw = scalarVal("max_price");
+        const maxPrice    = maxPriceRaw !== "" ? parseFloat(maxPriceRaw) : null;
+        const maxMileageRaw = scalarVal("max_mileage");
+        const maxMileage  = maxMileageRaw !== "" ? parseInt(maxMileageRaw, 10) : null;
         const engLMin     = parseFloat(scalarVal("engine_l_min")) || null;
         const engLMax     = parseFloat(scalarVal("engine_l_max")) || null;
         const pkgs        = checked("package");
@@ -615,14 +838,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 const carPkgs = (c.package_names || []).map(n => n.toLowerCase());
                 if (!pkgs.some(p => carPkgs.includes(p.toLowerCase()))) return false;
             }
-            if (maxPrice    && c.price   > maxPrice)   return false;
-            if (maxMileage  && c.mileage > maxMileage) return false;
+            if (maxPrice != null && Number.isFinite(maxPrice) && c.price > maxPrice) return false;
+            if (maxMileage != null && Number.isFinite(maxMileage) && c.mileage > maxMileage) return false;
             if (engLMin != null || engLMax != null) {
                 const disp = parseEngineLiters(c);
                 if (disp == null) return false;
                 if (engLMin != null && disp < engLMin) return false;
                 if (engLMax != null && disp > engLMax) return false;
             }
+            if (!passesDealerFilter(c)) return false;
             return true;
         });
 
@@ -639,6 +863,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
                 const filtered = cars.filter(c => {
+                    if (!passesDealerFilter(c)) return false;
                     // Primary: dealer's geocoded lat/lon from dealer_geopoints
                     let coords = (typeof DEALER_COORDS === "object" && c.dealer_url)
                         ? (DEALER_COORDS[String(c.dealer_url).trim()] || null) : null;
@@ -646,7 +871,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (!coords && c.zip_code && typeof ZIP_COORDS === "object") {
                         coords = ZIP_COORDS[String(c.zip_code).trim()] || null;
                     }
-                    if (!coords) return false;
+                    if (!coords) return true; // no geo data → include (don't silently drop)
                     return haversineJS(origin[0], origin[1], coords[0], coords[1]) <= radiusMi;
                 });
                 renderCarGrid(filtered);
@@ -671,6 +896,66 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.__DS_renderCarGrid = renderCarGrid;
     window.__DS_runFilterRender = renderResults;
+
+    window.__DS_applySmartFilters = function(filters) {
+        if (!filters) return;
+        // Uncheck all filter checkboxes without triggering change events
+        document.querySelectorAll(".filter-option input[type=checkbox]").forEach(cb => {
+            cb.checked = false;
+        });
+        function checkFilter(name, value) {
+            if (value == null || value === "") return;
+            const normVal = String(value).trim().toLowerCase();
+            document.querySelectorAll(`input[type=checkbox][name="${name}"]`).forEach(cb => {
+                const cbVal = String(cb.value).trim().toLowerCase();
+                if (
+                    cbVal === normVal
+                    || cbVal.startsWith(normVal + " ")
+                    || cbVal.startsWith(normVal + "-")
+                    || (name === "model" && normVal.length >= 2 && cbVal.startsWith(normVal))
+                ) {
+                    cb.checked = true;
+                }
+            });
+        }
+        if (filters.make) checkFilter("make", filters.make);
+        if (filters.model) checkFilter("model", filters.model);
+        if (filters.drivetrain) checkFilter("drivetrain", filters.drivetrain);
+        if (filters.fuel_type) checkFilter("fuel_type", filters.fuel_type);
+        if (filters.cylinders != null) checkFilter("cylinders", String(filters.cylinders));
+        if (filters.body_style) {
+            const bs = filters.body_style;
+            const vals = Array.isArray(bs) ? bs : [bs];
+            vals.forEach(v => checkFilter("body_style", v));
+        }
+        const ext = filters.exterior_color;
+        if (ext) {
+            const vals = Array.isArray(ext) ? ext : [ext];
+            vals.forEach(v => checkFilter("exterior_color", v));
+        }
+        const intc = filters.interior_color;
+        if (intc) {
+            const vals = Array.isArray(intc) ? intc : [intc];
+            vals.forEach(v => checkFilter("interior_color", v));
+        }
+        function setScalarSelect(name, value) {
+            if (value == null || value === "") return;
+            const v = String(value);
+            document.querySelectorAll(`#search-form [name="${name}"]`).forEach(el => {
+                el.value = v;
+            });
+        }
+        if (filters.max_price != null) setScalarSelect("max_price", filters.max_price);
+        if (filters.max_mileage != null) setScalarSelect("max_mileage", filters.max_mileage);
+        if (filters.engine_displacement_l_min != null) {
+            setScalarSelect("engine_l_min", filters.engine_displacement_l_min);
+        }
+        if (filters.engine_displacement_l_max != null) {
+            setScalarSelect("engine_l_max", filters.engine_displacement_l_max);
+        }
+        runCascade();
+        updateAllCounts();
+    };
 
     // ── Radius-aware cascade ───────────────────────────────────────────
     // Build a make/model/trim/etc. row set restricted to cars within the
@@ -697,6 +982,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         return rows;
     }
+    window.__DS_buildCarRowsFromCars = _buildCarRowsFromCars;
 
     function _setRadiusCarRows(origin, radiusMi) {
         if (!origin || !radiusMi) {
@@ -709,15 +995,16 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!coords && c.zip_code && typeof ZIP_COORDS === "object") {
                 coords = ZIP_COORDS[String(c.zip_code).trim()] || null;
             }
-            if (!coords) return false;
+            if (!coords) return true; // no geo data → include
             return haversineJS(origin[0], origin[1], coords[0], coords[1]) <= radiusMi;
         });
-        RADIUS_CAR_ROWS = _buildCarRowsFromCars(nearby);
+        RADIUS_CAR_ROWS = nearby.length > 0 ? _buildCarRowsFromCars(nearby) : null;
     }
 
     function refreshRadiusAndRender() {
         const zipCode  = scalarVal("zip_code");
         const radiusMi = parseFloat(scalarVal("radius")) || null;
+        scheduleReloadMarketStats();
 
         if (!zipCode || !radiusMi) {
             RADIUS_CAR_ROWS = null;
@@ -752,8 +1039,12 @@ document.addEventListener("DOMContentLoaded", () => {
         runCascade();
         renderCarGrid(INITIAL_GRID_CARS);
     } else {
-        // refreshRadiusAndRender builds the radius-filtered cascade row set first,
-        // then runs cascade + renderResults — picks up URL-param pre-checked filters too.
+        // Show first 300 cars immediately so the page isn't blank while radius resolves async.
+        if (typeof ALL_CARS !== "undefined" && Array.isArray(ALL_CARS) && ALL_CARS.length) {
+            runCascade();
+            renderCarGrid(ALL_CARS.slice(0, 300));
+        }
+        // Then async-update with radius filter and URL-param pre-checked filters.
         refreshRadiusAndRender();
     }
 
@@ -822,8 +1113,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then((data) => {
                     if (!data || !data.ok || !Array.isArray(data.cars)) return;
                     window.ALL_CARS = data.cars;
+                    if (typeof window.__DS_buildCarRowsFromCars === "function") {
+                        window.CAR_ROWS = window.__DS_buildCarRowsFromCars(data.cars);
+                    }
                     const smartIn = document.getElementById("smart-search-input");
                     if (smartIn && (smartIn.value || "").trim()) return;
+                    if (typeof runCascade === "function") runCascade();
                     if (typeof window.__DS_runFilterRender === "function") {
                         window.__DS_runFilterRender();
                     }

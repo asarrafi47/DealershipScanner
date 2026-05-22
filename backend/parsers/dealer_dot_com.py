@@ -448,6 +448,14 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
             x for x in dealer_style_vdp_url_candidates(base_url, vin, obj) if x != detail_url
         ]
 
+    lot_location = ""
+    try:
+        from backend.scanner.dealer_location import extract_location_from_inventory_object
+
+        lot_location = extract_location_from_inventory_object(obj)
+    except ImportError:
+        pass
+
     out = {
         "vin": vin,
         "stock_number": stock_number,
@@ -479,6 +487,8 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         out["_detail_url"] = detail_url
     if detail_alternates:
         out["_detail_url_alternates"] = detail_alternates[:12]
+    if lot_location:
+        out["_lot_location"] = lot_location
     return out
 
 

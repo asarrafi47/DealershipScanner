@@ -30,9 +30,6 @@ from backend.vision.url_heuristics import (  # noqa: F401
     dealer_lot_photo_score,
 )
 
-# Removed: OLLAMA_HOST, OLLAMA_VISION_MODEL, LLaVA analysis functions (deleted with ollama_llava.py)
-# Use backend.vision.claude_vision for gallery filtering
-# Use backend.scanner.post_pipeline.run_interior_vision_for_vins for interior classification
 
 __all__ = [
     "filter_gallery_urls_for_vehicle_listing",

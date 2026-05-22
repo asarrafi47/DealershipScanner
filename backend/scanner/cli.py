@@ -32,6 +32,8 @@ Optional VDP (detail page) enrichment (see scanner_vdp):
     count is below this (default: 3); otherwise VDP URLs extend listing gallery (see gallery_merge).
   SCANNER_MAX_DEALER_CONCURRENCY — parallel dealer scans (default: 3; set 1 for sequential).
   SCANNER_MAX_VDP_CONCURRENCY — parallel VDP page visits per dealer (default: 12; max 64).
+  SCANNER_SISTER_STORE_FILTER — when truthy (default), drop inventory/VDP rows whose known
+    lot location does not match the scanned dealership (city/state/name). Set 0 to disable.
 
 Inventory JSON intercept gating (drops third-party vehicle-shaped JSON, e.g. payment widgets):
   SCANNER_INTERCEPT_URL_ALLOW — comma-separated URL substrings that always allow (lowercased match).
@@ -100,6 +102,13 @@ Post-scan pipeline (SQLite, same run):
   ``--post-listing-gap-fill`` or ``SCANNER_POST_LISTING_GAP_FILL=1``; cap via
   ``SCANNER_POST_LISTING_GAP_FILL_MAX`` (default 400); disable DDG tier with ``LISTING_GAP_FILL_ALLOW_DDG=0``.
 
+  OEM window sticker PDFs for each touched VIN (post-scan): Stellantis (Ram/Jeep/Dodge/Chrysler),
+  Ford/Lincoln (``windowsticker.forddirect.com``). GM is off by default (unstable); enable with
+  ``WINDOW_STICKER_GM_EXPERIMENTAL=1`` (``cws.gm.com``). BMW/Mercedes/Porsche decoder sites are
+  not used (not true Monroney PDFs). Stored under ``car_window_stickers/``; merged into
+  ``cars.packages``. On by default (``SCANNER_POST_WINDOW_STICKER=1``); skip with
+  ``--no-post-window-sticker``. Cap: ``SCANNER_POST_WINDOW_STICKER_MAX`` (0 = unlimited).
+
   Optional enrichment (EPA catalog in Postgres + Ollama vision), after repair + listing parse:
 
   --post-enrich / SCANNER_POST_ENRICH=1 — ``InventoryEnricher`` for scanned VINs only (needs catalog).
@@ -111,27 +120,20 @@ Post-scan pipeline (SQLite, same run):
   SCANNER_RECONCILE=0. Skipped when ``deduped_rows`` < SCANNER_RECONCILE_MIN_ROWS (default 8) or
   when there are no valid normalized VINs in the scrape.
 
-Vision passes (default **on** for ``python scanner.py``; requires local Ollama, default
-``OLLAMA_VISION_MODEL=llava:13b``):
+Vision passes (default **on**; requires ``ANTHROPIC_API_KEY``):
 
-  **Gallery** — HTTPS gallery / hero URLs are de-junked (KBB, CARFAX, OEM, etc.); for proven dealer
-  inventory image URLs, LLaVA can be **skipped** so the full VDP photo carousel is preserved
-  (``SCANNER_GALLERY_VISION_PASSTHROUGH_TRUSTED_CDN=1`` default; set ``0`` to run vision on every URL).
-  Remaining images are LLaVA-triaged. Opt out entirely: ``SCANNER_GALLERY_VISION_FILTER=0`` or
-  ``--no-gallery-vision-filter``. ``SCANNER_GALLERY_VISION_MAX_WORKERS`` (default ``1``) sets parallel
-  Ollama calls per vehicle. ``SCANNER_GALLERY_VISION_KEEP_UNFETCHABLE=1`` preserves URLs when the image
-  could not be fetched (legacy: avoid dropping on CDN flakes; default is to **drop** broken/blank
-  fetches from the list).
+  **Gallery** — HTTPS gallery / hero URLs are de-junked (KBB, CARFAX, OEM, etc.); trusted dealer
+  CDN URLs pass through without vision classification. Remaining images are classified by Claude
+  Haiku. Opt out entirely: ``SCANNER_GALLERY_VISION_FILTER=0`` or ``--no-gallery-vision-filter``.
+  ``SCANNER_GALLERY_VISION_KEEP_UNFETCHABLE=1`` preserves URLs when the image could not be fetched.
 
-  **Monroney** — after gallery cleanup, LLaVA reads sticker-like URLs and VDP Monroney text into
+  **Monroney** — after gallery cleanup, sticker-like URLs and VDP Monroney text are parsed into
   ``packages`` / empty specs. Opt out: ``SCANNER_MONRONEY_VISION=0`` or ``--no-monroney-vision``.
 
-  **Post-scan interior** — LLaVA cabin inference for touched VINs (see ``SCANNER_POST_INTERIOR_VISION``).
+  **Post-scan interior** — Claude cabin inference for touched VINs (see ``SCANNER_POST_INTERIOR_VISION``).
   Default on; opt out: ``SCANNER_POST_INTERIOR_VISION=0`` or ``--no-post-interior-vision``.
-  A cabin-appropriate image is selected via URL heuristics + LLaVA gallery classification
-  (not only the first hero; avoids reading exterior as cabin). Tuning: ``INTERIOR_VISION_MAX_GALLERY_CLASSIFY``,
-  ``INTERIOR_VISION_CONFIDENCE``, ``INTERIOR_VISION_OVERWRITE``, and optional legacy
-  ``INTERIOR_VISION_FALLBACK_HERO=1`` to analyze the first HTTPS image if no cabin shot is found.
+  Tuning: ``INTERIOR_VISION_MAX_GALLERY_CLASSIFY``, ``INTERIOR_VISION_CONFIDENCE``,
+  ``INTERIOR_VISION_OVERWRITE``, ``INTERIOR_VISION_FALLBACK_HERO=1``.
 
   **Post-scan KBB (optional)** — licensed Kelley Blue Book IDWS values for touched VINs
   (``--post-kbb`` or ``SCANNER_POST_KBB=1``). Requires ``KBB_API_KEY`` and usually a ZIP
@@ -216,6 +218,7 @@ from backend.scanner.post_pipeline import (
     post_listing_gap_fill_env_enabled,
     post_kbb_env_enabled,
     post_repair_env_enabled,
+    post_window_sticker_env_enabled,
     run_dictionary_enrich_for_vins,
     run_listing_gap_fill_stage,
     run_post_scan,
@@ -285,6 +288,11 @@ INVENTORY_PATHS = [
     "/new-inventory/index.htm",
     "/used-inventory/index.htm",
     "/certified-inventory/index.htm",
+    "/new-inventory/",
+    "/used-inventory/",
+    "/inventory/",
+    "/new-vehicles/",
+    "/used-vehicles/",
 ]
 NEXT_SELECTORS = [
     'button:has-text("Next")',
@@ -716,7 +724,6 @@ def _load_dealers_from_db() -> list[dict]:
             "url": url,
             "dealer_id": "db-" + slug,
             "dealership_registry_id": r["id"],
-            "provider": "google_places",
             "city": r["city"] or "",
             "state": r["state"] or "",
         })
@@ -1103,11 +1110,10 @@ def _apply_gallery_vision_filter_to_vehicles(vehicles: list[dict[str, Any]]) -> 
 
 def _apply_monroney_vision_to_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, Any]:
     """
-    Monroney/window-sticker vision is disabled (LLaVA removed; Claude replacement not yet
-    implemented). Pops ``_monroney_page_texts`` from each vehicle to avoid leaking internal keys
-    downstream, then returns a no-op stats dict.
+    Monroney/window-sticker vision is disabled. Pops ``_monroney_page_texts`` from each vehicle
+    to avoid leaking internal keys downstream, then returns a no-op stats dict.
     """
-    logger.info("Monroney vision disabled (LLaVA removed) — skipping sticker image parsing")
+    logger.info("Monroney vision disabled — skipping sticker image parsing")
     for v in vehicles:
         v.pop("_monroney_page_texts", None)
     return {"skipped": "monroney_vision_removed"}
@@ -1325,7 +1331,71 @@ async def run_dealer(
                 else:
                     logger.info("HTML fallback: %s — 0 vehicles (SPA shell or unsupported)", name)
 
+            # DealerOn fallback: intercept cosmos/srp/vehicles API and paginate via HTTP
+            if not all_vehicles:
+                try:
+                    from backend.scanner.scrapers.dealer_on import scrape_dealer_on_from_page
+                    do_vehicles = await scrape_dealer_on_from_page(
+                        page, url, dealer_id, name, url
+                    )
+                    if do_vehicles:
+                        all_vehicles = do_vehicles
+                        logger.info(
+                            "DealerOn fallback: %s — recovered %d vehicle(s) via cosmos/srp/vehicles API",
+                            name,
+                            len(all_vehicles),
+                        )
+                except Exception as _do_err:
+                    logger.debug("DealerOn fallback error for %s: %s", name, _do_err)
+
+            # DealerEProcess fallback: fetch static JSON datasets
+            if not all_vehicles:
+                try:
+                    from backend.scanner.scrapers.dealer_eprocess import scrape_dealer_eprocess_from_page
+                    dep_vehicles = await scrape_dealer_eprocess_from_page(
+                        page, url, dealer_id, name, url
+                    )
+                    if dep_vehicles:
+                        all_vehicles = dep_vehicles
+                        logger.info(
+                            "DealerEProcess fallback: %s — recovered %d vehicle(s) via datasets",
+                            name,
+                            len(all_vehicles),
+                        )
+                except Exception as _dep_err:
+                    logger.debug("DealerEProcess fallback error for %s: %s", name, _dep_err)
+
             result["inventory_rows"] = len(all_vehicles)
+
+        # DealerInspire augmentation: runs even when intercept captured some vehicles.
+        # The browser's first-page Algolia response only yields ~40 hits; DealerInspire
+        # queries all pages directly. Replace intercept result if DI returns more.
+        try:
+            from backend.scanner.scrapers.dealer_inspire import scrape_dealer_inspire_from_page
+            di_vehicles = await scrape_dealer_inspire_from_page(
+                page, url, dealer_id, name, url
+            )
+            if di_vehicles:
+                if len(di_vehicles) > len(all_vehicles):
+                    prev = len(all_vehicles)
+                    all_vehicles = di_vehicles
+                    result["inventory_rows"] = len(all_vehicles)
+                    logger.info(
+                        "DealerInspire: %s — %d vehicle(s) via Algolia (replaced %d from intercept)",
+                        name,
+                        len(all_vehicles),
+                        prev,
+                    )
+                elif not all_vehicles:
+                    all_vehicles = di_vehicles
+                    result["inventory_rows"] = len(all_vehicles)
+                    logger.info(
+                        "DealerInspire fallback: %s — recovered %d vehicle(s) via Algolia",
+                        name,
+                        len(all_vehicles),
+                    )
+        except Exception as _di_err:
+            logger.debug("DealerInspire fallback error for %s: %s", name, _di_err)
 
         if all_vehicles:
             # One row per VIN for downstream VDP enrichment (listing payloads may repeat VINs).
@@ -1339,12 +1409,37 @@ async def run_dealer(
                         by_vin[vin] = v
             all_vehicles = list(by_vin.values())
             result["deduped_rows"] = len(all_vehicles)
-            result["vins"] = sorted({(v.get("vin") or "").strip() for v in all_vehicles if (v.get("vin") or "").strip()})
             _log_gallery_bins(name, "after_inventory_merge", all_vehicles)
+
+            site_profile = None
+            try:
+                from backend.scanner.dealer_location import (
+                    build_dealer_site_profile,
+                    filter_sister_store_vehicles,
+                    sister_store_filter_enabled,
+                )
+
+                site_profile = build_dealer_site_profile(dealer)
+                if sister_store_filter_enabled():
+                    all_vehicles, inv_loc_stats = filter_sister_store_vehicles(
+                        all_vehicles, site_profile, source="inventory"
+                    )
+                    result["sister_store_inventory"] = inv_loc_stats
+                    result["deduped_rows"] = len(all_vehicles)
+            except Exception as loc_e:
+                logger.warning(
+                    "Sister-store inventory filter failed for %s (continuing): %s",
+                    name,
+                    loc_e,
+                )
+
+            result["vins"] = sorted({(v.get("vin") or "").strip() for v in all_vehicles if (v.get("vin") or "").strip()})
 
             vdp_stats: dict[str, Any] = {}
             try:
-                vdp_stats = await enrich_vehicles_vdp(page, all_vehicles, name, dealer_id=dealer_id)
+                vdp_stats = await enrich_vehicles_vdp(
+                    page, all_vehicles, name, dealer_id=dealer_id, site_profile=site_profile
+                )
             except Exception as e:
                 logger.warning("VDP enrichment failed for %s (continuing with listing data only): %s", name, e)
             result["vdps_visited"] = int(vdp_stats.get("vdps_visited") or 0)
@@ -1354,6 +1449,21 @@ async def run_dealer(
             result["gallery_bins"] = gallery_https_bin_histogram(all_vehicles)
             if vdp_stats.get("gallery_phase_bins"):
                 logger.info("Gallery phase bins [%s]: %s", name, vdp_stats.get("gallery_phase_bins"))
+
+            pre_vdp_n = len(all_vehicles)
+            all_vehicles = [v for v in all_vehicles if not v.get("_sister_store_exclude")]
+            vdp_excluded = pre_vdp_n - len(all_vehicles)
+            if vdp_excluded:
+                result["sister_store_vdp_excluded"] = vdp_excluded
+                result["deduped_rows"] = len(all_vehicles)
+                result["vins"] = sorted(
+                    {(v.get("vin") or "").strip() for v in all_vehicles if (v.get("vin") or "").strip()}
+                )
+                logger.info(
+                    "Sister-store filter [%s] VDP: excluded %d vehicle(s) after detail-page location check",
+                    name,
+                    vdp_excluded,
+                )
 
             # Ensure gallery is always a list for DB (stored as json.dumps(gallery) in database.py)
             for v in all_vehicles:
@@ -1373,7 +1483,7 @@ async def run_dealer(
                     gv = await asyncio.to_thread(_apply_gallery_vision_filter_to_vehicles, all_vehicles)
                     result["gallery_vision"] = gv
                     logger.info(
-                        "Gallery vision filter [%s]: dropped %s of %s unique HTTPS image URLs (LLaVA)",
+                        "Gallery vision filter [%s]: dropped %s of %s unique HTTPS image URLs (Claude)",
                         name,
                         gv.get("gallery_vision_unique_dropped"),
                         gv.get("gallery_vision_unique_before"),
@@ -1510,6 +1620,7 @@ async def main(
     post_enrich_vision_only: bool = False,
     post_kbb: bool = False,
     post_listing_gap_fill: bool = False,
+    post_window_sticker: bool = True,
     enrichment_max_workers: int | None = None,
     gallery_vision_filter: bool = True,
     monroney_vision: bool = True,
@@ -1645,6 +1756,7 @@ async def main(
         or post_enrich
         or post_enrich_vision_only
         or post_kbb
+        or post_window_sticker
     ):
         try:
             post_summary = run_post_scan(
@@ -1655,6 +1767,7 @@ async def main(
                 post_enrich=post_enrich,
                 post_enrich_vision_only=post_enrich_vision_only,
                 post_kbb=post_kbb,
+                post_window_sticker=post_window_sticker,
                 enrichment_max_workers=enrichment_max_workers,
             )
             logger.info("Post-scan summary: %s", json.dumps(post_summary, default=str)[:1800])
@@ -1761,22 +1874,22 @@ def run_cli_entry() -> None:
     ap.add_argument(
         "--post-enrich-vision-only",
         action="store_true",
-        help="After repair + listing parse, vision-only enrichment for scanned rows (Ollama; catalog not required).",
+        help="After repair + listing parse, vision-only enrichment for scanned rows (catalog not required).",
     )
     ap.add_argument(
         "--enable-interior-vision",
         action="store_true",
-        help="Enable post-scan Ollama LLaVA interior/cabin analysis (default is off; run separately via image_analyzer.py).",
+        help="Enable post-scan Claude interior/cabin analysis (default is off; run separately via image_analyzer.py).",
     )
     ap.add_argument(
         "--enable-gallery-vision",
         action="store_true",
-        help="Enable LLaVA gallery cleanup before upsert (default is off; run separately via image_analyzer.py).",
+        help="Enable Claude gallery cleanup before upsert (default is off; run separately via image_analyzer.py).",
     )
     ap.add_argument(
         "--enable-monroney-vision",
         action="store_true",
-        help="Enable LLaVA Monroney / sticker pass before upsert (default is off; run separately via image_analyzer.py).",
+        help="Enable Monroney / sticker pass before upsert (default is off; run separately via image_analyzer.py).",
     )
     ap.add_argument(
         "--enrichment-workers",
@@ -1793,6 +1906,11 @@ def run_cli_entry() -> None:
         "--post-listing-gap-fill",
         action="store_true",
         help="After post-scan repair: backfill missing specs (EPA/vPIC → listing-page HTML via Playwright → DDG for mechanical only). Condition from listing sites only. Or set SCANNER_POST_LISTING_GAP_FILL=1.",
+    )
+    ap.add_argument(
+        "--no-post-window-sticker",
+        action="store_true",
+        help="Skip OEM window sticker PDF fetch during post-scan (default: on; SCANNER_POST_WINDOW_STICKER=0).",
     )
     args = ap.parse_args()
     if is_inventory_postgres():
@@ -1863,6 +1981,7 @@ def run_cli_entry() -> None:
     do_monroney = args.enable_monroney_vision and monroney_vision_env_enabled()
     do_kbb = bool(args.post_kbb) or post_kbb_env_enabled()
     do_listing_gap_fill = bool(args.post_listing_gap_fill) or post_listing_gap_fill_env_enabled()
+    do_window_sticker = not args.no_post_window_sticker and post_window_sticker_env_enabled()
 
     try:
         asyncio.run(
@@ -1875,6 +1994,7 @@ def run_cli_entry() -> None:
                 post_enrich_vision_only=do_vision,
                 post_kbb=do_kbb,
                 post_listing_gap_fill=do_listing_gap_fill,
+                post_window_sticker=do_window_sticker,
                 enrichment_max_workers=args.enrichment_workers,
                 gallery_vision_filter=do_gallery_vision,
                 monroney_vision=do_monroney,

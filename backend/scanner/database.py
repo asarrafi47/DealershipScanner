@@ -154,6 +154,21 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
         for raw in vehicles:
             merged = apply_ep_from_scanner_dict(dict(raw))
             v = clean_car_row_dict(merged)
+            if not v.get("transmission_type") and v.get("transmission"):
+                from backend.utils.transmission_normalize import normalize_transmission_standard
+                _y = v.get("year")
+                _tt, _ = normalize_transmission_standard(
+                    v["transmission"],
+                    make=v.get("make"),
+                    model=v.get("model"),
+                    trim=v.get("trim"),
+                    title=v.get("title"),
+                    year=_y if isinstance(_y, int) else None,
+                    vin=v.get("vin"),
+                    log_weak=False,
+                )
+                if _tt:
+                    v["transmission_type"] = _tt
             if is_effectively_empty(v.get("engine_l")):
                 _eng = infer_engine_l_for_db(v)
                 if _eng is not None:
@@ -229,7 +244,7 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                 INSERT INTO cars (
                     vin, title, year, make, model, trim, price, mileage,
                     image_url, dealer_name, dealer_url, dealer_id, scraped_at,
-                    zip_code, fuel_type, cylinders, transmission, drivetrain,
+                    zip_code, fuel_type, cylinders, transmission, transmission_type, drivetrain,
                     exterior_color, interior_color, interior_color_buckets, stock_number, gallery, carfax_url, history_highlights, msrp,
                     dealership_registry_id,
                     source_url, body_style, engine_description, engine_l, condition, description, data_quality_score,
@@ -237,7 +252,7 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     packages,
                     listing_active, listing_removed_at, spec_source_json,
                     first_seen_at, last_price_change_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(vin) DO UPDATE SET
                     title=CASE
                         WHEN NULLIF(TRIM(excluded.title),'') IS NOT NULL AND excluded.title != 'Unknown vehicle'
@@ -261,6 +276,7 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     fuel_type=COALESCE(excluded.fuel_type, fuel_type),
                     cylinders=COALESCE(excluded.cylinders, cylinders),
                     transmission=COALESCE(excluded.transmission, transmission),
+                    transmission_type=COALESCE(excluded.transmission_type, transmission_type),
                     drivetrain=COALESCE(excluded.drivetrain, drivetrain),
                     exterior_color=COALESCE(NULLIF(TRIM(excluded.exterior_color), ''), exterior_color),
                     interior_color=COALESCE(NULLIF(TRIM(excluded.interior_color), ''), interior_color),
@@ -321,6 +337,7 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     v.get("fuel_type"),
                     v.get("cylinders"),
                     v.get("transmission"),
+                    v.get("transmission_type"),
                     v.get("drivetrain"),
                     v.get("exterior_color"),
                     v.get("interior_color"),

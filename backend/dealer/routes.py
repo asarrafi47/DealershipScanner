@@ -28,18 +28,14 @@ from backend.db.users_db import (
     check_user,
     create_org,
     get_user_by_login,
-    get_user_totp,
     save_user,
     sync_env_admin_user_row,
 )
 from backend.utils.client_ip import client_ip as _client_ip
 from backend.utils.dealer_vin_prefill import build_vehicle_prefill_from_vin
 from backend.utils.ip_rate_limit import allow_request
-from backend.utils.mfa_otp import clear_session_otp
 from backend.utils.registration_validation import registration_form_error
 from backend.utils.roles import (
-    MFA_INTENT_DEALER,
-    MFA_INTENT_GENERAL,
     ROLE_ADMIN,
     ROLE_DEALERSHIP_OWNER,
     email_is_admin,
@@ -88,28 +84,11 @@ def dealer_login():
             u = get_user_by_login(login_input)
             if not u:
                 return render_template("dealer_login.html", error="Invalid username or password.")
-            if is_admin_role(normalize_role(u.get("role"))):
-                from backend.main import (  # noqa: PLC0415
-                    _finalize_app_session,
-                    _post_mfa_success_redirect,
-                )
-
-                session.clear()
-                session["mfa_intent"] = MFA_INTENT_GENERAL
-                if _finalize_app_session(int(u["id"])):
-                    return _post_mfa_success_redirect()
+            from backend.main import _finalize_app_session, _post_login_redirect  # noqa: PLC0415
             session.clear()
-            session["mfa_intent"] = MFA_INTENT_DEALER
-            session["mfa_ok"] = False
-            session["mfa_pending_user_id"] = int(u["id"])
-            session["mfa_pending_login"] = (u.get("email") or u.get("username") or "").strip()
-            clear_session_otp(session, kind="mfa")
-            totp_row = get_user_totp(int(u["id"])) or {}
-            if totp_row.get("enabled") and (totp_row.get("secret") or "").strip():
-                session["mfa_pending_method"] = "totp"
-                return redirect("/mfa/verify")
-            session["mfa_pending_method"] = "choose"
-            return redirect("/mfa/choose")
+            if not _finalize_app_session(int(u["id"])):
+                return render_template("dealer_login.html", error="Login failed. Try again.")
+            return _post_login_redirect()
     return render_template("dealer_login.html")
 
 
@@ -151,35 +130,18 @@ def dealer_register():
             uid = save_user(username, email, password, role=role, org_id=org_id)
         except sqlite3.IntegrityError:
             return render_template("dealer_register.html", error="That username or email is already registered.")
-        if is_admin:
-            from backend.main import (  # noqa: PLC0415
-                _finalize_app_session,
-                _post_mfa_success_redirect,
-            )
-
-            session.clear()
-            session["mfa_intent"] = MFA_INTENT_GENERAL
-            if _finalize_app_session(int(uid)):
-                return _post_mfa_success_redirect()
+        from backend.main import _finalize_app_session, _post_login_redirect  # noqa: PLC0415
         session.clear()
-        session["mfa_intent"] = MFA_INTENT_DEALER if not is_admin else MFA_INTENT_GENERAL
-        session["mfa_ok"] = False
-        session["mfa_pending_user_id"] = int(uid)
-        session["mfa_pending_login"] = email or username
-        clear_session_otp(session, kind="mfa")
-        session["mfa_pending_method"] = "choose"
-        return redirect("/mfa/choose")
+        if not _finalize_app_session(int(uid)):
+            return render_template("dealer_register.html", error="Registration failed. Try again.")
+        return _post_login_redirect()
     return render_template("dealer_register.html")
 
 
 def _require_login() -> int:
     uid = session.get("user_id")
     if uid is None:
-        if session.get("mfa_pending_user_id") and not session.get("mfa_ok"):
-            return -1
         return 0
-    if not session.get("mfa_ok"):
-        return -1
     try:
         return int(uid)
     except (TypeError, ValueError):
@@ -203,8 +165,6 @@ def _safe_upload_basename(name: str) -> str | None:
 @bp.route("/inventory")
 def inventory_dashboard():
     uid = _require_login()
-    if uid == -1:
-        return redirect(url_for("mfa_verify"))
     if not uid:
         return redirect(url_for("dealer_portal.dealer_login"))
     vehicles = ddb.list_vehicles_for_user(uid)
@@ -218,8 +178,6 @@ def inventory_dashboard():
 @bp.route("/inventory/listings")
 def inventory_listings():
     uid = _require_login()
-    if uid == -1:
-        return redirect(url_for("mfa_verify"))
     if not uid:
         return redirect(url_for("dealer_portal.dealer_login"))
     vehicles = ddb.list_vehicles_for_user(uid)

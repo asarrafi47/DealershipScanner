@@ -34,9 +34,15 @@ import threading
 import time
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from io import BytesIO
+from pathlib import Path
 from typing import Any
 
 import requests
+
+# bare imports like `from scraping.xxx` and `from oem.intake.xxx` require backend/ on sys.path
+_backend_dir = str(Path(__file__).resolve().parents[1])
+if _backend_dir not in sys.path:
+    sys.path.insert(0, _backend_dir)
 
 from backend.db.inventory_db import get_conn, get_car_by_id
 from backend.utils.field_clean import is_effectively_empty, normalize_optional_str
@@ -44,7 +50,7 @@ from backend.vector.catalog_service import MasterCatalog
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_MAX_WORKERS = int(os.environ.get("ENRICHMENT_MAX_WORKERS", "16"))
+DEFAULT_MAX_WORKERS = int(os.environ.get("ENRICHMENT_MAX_WORKERS", "4"))
 BATCH_COMMIT_SIZE = 50       # flush SQLite every N vehicles
 PREFETCH_AHEAD = 20          # images to pre-download ahead of GPU
 VISION_MAX_DIM = 1600        # longest-edge cap for vision images
@@ -90,6 +96,162 @@ def ensure_enrichment_columns(conn: sqlite3.Connection) -> None:
         if col not in existing:
             cur.execute(f"ALTER TABLE cars ADD COLUMN {col} {ctype}")
     conn.commit()
+    _ensure_haiku_cache_table(conn)
+
+
+def _ensure_haiku_cache_table(conn: sqlite3.Connection) -> None:
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS haiku_spec_cache (
+            cache_key TEXT PRIMARY KEY,
+            make TEXT,
+            model TEXT,
+            year INTEGER,
+            trim TEXT,
+            engine_l TEXT,
+            cylinders INTEGER,
+            transmission TEXT,
+            drivetrain TEXT,
+            fuel_type TEXT,
+            mpg_city INTEGER,
+            mpg_highway INTEGER,
+            created_at TEXT DEFAULT (datetime('now'))
+        )
+        """
+    )
+    conn.commit()
+
+
+_haiku_cache_lock = threading.Lock()
+
+
+def _haiku_cache_key(make: str, model: str, year: Any, trim: str | None) -> str:
+    return f"{(make or '').strip().lower()}|{(model or '').strip().lower()}|{str(year or '').strip()}|{(trim or '').strip().lower()}"
+
+
+def _load_haiku_cache(key: str) -> dict[str, Any] | None:
+    conn = get_conn()
+    try:
+        row = conn.execute(
+            "SELECT engine_l, cylinders, transmission, drivetrain, fuel_type, mpg_city, mpg_highway "
+            "FROM haiku_spec_cache WHERE cache_key = ?",
+            (key,),
+        ).fetchone()
+        if not row:
+            return None
+        return {
+            "engine_l": row[0],
+            "cylinders": row[1],
+            "transmission": row[2],
+            "drivetrain": row[3],
+            "fuel_type": row[4],
+            "mpg_city": row[5],
+            "mpg_highway": row[6],
+        }
+    finally:
+        conn.close()
+
+
+def _save_haiku_cache(key: str, make: str, model: str, year: Any, trim: str | None, specs: dict[str, Any]) -> None:
+    conn = get_conn()
+    try:
+        _ensure_haiku_cache_table(conn)
+        conn.execute(
+            """
+            INSERT OR REPLACE INTO haiku_spec_cache
+                (cache_key, make, model, year, trim, engine_l, cylinders, transmission, drivetrain, fuel_type, mpg_city, mpg_highway)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                key,
+                make, model, year, trim,
+                specs.get("engine_l"), specs.get("cylinders"),
+                specs.get("transmission"), specs.get("drivetrain"),
+                specs.get("fuel_type"), specs.get("mpg_city"), specs.get("mpg_highway"),
+            ),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def _ask_haiku_specs(make: str, model: str, year: Any, trim: str | None) -> dict[str, Any] | None:
+    """Ask Haiku for mechanical specs. Results are cached per make/model/year/trim."""
+    if not make or not model:
+        return None
+
+    key = _haiku_cache_key(make, model, year, trim)
+    with _haiku_cache_lock:
+        cached = _load_haiku_cache(key)
+        if cached is not None:
+            return cached
+
+    api_key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
+    if not api_key:
+        return None
+
+    year_str = str(year).strip() if year else ""
+    trim_str = (trim or "").strip()
+    car_desc = " ".join(filter(None, [year_str, make, model, trim_str]))
+
+    prompt = (
+        f"Return mechanical specs for a {car_desc} as JSON only. "
+        "Use typical/most-common specs if a trim has variants. "
+        "Fields:\n"
+        '{"engine_l": number|null, "cylinders": integer|null, '
+        '"transmission": string|null, "drivetrain": "FWD"|"RWD"|"AWD"|"4WD"|null, '
+        '"fuel_type": string|null, "mpg_city": integer|null, "mpg_highway": integer|null}\n'
+        "engine_l: displacement in liters (e.g. 2.5), or \"Electric\" / \"PHEV\" string. "
+        "transmission: e.g. \"8-Speed Automatic\", \"6-Speed Manual\". "
+        "fuel_type: e.g. \"Gasoline\", \"Electric\", \"Plug-In Hybrid\". "
+        "Return null for unknown fields. Raw JSON only, no explanation."
+    )
+
+    try:
+        r = requests.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key": api_key,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
+            },
+            json={
+                "model": "claude-haiku-4-5-20251001",
+                "max_tokens": 256,
+                "system": "JSON-only response engine. Output a single valid JSON object, nothing else.",
+                "messages": [{"role": "user", "content": prompt}],
+            },
+            timeout=20.0,
+        )
+        r.raise_for_status()
+        text = (r.json().get("content") or [{}])[0].get("text") or ""
+    except Exception as e:
+        logger.debug("Haiku spec lookup failed for %s: %s", car_desc, e)
+        return None
+
+    specs = _parse_vision_json_response(text)
+    if not specs:
+        return None
+
+    # Normalise numeric fields
+    for int_key in ("cylinders", "mpg_city", "mpg_highway"):
+        v = specs.get(int_key)
+        if v is not None:
+            try:
+                specs[int_key] = int(float(v))
+            except (TypeError, ValueError):
+                specs[int_key] = None
+    eng = specs.get("engine_l")
+    if eng is not None and not isinstance(eng, str):
+        try:
+            specs["engine_l"] = float(eng)
+        except (TypeError, ValueError):
+            specs["engine_l"] = None
+
+    with _haiku_cache_lock:
+        _save_haiku_cache(key, make, model, year, trim, specs)
+
+    return specs
 
 
 def _row_has_any_image(row: dict[str, Any]) -> bool:
@@ -140,6 +302,23 @@ def _pick_vision_url(row: dict[str, Any]) -> str | None:
         return None
     sticker = next((u for u in urls if _is_sticker_url(u)), None)
     return sticker or urls[0]
+
+
+def _pick_interior_url(row: dict[str, Any]) -> str | None:
+    """Pick a gallery image likely to show the interior (index 3-5 of dealer photo sets)."""
+    urls = _all_gallery_urls_ordered(row)
+    if not urls:
+        return None
+    # Check for explicit "interior" keyword in URL first
+    for u in urls:
+        ul = u.lower()
+        if "interior" in ul or "/int/" in ul or "_int_" in ul or "-int-" in ul:
+            return u
+    # Dealer photo sets: exterior shots fill indices 0-2, interior starts ~index 3
+    for idx in (3, 4, 2, 5):
+        if idx < len(urls):
+            return urls[idx]
+    return urls[-1]
 
 
 VISION_JPEG_QUALITY = 100
@@ -296,6 +475,8 @@ def _needs_vision(row: dict[str, Any]) -> bool:
         return False
     if _is_missing(row.get("exterior_color")):
         return True
+    if _is_missing(row.get("interior_color")):
+        return True
     if _is_missing(row.get("packages")):
         return True
     return False
@@ -336,19 +517,22 @@ def fetch_enrichment_candidate_ids(
         id_filter = f" AND id IN ({','.join('?' * len(uniq))}) "
         id_params = uniq
 
+    _sql_color_missing = """(
+                    exterior_color IS NULL OR TRIM(exterior_color) = '' OR TRIM(exterior_color) = '---'
+                    OR interior_color IS NULL OR TRIM(interior_color) = '' OR TRIM(interior_color) = '---'
+                    OR packages IS NULL OR TRIM(packages) = '' OR TRIM(packages) = '---'
+                )"""
+    _sql_has_image = """(
+                    (image_url IS NOT NULL AND TRIM(image_url) LIKE 'http%')
+                    OR (gallery IS NOT NULL AND gallery LIKE '%http%')
+                )"""
     if vision_only:
         sql = f"""
             SELECT id FROM cars
             WHERE
                 NOT ({_sql_catalog_incomplete().strip()})
-                AND (
-                    exterior_color IS NULL OR TRIM(exterior_color) = '' OR TRIM(exterior_color) = '---'
-                    OR packages IS NULL OR TRIM(packages) = '' OR TRIM(packages) = '---'
-                )
-                AND (
-                    (image_url IS NOT NULL AND TRIM(image_url) LIKE 'http%')
-                    OR (gallery IS NOT NULL AND gallery LIKE '%http%')
-                )
+                AND {_sql_color_missing}
+                AND {_sql_has_image}
                 {id_filter}
             ORDER BY id
             {lim}
@@ -360,14 +544,8 @@ def fetch_enrichment_candidate_ids(
                 ({_sql_catalog_incomplete().strip()})
                 OR (
                     NOT ({_sql_catalog_incomplete().strip()})
-                    AND (
-                        exterior_color IS NULL OR TRIM(exterior_color) = '' OR TRIM(exterior_color) = '---'
-                        OR packages IS NULL OR TRIM(packages) = '' OR TRIM(packages) = '---'
-                    )
-                    AND (
-                        (image_url IS NOT NULL AND TRIM(image_url) LIKE 'http%')
-                        OR (gallery IS NOT NULL AND gallery LIKE '%http%')
-                    )
+                    AND {_sql_color_missing}
+                    AND {_sql_has_image}
                 )
                 {id_filter}
             ORDER BY id
@@ -464,14 +642,14 @@ def _fetch_vision_urls_for_ids(conn: sqlite3.Connection, ids: list[int]) -> dict
     return result
 
 
-def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | None = None) -> dict[str, Any] | None:
+def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | None = None, *, url_override: str | None = None) -> dict[str, Any] | None:
     """One image per car via Nitro Mode: uses pre-fetched b64 when available."""
-    url = _pick_vision_url(row)
+    url = url_override or _pick_vision_url(row)
     if not url:
         return None
 
     car_id = int(row.get("id") or 0)
-    if prefetch_cache is not None:
+    if prefetch_cache is not None and url_override is None:
         b64 = prefetch_cache.fetch(car_id, url)
     else:
         b64 = _fetch_image_b64_optimized(url)
@@ -479,17 +657,40 @@ def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | No
         return None
 
     prompt = (
-        "You only report what is visibly present in this photo. Do not claim definitive factory "
-        "packages or trim levels. possible_packages is for uncertain sticker/badge hints only.\n"
-        "exterior_color must be null unless the paint is clearly readable; if you set exterior_color, "
-        "set confidence.exterior_color to \"high\" only when certain, else null and omit exterior_color.\n"
-        "Output raw JSON only with exactly these keys:\n"
+        "Analyze this dealership car photo. Report ONLY what you can directly observe.\n\n"
+        "LOOK FOR THESE SPECIFIC FEATURES:\n"
+        "- Adaptive Cruise Control: steering wheel buttons labeled SET+/SET-/CANC/RES with distance/car icons\n"
+        "- Lane Keep Assist / Lane Departure: steering wheel buttons with lane-line icons, or windshield camera mount\n"
+        "- Heads-Up Display (HUD): small frosted/clear rectangular projection zone on dashboard top\n"
+        "- Surround View / 360 Cameras: cameras embedded in side mirrors or front grille mesh holes\n"
+        "- Night Vision: circular mesh hole in center of front grille (thermal camera housing)\n"
+        "- Blind Spot Monitoring: amber warning indicators on mirrors or A-pillars\n"
+        "- Parking Sensors: small round dots on front/rear bumpers\n"
+        "- Panoramic Sunroof: large glass roof panel visible from interior or exterior\n"
+        "- Heated/Ventilated Seats: buttons with wavy lines or fan icons on center console\n"
+        "- Massage Seats: buttons with wavy line patterns on seat controls\n"
+        "- Memory Seats: numbered buttons on door panel (1, 2, 3)\n"
+        "- Ambient Lighting: colored LED strips along dash/doors\n"
+        "- Digital Instrument Cluster: full-screen display replacing analog gauges\n"
+        "- Wireless Charging Pad: Qi symbol or phone charging pad on center console\n"
+        "- Sunroof/Moonroof: glass panel in roof visible from interior\n"
+        "- Sport/Performance Package: red brake calipers, sport seats, carbon fiber trim\n"
+        "- Ventilated Seats: mesh perforations on seat surfaces\n"
+        "- Window sticker / Monroney label: paper label on window — read ALL options/packages listed\n\n"
+        "exterior_color: name the paint color if visible (e.g. 'Alpine White', 'Midnight Blue', 'Gray'). "
+        "Set confidence.exterior_color to 'high' when certain, 'medium' when likely but not 100%.\n"
+        "interior_color: name the cabin/seat color as a simple color word (e.g. 'Black', 'Tan', 'Gray', 'Beige', 'Red', 'Brown'). "
+        "Use the most prominent color visible on seats/trim. Set confidence.interior_color to 'high' or 'medium'.\n"
+        "interior_color_hint: brief description of cabin material/color (e.g. 'black leather', 'tan perforated leather').\n\n"
+        "Output raw JSON only:\n"
         '{"observed_features": string[], "observed_badges": string[], "possible_packages": string[], '
-        '"confidence": object, '
-        '"exterior_color": string|null, "interior_color_hint": string|null, '
-        '"vin": string|null, "msrp": number|null}\n'
-        "confidence keys may include exterior_color (low|medium|high). Use null/[] when unknown. "
-        "Omit vision_notes."
+        '"detected_adas": string[], '
+        '"confidence": {"exterior_color": "low"|"medium"|"high"|null, "interior_color": "low"|"medium"|"high"|null}, '
+        '"exterior_color": string|null, "interior_color": string|null, "interior_color_hint": string|null, '
+        '"vin": string|null, "msrp": number|null, "sticker_options": string[]}\n\n'
+        "detected_adas: list confirmed ADAS features you SEE (ACC, LKA, HUD, 360_cameras, night_vision, blind_spot, etc.)\n"
+        "sticker_options: if a window sticker is visible, list every option/package name from it\n"
+        "Use null/[] when unknown."
     )
 
     api_key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
@@ -497,45 +698,65 @@ def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | No
         _log_vision_skipped(RuntimeError("ANTHROPIC_API_KEY not set"))
         return None
 
-    try:
-        import requests as _requests
-
-        r = _requests.post(
-            "https://api.anthropic.com/v1/messages",
-            headers={
-                "x-api-key": api_key,
-                "anthropic-version": "2023-06-01",
-                "content-type": "application/json",
-            },
-            json={
-                "model": "claude-haiku-4-5-20251001",
-                "max_tokens": 512,
-                "system": (
-                    "You are a JSON-only response engine. "
-                    "Never output text other than a valid JSON object. "
-                    "If you are unsure about a field, return null. "
-                    "Do not explain yourself."
-                ),
-                "messages": [
+    _vision_payload = {
+        "model": "claude-haiku-4-5-20251001",
+        "max_tokens": 512,
+        "system": (
+            "You are a JSON-only response engine. "
+            "Never output text other than a valid JSON object. "
+            "If you are unsure about a field, return null. "
+            "Do not explain yourself."
+        ),
+        "messages": [
+            {
+                "role": "user",
+                "content": [
                     {
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "image",
-                                "source": {"type": "base64", "media_type": "image/jpeg", "data": b64},
-                            },
-                            {"type": "text", "text": prompt},
-                        ],
-                    }
+                        "type": "image",
+                        "source": {"type": "base64", "media_type": "image/jpeg", "data": b64},
+                    },
+                    {"type": "text", "text": prompt},
                 ],
-            },
-            timeout=45.0,
-        )
-        r.raise_for_status()
-        data = r.json()
-        raw_content = (data.get("content") or [{}])[0].get("text") or ""
-    except Exception as e:
-        _log_vision_skipped(e)
+            }
+        ],
+    }
+    _vision_headers = {
+        "x-api-key": api_key,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+    }
+
+    raw_content = ""
+    _max_retries = 5
+    _retry_delay = 10.0
+    for _attempt in range(_max_retries):
+        try:
+            import requests as _requests
+
+            r = _requests.post(
+                "https://api.anthropic.com/v1/messages",
+                headers=_vision_headers,
+                json=_vision_payload,
+                timeout=45.0,
+            )
+            if r.status_code == 429:
+                retry_after = float(r.headers.get("retry-after") or _retry_delay)
+                wait = min(retry_after, 60.0) * (2 ** _attempt)
+                logger.warning("Vision 429 rate-limited (attempt %d/%d), sleeping %.0fs", _attempt + 1, _max_retries, wait)
+                time.sleep(wait)
+                continue
+            r.raise_for_status()
+            data = r.json()
+            raw_content = (data.get("content") or [{}])[0].get("text") or ""
+            break
+        except Exception as e:
+            if _attempt < _max_retries - 1:
+                time.sleep(_retry_delay * (2 ** _attempt))
+                continue
+            _log_vision_skipped(e)
+            return None
+    else:
+        _log_vision_skipped(RuntimeError("Vision API rate-limited after all retries"))
         return None
 
     content = raw_content
@@ -611,6 +832,16 @@ def _merge_vision_observations(existing: str | None, vision: dict[str, Any]) -> 
     _extend_list("observed_badges", vision.get("observed_badges") or vision.get("badges"))
     _extend_list("possible_packages", vision.get("possible_packages") or vision.get("optional_packages"))
 
+    # ADAS features detected visually
+    if not isinstance(base.get("detected_adas"), list):
+        base["detected_adas"] = []
+    _extend_list("detected_adas", vision.get("detected_adas"))
+
+    # Window sticker options read from visible Monroney label
+    if not isinstance(base.get("sticker_options"), list):
+        base["sticker_options"] = []
+    _extend_list("sticker_options", vision.get("sticker_options"))
+
     note = (vision.get("vision_notes") or vision.get("notes") or "").strip()
     if note:
         prev = (base.get("vision_notes") or "").strip()
@@ -665,13 +896,14 @@ class InventoryEnricher:
             "mpg_city",
             "mpg_highway",
             "exterior_color",
+            "interior_color",
             "packages",
         }
         updates = {k: v for k, v in data.items() if k in allowed and v is not None}
         if not updates:
             return []
 
-        str_cols = ("transmission", "drivetrain", "fuel_type", "exterior_color")
+        str_cols = ("transmission", "drivetrain", "fuel_type", "exterior_color", "interior_color")
         for k in str_cols:
             if k in updates:
                 updates[k] = normalize_optional_str(updates[k])
@@ -760,8 +992,19 @@ class InventoryEnricher:
                 n_results=5,
             )
         if not lk.get("ok"):
-            return out, heal
-        best = lk.get("best") or {}
+            # Catalog miss — fall back to Haiku for this make/model/year/trim
+            haiku = _ask_haiku_specs(
+                row.get("make") or "",
+                row.get("model") or "",
+                year,
+                row.get("trim"),
+            )
+            if not haiku:
+                return out, heal
+            best = haiku
+            logger.info("Haiku fallback for id=%s %s %s %s", row.get("id"), year, row.get("make"), row.get("model"))
+        else:
+            best = lk.get("best") or {}
 
         if best.get("cylinders") is not None and (row.get("cylinders") is None or row.get("cylinders") == 0):
             if not _is_ev_label(row.get("engine_l")):
@@ -770,8 +1013,13 @@ class InventoryEnricher:
         if _is_ev_label(row.get("engine_l")):
             pass  # never overwrite a resolved EV/PHEV label with a numeric displacement
         elif best.get("engine_l") is not None and _safe_float(row.get("engine_l")) <= 0:
-            out["engine_l"] = _safe_float(best["engine_l"], default=0.1)
-            heal.append(f"{best['engine_l']}L engine")
+            _best_eng = best["engine_l"]
+            if _is_ev_label(_best_eng):
+                out["engine_l"] = str(_best_eng).strip().title()
+                heal.append(f"{_best_eng} engine")
+            else:
+                out["engine_l"] = _safe_float(_best_eng, default=0.1)
+                heal.append(f"{_best_eng}L engine")
         if best.get("transmission") and _is_missing(row.get("transmission")):
             out["transmission"] = str(best["transmission"])[:200]
             heal.append("transmission")
@@ -806,10 +1054,30 @@ class InventoryEnricher:
         if (
             vis.get("exterior_color")
             and _is_missing(row.get("exterior_color"))
-            and ext_conf == "high"
+            and ext_conf in ("high", "medium")
         ):
             out["exterior_color"] = str(vis["exterior_color"])[:120]
             heal.append(f"exterior color ({out['exterior_color']})")
+        int_hint = (vis.get("interior_color") or vis.get("interior_color_hint") or "").strip()
+        if int_hint and _is_missing(row.get("interior_color")):
+            out["interior_color"] = int_hint[:120]
+            heal.append(f"interior color ({int_hint})")
+
+        # Second pass with interior-facing gallery image when interior_color still missing
+        if _is_missing(out.get("interior_color")) and _is_missing(row.get("interior_color")):
+            int_url = _pick_interior_url(row)
+            hero_url = _pick_vision_url(row)
+            if int_url and int_url != hero_url:
+                try:
+                    vis2 = _vision_analyze_car(row, url_override=int_url)
+                    if vis2:
+                        int2 = (vis2.get("interior_color") or vis2.get("interior_color_hint") or "").strip()
+                        if int2:
+                            out["interior_color"] = int2[:120]
+                            heal.append(f"interior color via gallery ({int2})")
+                except Exception as e:
+                    _log_vision_skipped(e, context="apply_vision interior pass")
+
         pkg = _merge_vision_observations(row.get("packages"), vis)
         out["packages"] = pkg[:8000]
         heal.append("vision_observations (packages JSON)")
@@ -996,12 +1264,10 @@ def main(argv: list[str] | None = None) -> int:
 
     enricher = InventoryEnricher()
     if not enricher.catalog.collection_exists() and not args.vision_only:
-        print(
-            "Master catalog collection not found. Index first:\n"
-            "  python -m backend.vector.ingest_master_specs --reindex",
-            file=sys.stderr,
+        logger.warning(
+            "Master catalog collection not found — falling back to Haiku spec lookup for all cars. "
+            "To build the pgvector index: python -m backend.vector.ingest_master_specs --reindex"
         )
-        return 1
 
     stats = enricher.run_all(
         limit=args.limit,

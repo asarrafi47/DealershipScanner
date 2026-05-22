@@ -128,6 +128,9 @@ def init_users_db():
         ("totp_enabled", "ALTER TABLE users ADD COLUMN totp_enabled INTEGER NOT NULL DEFAULT 0"),
         ("mfa_method", "ALTER TABLE users ADD COLUMN mfa_method TEXT"),
         ("mfa_phone", "ALTER TABLE users ADD COLUMN mfa_phone TEXT"),
+        ("is_premium", "ALTER TABLE users ADD COLUMN is_premium INTEGER NOT NULL DEFAULT 0"),
+        ("premium_stripe_customer_id", "ALTER TABLE users ADD COLUMN premium_stripe_customer_id TEXT"),
+        ("premium_stripe_session_id", "ALTER TABLE users ADD COLUMN premium_stripe_session_id TEXT"),
     ):
         if col not in ucols:
             cursor.execute(ddl)
@@ -196,9 +199,10 @@ def init_users_db():
     # Always seed APP_ADMIN_USERNAMES in development (convenience for the main developer)
     if not is_production_env():
         try:
-            from backend.utils.roles import admin_usernames
+            from backend.utils.roles import admin_usernames, admin_emails
+            _admin_email_map = {e.split("@")[0].lower(): e for e in admin_emails()}
             for uname in admin_usernames():
-                email_guess = f"{uname}@localhost"
+                email_guess = _admin_email_map.get(uname.lower()) or f"{uname}@localhost"
                 cursor.execute(
                     """
                     INSERT OR IGNORE INTO users (username, email, password, role, totp_enabled)
@@ -307,6 +311,7 @@ def get_user_by_login(login_input: str) -> dict | None:
         "totp_enabled",
         "totp_secret",
         "mfa_phone",
+        "is_premium",
     ):
         if extra in cols:
             want.append(extra)
@@ -335,6 +340,8 @@ def get_user_by_login(login_input: str) -> dict | None:
         out["totp_secret"] = ""
     if "mfa_phone" in out and out["mfa_phone"] is None:
         out["mfa_phone"] = ""
+    if "is_premium" in out:
+        out["is_premium"] = bool(out["is_premium"])
     return out
 
 
@@ -351,7 +358,7 @@ def get_user_profile(user_id: int) -> dict | None:
     cursor.execute("PRAGMA table_info(users)")
     cols = [r[1] for r in cursor.fetchall()]
     want = ["id", "username", "email"]
-    for extra in ("role", "dealer_id", "dealership_registry_id", "org_id", "mfa_phone"):
+    for extra in ("role", "dealer_id", "dealership_registry_id", "org_id", "mfa_phone", "is_premium"):
         if extra in cols:
             want.append(extra)
     cursor.execute(f"SELECT {', '.join(want)} FROM users WHERE id = ?", (uid,))
@@ -634,3 +641,47 @@ def delete_user_by_email(email: str) -> bool:
         conn2.commit()
         conn2.close()
     return True
+
+
+def grant_user_premium(user_id: int, *, customer_id: str | None = None, session_id: str | None = None) -> None:
+    """Set is_premium=1 and store Stripe identifiers for a user."""
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return
+    conn = get_conn()
+    c = conn.cursor()
+    c.execute(
+        """
+        UPDATE users
+        SET is_premium = 1,
+            premium_stripe_customer_id = COALESCE(?, premium_stripe_customer_id),
+            premium_stripe_session_id = COALESCE(?, premium_stripe_session_id)
+        WHERE id = ?
+        """,
+        (customer_id or None, session_id or None, uid),
+    )
+    conn.commit()
+    conn.close()
+
+
+def revoke_user_premium(user_id: int) -> None:
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return
+    conn = get_conn()
+    conn.execute("UPDATE users SET is_premium = 0 WHERE id = ?", (uid,))
+    conn.commit()
+    conn.close()
+
+
+def get_user_premium_status(user_id: int) -> bool:
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return False
+    conn = get_conn()
+    row = conn.execute("SELECT is_premium FROM users WHERE id = ?", (uid,)).fetchone()
+    conn.close()
+    return bool(row and row[0])

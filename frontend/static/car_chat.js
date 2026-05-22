@@ -52,10 +52,17 @@
             .then(function (wrapped) {
                 var data = wrapped.data || {};
                 if (!wrapped.ok) {
-                    appendBubble(
-                        data.error || "Request failed (" + (wrapped.status || "?") + ").",
-                        "error"
-                    );
+                    if (data.error === "premium_required") {
+                        appendBubble(
+                            "Premium subscription required. Open /premium to unlock car chat.",
+                            "error"
+                        );
+                    } else {
+                        appendBubble(
+                            data.error || "Request failed (" + (wrapped.status || "?") + ").",
+                            "error"
+                        );
+                    }
                     return;
                 }
                 var reply = data.reply || "";

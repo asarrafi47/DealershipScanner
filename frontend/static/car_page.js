@@ -33,9 +33,32 @@
             gallery = [];
         }
         if (!Array.isArray(gallery)) gallery = [];
+        function isGalleryJunkUrl(u) {
+            const sl = String(u || "").toLowerCase();
+            if (!sl.startsWith("http")) return true;
+            const junk = [
+                "transferbadge",
+                "directions-icon",
+                "photoswipe",
+                "default-skin",
+                "gubagoo",
+                "pureinfluencer",
+                "idrove.it",
+                "/customwork/",
+                "coming soon",
+            ];
+            return junk.some(function (frag) {
+                return sl.indexOf(frag) >= 0;
+            });
+        }
+
         gallery = gallery.filter(function (u) {
-            return u && typeof u === "string";
+            return u && typeof u === "string" && !isGalleryJunkUrl(u);
         });
+        if (gallery.length === 0) {
+            const fallback = imgEl.getAttribute("src") || "";
+            if (fallback && !isGalleryJunkUrl(fallback)) gallery = [fallback];
+        }
         if (gallery.length === 0) return;
 
         let activeImageIndex = 0;
@@ -204,7 +227,17 @@
 
             if (typeof item === "string") {
                 const s = item.trim();
-                if (isBad(s) || isCamelKey(s) || s.length < 2) return;
+                if (isBad(s) || s.length < 2) return;
+                const colonIdx = s.indexOf(":");
+                if (colonIdx > 0 && colonIdx < s.length - 1) {
+                    const key = s.slice(0, colonIdx).trim();
+                    const val = s.slice(colonIdx + 1).trim();
+                    if (!isBad(val) && key.length >= 1) {
+                        rows.push({ label: camelToLabel(key), value: val });
+                        return;
+                    }
+                }
+                if (isCamelKey(s)) return;
                 rows.push({ label: null, value: s });
             } else if (typeof item === "object" && !Array.isArray(item)) {
                 if ("label" in item && "value" in item) {

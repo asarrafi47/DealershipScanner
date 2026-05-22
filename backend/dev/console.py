@@ -36,7 +36,9 @@ def _dev_console_csrf() -> None:
     if request.method not in ("POST", "PUT", "PATCH", "DELETE"):
         return
     if ep in ("dev_console.dev_login", "dev_console.dev_logout"):
-        validate_csrf_form()
+        csrf_resp = validate_csrf_form()
+        if csrf_resp is not None:
+            return csrf_resp
     else:
         validate_csrf_header()
 

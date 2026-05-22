@@ -7,11 +7,14 @@ from flask import Blueprint, abort, jsonify, redirect, render_template, request,
 
 from backend.billing.stripe_billing import (
     billing_enabled,
+    construct_premium_webhook_event,
     construct_webhook_event,
     create_checkout_session,
+    create_premium_checkout_session,
     unix_to_iso,
+    verify_premium_checkout_session,
 )
-from backend.db.users_db import get_org, update_org_stripe_subscription
+from backend.db.users_db import get_org, grant_user_premium, update_org_stripe_subscription
 from backend.utils.roles import is_admin_role
 
 _log = logging.getLogger(__name__)
@@ -69,8 +72,12 @@ def billing_checkout():
     if not user_email:
         # get_user_by_login returns email, but we don't store it in session currently
         user_email = ""
-    cs = create_checkout_session(request=request, org_id=org_id, user_id=uid, user_email=user_email)
-    return redirect(cs["url"])
+    try:
+        cs = create_checkout_session(request=request, org_id=org_id, user_id=uid, user_email=user_email)
+        return redirect(cs["url"])
+    except Exception:
+        _log.exception("billing checkout session creation failed")
+        return redirect(url_for("billing.billing_required"))
 
 
 @bp.route("/success")
@@ -138,6 +145,90 @@ def stripe_webhook():
             status=str(status) if status else None,
             current_period_end_iso=str(cpe) if cpe else None,
         )
+
+    return jsonify({"ok": True})
+
+
+# ── Consumer premium (user-level, one-time payment) ──────────────────────────
+
+@bp.route("/premium/checkout")
+def premium_checkout():
+    if not billing_enabled():
+        return redirect(url_for("premium_page"))
+    uid = _require_app_login()
+    if not uid:
+        return redirect(url_for("login_page") + "?next=/premium")
+    user_email = (session.get("user_email") or "").strip()
+    try:
+        cs = create_premium_checkout_session(request=request, user_id=uid, user_email=user_email)
+        return redirect(cs["url"])
+    except Exception:
+        _log.exception("premium checkout session creation failed")
+        return redirect(url_for("premium_page"))
+
+
+@bp.route("/premium/success")
+def premium_success():
+    uid = _require_app_login()
+    if not uid:
+        return redirect(url_for("login_page") + "?next=/premium")
+    activated = False
+    checkout_error = ""
+    if billing_enabled():
+        stripe_sid = (request.args.get("session_id") or "").strip()
+        if not stripe_sid:
+            checkout_error = "missing_session"
+        elif verify_premium_checkout_session(session_id=stripe_sid, user_id=uid):
+            grant_user_premium(uid, session_id=stripe_sid)
+            session["user_is_premium"] = True
+            activated = True
+        else:
+            checkout_error = "payment_not_verified"
+            _log.warning(
+                "premium success: checkout session not verified (user_id=%s session_id=%s)",
+                uid,
+                stripe_sid[:24] + "…" if len(stripe_sid) > 24 else stripe_sid,
+            )
+    else:
+        checkout_error = "billing_disabled"
+    return render_template(
+        "premium_success.html",
+        premium_activated=activated,
+        checkout_error=checkout_error,
+    )
+
+
+@bp.route("/premium/webhook", methods=["POST"])
+def premium_webhook():
+    if not billing_enabled():
+        abort(404)
+    payload = request.get_data(cache=False) or b""
+    sig = request.headers.get("Stripe-Signature") or ""
+    try:
+        event = construct_premium_webhook_event(payload, sig)
+    except Exception:
+        _log.warning("premium webhook signature verification failed", exc_info=True)
+        return jsonify({"ok": False, "error": "invalid_signature"}), 400
+
+    etype = (event.get("type") or "").strip()
+    obj = ((event.get("data") or {}).get("object") or {}) if isinstance(event.get("data"), dict) else {}
+
+    if etype == "checkout.session.completed":
+        md = obj.get("metadata") or {}
+        raw_uid = (md.get("user_id") or "").strip()
+        customer = obj.get("customer")
+        session_id = obj.get("id")
+        try:
+            user_id = int(raw_uid)
+        except (TypeError, ValueError):
+            user_id = 0
+        if user_id > 0:
+            grant_user_premium(
+                user_id,
+                customer_id=str(customer) if customer else None,
+                session_id=str(session_id) if session_id else None,
+            )
+            _log.info("premium granted to user_id=%d via webhook", user_id)
 
     return jsonify({"ok": True})
 

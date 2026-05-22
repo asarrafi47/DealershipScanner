@@ -6,7 +6,7 @@ Re-scan a single vehicle by VIN (or car id) using the same pipeline as ``scanner
 - Open Playwright, probe VDP URL(s) — if every candidate returns 404/410, soft-unlist
   the row (``listing_active=0``) and remove it from ``incomplete_listings``
 - Run ``enrich_vehicles_vdp`` (detail page: EP merge, gallery harvest, price hints, etc.)
-- Optional LLaVA gallery + Monroney passes (same helpers as the main scanner)
+- Optional Claude gallery + Monroney passes (same helpers as the main scanner)
 - ``upsert_vehicles`` into ``inventory.db``
 - Post pipeline: repair, listing description → packages, interior vision, optional vision-only
   ``InventoryEnricher``
@@ -306,6 +306,7 @@ async def _run_async(
         post_enrich=post_enrich and not post_enrich_vision_only,
         post_enrich_vision_only=post_enrich_vision_only,
         post_kbb=False,
+        post_window_sticker=True,
     )
     if run_spec_bfill:
         from backend.enrichment.spec_backfill import run_spec_backfill_for_car
@@ -385,12 +386,12 @@ def main() -> None:
     ap.add_argument(
         "--no-gallery-vision",
         action="store_true",
-        help="Skip LLaVA gallery filter before upsert (default: on when SCANNER_GALLERY_VISION_FILTER is on).",
+        help="Skip Claude gallery filter before upsert (default: on when SCANNER_GALLERY_VISION_FILTER is on).",
     )
     ap.add_argument(
         "--no-monroney-vision",
         action="store_true",
-        help="Skip Monroney/sticker LLaVA pass (default: on).",
+        help="Skip Monroney/sticker pass (default: on).",
     )
     ap.add_argument("--no-post-repair", action="store_true", help="Skip post-scan storage repair for this VIN")
     ap.add_argument(
@@ -398,7 +399,7 @@ def main() -> None:
         action="store_true",
         help="Skip listing description → packages parse for this VIN",
     )
-    ap.add_argument("--no-post-interior-vision", action="store_true", help="Skip post-scan interior LLaVA pass")
+    ap.add_argument("--no-post-interior-vision", action="store_true", help="Skip post-scan Claude interior vision pass")
     ap.add_argument(
         "--no-post-enrich-vision",
         action="store_true",

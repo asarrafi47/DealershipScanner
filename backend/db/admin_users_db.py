@@ -19,14 +19,10 @@ logger = logging.getLogger(__name__)
 def dev_public_registration_allowed() -> bool:
     """
     Open /dev/register for creating new dev operator accounts.
-    Production: off unless ALLOW_DEV_PUBLIC_REGISTER is truthy.
-    Non-production: on unless DEV_DISABLE_PUBLIC_REGISTER is truthy.
+    Off by default in all environments; only on when ALLOW_DEV_PUBLIC_REGISTER=1.
     """
     o = (os.environ.get("ALLOW_DEV_PUBLIC_REGISTER") or "").strip().lower()
-    d = (os.environ.get("DEV_DISABLE_PUBLIC_REGISTER") or "").strip().lower()
-    if is_production_env():
-        return o in ("1", "true", "yes", "on")
-    return d not in ("1", "true", "yes", "on")
+    return o in ("1", "true", "yes", "on")
 
 
 def _migrate_legacy_admin_users_if_empty(conn: sqlite3.Connection) -> None:

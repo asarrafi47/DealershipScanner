@@ -1,5 +1,5 @@
 """
-Merge LLaVA interior inference into inventory rows with safe overwrite rules.
+Merge Claude interior vision inference into inventory rows with safe overwrite rules.
 
 Environment:
 
@@ -16,10 +16,6 @@ Provenance: ``spec_source_json`` gains ``interior_cabin_vision`` on every qualif
 The ``interior_color`` provenance key is updated only when this module also sets the
 ``interior_color`` column (placeholder fill or overwrite), so listing-description
 provenance is not clobbered when the dealer string is kept.
-
-``packages["llava_interior_cabin"]`` stores a stable slice for UI badges.
-
-Recommended model pull: ``ollama pull llava:13b`` (see ``ollama_llava.OLLAMA_VISION_MODEL``).
 """
 from __future__ import annotations
 
@@ -59,10 +55,7 @@ def build_updates_from_llava_result(
     row: dict[str, Any],
     llava: dict[str, Any],
 ) -> dict[str, Any]:
-    """
-    Given an existing DB row dict and LLaVA output from ``ollama_llava``, return kwargs for
-    ``update_car_row_partial`` (only keys that should change).
-    """
+    """Return kwargs for ``update_car_row_partial`` (only keys that should change)."""
     conf = float(llava.get("confidence") or 0.0)
     if conf < INTERIOR_VISION_CONFIDENCE:
         return {}

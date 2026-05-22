@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Search inventory — Sarrafi Collection</title>
+    <title>Search inventory — Sarrafi Cars</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
 </head>
@@ -16,19 +16,37 @@
 <script type="application/json" id="ds-listings-dealer-coords" nonce="{{ csp_nonce }}">{{ (options.dealer_coords if options.dealer_coords is defined else {}) | tojson }}</script>
 <script type="application/json" id="ds-listings-initial-grid" nonce="{{ csp_nonce }}">{{ (initial_grid_cars or []) | tojson }}</script>
 <script type="application/json" id="ds-listings-package-rows" nonce="{{ csp_nonce }}">{{ (options.package_rows or []) | tojson }}</script>
+<script type="application/json" id="ds-listings-premium" nonce="{{ csp_nonce }}">{{ has_paid_access | tojson }}</script>
 
 <div class="page">
 
     <nav class="topbar listings-topbar">
-        <a href="{{ url_for('home') }}" class="logo logo--link">Sarrafi Collection</a>
+        <a href="{{ url_for('home') }}" class="logo logo--link">Sarrafi Cars</a>
         <div class="nav-links">
-            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            {% if not has_paid_access %}
+            <a href="{{ url_for('premium_page') }}" class="nav-link-cta nav-premium-btn">✦ Premium</a>
+            {% endif %}
             {% if logged_in_user %}
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
             <a href="/inventory">My inventory</a>
             {% include "_app_logout.html" %}
+            {% else %}
+            <a href="{{ url_for('login_page') }}">Sign in</a>
             {% endif %}
         </div>
     </nav>
+
+    {% if not logged_in_user %}
+    <div class="guest-banner" id="guest-banner">
+        <div class="guest-banner-content">
+            <span class="guest-banner-text">
+                <strong>Save cars you like</strong> — <a href="{{ url_for('register_page') }}">create a free account</a>.
+                Want advanced features? <a href="{{ url_for('premium_page') }}">Go Premium</a>.
+            </span>
+            <button class="guest-banner-dismiss" aria-label="Dismiss" onclick="this.closest('.guest-banner').remove()">&#x2715;</button>
+        </div>
+    </div>
+    {% endif %}
 
     {# ── Filters in left sidebar; results grid in main column ── #}
     <div class="filter-bar listings-filter-shell" id="filter-bar">
@@ -65,6 +83,50 @@
                         <div id="smart-parse-chips" class="smart-parse-chips" aria-live="polite"></div>
                     </div>
                 </div>
+
+                <div class="listings-geo-bar" id="listings-geo-bar">
+                    <p class="listings-geo-bar-label">Near you</p>
+                    <div class="listings-geo-bar-controls">
+                        <div class="pill-group pill-select-group listings-geo-field">
+                            <label class="pill-select-label" for="listings-zip-input">ZIP</label>
+                            <input type="text" name="zip_code" id="listings-zip-input" placeholder="00000" maxlength="5"
+                                value="{{ active.zip_code if active else '' }}" class="pill-zip">
+                        </div>
+                        <div class="pill-group pill-select-group listings-geo-field">
+                            <label class="pill-select-label" for="listings-radius-select">Radius</label>
+                            <select name="radius" id="listings-radius-select" class="pill-select">
+                                {% for r in [10, 25, 50, 100, 200, 500] %}
+                                <option value="{{ r }}" {% if active and active.radius == r|string %}selected{% elif (not active or not active.radius) and r == 25 %}selected{% endif %}>{{ r }} mi</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="listings-dealer-picker" id="dealer-filter-group" style="display:none">
+                            <label class="pill-select-label" id="label-dealer_registry_id">Dealerships</label>
+                            <button type="button" class="listings-dealer-picker-btn" id="trigger-dealer_registry_id"
+                                aria-expanded="false" aria-controls="dropdown-dealer_registry_id">
+                                <span class="listings-dealer-picker-btn-label">All nearby dealers</span>
+                                <span class="pill-count listings-dealer-picker-count" id="count-dealer_registry_id" style="display:none"></span>
+                                <svg class="pill-chevron" viewBox="0 0 10 6" width="8" aria-hidden="true">
+                                    <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                                </svg>
+                            </button>
+                            <div class="listings-dealer-picker-panel" id="dropdown-dealer_registry_id" hidden>
+                                <p class="listings-dealer-picker-meta" id="dealer-filter-meta" hidden></p>
+                                <div class="listings-dealer-picker-toolbar">
+                                    <button type="button" class="listings-dealer-picker-tool" data-dealer-select="all">Select all</button>
+                                    <button type="button" class="listings-dealer-picker-tool" data-dealer-select="none">Clear</button>
+                                </div>
+                                <div class="listings-dealer-picker-list pill-options" id="dealer-filter-list" role="group" aria-label="Dealerships">
+                                    <p class="dealer-filter-loading">Set ZIP and radius ≤ 50 mi</p>
+                                </div>
+                                <p class="dealer-filter-premium-hint" id="dealer-filter-premium" hidden>
+                                    <a href="{{ url_for('premium_page') }}">Premium</a> — filter by specific dealerships near you.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="filter-controls-row filter-grid" id="filter-controls-row">
                 {% macro pill(label, param) %}
                 <div class="pill-group">
@@ -267,21 +329,6 @@
                         <option value="" {% if not active or not active.engine_l_max %}selected{% endif %}>Any</option>
                         {% for e in ["2.0", "2.5", "3.0", "3.5", "4.0", "4.4", "5.0", "5.2", "6.0", "6.2", "8.0"] %}
                         <option value="{{ e }}" {% if active and active.engine_l_max == e %}selected{% endif %}>≤{{ e }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="pill-group pill-select-group">
-                    <label class="pill-select-label">Zip</label>
-                    <input type="text" name="zip_code" placeholder="00000" maxlength="5"
-                        value="{{ active.zip_code if active else '' }}" class="pill-zip">
-                </div>
-
-                <div class="pill-group pill-select-group">
-                    <label class="pill-select-label">Radius</label>
-                    <select name="radius" class="pill-select">
-                        {% for r in [10, 25, 50, 100, 200, 500] %}
-                        <option value="{{ r }}" {% if active and active.radius == r|string %}selected{% elif (not active or not active.radius) and r == 25 %}selected{% endif %}>{{ r }}mi</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -541,13 +588,6 @@
                         </select>
                     </div>
 
-                    {# Dealership filter — loads nearby dealers when radius ≤ 50 mi #}
-                    <div class="acc-plain-group dealer-filter-group" id="dealer-filter-group" style="display:none">
-                        <div class="acc-plain-label">Dealership</div>
-                        <div class="dealer-filter-list" id="dealer-filter-list">
-                            <p class="dealer-filter-loading">Loading nearby dealerships…</p>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="docked-footer">
@@ -560,50 +600,218 @@
 
 </div>
 
-<script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
-<script src="{{ url_for('static', filename='listings.js') }}" nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='main.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='listings.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+<script type="application/json" id="ds-listings-paid-access" nonce="{{ csp_nonce }}">{{ has_paid_access | tojson }}</script>
 <script nonce="{{ csp_nonce }}">
 (function () {
-    const group = document.getElementById("dealer-filter-group");
+    const picker = document.getElementById("dealer-filter-group");
     const listEl = document.getElementById("dealer-filter-list");
-    if (!group || !listEl) return;
+    const premiumHint = document.getElementById("dealer-filter-premium");
+    if (!picker || !listEl) return;
+
+    let hasPaid = false;
+    try {
+        const el = document.getElementById("ds-listings-paid-access");
+        hasPaid = el && JSON.parse(el.textContent || "false");
+    } catch (_) {}
 
     const activeIds = new Set({{ (active.dealer_registry_ids or []) | tojson }});
-
+    const metaEl = document.getElementById("dealer-filter-meta");
     let lastKey = "";
+    let dealerReloadTimer = null;
 
-    function loadDealers(zip, radius) {
-        const key = zip + "|" + radius;
+    function escHtml(s) {
+        const d = document.createElement("div");
+        d.textContent = s == null ? "" : String(s);
+        return d.innerHTML;
+    }
+
+    const trigger = document.getElementById("trigger-dealer_registry_id");
+    const countEl = document.getElementById("count-dealer_registry_id");
+    const dropdown = document.getElementById("dropdown-dealer_registry_id");
+    const btnLabel = trigger && trigger.querySelector(".listings-dealer-picker-btn-label");
+
+    function closeDealerPanel() {
+        if (!dropdown || !trigger) return;
+        dropdown.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.classList.remove("open");
+    }
+
+    function openDealerPanel() {
+        if (!dropdown || !trigger) return;
+        dropdown.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+        trigger.classList.add("open");
+    }
+
+    function toggleDealerPanel() {
+        if (!dropdown || !trigger) return;
+        if (dropdown.hidden) openDealerPanel();
+        else closeDealerPanel();
+    }
+
+    if (trigger) {
+        trigger.addEventListener("click", function (e) {
+            e.stopPropagation();
+            toggleDealerPanel();
+        });
+    }
+    if (dropdown) {
+        dropdown.addEventListener("click", function (e) {
+            e.stopPropagation();
+        });
+    }
+    document.addEventListener("click", function () {
+        closeDealerPanel();
+    });
+
+    document.querySelectorAll("[data-dealer-select]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            const mode = btn.getAttribute("data-dealer-select");
+            listEl.querySelectorAll('input[name="dealer_registry_id"]').forEach(function (cb) {
+                cb.checked = mode === "all";
+            });
+            updateDealerPillUi();
+            notifyFilterChange();
+        });
+    });
+
+    function notifyFilterChange() {
+        if (typeof window.__DS_runFilterRender === "function") {
+            window.__DS_runFilterRender();
+        }
+    }
+
+    function updateDealerPillUi() {
+        const inputs = listEl.querySelectorAll('input[name="dealer_registry_id"]');
+        const total = inputs.length;
+        const checked = listEl.querySelectorAll('input[name="dealer_registry_id"]:checked').length;
+        const narrowed = total > 0 && checked > 0 && checked < total;
+        if (countEl) {
+            if (narrowed) {
+                countEl.textContent = String(checked);
+                countEl.style.display = "inline";
+            } else {
+                countEl.style.display = "none";
+            }
+        }
+        if (trigger) {
+            trigger.classList.toggle("has-selection", narrowed);
+        }
+        if (btnLabel) {
+            if (!total) {
+                btnLabel.textContent = "Dealers";
+            } else if (narrowed) {
+                btnLabel.textContent = checked + " of " + total + " dealers";
+            } else {
+                btnLabel.textContent = "All nearby dealers (" + total + ")";
+            }
+        }
+    }
+
+    function wireDealerCheckboxes() {
+        listEl.querySelectorAll('input[name="dealer_registry_id"]').forEach(function (cb) {
+            cb.addEventListener("change", function () {
+                updateDealerPillUi();
+                notifyFilterChange();
+            });
+        });
+        updateDealerPillUi();
+    }
+
+    function currentSearchQuery() {
+        const smartIn = document.getElementById("smart-search-input");
+        return smartIn ? (smartIn.value || "").trim() : "";
+    }
+
+    function loadDealers(zip, radius, searchQ) {
+        const q = (searchQ != null ? searchQ : currentSearchQuery());
+        const key = zip + "|" + radius + "|" + q;
         if (key === lastKey) return;
         lastKey = key;
 
         const r = parseFloat(radius);
-        if (!zip || isNaN(r) || r > 50) {
-            group.style.display = "none";
+        if (!zip || zip.length < 5 || isNaN(r) || r > 50) {
+            if (picker) picker.style.display = "none";
+            closeDealerPanel();
+            if (premiumHint) premiumHint.hidden = true;
             return;
         }
 
-        listEl.innerHTML = '<p class="dealer-filter-loading">Loading…</p>';
-        group.style.display = "";
+        if (picker) picker.style.display = "";
+        if (!hasPaid) {
+            listEl.innerHTML = "";
+            if (premiumHint) premiumHint.hidden = false;
+            return;
+        }
+        if (premiumHint) premiumHint.hidden = true;
+        listEl.innerHTML = '<p class="dealer-filter-loading">Loading dealerships…</p>';
 
-        fetch("/api/nearby-dealers?zip_code=" + encodeURIComponent(zip) + "&radius=" + r)
-            .then(function (res) { return res.ok ? res.json() : null; })
+        let url = "/api/nearby-dealers?zip_code=" + encodeURIComponent(zip) + "&radius=" + r;
+        if (q.length >= 2) {
+            url += "&q=" + encodeURIComponent(q);
+        }
+        fetch(url, { credentials: "same-origin" })
+            .then(function (res) {
+                if (res.status === 403) {
+                    listEl.innerHTML = "";
+                    if (premiumHint) premiumHint.hidden = false;
+                    return null;
+                }
+                return res.ok ? res.json() : null;
+            })
             .then(function (data) {
+                if (metaEl) {
+                    if (data && data.mode === "search" && q.length >= 2) {
+                        metaEl.textContent = data.dealers && data.dealers.length
+                            ? "Dealers with vehicles matching your search in this radius."
+                            : "No dealers with matching inventory in this radius.";
+                        metaEl.hidden = false;
+                    } else if (data && data.capped) {
+                        metaEl.textContent = "Showing top " + (data.shown || data.dealers.length)
+                            + " by inventory (" + (data.total_with_inventory || "?")
+                            + " with stock in area). Use search to narrow dealers.";
+                        metaEl.hidden = false;
+                    } else if (data && data.total_in_radius > (data.total_with_inventory || 0)) {
+                        metaEl.textContent = (data.total_with_inventory || 0)
+                            + " dealers with inventory in this radius.";
+                        metaEl.hidden = false;
+                    } else {
+                        metaEl.hidden = true;
+                        metaEl.textContent = "";
+                    }
+                }
                 if (!data || !data.ok || !data.dealers.length) {
-                    group.style.display = "none";
+                    listEl.innerHTML = '<p class="dealer-filter-empty">No dealerships with inventory'
+                        + (q.length >= 2 ? " matching your search" : "") + " in this radius.</p>";
+                    updateDealerPillUi();
                     return;
                 }
                 let html = "";
                 data.dealers.forEach(function (d) {
-                    const checked = !activeIds.size || activeIds.has(d.id) ? "checked" : "";
+                    const id = parseInt(d.id, 10);
+                    if (!Number.isFinite(id) || id <= 0) return;
+                    const checked = !activeIds.size || activeIds.has(id) ? "checked" : "";
+                    const dist = d.distance_miles != null ? ' <small>(' + escHtml(Number(d.distance_miles).toFixed(1)) + ' mi)</small>' : "";
+                    const loc = (d.city || d.state)
+                        ? ' <small>' + escHtml(d.city || "") + (d.city && d.state ? ", " : "") + escHtml(d.state || "") + "</small>"
+                        : "";
+                    const stock = d.listing_count != null
+                        ? ' <small class="dealer-stock-count">· ' + escHtml(d.listing_count) + " listed</small>"
+                        : "";
                     html += '<label class="filter-option dealer-filter-option">'
-                        + '<input type="checkbox" name="dealer_registry_id" value="' + d.id + '" ' + checked + '>'
-                        + '<span>' + (d.name || "Unknown") + (d.city ? ' <small>(' + d.city + ', ' + d.state + ')</small>' : '') + '</span>'
-                        + '</label>';
+                        + '<input type="checkbox" name="dealer_registry_id" value="' + id + '" ' + checked + '>'
+                        + "<span>" + escHtml(d.name || "Unknown") + loc + dist + stock + "</span>"
+                        + "</label>";
                 });
                 listEl.innerHTML = html;
+                wireDealerCheckboxes();
             })
-            .catch(function () { group.style.display = "none"; });
+            .catch(function () {
+                listEl.innerHTML = '<p class="dealer-filter-empty">Could not load dealerships.</p>';
+            });
     }
 
     function getZipAndRadius() {
@@ -611,23 +819,41 @@
         const radEl = document.querySelector('[name="radius"]');
         return {
             zip: zipEl ? zipEl.value.trim() : "",
-            radius: radEl ? radEl.value : "25"
+            radius: radEl ? radEl.value : "25",
         };
     }
 
+    function scheduleLoadDealers() {
+        const { zip: z, radius: r } = getZipAndRadius();
+        clearTimeout(dealerReloadTimer);
+        dealerReloadTimer = setTimeout(function () {
+            lastKey = "";
+            loadDealers(z, r);
+        }, 350);
+    }
+
+    window.__DS_reloadNearbyDealers = function () {
+        lastKey = "";
+        const { zip: z, radius: r } = getZipAndRadius();
+        loadDealers(z, r);
+    };
+
     const { zip, radius } = getZipAndRadius();
-    if (zip) loadDealers(zip, radius);
+    if (zip) loadDealers(zip, radius, currentSearchQuery());
 
     document.addEventListener("change", function (e) {
-        if (e.target && (e.target.name === "zip_code" || e.target.name === "radius")) {
-            const { zip: z, radius: r } = getZipAndRadius();
-            loadDealers(z, r);
+        if (!e.target) return;
+        if (e.target.name === "zip_code" || e.target.name === "radius") {
+            scheduleLoadDealers();
         }
     });
     document.addEventListener("input", function (e) {
-        if (e.target && e.target.name === "zip_code" && e.target.value.length === 5) {
-            const { radius: r } = getZipAndRadius();
-            loadDealers(e.target.value.trim(), r);
+        if (!e.target) return;
+        if (e.target.name === "zip_code" && e.target.value.length === 5) {
+            scheduleLoadDealers();
+        }
+        if (e.target.id === "smart-search-input") {
+            scheduleLoadDealers();
         }
     });
 })();

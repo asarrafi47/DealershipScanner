@@ -20,6 +20,20 @@ def test_logout_post_requires_csrf() -> None:
         assert rv.status_code == 403
 
 
+def test_login_post_bad_csrf_redirects_not_authenticates() -> None:
+    from backend.main import app
+
+    with app.test_client() as c:
+        c.get("/login")
+        rv = c.post(
+            "/login",
+            data={"csrf_token": "invalid", "login": "nobody", "password": "wrong-password-here"},
+            follow_redirects=False,
+        )
+        assert rv.status_code == 302
+        assert "_error=session_expired" in (rv.headers.get("Location") or "")
+
+
 def test_smart_search_payload_too_large() -> None:
     from backend import main
     from backend.utils.csrf import _SESSION_KEY

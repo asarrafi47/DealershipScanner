@@ -60,6 +60,7 @@ from backend.utils.client_ip import client_ip
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.registration_validation import registration_form_error
 from backend.utils.listing_completeness import INCOMPLETE_FIELD_LABELS
+from backend.utils.outbound_url import validate_dev_scanner_url
 from backend.schemas.dealership import DealerCreate
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -97,7 +98,11 @@ def _spawn_vector_reindex_background() -> None:
 
 
 def _admin_session_ok() -> bool:
-    return bool(session.get("admin_user_id"))
+    if session.get("admin_user_id"):
+        return True
+    # App-level admin (APP_ADMIN_EMAILS) can access /dev without a separate dev login
+    from backend.utils.roles import is_admin_role
+    return bool(session.get("user_id")) and is_admin_role(session.get("user_role"))
 
 
 def _finalize_dev_session(*, user_id: int, username: str) -> bool:
@@ -176,7 +181,9 @@ def _dev_require_admin() -> Any:
 
     if request.method in ("POST", "PUT", "PATCH", "DELETE"):
         if ep in ("dev.admin_login", "dev.admin_register", "dev.admin_logout"):
-            validate_csrf_form()
+            csrf_resp = validate_csrf_form()
+            if csrf_resp is not None:
+                return csrf_resp
         else:
             validate_csrf_header()
 
@@ -187,6 +194,9 @@ def _dev_require_admin() -> Any:
     ):
         return None
     if _admin_session_ok():
+        # Populate dev session label for templates when using app-admin pass-through
+        if not session.get("admin_user_id") and session.get("user_id"):
+            session.setdefault("admin_username", session.get("username") or "admin")
         return None
     if request.path.startswith("/dev/api"):
         return jsonify({"ok": False, "error": "unauthorized", "login_url": "/dev/login"}), 401
@@ -197,6 +207,15 @@ def _json_body_no_token(data: dict[str, Any] | None) -> dict[str, Any]:
     if not isinstance(data, dict):
         return {}
     return {k: v for k, v in data.items() if k != "token"}
+
+
+def _dev_scanner_url_or_error(url: str) -> tuple[str | None, str | None]:
+    """Return ``(normalized_url, error_code)`` for dev scanner subprocess endpoints."""
+    normalized = (url or "").strip()
+    err = validate_dev_scanner_url(normalized)
+    if err:
+        return None, err
+    return normalized, None
 
 
 def _node_version_string(exe: str) -> str | None:
@@ -936,10 +955,11 @@ def api_delete_dealer(dealer_id: int):
 @dev_bp.route("/api/test-scanner", methods=["POST"])
 def api_test_scanner():
     data = _json_body_no_token(request.get_json())
-    url = (data.get("url") or "").strip()
+    url, url_err = _dev_scanner_url_or_error(data.get("url") or "")
     headed = bool(data.get("headed"))
-    if not url:
-        return jsonify({"ok": False, "error": "url is required"}), 400
+    if url_err:
+        return jsonify({"ok": False, "error": url_err}), 400
+    assert url
 
     job_id = uuid.uuid4().hex
     with scanner_lock:
@@ -965,10 +985,11 @@ def api_test_scanner():
 @dev_bp.route("/api/smart-import", methods=["POST"])
 def api_smart_import():
     data = _json_body_no_token(request.get_json())
-    url = (data.get("url") or "").strip()
+    url, url_err = _dev_scanner_url_or_error(data.get("url") or "")
     headed = bool(data.get("headed"))
-    if not url:
-        return jsonify({"ok": False, "error": "url is required"}), 400
+    if url_err:
+        return jsonify({"ok": False, "error": url_err}), 400
+    assert url
 
     job_id = uuid.uuid4().hex
     with scanner_lock:
@@ -1044,9 +1065,12 @@ def api_smart_import_bulk():
     queue_id = uuid.uuid4().hex
     items: list[dict[str, Any]] = []
     for u in urls:
-        u = (u or "").strip()
-        if not u:
+        normalized, url_err = _dev_scanner_url_or_error(u or "")
+        if url_err:
+            return jsonify({"ok": False, "error": url_err, "url": (u or "").strip()[:200]}), 400
+        if not normalized:
             continue
+        u = normalized
         jid = uuid.uuid4().hex
         items.append({"job_id": jid, "url": u, "status": "pending"})
         with scanner_lock:

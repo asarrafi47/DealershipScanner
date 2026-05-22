@@ -244,6 +244,33 @@ def _merge_provenance(
     return merge_spec_source_json(existing_json, patch)
 
 
+def _try_window_sticker_enrich(vin: str, raw: dict[str, Any], proposed: dict[str, Any]) -> None:
+    """
+    Gap-fill fallback when post-scan sticker stage did not run or was capped.
+    Persists PDF + packages via ``ensure_window_sticker_for_car``.
+    """
+    try:
+        from backend.enrichment.window_sticker_service import (
+            ensure_window_sticker_for_car,
+            window_sticker_available,
+        )
+        from backend.scanner.window_sticker import get_window_sticker_url
+
+        if window_sticker_available(raw):
+            return
+        sticker_url = get_window_sticker_url(vin)
+        if not sticker_url:
+            return
+        cid = raw.get("id")
+        if not cid:
+            return
+        if is_effectively_empty(raw.get("window_sticker_url")):
+            proposed.setdefault("window_sticker_url", sticker_url)
+        ensure_window_sticker_for_car(int(cid), allow_vision_fallback=False)
+    except Exception as e:
+        logger.debug("Window sticker enrich failed for %s: %s", vin, e)
+
+
 def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
     stats: dict[str, Any] = {
         "vins_input": len(vins),
@@ -349,6 +376,9 @@ def run_listing_gap_fill_for_vins(vins: list[str]) -> dict[str, Any]:
                     continue
                 proposed[k] = v
                 stats["ddg_patch_fields"] += 1
+
+        # OEM window sticker: store URL + parse options into packages if not already present
+        _try_window_sticker_enrich(vin, dict(raw), proposed)
 
         if not proposed:
             continue

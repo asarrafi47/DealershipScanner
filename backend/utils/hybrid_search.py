@@ -54,6 +54,58 @@ def _parse_listings_car_id_query(q: str) -> list[int] | None:
     return None
 
 
+def expand_inventory_models(make: str | None, model_hint: str) -> list[str]:
+    """
+    Map a user/model hint (e.g. ``X5``, ``Accord``) to all distinct ``cars.model`` values in inventory.
+    Uses prefix and word-boundary matching so SQL does not require an exact trim string.
+    """
+    hint = (model_hint or "").strip()
+    if not hint:
+        return []
+    from backend.db.inventory_db import get_conn
+
+    hint_l = hint.lower()
+    conn = get_conn()
+    cur = conn.cursor()
+    if make and str(make).strip():
+        cur.execute(
+            """
+            SELECT DISTINCT model FROM cars
+            WHERE make IS NOT NULL AND model IS NOT NULL
+              AND LOWER(TRIM(make)) = LOWER(TRIM(?))
+              AND (COALESCE(listing_active, 1) = 1)
+            """,
+            (str(make).strip(),),
+        )
+    else:
+        cur.execute(
+            """
+            SELECT DISTINCT model FROM cars
+            WHERE model IS NOT NULL AND TRIM(model) != ''
+              AND (COALESCE(listing_active, 1) = 1)
+            """
+        )
+    rows = [r[0] for r in cur.fetchall() if r and r[0]]
+    conn.close()
+
+    matched: list[str] = []
+    seen: set[str] = set()
+    for md in rows:
+        md_l = str(md).lower().strip()
+        if md_l == hint_l or md_l.startswith(hint_l + " ") or md_l.startswith(hint_l + "-"):
+            if md not in seen:
+                seen.add(md)
+                matched.append(md)
+            continue
+        if re.search(rf"(?i)\b{re.escape(hint)}\b", md):
+            if md not in seen:
+                seen.add(md)
+                matched.append(md)
+    if matched:
+        return sorted(matched, key=len)
+    return [hint]
+
+
 def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any]:
     """Map parse_natural_query() output to search_cars() keyword arguments.
 
@@ -68,7 +120,16 @@ def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any
     if filters.get("make"):
         out["makes"] = [filters["make"]] if not isinstance(filters["make"], list) else filters["make"]
     if filters.get("model"):
-        out["models"] = [filters["model"]] if not isinstance(filters["model"], list) else filters["model"]
+        raw_model = filters["model"]
+        if isinstance(raw_model, list):
+            expanded: list[str] = []
+            for m in raw_model:
+                expanded.extend(expand_inventory_models(filters.get("make"), str(m)))
+            out["models"] = list(dict.fromkeys(expanded)) if expanded else raw_model
+        else:
+            mk = filters.get("make")
+            expanded = expand_inventory_models(mk if isinstance(mk, str) else None, str(raw_model))
+            out["models"] = expanded
     if filters.get("drivetrain"):
         d = filters["drivetrain"]
         out["drivetrains"] = d if isinstance(d, list) else [d]
@@ -103,6 +164,27 @@ def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any
     pkg = filters.get("packages_json_contains") or filters.get("package_contains")
     if isinstance(pkg, str) and pkg.strip():
         out["packages_json_contains"] = pkg.strip()
+    ft = filters.get("fuel_type")
+    if ft:
+        # Expand canonical label to all DB variants so LIKE-style matches work via IN clause.
+        _FUEL_EXPANSIONS: dict[str, list[str]] = {
+            "gasoline": ["Gasoline", "Gasoline Fuel", "Premium Unleaded", "Regular Unleaded", "Gasoline/Mild Electric Hybrid"],
+            "hybrid": ["Hybrid", "Hybrid Fuel", "Full Hybrid Electric (FHEV)", "Gasoline / Electric"],
+            "electric": ["Electric"],
+            "plug-in hybrid": ["Plug-In Hybrid", "Performance Plug-In Hybrid", "Plug-In Electric/Gas"],
+            "diesel": ["Diesel", "Diesel Fuel"],
+        }
+        expanded = _FUEL_EXPANSIONS.get(str(ft).lower().strip())
+        out["fuel_types"] = expanded if expanded else [str(ft)]
+    cyl = filters.get("cylinders")
+    if cyl is not None:
+        try:
+            out["cylinders"] = [int(cyl)]
+        except (TypeError, ValueError):
+            pass
+    tc = filters.get("trim_contains")
+    if isinstance(tc, str) and tc.strip():
+        out["trim_contains"] = tc.strip()
     return out
 
 
@@ -272,6 +354,64 @@ def hybrid_search_with_kwargs(
     return _sort_sql_rows(rows), meta
 
 
+_STRUCTURED_FILTER_KEYS = frozenset(
+    {
+        "make",
+        "model",
+        "min_year",
+        "max_year",
+        "max_price",
+        "max_mileage",
+        "drivetrain",
+        "body_style",
+        "fuel_type",
+        "exterior_color",
+        "interior_color",
+        "interior_color_buckets",
+        "cylinders",
+        "engine_displacement_l_min",
+        "engine_displacement_l_max",
+        "packages_json_contains",
+        "trim_contains",
+    }
+)
+
+
+def _has_structured_filters(filters: dict[str, Any] | None) -> bool:
+    if not filters:
+        return False
+    for k in _STRUCTURED_FILTER_KEYS:
+        v = filters.get(k)
+        if v is None or v == "" or v == []:
+            continue
+        return True
+    return False
+
+
+def _rerank_rows_by_vector(query_text: str, rows: list[dict], *, vector_top_k: int) -> list[dict]:
+    """Preserve SQL filter membership; order by semantic similarity when pgvector is available."""
+    if not rows or not (query_text or "").strip():
+        return rows
+    try:
+        from backend.vector.pgvector_service import query_cars
+
+        vector_order = query_cars(query_text, n_results=max(vector_top_k, len(rows)))
+    except Exception as e:
+        logger.debug("vector rerank skipped: %s", e)
+        return rows
+    if not vector_order:
+        return rows
+    rank = {int(cid): i for i, cid in enumerate(vector_order)}
+    return sorted(
+        rows,
+        key=lambda c: (
+            rank.get(int(c.get("id") or 0), 10**9),
+            -(float(c.get("data_quality_score") or 0) or compute_data_quality_score(c)),
+            _price_key(c),
+        ),
+    )
+
+
 def hybrid_smart_search(
     query_text: str,
     filters: dict[str, Any],
@@ -281,14 +421,44 @@ def hybrid_smart_search(
 ) -> tuple[list[dict], dict[str, Any]]:
     """API smart search: natural-language *filters* from ``parse_natural_query`` + vector recall.
 
+    When structured filters are present (make, model, price, etc.), **SQL runs first** so results
+    are not limited to an arbitrary semantic candidate pool. Free-text vector recall only re-ranks
+    within rows that pass SQL. Vague queries without structured filters still use semantic-first recall.
+
     ``listing_geo_kwargs``: optional ``zip_code`` + ``radius_miles`` from the listings form so
     smart search respects the same radius as the facet grid (must match ``search_cars`` geo filter).
     """
+    q = (query_text or "").strip()
     sql_kwargs = filters_dict_to_search_cars_kwargs(filters or {})
     if listing_geo_kwargs:
         sql_kwargs = {**sql_kwargs, **listing_geo_kwargs}
-    meta_extra = {"parsed_filters": dict(filters) if filters else {}}
-    rows, meta = hybrid_search_with_kwargs(query_text, sql_kwargs, vector_top_k=vector_top_k)
+    meta_extra: dict[str, Any] = {"parsed_filters": dict(filters) if filters else {}}
+
+    if _normalize_listings_vin_query(q) or _parse_listings_car_id_query(q):
+        rows, meta = hybrid_search_with_kwargs(q, sql_kwargs, vector_top_k=vector_top_k)
+        meta.update(meta_extra)
+        return rows, meta
+
+    if _has_structured_filters(filters):
+        rows = search_cars(**sql_kwargs)
+        meta: dict[str, Any] = {
+            "mode": "sql_first",
+            "sql_count": len(rows),
+            "vector_candidate_count": 0,
+            "vector_candidate_ids_head": [],
+            "vector_backend": "pgvector",
+            **meta_extra,
+        }
+        if q:
+            before = rows
+            rows = _rerank_rows_by_vector(q, rows, vector_top_k=vector_top_k)
+            if rows is not before:
+                meta["mode"] = "sql_first_vector_rerank"
+        else:
+            rows = _sort_sql_rows(rows)
+        return rows, meta
+
+    rows, meta = hybrid_search_with_kwargs(q, sql_kwargs, vector_top_k=vector_top_k)
     meta.update(meta_extra)
     return rows, meta
 

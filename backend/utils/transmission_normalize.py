@@ -65,7 +65,7 @@ def normalize_transmission_standard(
     title: str | None = None,
     year: int | None = None,
     vin: str | None = None,
-    log_weak: bool = True,
+    log_weak: bool = False,
 ) -> tuple[str | None, bool]:
     """
     Map *raw* transmission text to ``Automatic``, ``Manual``, or ``CVT``.
