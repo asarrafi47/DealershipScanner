@@ -22,6 +22,10 @@ logger = logging.getLogger(__name__)
 _ROOT = Path(__file__).resolve().parents[2]
 CAR_WINDOW_STICKERS_DIR = _ROOT / "car_window_stickers"
 
+# Bump when render settings change so cached PNGs regenerate.
+_STICKER_PREVIEW_RENDER_VERSION = 2
+_DEFAULT_STICKER_PREVIEW_DPI = 200
+
 _VIN_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$", re.I)
 
 
@@ -89,14 +93,25 @@ def window_sticker_local_path(
 
 
 def window_sticker_preview_path(local_pdf: Path) -> Path:
-    return local_pdf.parent / "window_sticker_preview.png"
+    return local_pdf.parent / f"window_sticker_preview_v{_STICKER_PREVIEW_RENDER_VERSION}.png"
 
 
-def ensure_sticker_preview_png(local_pdf: Path, *, target_width: int = 900) -> Path | None:
+def sticker_preview_dpi() -> int:
+    """DPI for Monroney PNG previews (120–300). 200 ≈ retina-sharp at ~720px display width."""
+    raw = (os.environ.get("WINDOW_STICKER_PREVIEW_DPI") or "").strip()
+    try:
+        dpi = int(raw) if raw else _DEFAULT_STICKER_PREVIEW_DPI
+    except ValueError:
+        dpi = _DEFAULT_STICKER_PREVIEW_DPI
+    return max(120, min(300, dpi))
+
+
+def ensure_sticker_preview_png(local_pdf: Path, *, dpi: int | None = None) -> Path | None:
     """Render page 1 of the stored Monroney PDF to PNG for in-page display."""
     if not local_pdf.is_file():
         return None
     png_path = window_sticker_preview_path(local_pdf)
+    render_dpi = dpi if dpi is not None else sticker_preview_dpi()
     try:
         pdf_mtime = local_pdf.stat().st_mtime
     except OSError:
@@ -115,10 +130,7 @@ def ensure_sticker_preview_png(local_pdf: Path, *, target_width: int = 900) -> P
         doc = fitz.open(str(local_pdf))
         try:
             page = doc[0]
-            rect = page.rect
-            zoom = (target_width / rect.width) if rect.width > 0 else 1.5
-            zoom = min(3.0, max(0.75, zoom))
-            pix = page.get_pixmap(matrix=fitz.Matrix(zoom, zoom), alpha=False)
+            pix = page.get_pixmap(dpi=render_dpi, alpha=False)
             png_path.write_bytes(pix.tobytes("png"))
         finally:
             doc.close()
