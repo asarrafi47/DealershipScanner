@@ -76,9 +76,9 @@ Failure diagnostics:
   SCANNER_SHARD_COUNT — optional; split manifest across parallel workers (with SCANNER_SHARD_INDEX or
   Kubernetes JOB_COMPLETION_INDEX from an Indexed Job). Same manifest order on every worker.
 
-  SCANNER_FAILURE_HAR — when truthy (default), zero-vehicle runs for ``dealer_dot_com`` / ``dealer_on``
+  SCANNER_FAILURE_HAR — when truthy, zero-vehicle runs for ``dealer_dot_com`` / ``dealer_on``
   dealers write ``workspace/debug/fail_<dealer_id>_<epoch>.har`` (may contain cookies / auth headers;
-    keep out of git — see SEC-066).
+  keep out of git — see SEC-066). Default **off**; set ``SCANNER_FAILURE_HAR=1`` to enable.
 
 Warmup (first dealer base URL load):
   SCANNER_WARMUP_POST_GOTO_SEC — max seconds to wait after domcontentloaded (default 2; set 0 to skip
@@ -348,11 +348,11 @@ def _hydration_timeout_ms() -> int:
 
 
 def _failure_har_enabled() -> bool:
-    return (os.environ.get("SCANNER_FAILURE_HAR") or "1").strip().lower() not in (
-        "0",
-        "false",
-        "off",
-        "no",
+    return (os.environ.get("SCANNER_FAILURE_HAR") or "0").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
     )
 
 

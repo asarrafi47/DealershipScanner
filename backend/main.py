@@ -351,11 +351,12 @@ def _car_window_sticker_preview_url(car_id: int) -> str:
 
 
 def _serve_car_window_sticker_preview(car_id: int):
-    """Render page 1 of stored Monroney PDF as PNG (premium when billing enabled)."""
+    """Render page 1 of stored Monroney PDF as PNG (same gate as chat/packages; SEC-072/073)."""
     car = get_car_by_id(car_id, include_inactive=False)
     if not car:
         abort(404)
-    if _billing_enabled() and not _viewer_sees_premium_features():
+    ok, _err = _require_premium_feature()
+    if not ok:
         abort(403)
     from backend.enrichment.window_sticker_service import (
         ensure_sticker_preview_png,
@@ -1746,7 +1747,7 @@ def api_search_smart():
         except (TypeError, ValueError):
             pass
 
-    from backend.utils.hybrid_search import NO_PARSE_MATCH_MESSAGE
+    from backend.utils.hybrid_search import NO_PARSE_MATCH_MESSAGE, public_search_meta
 
     results, search_meta = hybrid_smart_search(
         q, filters, vector_top_k=50, listing_geo_kwargs=geo_kw if geo_kw else None
@@ -1760,7 +1761,7 @@ def api_search_smart():
             "filters": filters,
             "results": safe_results,
             "highlight": _highlight_params_from_filters(filters),
-            "search_meta": search_meta,
+            "search_meta": public_search_meta(search_meta),
             "empty_message": empty_message,
         }
     )

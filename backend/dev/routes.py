@@ -55,7 +55,12 @@ from backend.db.inventory_db import (
     link_cars_to_dealership_registry,
 )
 from backend.enrichment.knowledge_engine import prepare_car_detail_context
-from backend.utils.car_serialize import build_detail_display_snapshot, serialize_car_for_api
+from backend.utils.car_serialize import (
+    SENSITIVE_CAR_ROW_KEYS,
+    build_detail_display_snapshot,
+    redact_sensitive_car_row,
+    serialize_car_for_api,
+)
 from backend.utils.client_ip import client_ip
 from backend.utils.ip_rate_limit import allow_request
 from backend.utils.registration_validation import registration_form_error
@@ -920,7 +925,7 @@ def api_audit_last_scrape():
         diagnostics.append(
             {
                 "vin": vin,
-                "parsed_database_row": row,
+                "parsed_database_row": redact_sensitive_car_row(row),
                 "raw_json_sample": match.get("raw_json_sample") if match else None,
                 "parsed_snapshot_from_scanner": match.get("parsed_snapshot") if match else None,
             }
@@ -1275,7 +1280,8 @@ def api_car_debug():
         "vin": raw.get("vin"),
         "car_id": raw.get("id"),
         "note": "in-memory pre-upsert is not stored; use SCANNER_TRACE_VIN during scan logs, or compare raw_db_row here after upsert.",
-        "raw_db_row": {k: raw[k] for k in sorted(raw.keys())},
+        "raw_db_row": redact_sensitive_car_row(raw),
+        "redacted_row_keys": sorted(SENSITIVE_CAR_ROW_KEYS & set(raw.keys())),
         "verified_specs": vs,
         "serialized_car_detail": detail_payload,
         "serialized_listing_style": listing_payload,

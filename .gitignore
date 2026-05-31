@@ -102,3 +102,7 @@ artifacts/scratch/*
 # Dev dashboard: incomplete listing SQLite dumps (generated)
 workspace/incomplete_exports/
 workspace/debug/
+
+# Scanner failure PNGs, e2e screenshots, last_scrape_samples (regenerate locally; see debug/README.md)
+debug/*
+!debug/README.md

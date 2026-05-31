@@ -12,7 +12,9 @@ From the repo root:
 ./scripts/start-always-on.sh
 ```
 
-Loads `.env`, starts Cloudflare tunnel + Flask (`PUBLIC=1`, port **5001** by default). Ctrl-C stops both.
+Loads `.env`, starts Cloudflare tunnel + Flask via **`run.py`** (`PUBLIC=1`, port **5001** by default). Ctrl-C stops both.
+
+For **supervised production** hosts, use the `launchd` / `systemd` examples below — they run **gunicorn** (same as `Dockerfile.web`), not the Werkzeug dev server in `run.py`.
 
 ## Environment
 

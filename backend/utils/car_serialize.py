@@ -27,6 +27,16 @@ logger = logging.getLogger(__name__)
 
 DISPLAY_DASH = "—"
 
+# Omitted from public JSON and redacted in /dev debug endpoints (SEC-087).
+SENSITIVE_CAR_ROW_KEYS = frozenset(
+    {"kbb_snapshot_json", "internal_notes", "marked_for_review", "price_provenance_json"}
+)
+
+
+def redact_sensitive_car_row(row: dict[str, Any]) -> dict[str, Any]:
+    """Copy car row dict without operator-only / provenance columns."""
+    return {k: v for k, v in row.items() if k not in SENSITIVE_CAR_ROW_KEYS}
+
 _BMW_SRC_CPO_MARKERS = (
     "certified-inventory",
     "certified_inventory",
@@ -979,7 +989,7 @@ def serialize_car_for_api(
 
     out: dict[str, Any] = {}
     for k, v in c.items():
-        if k in ("kbb_snapshot_json", "internal_notes", "marked_for_review", "price_provenance_json"):
+        if k in SENSITIVE_CAR_ROW_KEYS:
             continue
         if k == "gallery":
             if isinstance(v, list):

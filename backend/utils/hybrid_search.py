@@ -730,6 +730,14 @@ def hybrid_smart_search(
     return rows, meta
 
 
+_PUBLIC_SEARCH_META_KEYS = frozenset({"mode", "sql_count", "vector_candidate_count"})
+
+
+def public_search_meta(meta: dict[str, Any]) -> dict[str, Any]:
+    """Trim hybrid search diagnostics for unauthenticated ``/api/search/smart`` responses (SEC-087)."""
+    return {k: meta[k] for k in _PUBLIC_SEARCH_META_KEYS if k in meta}
+
+
 def _price_key(c: dict) -> float:
     try:
         p = float(c.get("price") or 0)

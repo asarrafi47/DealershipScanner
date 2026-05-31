@@ -47,8 +47,9 @@
 | `/login`, `/register` | N/A | CSRF on POST; bcrypt passwords; per-IP rate limits on POST; **general** accounts (no org) use these; **dealership** sign-up with org uses `/dealer/register` + `/dealer/login` |
 | `/auth/google`, `/auth/google/callback` | N/A | Optional Google OAuth when `GOOGLE_OAUTH_CLIENT_ID` + `GOOGLE_OAUTH_CLIENT_SECRET` set; OAuth `state` validation; per-IP rate limit on callback; auto-link by verified email (see **SEC-075**) |
 | `/dev/login`, `/dev/register` | N/A | CSRF on POST; bcrypt; per-IP rate limits; `/dev/register` gated in production; optional `DEV_IP_ALLOWLIST` (comma IPs / CIDRs) restricts all `/dev/*` when set |
-| `/api/search/smart` | No | CSRF header (`X-CSRF-Token`) + per-IP rate limit (see SEC-043) |
+| `/api/search/smart` | No | CSRF header (`X-CSRF-Token`) + per-IP rate limit (see SEC-043); response `search_meta` trimmed to mode/counts only (**SEC-087**) |
 | `POST /api/session/listings-geo` | No | CSRF header; stores last listings ZIP + radius in the Flask session (for dashboard recommendations) |
+| `/car/<id>/window-sticker-preview.png`, `GET /api/cars/<id>/window-sticker-preview` | Same as car chat (SEC-072/073) | `_require_premium_feature`; PNG from stored Monroney PDF |
 | `/api/car/<id>/chat` | **Yes** when `BILLING_STRIPE_ENABLED=1` (premium / org subscription / app admin); open when billing off | CSRF header + **layered** rate limits (see **SEC-041**) + max message/body size; **403** `premium_required` when billing on and unpaid. Playwright web research off for anonymous users in production by default. |
 | `/api/compare/chat` | Same as car chat | CSRF header + same rate limits as **SEC-041**; up to 4 `car_ids`; **403** when billing on and unpaid. |
 | `/api/nearby-dealers` | Same as car chat (dealership picker) | ZIP + radius; **403** `premium_required` when billing on and unpaid. |
@@ -156,9 +157,9 @@
 |-------|---------|
 | **Status** | Done (lxml **Blocked** on upstream) |
 | **Scope** | `requirements.txt`, `scripts/security_check.sh` |
-| **Outcome** | Minimum versions pin known CVE fixes for `urllib3`, `idna`, `langchain-*`, `langsmith`, `pygments`, `starlette`, `tornado`. **`lxml` 6.1+** fixes PYSEC-2026-87 but **`crawl4ai` 0.8.x** requires `lxml~=5.3` — remain on 5.4.x until Crawl4AI allows lxml 6 or drops the pin. Operator script `scripts/security_check.sh` runs security pytest + `pip-audit` (fails only on unmitigated vulns). |
-| **Validation** | `bash scripts/security_check.sh` → pytest green; `pip-audit` reports no vulns except optional documented `lxml` if still pinned by crawl4ai. |
-| **Last verified** | 2026-05-25 |
+| **Outcome** | Minimum versions pin known CVE fixes for `urllib3`, `idna`, `langchain-*`, `langsmith`, `pygments`, `starlette`, `tornado`. **`lxml` 6.1+** fixes PYSEC-2026-87 but **`crawl4ai` 0.8.x** requires `lxml~=5.3` — remain on 5.4.x until Crawl4AI allows lxml 6 or drops the pin. **`chromadb`** is not an app dependency (pgvector only); `pip-audit` ignores **CVE-2026-45829** for orphan venv installs. Operator script `scripts/security_check.sh` runs security pytest + `pip-audit` (fails only on unmitigated vulns). |
+| **Validation** | `bash scripts/security_check.sh` → pytest green; `pip-audit` reports no vulns except documented `lxml` / ignored orphan `chromadb`. |
+| **Last verified** | 2026-05-30 |
 
 ### SEC-002 — No default `admin` / `password` app user
 
@@ -427,10 +428,10 @@
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `frontend/static/dev.js`, `dev_console.js`, `car.html`, `frontend/templates/listings.html` (nearby-dealer filter) |
-| **Outcome** | Dev incomplete cards: `escHtml` on tags and fields; http(s) CSS URLs; numeric `data-car-id`. Listings dealer picker builds labels with `escHtml` + numeric registry ids only. |
+| **Scope** | `frontend/static/dev.js`, `dev_console.js`, `car.html`, `frontend/static/compare.js`, `frontend/templates/listings.html` (nearby-dealer filter) |
+| **Outcome** | Dev incomplete cards: `escHtml` on tags and fields; http(s) CSS URLs; numeric `data-car-id`. Compare tray uses `safeCssBackgroundUrl` + `escapeHtml`. Listings dealer picker builds labels with `escHtml` + numeric registry ids only. |
 | **Validation** | Grep `innerHTML` — each site reviewed; `python -m pytest backend/tests/test_app_security_basics.py -q`. |
-| **Last verified** | 2026-05-22 |
+| **Last verified** | 2026-05-30 |
 
 ### SEC-066 — Consumer premium Checkout verification
 
@@ -468,19 +469,19 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/main.py` (`_serve_car_window_sticker_preview`, `car_detail` preview URL context) |
-| **Outcome** | Window sticker PNG preview and OEM URLs require paid access when billing enabled (no CDJR free bypass). |
-| **Validation** | `python -m pytest backend/tests/test_audit_fixes.py::test_sticker_preview_requires_premium_when_billing_on -q`; free session + billing on → direct GET preview URL returns 403. |
-| **Last verified** | 2026-05-22 |
+| **Outcome** | Window sticker PNG preview (`/car/<id>/window-sticker-preview.png`, legacy API path) uses `_require_premium_feature`: paid access when billing enabled; **login required in production when billing off** (same as SEC-073). OEM URLs in template context follow premium UI gates. |
+| **Validation** | `python -m pytest backend/tests/test_audit_fixes.py::test_sticker_preview_requires_premium_when_billing_on backend/tests/test_audit_fixes.py::test_sticker_preview_requires_login_in_production_when_billing_off -q`. |
+| **Last verified** | 2026-05-30 |
 
 ### SEC-073 — Login required for premium APIs when billing off in production
 
 | Field | Content |
 |-------|---------|
 | **Status** | Done |
-| **Scope** | `backend/main.py` (`_require_premium_feature`, `api_car_chat`, packages ensure routes) |
-| **Outcome** | In production, car chat and packages APIs require an authenticated session even when `BILLING_STRIPE_ENABLED=0`; billing-off early access remains dev-only. |
-| **Validation** | `python -m pytest backend/tests/test_audit_fixes.py::test_car_chat_requires_login_in_production_when_billing_off -q`. |
-| **Last verified** | 2026-05-22 |
+| **Scope** | `backend/main.py` (`_require_premium_feature`, `api_car_chat`, packages ensure routes, `_serve_car_window_sticker_preview`) |
+| **Outcome** | In production, car chat, packages APIs, and window sticker PNG preview require an authenticated session even when `BILLING_STRIPE_ENABLED=0`; billing-off early access remains dev-only. |
+| **Validation** | `python -m pytest backend/tests/test_audit_fixes.py::test_car_chat_requires_login_in_production_when_billing_off backend/tests/test_audit_fixes.py::test_sticker_preview_requires_login_in_production_when_billing_off -q`. |
+| **Last verified** | 2026-05-30 |
 
 ### SEC-074 — Block admin self-registration via env lists
 
@@ -696,9 +697,19 @@
 |-------|---------|
 | **Status** | Done |
 | **Scope** | `backend/scanner/cli.py` (`_capture_scanner_failure_har`, `SCANNER_FAILURE_HAR`), `.gitignore` (`workspace/debug/`) |
-| **Outcome** | When a **known inventory provider** (`dealer_dot_com`, `dealer_on`) yields **zero vehicles**, the scanner may write a Playwright **HAR** under `workspace/debug/fail_<dealer_id>_<epoch>.har` for operator diagnosis. HAR files can contain **cookies, Authorization headers, and URL query tokens** — treat as **sensitive**, do not commit, and restrict filesystem permissions in shared environments. Disabled with `SCANNER_FAILURE_HAR=0`. |
-| **Validation** | `.gitignore` contains `workspace/debug/`; `python -m pytest backend/tests/test_scanner_intercept_filter.py -q` passes; manual optional: run scanner against a dealer forced to 0 rows with `SCANNER_FAILURE_HAR=1` and confirm a `.har` appears under `workspace/debug/` when play succeeds. |
-| **Last verified** | 2026-05-02 |
+| **Outcome** | When a **known inventory provider** (`dealer_dot_com`, `dealer_on`) yields **zero vehicles**, the scanner may write a Playwright **HAR** under `workspace/debug/fail_<dealer_id>_<epoch>.har` for operator diagnosis when **`SCANNER_FAILURE_HAR=1`** (default **off** since SEC-087). HAR files can contain **cookies, Authorization headers, and URL query tokens** — treat as **sensitive**, do not commit, and restrict filesystem permissions in shared environments. |
+| **Validation** | `.gitignore` contains `workspace/debug/` and repo-root `debug/` (except `debug/README.md`); `python -m pytest backend/tests/test_scanner_intercept_filter.py -q` passes; manual optional: run scanner against a dealer forced to 0 rows with `SCANNER_FAILURE_HAR=1` and confirm a `.har` appears under `workspace/debug/` when play succeeds. |
+| **Last verified** | 2026-05-30 |
+
+### SEC-087 — Debug audit remediation (May 2026)
+
+| Field | Content |
+|-------|---------|
+| **Status** | Done |
+| **Scope** | `.gitignore`, `debug/README.md`, `backend/utils/hybrid_search.py` (`public_search_meta`), `backend/main.py` (`api_search_smart`), `backend/utils/car_serialize.py` (`redact_sensitive_car_row`), `backend/dev/routes.py` (`api_car_debug`, `api_audit_last_scrape`), `backend/scanner/cli.py` (`SCANNER_FAILURE_HAR` default), `deploy/always-on/systemd/sarraficars-web.service`, `deploy/always-on/launchd/com.sarraficars.web.plist` |
+| **Outcome** | Repo-root `debug/` artifacts untracked (scanner PNGs, e2e screenshots). Public `POST /api/search/smart` returns trimmed `search_meta` (mode + counts only). `/dev/api/car-debug` and `/dev/api/audit-last-scrape` redact `internal_notes`, `price_provenance_json`, and related operator columns even for dev admins. Scanner HAR capture opt-in (`SCANNER_FAILURE_HAR=1`). Supervised always-on units use **gunicorn** (not Werkzeug `run.py`). |
+| **Validation** | `python -m pytest backend/tests/test_debug_audit.py backend/tests/test_production_security.py -q`; `git ls-files 'debug/*'` → only `debug/README.md`; `git check-ignore -v debug/fail_foo.png` confirms ignore. |
+| **Last verified** | 2026-05-30 |
 
 ### SEC-064 — Post-scan listing gap fill (operator inventory DB URLs + DDG Instant Answer)
 
@@ -736,6 +747,8 @@
 
 | Date (UTC) | Change |
 |------------|--------|
+| 2026-05-30 | **SEC-072 / SEC-073 / SEC-031 / SEC-076 (security audit follow-up):** Window sticker PNG preview uses `_require_premium_feature` (login in prod when billing off); compare tray `safeCssBackgroundUrl`; `pip-audit` ignores orphan `chromadb` CVE-2026-45829; redacted demo password from `docs/FULL_AUDIT_MAY2026.md`. Validation: `bash scripts/security_check.sh`. |
+| 2026-05-30 | **SEC-087 / SEC-066:** Debug audit remediation — untrack repo-root `debug/`; trim public smart-search `search_meta`; redact sensitive columns on `/dev/api/car-debug` and `/dev/api/audit-last-scrape`; `SCANNER_FAILURE_HAR` default off; always-on systemd/launchd use gunicorn. Validation: `pytest backend/tests/test_debug_audit.py -q`. |
 | 2026-05-26 | **SEC-086:** `POST /api/auth/register` + shared `register_general_app_user`; iOS native `RegisterSheet`; cookie bridge `syncFromWebView`. Validation: `pytest backend/tests/test_mobile_auth_register.py -q`. |
 | 2026-05-26 | **SEC-080–085 (May 2026 audit remediation):** Hardened `db_admin` (token auth, route rename, SQL column allowlist); production config guards (`DEV_CONSOLE` + secret); app-admin `/dev` pass-through off by default in prod; plaintext login rejected in prod; security headers (HSTS when secure cookies); dealer locator Google requires login in prod. Validation: `bash scripts/security_check.sh`. |
 | 2026-05-26 | **SEC-078 / SEC-079:** iOS TLS pinning (Release), WebView response policy, image URL allowlist client + server; `pytest backend/tests/test_safe_listing_url.py backend/tests/test_mobile_auth_api.py -q`. |
