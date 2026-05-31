@@ -69,13 +69,25 @@ def _playwright_fetch_html(url: str, timeout_ms: int = 65000) -> str | None:
     except ImportError:
         logger.warning("playwright not installed; skipping JS listing fetch for %s", url[:80])
         return None
+    ua = (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    )
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             try:
-                page = browser.new_page()
+                page = browser.new_page(user_agent=ua)
                 page.goto(url, timeout=timeout_ms, wait_until="domcontentloaded")
-                page.wait_for_timeout(int(os.environ.get("LISTING_GAP_FILL_POST_GOTO_MS") or "2200"))
+                for _ in range(15):
+                    title = (page.title() or "").lower()
+                    body_head = (page.inner_text("body") or "")[:240].lower()
+                    if "just a moment" not in title and "just a moment" not in body_head:
+                        break
+                    page.wait_for_timeout(2000)
+                page.wait_for_timeout(
+                    int(os.environ.get("LISTING_GAP_FILL_POST_GOTO_MS") or "5000")
+                )
                 return page.content()
             finally:
                 browser.close()
@@ -102,8 +114,18 @@ def fetch_listing_html(url: str) -> str | None:
         )
         if len(raw) > 8000 and has_signals:
             return raw
-    # Retry with Playwright for JS-rendered inventory/VDP pages
-    return _playwright_fetch_html(url)
+    # Retry with Playwright for JS-rendered inventory/VDP pages.
+    try:
+        import asyncio
+
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return _playwright_fetch_html(url)
+    # Post-scan runs inside scanner's asyncio loop — sync Playwright must run in a thread.
+    import concurrent.futures
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+        return pool.submit(_playwright_fetch_html, url).result()
 
 
 def _ddg_html_search_specs(car: dict[str, Any]) -> dict[str, Any]:
@@ -247,25 +269,40 @@ def _merge_provenance(
 def _try_window_sticker_enrich(vin: str, raw: dict[str, Any], proposed: dict[str, Any]) -> None:
     """
     Gap-fill fallback when post-scan sticker stage did not run or was capped.
-    Persists PDF + packages via ``ensure_window_sticker_for_car``.
+    Persists PDF + packages via ``ensure_window_sticker_for_car`` for OEM and listing stickers.
     """
     try:
+        from backend.enrichment.listing_packages_service import ensure_listing_sticker_url_for_car
         from backend.enrichment.window_sticker_service import (
+            car_sticker_packages_need_analysis,
             ensure_window_sticker_for_car,
             window_sticker_available,
         )
-        from backend.scanner.window_sticker import get_window_sticker_url
+        from backend.scanner.window_sticker import (
+            car_listing_may_have_sticker,
+            get_window_sticker_url,
+            is_cdjr_stellantis_car,
+        )
 
-        if window_sticker_available(raw):
+        needs_sticker = not window_sticker_available(raw) or car_sticker_packages_need_analysis(raw)
+        if not needs_sticker:
             return
-        sticker_url = get_window_sticker_url(vin)
-        if not sticker_url:
+        can_fetch = is_cdjr_stellantis_car(raw) and bool(get_window_sticker_url(vin))
+        if not can_fetch and not car_listing_may_have_sticker(raw):
             return
         cid = raw.get("id")
         if not cid:
             return
         if is_effectively_empty(raw.get("window_sticker_url")):
-            proposed.setdefault("window_sticker_url", sticker_url)
+            if is_cdjr_stellantis_car(raw):
+                sticker_url = get_window_sticker_url(vin)
+                if sticker_url:
+                    proposed.setdefault("window_sticker_url", sticker_url)
+            elif ensure_listing_sticker_url_for_car(int(cid), raw):
+                refreshed = get_car_by_id(int(cid), include_inactive=True) or raw
+                ws = str(refreshed.get("window_sticker_url") or "").strip()
+                if ws:
+                    proposed.setdefault("window_sticker_url", ws)
         ensure_window_sticker_for_car(int(cid), allow_vision_fallback=False)
     except Exception as e:
         logger.debug("Window sticker enrich failed for %s: %s", vin, e)

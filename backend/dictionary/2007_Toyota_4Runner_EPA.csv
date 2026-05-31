@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2007,Toyota,4Runner,2WD,4.0L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.0,16,21,18,,,,,
-2007,Toyota,4Runner,2WD,4.7L V8,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,4.7,15,19,17,,,,,
-2007,Toyota,4Runner,4WD,4.0L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.0,16,20,17,,,,,
-2007,Toyota,4Runner,4WD,4.7L V8,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,8,4.7,14,18,16,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2007,Toyota,4Runner,2WD,4.0L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.0,16,21,18,,,,,,4.0L V6,
+2007,Toyota,4Runner,2WD,4.7L V8,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,4.7,15,19,17,,,,,,4.7L V8,
+2007,Toyota,4Runner,4WD,4.0L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.0,16,20,17,,,,,,4.0L V6,
+2007,Toyota,4Runner,4WD,4.7L V8,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,8,4.7,14,18,16,,,,,,4.7L V8,

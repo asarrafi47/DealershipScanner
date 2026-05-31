@@ -1,21 +1,21 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1989,Volvo,740/760,740,"2.3L I4 ((TURBO) (FFS,TRBO))",Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,17,21,18,,,,,
-1989,Volvo,740/760,740,2.3L I4 ((EGR) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,17,24,19,,,,,
-1989,Volvo,740/760,740,2.3L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,18,24,20,,,,,
-1989,Volvo,740/760,740,2.3L I4 ((16-VALVE) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,16,22,18,,,,,
-1989,Volvo,740/760,740,2.3L I4 ((16-VALVE) (FFS)),Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,16,24,19,,,,,
-1989,Volvo,740/760,740,"2.3L I4 ((TURBO) (FFS,TRBO))",Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,18,23,20,,,,,
-1989,Volvo,740/760,740,2.3L I4 ((BENDIX) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,19,26,21,,,,,
-1989,Volvo,740/760,740,2.3L I4 ((EGR) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,18,25,21,,,,,
-1989,Volvo,740/760,760,"2.3L I4 ((TURBO) (FFS,TRBO))",Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,17,21,18,,,,,
-1989,Volvo,740/760,760,2.8L V6 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,6,2.8,15,19,17,,,,,
-1989,Volvo,740/760,740 Wagon,"2.3L I4 ((TURBO) (FFS,TRBO))",Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,17,21,18,,,,,
-1989,Volvo,740/760,740 Wagon,2.3L I4 ((BENDIX) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,18,23,20,,,,,
-1989,Volvo,740/760,740 Wagon,2.3L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,17,23,19,,,,,
-1989,Volvo,740/760,740 Wagon,2.3L I4 ((EGR) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,17,22,19,,,,,
-1989,Volvo,740/760,740 Wagon,2.3L I4 ((16-VALVE) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,16,22,18,,,,,
-1989,Volvo,740/760,740 Wagon,2.3L I4 ((16-VALVE) (FFS)),Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,16,24,19,,,,,
-1989,Volvo,740/760,740 Wagon,"2.3L I4 ((TURBO) (FFS,TRBO))",Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,18,23,20,,,,,
-1989,Volvo,740/760,740 Wagon,2.3L I4 ((BENDIX) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,19,24,21,,,,,
-1989,Volvo,740/760,740 Wagon,2.3L I4 ((EGR) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,18,24,20,,,,,
-1989,Volvo,740/760,760 Wagon,"2.3L I4 ((TURBO) (FFS,TRBO))",Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,17,21,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1989,Volvo,740/760,740,"2.3L I4 ((TURBO) (FFS,TRBO))",Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,17,21,18,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740,2.3L I4 ((EGR) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,17,24,19,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740,2.3L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,18,24,20,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740,2.3L I4 ((16-VALVE) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,16,22,18,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740,2.3L I4 ((16-VALVE) (FFS)),Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,16,24,19,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740,"2.3L I4 ((TURBO) (FFS,TRBO))",Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,18,23,20,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740,2.3L I4 ((BENDIX) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,19,26,21,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740,2.3L I4 ((EGR) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,18,25,21,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,760,"2.3L I4 ((TURBO) (FFS,TRBO))",Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,17,21,18,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,760,2.8L V6 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,6,2.8,15,19,17,,,,,,2.8L V6 Turbo,Turbocharged
+1989,Volvo,740/760,740 Wagon,"2.3L I4 ((TURBO) (FFS,TRBO))",Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,17,21,18,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740 Wagon,2.3L I4 ((BENDIX) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,18,23,20,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740 Wagon,2.3L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,17,23,19,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740 Wagon,2.3L I4 ((EGR) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,17,22,19,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740 Wagon,2.3L I4 ((16-VALVE) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,16,22,18,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740 Wagon,2.3L I4 ((16-VALVE) (FFS)),Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,16,24,19,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740 Wagon,"2.3L I4 ((TURBO) (FFS,TRBO))",Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,18,23,20,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740 Wagon,2.3L I4 ((BENDIX) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,19,24,21,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,740 Wagon,2.3L I4 ((EGR) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,18,24,20,,,,,,2.3L I4 Turbo,Turbocharged
+1989,Volvo,740/760,760 Wagon,"2.3L I4 ((TURBO) (FFS,TRBO))",Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.3,17,21,18,,,,,,2.3L I4 Turbo,Turbocharged

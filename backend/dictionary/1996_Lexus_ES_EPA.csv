@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1996,Lexus,ES,300,3.0L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,3.0,18,26,21,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1996,Lexus,ES,300,3.0L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,3.0,18,26,21,,,,,,3.0L V6,

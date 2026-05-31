@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1991,Buick,Skylark,Skylark,2.3L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.3,21,30,24,,,,,
-1991,Buick,Skylark,Skylark,2.5L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.5,19,28,22,,,,,
-1991,Buick,Skylark,Skylark,3.3L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,3.3,17,24,19,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1991,Buick,Skylark,Skylark,2.3L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.3,21,30,24,,,,,,2.3L I4,
+1991,Buick,Skylark,Skylark,2.5L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.5,19,28,22,,,,,,2.5L I4,
+1991,Buick,Skylark,Skylark,3.3L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,3.3,17,24,19,,,,,,3.3L V6,

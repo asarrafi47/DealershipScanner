@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2003,Volvo,V70,AWD,2.5L V5,Automatic (S5),All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,5,2.5,16,23,19,,,,,
-2003,Volvo,V70,FWD,2.3L V5,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Station Wagons,5,2.3,17,24,20,,,,,
-2003,Volvo,V70,FWD,2.3L V5,Automatic (S5),Front-Wheel Drive,Premium Gasoline,Midsize Station Wagons,5,2.3,17,24,20,,,,,
-2003,Volvo,V70,FWD,2.4L V5,Automatic 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Station Wagons,5,2.4,19,28,22,,,,,
-2003,Volvo,V70,FWD,2.4L V5,Automatic 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Station Wagons,5,2.4,17,24,20,,,,,
-2003,Volvo,V70,FWD,2.4L V5,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Station Wagons,5,2.4,19,27,22,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2003,Volvo,V70,AWD,2.5L V5,Automatic (S5),All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,5,2.5,16,23,19,,,,,,2.5L V5 Turbo,Turbocharged
+2003,Volvo,V70,FWD,2.3L V5,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Station Wagons,5,2.3,17,24,20,,,,,,2.3L V5 Turbo,Turbocharged
+2003,Volvo,V70,FWD,2.3L V5,Automatic (S5),Front-Wheel Drive,Premium Gasoline,Midsize Station Wagons,5,2.3,17,24,20,,,,,,2.3L V5 Turbo,Turbocharged
+2003,Volvo,V70,FWD,2.4L V5,Automatic 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Station Wagons,5,2.4,19,28,22,,,,,,2.4L V5 Turbo,Turbocharged
+2003,Volvo,V70,FWD,2.4L V5,Automatic 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Station Wagons,5,2.4,17,24,20,,,,,,2.4L V5 Turbo,Turbocharged
+2003,Volvo,V70,FWD,2.4L V5,Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Station Wagons,5,2.4,19,27,22,,,,,,2.4L V5 Turbo,Turbocharged

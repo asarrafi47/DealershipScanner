@@ -1,3 +1,3 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2005,Chrysler,300,C AWD,3.5L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Large Cars,6,3.5,15,22,18,,,,,
-2005,Chrysler,300,C AWD,5.7L V8,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Large Cars,8,5.7,15,22,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2005,Chrysler,300,C AWD,3.5L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Large Cars,6,3.5,15,22,18,,,,,,3.5L V6,
+2005,Chrysler,300,C AWD,5.7L V8,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Large Cars,8,5.7,15,22,18,,,,,,5.7L V8,

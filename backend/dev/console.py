@@ -77,6 +77,24 @@ def _safe_manifest_next_url(next_url: str, *, default: str) -> str:
     return raw
 
 
+def _dev_console_secret_required_block(*, api: bool):
+    """Production with DEV_CONSOLE=1 must set DEV_CONSOLE_SECRET (SEC-081). Returns response or None."""
+    from backend.utils.runtime_env import is_production_env
+
+    if not dev_console_enabled() or not is_production_env() or _secret_configured():
+        return None
+    if api:
+        return jsonify({"ok": False, "error": "dev_console_secret_required"}), 404
+    return render_template("dev_disabled.html"), 200
+
+
+def dev_console_secret_required_in_production() -> bool:
+    """True when manifest console is enabled in production but DEV_CONSOLE_SECRET is missing."""
+    from backend.utils.runtime_env import is_production_env
+
+    return bool(dev_console_enabled() and is_production_env() and not _secret_configured())
+
+
 def require_dev_access(*, api: bool = False):
     def decorator(view):
         @wraps(view)
@@ -85,6 +103,9 @@ def require_dev_access(*, api: bool = False):
                 if api:
                     return jsonify({"ok": False, "error": _DISABLED_API}), 404
                 return render_template("dev_disabled.html"), 200
+            blocked = _dev_console_secret_required_block(api=api)
+            if blocked is not None:
+                return blocked
             if _secret_configured() and not _session_ok():
                 if api:
                     return jsonify({"ok": False, "error": "Unauthorized"}), 401

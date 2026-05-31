@@ -1,3 +1,3 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2025,Dodge,Hornet,AWD,2.0L I4 (SIDI),Automatic 9-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,21,29,24,,,,,
-2025,Dodge,Hornet,PHEV AWD,Plug-in Hybrid 1.3L I4 (SIDI; PHEV),Automatic 6-spd,All-Wheel Drive,Regular Gasoline / Electricity,Small Sport Utility Vehicle 4WD,4,1.3,29,29,29,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2025,Dodge,Hornet,AWD,2.0L I4 (SIDI),Automatic 9-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,21,29,24,,,,,,2.0L I4,
+2025,Dodge,Hornet,PHEV AWD,Plug-in Hybrid 1.3L I4 (SIDI; PHEV),Automatic 6-spd,All-Wheel Drive,Regular Gasoline / Electricity,Small Sport Utility Vehicle 4WD,4,1.3,29,29,29,,,,,,1.3L I4,

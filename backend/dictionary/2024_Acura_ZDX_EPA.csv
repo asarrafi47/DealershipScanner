@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2024,Acura,ZDX,AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,94,80,87,,,,,
-2024,Acura,ZDX,RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,96,83,90,,,,,
-2024,Acura,ZDX,AWD Type S,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,83,74,78,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2024,Acura,ZDX,AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,94,80,87,,,,,,EV Electricity,
+2024,Acura,ZDX,RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,96,83,90,,,,,,EV Electricity,
+2024,Acura,ZDX,AWD Type S,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,83,74,78,,,,,,EV Electricity,

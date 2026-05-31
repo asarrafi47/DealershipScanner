@@ -18,7 +18,7 @@ from backend.utils.oem_option_catalog import color_phrase_candidates, resolve_ca
 
 logger = logging.getLogger(__name__)
 
-LISTING_DESCRIPTION_PARSER_VERSION = "1"
+LISTING_DESCRIPTION_PARSER_VERSION = "2"
 
 _BOILERPLATE_LINE_RES: tuple[re.Pattern[str], ...] = (
     re.compile(r"^\s*call\s+us\b", re.I),
@@ -236,6 +236,118 @@ def _split_package_blocks(norm: str) -> tuple[list[dict[str, Any]], list[str]]:
     return packages, dedup_standalone
 
 
+_FEATURE_SECTION_INTRO = re.compile(
+    r"(?i)(?:"
+    r"features?\s+(?:include|includes|such\s+as|like|are|consist\s+of)"
+    r"|equipped\s+with"
+    r"|equipment\s+includes?"
+    r"|options?\s+(?:include|includes|such\s+as|like|are)"
+    r"|standard\s+features?\s+include"
+    r"|highlights?\s+(?:include|includes|such\s+as|like|are)"
+    r"|this\s+(?:vehicle|car|suv|sedan|truck|coupe)\s+(?:features|includes|offers|comes\s+with|is\s+equipped)"
+    r"|interior\s+features?"
+    r"|exterior\s+features?"
+    r")"
+)
+
+_FEATURE_KEYWORD_RE = re.compile(
+    r"(?i)\b("
+    r"wheel|wheels|seat|seats|sound|audio|navigation|navi|camera|cameras|sunroof|moonroof|"
+    r"leather|heated|ventilated|cooled|massage|premium|surround|adaptive|blind\s+spot|"
+    r"lane|park(?:ing)?|assist|burmester|mbux|harman|bose|bang\s*&?\s*olufsen|"
+    r"carplay|android\s+auto|wireless|hitch|tow|lift|package|certified|panoramic|"
+    r"head[-\s]?up|hud|cruise|collision|warning|monitoring|suspension|exhaust|"
+    r"turbo|hybrid|electric|phev|4matic|quattro|xdrive|amg|m\s+package|"
+    r"roof|liner|tonneau|step|rail|running\s+board|fender|spoiler|"
+    r"display|screen|touchscreen|keyless|remote|memory|power"
+    r")\b"
+)
+
+_SIZE_WHEEL_RE = re.compile(
+    r"(?i)\b\d{1,2}[-\s\"']?(?:inch|in)\b"
+)
+
+
+def _is_plausible_feature_clause(s: str) -> bool:
+    t = " ".join(str(s).split()).strip(" .;:-")
+    if len(t) < 4 or len(t) > 200:
+        return False
+    low = t.lower()
+    if re.match(r"^(call|visit|schedule|financ|contact|disclaimer|dealer)\b", low):
+        return False
+    if re.search(r"(?i)\b(mileage|price|msrp|stock\s*#|vin)\b", low):
+        return False
+    if _FEATURE_KEYWORD_RE.search(t) or _SIZE_WHEEL_RE.search(t):
+        return True
+    if re.search(r"(?i)\b(system|package|group|edition|technology|comfort|convenience)\b", t):
+        return True
+    return False
+
+
+def _split_feature_clauses(text: str) -> list[str]:
+    """Split comma/semicolon/and lists into individual feature clauses."""
+    if not text or not str(text).strip():
+        return []
+    work = re.sub(r"\s+", " ", str(text).strip())
+    work = re.sub(r"(?i)\b(?:including|such\s+as|like)\s+", "", work)
+    parts = re.split(r",\s*|\;\s*|\s+\band\s+(?=[A-Z0-9\"'])", work)
+    out: list[str] = []
+    for p in parts:
+        s = p.strip().strip(".")
+        if _is_plausible_feature_clause(s):
+            out.append(s[:200])
+    return out
+
+
+def _looks_like_feature_paragraph(para: str) -> bool:
+    if len(para) < 40:
+        return False
+    commas = para.count(",")
+    hits = len(_FEATURE_KEYWORD_RE.findall(para))
+    return commas >= 2 and hits >= 2
+
+
+def _extract_prose_features(norm: str) -> list[str]:
+    """Pull equipment phrases from marketing prose (not only bullet/package blocks)."""
+    out: list[str] = []
+    seen: set[str] = set()
+
+    def _add(items: list[str]) -> None:
+        for raw in items:
+            s = " ".join(str(raw).split()).strip()
+            if not s:
+                continue
+            k = s.lower()
+            if k in seen:
+                continue
+            seen.add(k)
+            out.append(s[:200])
+
+    paragraphs = re.split(r"\n\s*\n", norm)
+    if len(paragraphs) <= 1 and len(norm) > 80:
+        paragraphs = re.split(r"(?<=[.!?])\s+(?=[A-Z0-9\"'])", norm)
+
+    for para in paragraphs:
+        p = para.strip()
+        if not p:
+            continue
+        m = _FEATURE_SECTION_INTRO.search(p)
+        if m:
+            _add(_split_feature_clauses(p[m.end() :]))
+            continue
+        if _looks_like_feature_paragraph(p):
+            _add(_split_feature_clauses(p))
+
+    # Inline "with X, Y, and Z" tails after equipped/includes verbs in long sentences.
+    for m in re.finditer(
+        r"(?i)\b(?:equipped|featuring|includes|offers|comes\s+with)\s+with\s+(.{12,220}?)(?:[.!?]|$)",
+        norm,
+    ):
+        _add(_split_feature_clauses(m.group(1)))
+
+    return out[:40]
+
+
 def _apply_catalog_to_packages(
     packages: list[dict[str, Any]],
     *,
@@ -412,6 +524,13 @@ def extract_listing_description(
     norm = normalize_listing_description(description or "")
     interior, exterior = _extract_interior_exterior(norm)
     packages_raw, standalone = _split_package_blocks(norm)
+    prose_features = _extract_prose_features(norm)
+    if prose_features:
+        seen = {s.lower() for s in standalone}
+        for feat in prose_features:
+            if feat.lower() not in seen:
+                standalone.append(feat)
+                seen.add(feat.lower())
     packages = _apply_catalog_to_packages(
         packages_raw,
         make=ctx.get("make"),
@@ -440,6 +559,9 @@ def extract_listing_description(
         packages and out["confidence"]["packages"] < 0.4
     )
     weak = weak or (not interior.get("value") and not packages and len(norm) > 80)
+    sparse_features = len(standalone) + sum(len(p.get("features") or []) for p in packages) < 3
+    if sparse_features and len(norm) > 120:
+        weak = True
 
     if weak:
         llm = _llm_extract(norm, ctx)
@@ -490,3 +612,60 @@ def semantic_packages_snippet(parsed: dict[str, Any], *, max_chars: int = 450) -
     if len(text) <= max_chars:
         return text
     return text[: max_chars - 1].rstrip() + "…"
+
+
+def collect_equipment_options_from_packages(
+    pj: dict[str, Any] | None,
+    *,
+    photo_equipment: list[str] | None = None,
+    include_vision: bool = True,
+) -> list[str]:
+    """
+    Unified buyer-facing equipment list from dealer description parse, package features,
+    and optional photo-detected items.
+    """
+    out: list[str] = []
+    seen: set[str] = set()
+
+    def _add(label: str) -> None:
+        s = str(label or "").strip()[:200]
+        if not s:
+            return
+        k = s.lower()
+        if k in seen:
+            return
+        seen.add(k)
+        out.append(s)
+
+    if isinstance(pj, dict):
+        for x in pj.get("standalone_features_from_description") or []:
+            _add(str(x))
+        for entry in pj.get("packages_normalized") or []:
+            if not isinstance(entry, dict):
+                continue
+            for feat in entry.get("features") or []:
+                _add(str(feat))
+            name = str(entry.get("name") or entry.get("canonical_name") or "").strip()
+            if name and not entry.get("features"):
+                _add(name)
+        for key in ("observed_features", "possible_packages"):
+            if not include_vision:
+                continue
+            for x in pj.get(key) or []:
+                _add(str(x))
+        adas = pj.get("detected_adas")
+        if include_vision and isinstance(adas, list):
+            try:
+                from backend.vision.equipment_vision import humanize_adas_token
+
+                for x in adas:
+                    _add(humanize_adas_token(str(x)))
+            except Exception:
+                for x in adas:
+                    _add(str(x))
+
+    for x in photo_equipment or []:
+        _add(str(x))
+
+    return out[:56]
+

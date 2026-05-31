@@ -9,8 +9,10 @@ import pytest
 from backend.enrichment.knowledge_engine import (
     _bmw_has_40i_suffix,
     _is_na_spec,
+    _model_epa_fallbacks,
     decode_trim_logic,
     lookup_epa_aggregate,
+    lookup_epa_by_trim,
     merge_verified_specs,
     prepare_car_detail_context,
 )
@@ -135,9 +137,10 @@ def test_prepare_car_detail_packages_uses_name_fallbacks_and_extras() -> None:
     sections = ctx.get("listing_packages_sections") or []
     titles = [s["name"] for s in sections]
     assert "Cold Weather Package" in titles
-    assert "Tech Package" in titles
+    assert "Tech Package" not in titles
+    assert ctx.get("listing_possible_packages") == []
     assert ctx.get("listing_standalone_features") == ["Panoramic roof"]
-    assert ctx.get("listing_observed_features") == ["Roof rails"]
+    assert ctx.get("listing_observed_features") == []
     assert ctx.get("packages_panel_has_content") is True
 
 
@@ -161,6 +164,7 @@ def test_prepare_car_detail_hides_photo_analysis_for_jeep() -> None:
     assert ctx.get("hide_photo_analysis") is True
     assert ctx.get("listing_possible_packages") == []
     assert ctx.get("listing_observed_features") == []
+    assert ctx.get("listing_photo_detected_equipment") == []
     assert ctx.get("llava_interior_section") is None
 
 
@@ -228,6 +232,28 @@ def test_lookup_epa_bmw_i4_short_model_and_edrive40_narrowing() -> None:
     assert "33" not in fe  # not kWh/100mi masquerading as MPGe
 
 
+def test_bmw_x2_xdrive28i_fuel_economy_from_epa_dictionary() -> None:
+    epa = lookup_epa_by_trim(2020, "BMW", "X2", "xDrive28i")
+    assert epa.get("city08") == 24
+    assert epa.get("highway08") == 31
+    vs = merge_verified_specs(
+        {
+            "make": "BMW",
+            "model": "X2",
+            "year": 2020,
+            "trim": "xDrive28i",
+            "title": "2020 BMW X2 xDrive28i",
+            "fuel_type": "Gasoline",
+            "cylinders": 4,
+            "drivetrain": "AWD",
+            "transmission": "8-Speed Automatic",
+            "mpg_city": None,
+            "mpg_highway": None,
+        }
+    )
+    assert vs.get("fuel_economy_display") == "24 City / 31 Hwy"
+
+
 def test_prepare_car_detail_monroney_option_lists() -> None:
     car = {
         "gallery": [],
@@ -242,3 +268,23 @@ def test_prepare_car_detail_monroney_option_lists() -> None:
     assert ctx.get("listing_monroney_options") == ["M Sport Package", "Panoramic roof"]
     assert ctx.get("listing_monroney_standard") == ["xDrive AWD", "SensaTec"]
     assert ctx.get("packages_panel_has_content") is True
+
+
+def test_model_epa_fallbacks_audi_q6_etron() -> None:
+    fallbacks = _model_epa_fallbacks("Audi", "Q6 e-tron quattro")
+    assert "Q6 e-tron" in fallbacks
+    assert "Q6" in fallbacks
+
+
+def test_model_epa_fallbacks_audi_a8_l() -> None:
+    fallbacks = _model_epa_fallbacks("Audi", "A8 L")
+    assert "A8 L" in fallbacks
+    assert "A8" in fallbacks
+
+
+def test_lookup_epa_audi_q5_premium_plus_trim() -> None:
+    epa = lookup_epa_by_trim(2022, "Audi", "Q5", "Premium Plus 45 TFSI quattro")
+    if not epa.get("city08"):
+        pytest.skip("epa_master has no Audi Q5 Premium Plus rows in this environment")
+    assert epa.get("city08") > 0
+    assert epa.get("highway08") > 0

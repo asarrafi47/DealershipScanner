@@ -59,6 +59,19 @@ Infinite scroll:
   When no Next/Load-more control is visible, the scanner runs a scroll-to-bottom loop (stable-height stop)
   and briefly waits for qualifying JSON responses between scrolls.
 
+Inventory recovery (when intercept is empty or incomplete):
+  SCANNER_INVENTORY_RECOVERY — when truthy (default), try alternate platforms in order: DealerInspire
+    Algolia API, DealerVenom Typesense, DealerOn cosmos, DealerEProcess JSON, then HTML/__NEXT_DATA__.
+  SCANNER_RECOVERY_MIN_ROWS — minimum unique VINs before recovery is skipped when feed looks complete (default 8).
+  SCANNER_RECOVERY_STRATEGY_TIMEOUT_SEC — per-strategy wall clock during recovery (default 90).
+  SCANNER_ALGOLIA_RECOVERY_FLOOR — when Algolia intercepts exist, run API recovery until at least this
+    many unique VINs (default 80) unless the feed already meets effective lot total.
+  SCANNER_DEALER_ON_MAX_PAGES / SCANNER_DEALER_ON_MAX_TOTAL — cap DealerOn HTTP pagination (defaults 60 / 5000).
+  SCANNER_VDP_COMPLETENESS_PASS — when 1, visit up to SCANNER_VDP_COMPLETENESS_MAX VDPs (default 400) prioritizing
+    rows that fail the public listings spec sheet (transmission, colors, etc.).
+  SCANNER_SISTER_STORE_SAFE — when truthy (default), do not drop an entire lot when sister-store filter
+    would exclude every row (pooled-inventory rooftops). Set 0 to allow empty results.
+
 Failure diagnostics:
   SCANNER_SHARD_COUNT — optional; split manifest across parallel workers (with SCANNER_SHARD_INDEX or
   Kubernetes JOB_COMPLETION_INDEX from an Indexed Job). Same manifest order on every worker.
@@ -122,7 +135,7 @@ Post-scan pipeline (SQLite, same run):
 
 Vision passes (default **on**; requires ``ANTHROPIC_API_KEY``):
 
-  **Gallery** — HTTPS gallery / hero URLs are de-junked (KBB, CARFAX, OEM, etc.); trusted dealer
+  **Gallery** — HTTPS gallery / hero URLs are de-junked (badges, CARFAX, OEM widgets, etc.); trusted dealer
   CDN URLs pass through without vision classification. Remaining images are classified by Claude
   Haiku. Opt out entirely: ``SCANNER_GALLERY_VISION_FILTER=0`` or ``--no-gallery-vision-filter``.
   ``SCANNER_GALLERY_VISION_KEEP_UNFETCHABLE=1`` preserves URLs when the image could not be fetched.
@@ -134,10 +147,6 @@ Vision passes (default **on**; requires ``ANTHROPIC_API_KEY``):
   Default on; opt out: ``SCANNER_POST_INTERIOR_VISION=0`` or ``--no-post-interior-vision``.
   Tuning: ``INTERIOR_VISION_MAX_GALLERY_CLASSIFY``, ``INTERIOR_VISION_CONFIDENCE``,
   ``INTERIOR_VISION_OVERWRITE``, ``INTERIOR_VISION_FALLBACK_HERO=1``.
-
-  **Post-scan KBB (optional)** — licensed Kelley Blue Book IDWS values for touched VINs
-  (``--post-kbb`` or ``SCANNER_POST_KBB=1``). Requires ``KBB_API_KEY`` and usually a ZIP
-  on each row or ``KBB_DEFAULT_ZIP``. See ``backend/kbb_idws.py``.
 
 Run from project root: python scanner.py
 """
@@ -199,15 +208,16 @@ from backend.parsers import parse
 from backend.utils.gallery_merge import gallery_https_bin_histogram
 
 from backend.scanner.scrapers.inventory_vin_merge import merge_inventory_rows_same_vin
-from backend.scanner.scrapers.next_data_inventory import fetch_next_data_json_from_page, parse_next_data_json_from_html
 from backend.scanner.scrapers.scanner_intercept_filter import (
     intercept_url_allowed,
     payload_qualifies_for_inventory_intercept,
+    effective_lot_total_from_intercepts,
     pick_total_count_from_intercepts,
     response_content_type_looks_json,
 )
 from backend.scanner.post_pipeline import (
     aggregate_vins_from_dealer_results,
+    apply_gallery_vision_filter_to_vehicles as _apply_gallery_vision_filter_to_vehicles,
     gallery_vision_filter_env_enabled,
     monroney_vision_env_enabled,
     post_dict_enrich_env_enabled,
@@ -216,12 +226,22 @@ from backend.scanner.post_pipeline import (
     post_interior_vision_env_enabled,
     post_listing_description_env_enabled,
     post_listing_gap_fill_env_enabled,
-    post_kbb_env_enabled,
     post_repair_env_enabled,
     post_window_sticker_env_enabled,
     run_dictionary_enrich_for_vins,
     run_listing_gap_fill_stage,
     run_post_scan,
+)
+from backend.scanner.scan_efficiency import (
+    INVENTORY_PATHS_EXTENDED,
+    apply_fast_mode_env_defaults,
+    effective_vdp_ep_max,
+    effective_vdp_price_max,
+    gallery_vision_inline_enabled,
+    gallery_vision_post_enabled,
+    inventory_paths_for_dealer,
+    intercept_feed_is_sufficient,
+    scanner_fast_mode_enabled,
 )
 
 logging.basicConfig(
@@ -230,6 +250,18 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 logger = logging.getLogger("scanner")
+
+_scanner_shutdown_requested = False
+
+
+def _on_scanner_shutdown_signal() -> None:
+    global _scanner_shutdown_requested
+    if _scanner_shutdown_requested:
+        return
+    _scanner_shutdown_requested = True
+    logger.info(
+        "Shutdown signal received; current dealer work may finish, then remaining dealers are skipped."
+    )
 
 
 OEM_MANUFACTURER_DOMAINS = frozenset({
@@ -283,17 +315,9 @@ WORKSPACE_DEBUG_DIR = ROOT / "workspace" / "debug"
 SCANNER_HYDRATION_SELECTORS = '[data-vin], a[href*="/inventory/"]'
 
 KNOWN_HAR_PROVIDERS = frozenset({"dealer_dot_com", "dealer_on"})
-# Exhaustive category search: all three for every dealer
-INVENTORY_PATHS = [
-    "/new-inventory/index.htm",
-    "/used-inventory/index.htm",
-    "/certified-inventory/index.htm",
-    "/new-inventory/",
-    "/used-inventory/",
-    "/inventory/",
-    "/new-vehicles/",
-    "/used-vehicles/",
-]
+# Default paths: ``backend.scanner.scan_efficiency.INVENTORY_PATHS_CORE`` (3 category pages).
+# Legacy nine-path sweep: ``SCANNER_INVENTORY_PATHS=extended``.
+INVENTORY_PATHS = list(INVENTORY_PATHS_EXTENDED)
 NEXT_SELECTORS = [
     'button:has-text("Next")',
     'button:has-text("Load More")',
@@ -304,6 +328,15 @@ NEXT_SELECTORS = [
     'a:has-text("Load More")',
 ]
 MAX_PAGINATION_CLICKS = 15
+
+
+def _pagination_debug_enabled() -> bool:
+    return (os.environ.get("SCANNER_PAGINATION_DEBUG") or "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    )
 
 
 def _hydration_timeout_ms() -> int:
@@ -748,6 +781,44 @@ def filter_manifest_by_dealer_id(dealers: list, dealer_id: str) -> list:
     return [d for d in dealers if (d.get("dealer_id") or "").strip() == want]
 
 
+def _default_skip_dealer_substrings() -> tuple[str, ...]:
+    """Built-in skip list for dealers known to block automation (override via env)."""
+    return ("carmax.com", "carmax-com")
+
+
+def filter_skip_dealers(dealers: list) -> list:
+    """
+    Drop manifest rows matching SCANNER_SKIP_DEALER_SUBSTRINGS (comma-separated
+    substrings matched against dealer_id and url, case-insensitive).
+    Defaults to skipping CarMax.
+    """
+    raw = (os.environ.get("SCANNER_SKIP_DEALER_SUBSTRINGS") or "").strip()
+    if raw:
+        needles = tuple(s.strip().lower() for s in raw.split(",") if s.strip())
+    else:
+        needles = _default_skip_dealer_substrings()
+    if not needles:
+        return list(dealers)
+
+    kept: list = []
+    skipped: list[str] = []
+    for d in dealers:
+        blob = " ".join(
+            str(d.get(k) or "") for k in ("dealer_id", "url", "name")
+        ).lower()
+        if any(n in blob for n in needles):
+            skipped.append(str(d.get("name") or d.get("dealer_id") or "?"))
+            continue
+        kept.append(d)
+    if skipped:
+        logger.info(
+            "Skipped %d dealer(s) via skip list: %s",
+            len(skipped),
+            ", ".join(skipped[:8]) + ("…" if len(skipped) > 8 else ""),
+        )
+    return kept
+
+
 def filter_manifest_by_shard(
     dealers: list[Any], shard_index: int, shard_count: int
 ) -> list[Any]:
@@ -883,6 +954,121 @@ async def _upsert_vehicles_serialized(write_lock: asyncio.Lock, vehicles: list[d
         return await asyncio.to_thread(upsert_vehicles, vehicles)
 
 
+async def _try_apply_location_filter(
+    page: Any,
+    dealer_name: str,
+    pred: Any,
+    pag_wait_ms: int,
+) -> bool:
+    """
+    Detect a Location checkbox filter on pooled-inventory sites and click only the entry
+    matching this dealer so sister-store vehicles are excluded at the source.
+    Returns True if a filter was applied.
+    """
+    from difflib import SequenceMatcher
+
+    def _name_sim(a: str, b: str) -> float:
+        a, b = a.lower().strip(), b.lower().strip()
+        return SequenceMatcher(None, a, b).ratio()
+
+    try:
+        # Expand the Location filter panel if collapsed.
+        expand_selectors = [
+            "button:has-text('Location')",
+            "[aria-label*='Location']",
+            ".filter-header:has-text('Location')",
+            ".accordion-header:has-text('Location')",
+            "h3:has-text('Location')",
+            "h4:has-text('Location')",
+            "legend:has-text('Location')",
+            "[data-filter-name='location']",
+            "[data-facet='location']",
+        ]
+        for sel in expand_selectors:
+            try:
+                loc = page.locator(sel)
+                if await loc.count() > 0 and await loc.first.is_visible():
+                    aria = await loc.first.get_attribute("aria-expanded")
+                    if aria == "false" or aria is None:
+                        await loc.first.click()
+                        await asyncio.sleep(0.6)
+                    break
+            except Exception:
+                continue
+
+        # Collect checkbox labels from location filter sections.
+        candidates: list[tuple[str, Any]] = []
+        label_selectors = [
+            "[class*='location'] label",
+            "[class*='location'] [class*='label']",
+            "[data-facet='location'] label",
+            "[id*='location'] label",
+            ".location-filter label",
+        ]
+        for sel in label_selectors:
+            try:
+                els = page.locator(sel)
+                count = await els.count()
+                if count > 1:
+                    for i in range(min(count, 60)):
+                        txt = (await els.nth(i).inner_text()).strip()
+                        if txt and len(txt) >= 3:
+                            candidates.append((txt, els.nth(i)))
+                    if candidates:
+                        break
+            except Exception:
+                continue
+
+        # Fallback: all visible labels that look like dealer name + count.
+        if not candidates:
+            try:
+                all_labels = page.locator("label")
+                count = await all_labels.count()
+                for i in range(min(count, 120)):
+                    try:
+                        txt = (await all_labels.nth(i).inner_text()).strip()
+                        if 4 <= len(txt) <= 100:
+                            candidates.append((txt, all_labels.nth(i)))
+                    except Exception:
+                        continue
+            except Exception:
+                pass
+
+        if not candidates:
+            return False
+
+        def _strip_count(s: str) -> str:
+            return re.sub(r"\s+\d+\s*$", "", s).strip()
+
+        best_label, best_el, best_sim = None, None, 0.0
+        for raw_txt, el in candidates:
+            clean = _strip_count(raw_txt)
+            sim = _name_sim(dealer_name, clean)
+            if sim > best_sim:
+                best_sim, best_label, best_el = sim, clean, el
+
+        if best_sim < 0.45 or best_el is None:
+            logger.debug(
+                "Location filter [%s]: no close match (best='%s' sim=%.2f)", dealer_name, best_label, best_sim
+            )
+            return False
+
+        logger.info(
+            "Location filter [%s]: clicking '%s' (sim=%.2f)", dealer_name, best_label, best_sim
+        )
+        await best_el.click()
+        try:
+            await page.wait_for_event("response", pred, timeout=pag_wait_ms)
+        except Exception:
+            pass
+        await asyncio.sleep(1.0)
+        return True
+
+    except Exception as e:
+        logger.debug("Location filter attempt skipped for %s: %s", dealer_name, e)
+        return False
+
+
 async def _scrape_inventory_path(
     context: Any,
     path: str,
@@ -958,6 +1144,21 @@ async def _scrape_inventory_path(
         except Exception:
             pass
 
+        # Attempt to apply the Location filter on pooled-inventory sites so only this
+        # dealer's cars are returned (avoids pulling sister-store inventory in bulk).
+        from backend.scanner.dealer_location import sister_store_filter_enabled as _sse
+        if _sse():
+            loc_applied = await _try_apply_location_filter(page, dealer_name, pred, pag_wait_ms)
+            if loc_applied:
+                # Clear any intercepts captured before the filter applied and wait for fresh data.
+                local_records.clear()
+                found_data["value"] = False
+                try:
+                    await page.wait_for_event("response", pred, timeout=inv_wait_ms)
+                except Exception:
+                    pass
+                await asyncio.sleep(1.0)
+
         # Short idle: 3 s when data found, up to 12 s otherwise
         idle_cap = 3 if found_data["value"] else 12
         for _ in range(idle_cap):
@@ -982,6 +1183,62 @@ async def _scrape_inventory_path(
                 pag_wait_ms=pag_wait_ms,
             )
 
+        from backend.scanner.scrapers.pixel_motion import _is_pixel_motion_html
+
+        peek_html = await page.content()
+        if _is_pixel_motion_html(peek_html):
+            from backend.scanner.scrapers.pixel_motion import (
+                _dismiss_cookie_banner,
+                parse_pixel_motion_inventory_html,
+            )
+
+            await _dismiss_cookie_banner(page)
+            by_vin: dict[str, dict[str, Any]] = {}
+            inv_base = base_url
+            try:
+                from urllib.parse import urlparse
+
+                pu = urlparse(page.url or "")
+                if pu.scheme and pu.netloc:
+                    inv_base = f"{pu.scheme}://{pu.netloc}"
+            except Exception:
+                pass
+            for _pag in range(20):
+                html = await page.content()
+                for v in parse_pixel_motion_inventory_html(
+                    html, inv_base, dealer_id, dealer_name, base_url
+                ):
+                    vin = (v.get("vin") or "").strip().upper()
+                    if vin:
+                        by_vin[vin] = v
+                next_btn = page.locator(".vlpm3Pages__next")
+                try:
+                    if await next_btn.count() == 0:
+                        break
+                    first = next_btn.first
+                    if not await first.is_visible():
+                        break
+                    await first.click(timeout=5000)
+                    await asyncio.sleep(0.8)
+                except Exception:
+                    break
+            if by_vin:
+                local_records.append(
+                    (
+                        f"{inv_base}/pixel_motion_inventory",
+                        {"inventory": list(by_vin.values())},
+                    )
+                )
+                found_data["value"] = True
+                logger.info(
+                    "PixelMotion: %s%s — %d vehicle(s) from SSR pagination",
+                    dealer_name,
+                    path,
+                    len(by_vin),
+                )
+            html = await page.content()
+            return local_records, html, url_denied
+
         # Pagination loop — uses only this path's own intercept records
         body_parse_cache: dict[int, list[dict[str, Any]]] = {}
 
@@ -999,15 +1256,39 @@ async def _scrape_inventory_path(
             body_parse_cache[bid] = vehicles
             return vehicles
 
-        for _ in range(MAX_PAGINATION_CLICKS):
-            total_count = pick_total_count_from_intercepts(local_records, base_url)
+        prev_unique_vins = 0
+        for pag_iter in range(MAX_PAGINATION_CLICKS):
+            total_count = effective_lot_total_from_intercepts(local_records, base_url)
             by_vin: dict[str, dict[str, Any]] = {}
             for _ru, body in local_records:
                 for v in _vehicles_for_body(body):
                     vin = (v.get("vin") or "").strip()
                     if vin:
                         by_vin[vin] = v
-            if total_count is not None and total_count > len(by_vin):
+            next_visible = await _any_next_control_visible(page)
+            need_more = total_count is not None and total_count > len(by_vin)
+            # Algolia / SPA listings often omit totalCount but expose Next (Tustin Toyota, etc.).
+            explore_next = (
+                not need_more
+                and total_count is None
+                and next_visible
+                and len(by_vin) > 0
+            )
+            if _pagination_debug_enabled():
+                logger.info(
+                    "Pagination debug [%s]%s iter=%d intercepts=%d total_count=%s unique_vins=%d "
+                    "next_visible=%s need_more=%s explore_next=%s",
+                    dealer_name,
+                    path,
+                    pag_iter,
+                    len(local_records),
+                    total_count,
+                    len(by_vin),
+                    next_visible,
+                    need_more,
+                    explore_next,
+                )
+            if need_more or explore_next:
                 clicked = False
                 for sel in NEXT_SELECTORS:
                     try:
@@ -1027,8 +1308,41 @@ async def _scrape_inventory_path(
                     except Exception:
                         continue
                 if not clicked:
+                    if _pagination_debug_enabled():
+                        logger.info(
+                            "Pagination debug [%s]%s stop=next_not_clickable iter=%d",
+                            dealer_name,
+                            path,
+                            pag_iter,
+                        )
                     break
+                if explore_next and len(by_vin) <= prev_unique_vins:
+                    if _pagination_debug_enabled():
+                        logger.info(
+                            "Pagination debug [%s]%s stop=no_vin_growth iter=%d",
+                            dealer_name,
+                            path,
+                            pag_iter,
+                        )
+                    break
+                prev_unique_vins = len(by_vin)
             else:
+                if _pagination_debug_enabled():
+                    if total_count is not None and total_count <= len(by_vin):
+                        reason = "total_count_met"
+                    elif not next_visible:
+                        reason = "no_next_control"
+                    else:
+                        reason = "no_total_count"
+                    logger.info(
+                        "Pagination debug [%s]%s stop=%s iter=%d total_count=%s unique_vins=%d",
+                        dealer_name,
+                        path,
+                        reason,
+                        pag_iter,
+                        total_count,
+                        len(by_vin),
+                    )
                 break
 
         if not await _any_next_control_visible(page):
@@ -1052,60 +1366,6 @@ async def _scrape_inventory_path(
         except Exception:
             pass
     return local_records, html, url_denied
-
-
-def _apply_gallery_vision_filter_to_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, int]:
-    """
-    Mutate each vehicle's ``gallery`` and ``image_url`` to drop non-vehicle images.
-    Uses Claude Haiku vision when ANTHROPIC_API_KEY is set; returns URLs as-is otherwise.
-    """
-    anthropic_key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
-    if anthropic_key:
-        from backend.vision import claude_vision as _vis
-        _filter_fn = _vis.filter_gallery_urls_for_vehicle_listing
-        logger.info("Gallery vision filter: using Claude Haiku")
-    else:
-        logger.info("Gallery vision filter: ANTHROPIC_API_KEY not set — returning URLs as-is (no filtering)")
-        def _filter_fn(urls, *, page_referer=None, **kw):  # type: ignore[misc]
-            return [u for u in urls if isinstance(u, str) and u.strip().lower().startswith("http")]
-
-    total_before = 0
-    total_after = 0
-    for v in vehicles:
-        hero = v.get("image_url")
-        raw_g = v.get("gallery")
-        g_list = raw_g if isinstance(raw_g, list) else []
-        urls: list[str] = []
-        if isinstance(hero, str) and hero.strip().lower().startswith("http"):
-            urls.append(hero.strip())
-        for u in g_list:
-            if isinstance(u, str) and u.strip().lower().startswith("http"):
-                urls.append(u.strip())
-        seen_u: set[str] = set()
-        n_before = 0
-        for u in urls:
-            if u not in seen_u:
-                seen_u.add(u)
-                n_before += 1
-        total_before += n_before
-        ref = str(v.get("_detail_url") or v.get("detail_url") or "").strip()
-        page_referer = ref if ref.lower().startswith("http") else None
-        filtered = _filter_fn(urls, page_referer=page_referer)
-        seen_f: set[str] = set()
-        n_after = 0
-        for u in filtered:
-            if u not in seen_f:
-                seen_f.add(u)
-                n_after += 1
-        total_after += n_after
-        v["gallery"] = filtered
-        v["image_url"] = filtered[0] if filtered else ""
-    dropped = max(0, total_before - total_after)
-    return {
-        "gallery_vision_unique_before": total_before,
-        "gallery_vision_unique_after": total_after,
-        "gallery_vision_unique_dropped": dropped,
-    }
 
 
 def _apply_monroney_vision_to_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, Any]:
@@ -1145,6 +1405,9 @@ def _emit_dealer_run_summary(result: dict[str, Any]) -> None:
             "marked_inactive": rec.get("marked_inactive"),
             "skipped_reason": rec.get("skipped_reason"),
         }
+    phases = result.get("phase_secs")
+    if isinstance(phases, dict) and phases:
+        payload["phase_secs"] = phases
     line = json.dumps(payload, separators=(",", ":"), default=str, ensure_ascii=False)
     if len(line) > 2048:
         line = line[:2045] + "..."
@@ -1189,6 +1452,7 @@ async def run_dealer(
         "reconcile": None,
         "gallery_vision": None,
         "monroney_vision": None,
+        "phase_secs": {},
     }
     t0 = time.perf_counter()
     if not url or not dealer_id:
@@ -1226,7 +1490,9 @@ async def run_dealer(
 
         # Scrape all three inventory paths in parallel — each on its own page within the
         # same browser context so session cookies from warmup are shared automatically.
-        logger.info("Inventory paths: %s — launching %d parallel scrapers", name, len(INVENTORY_PATHS))
+        inv_paths = inventory_paths_for_dealer(dealer)
+        logger.info("Inventory paths: %s — launching %d parallel scrapers", name, len(inv_paths))
+        t_inv0 = time.perf_counter()
         path_results = await asyncio.gather(
             *[
                 _scrape_inventory_path(
@@ -1239,10 +1505,11 @@ async def run_dealer(
                     inv_wait_ms,
                     pag_wait_ms,
                 )
-                for path in INVENTORY_PATHS
+                for path in inv_paths
             ],
             return_exceptions=False,
         )
+        result["phase_secs"]["inventory"] = round(time.perf_counter() - t_inv0, 2)
 
         # Merge results from all paths
         path_htmls: list[str | None] = []
@@ -1276,126 +1543,74 @@ async def run_dealer(
 
         result["inventory_rows"] = len(all_vehicles)
 
+        from backend.scanner.inventory_recovery import unique_vin_count as _unique_vin_count
+
+        merged_unique = _unique_vin_count(all_vehicles)
+        feed_sufficient = (
+            bool(all_vehicles)
+            and bool(intercept_records)
+            and intercept_feed_is_sufficient(
+                intercept_records, url, len(all_vehicles), unique_vin_count=merged_unique
+            )
+        )
+
+        def _parse_inventory_raw(raw: Any) -> list[dict[str, Any]]:
+            rows = list(
+                parse(provider, raw, base_url=url, dealer_id=dealer_id, dealer_name=name, dealer_url=url)
+            )
+            for v in rows:
+                v.setdefault("dealer_name", name)
+                v.setdefault("dealer_url", url)
+            return rows
+
+        from backend.scanner.inventory_recovery import RecoveryContext, recover_inventory
+
         if not all_vehicles:
             logger.info(
-                "Extraction backup: %s — no vehicles from %d JSON intercept(s); trying HTML from path pages",
+                "Extraction backup: %s — no vehicles from %d JSON intercept(s); running recovery chain",
                 name,
                 len(intercept_records),
             )
-            # Try each path's saved HTML in order; stop at first one that yields vehicles
-            for path_html in path_htmls:
-                if not path_html:
-                    continue
-                all_vehicles = list(
-                    parse(provider, path_html, base_url=url, dealer_id=dealer_id, dealer_name=name, dealer_url=url)
-                )
-                for v in all_vehicles:
-                    v.setdefault("dealer_name", name)
-                    v.setdefault("dealer_url", url)
-                if all_vehicles:
-                    logger.info("HTML fallback: %s — recovered %d vehicle row(s) from HTML", name, len(all_vehicles))
-                    break
-                # Try __NEXT_DATA__ from the same HTML snapshot before moving on
-                nd = parse_next_data_json_from_html(path_html)
-                if nd is not None:
-                    all_vehicles = list(
-                        parse(provider, nd, base_url=url, dealer_id=dealer_id, dealer_name=name, dealer_url=url)
-                    )
-                    for v in all_vehicles:
-                        v.setdefault("dealer_name", name)
-                        v.setdefault("dealer_url", url)
-                    if all_vehicles:
-                        logger.info(
-                            "HTML fallback: %s — recovered %d vehicle row(s) from __NEXT_DATA__",
-                            name,
-                            len(all_vehicles),
-                        )
-                        break
 
-            # Last resort: live page fetch via the warmup page
-            if not all_vehicles:
-                nd = await fetch_next_data_json_from_page(page)
-                if nd is not None:
-                    all_vehicles = list(
-                        parse(provider, nd, base_url=url, dealer_id=dealer_id, dealer_name=name, dealer_url=url)
-                    )
-                    for v in all_vehicles:
-                        v.setdefault("dealer_name", name)
-                        v.setdefault("dealer_url", url)
-                if all_vehicles:
-                    logger.info(
-                        "HTML fallback: %s — recovered %d vehicle row(s) from live __NEXT_DATA__",
-                        name,
-                        len(all_vehicles),
-                    )
-                else:
-                    logger.info("HTML fallback: %s — 0 vehicles (SPA shell or unsupported)", name)
-
-            # DealerOn fallback: intercept cosmos/srp/vehicles API and paginate via HTTP
-            if not all_vehicles:
-                try:
-                    from backend.scanner.scrapers.dealer_on import scrape_dealer_on_from_page
-                    do_vehicles = await scrape_dealer_on_from_page(
-                        page, url, dealer_id, name, url
-                    )
-                    if do_vehicles:
-                        all_vehicles = do_vehicles
-                        logger.info(
-                            "DealerOn fallback: %s — recovered %d vehicle(s) via cosmos/srp/vehicles API",
-                            name,
-                            len(all_vehicles),
-                        )
-                except Exception as _do_err:
-                    logger.debug("DealerOn fallback error for %s: %s", name, _do_err)
-
-            # DealerEProcess fallback: fetch static JSON datasets
-            if not all_vehicles:
-                try:
-                    from backend.scanner.scrapers.dealer_eprocess import scrape_dealer_eprocess_from_page
-                    dep_vehicles = await scrape_dealer_eprocess_from_page(
-                        page, url, dealer_id, name, url
-                    )
-                    if dep_vehicles:
-                        all_vehicles = dep_vehicles
-                        logger.info(
-                            "DealerEProcess fallback: %s — recovered %d vehicle(s) via datasets",
-                            name,
-                            len(all_vehicles),
-                        )
-                except Exception as _dep_err:
-                    logger.debug("DealerEProcess fallback error for %s: %s", name, _dep_err)
-
-            result["inventory_rows"] = len(all_vehicles)
-
-        # DealerInspire augmentation: runs even when intercept captured some vehicles.
-        # The browser's first-page Algolia response only yields ~40 hits; DealerInspire
-        # queries all pages directly. Replace intercept result if DI returns more.
-        try:
-            from backend.scanner.scrapers.dealer_inspire import scrape_dealer_inspire_from_page
-            di_vehicles = await scrape_dealer_inspire_from_page(
-                page, url, dealer_id, name, url
+        recovery = await recover_inventory(
+            RecoveryContext(
+                page=page,
+                base_url=url,
+                dealer_id=dealer_id,
+                dealer_name=name,
+                dealer_url=url,
+                provider=provider,
+                intercept_records=intercept_records,
+                path_htmls=path_htmls,
+                vehicles=all_vehicles,
+                parse_fn=_parse_inventory_raw,
             )
-            if di_vehicles:
-                if len(di_vehicles) > len(all_vehicles):
-                    prev = len(all_vehicles)
-                    all_vehicles = di_vehicles
-                    result["inventory_rows"] = len(all_vehicles)
-                    logger.info(
-                        "DealerInspire: %s — %d vehicle(s) via Algolia (replaced %d from intercept)",
-                        name,
-                        len(all_vehicles),
-                        prev,
-                    )
-                elif not all_vehicles:
-                    all_vehicles = di_vehicles
-                    result["inventory_rows"] = len(all_vehicles)
-                    logger.info(
-                        "DealerInspire fallback: %s — recovered %d vehicle(s) via Algolia",
-                        name,
-                        len(all_vehicles),
-                    )
-        except Exception as _di_err:
-            logger.debug("DealerInspire fallback error for %s: %s", name, _di_err)
+        )
+        all_vehicles = recovery.vehicles
+        result["inventory_rows"] = len(all_vehicles)
+        if recovery.strategies_tried:
+            result["inventory_recovery"] = {
+                "winning_strategy": recovery.winning_strategy,
+                "strategies_tried": recovery.strategies_tried,
+                "replaced": recovery.replaced,
+            }
+        if (
+            all_vehicles
+            and feed_sufficient
+            and not recovery.replaced
+            and not recovery.strategies_tried
+        ):
+            logger.info(
+                "Inventory feed sufficient for %s (%d rows, %d intercepts) — skipping platform augmentations",
+                name,
+                len(all_vehicles),
+                len(intercept_records),
+            )
+        elif not all_vehicles and not recovery.strategies_tried:
+            logger.info(
+                "Inventory recovery: %s — 0 vehicles after intercept and recovery (SPA shell or unsupported)",
+                name,
+            )
 
         if all_vehicles:
             # One row per VIN for downstream VDP enrichment (listing payloads may repeat VINs).
@@ -1435,13 +1650,30 @@ async def run_dealer(
 
             result["vins"] = sorted({(v.get("vin") or "").strip() for v in all_vehicles if (v.get("vin") or "").strip()})
 
+            _ep_raw = (os.environ.get("SCANNER_VDP_EP_MAX") or "").strip()
+            _completeness_pass = (
+                os.environ.get("SCANNER_VDP_COMPLETENESS_PASS") or ""
+            ).strip().lower() in ("1", "true", "yes", "on")
+            if not _ep_raw or (_completeness_pass and _ep_raw == "0"):
+                os.environ["SCANNER_VDP_EP_MAX"] = str(effective_vdp_ep_max(len(all_vehicles)))
+                logger.info(
+                    "VDP cap: %s — EP max=%s (completeness_pass=%s)",
+                    name,
+                    os.environ["SCANNER_VDP_EP_MAX"],
+                    _completeness_pass,
+                )
+            if not (os.environ.get("SCANNER_VDP_PRICE_MAX") or "").strip():
+                os.environ["SCANNER_VDP_PRICE_MAX"] = str(effective_vdp_price_max(len(all_vehicles)))
+
             vdp_stats: dict[str, Any] = {}
+            t_vdp0 = time.perf_counter()
             try:
                 vdp_stats = await enrich_vehicles_vdp(
                     page, all_vehicles, name, dealer_id=dealer_id, site_profile=site_profile
                 )
             except Exception as e:
                 logger.warning("VDP enrichment failed for %s (continuing with listing data only): %s", name, e)
+            result["phase_secs"]["vdp"] = round(time.perf_counter() - t_vdp0, 2)
             result["vdps_visited"] = int(vdp_stats.get("vdps_visited") or 0)
             result["vehicles_vdp_enriched"] = int(vdp_stats.get("vehicles_enriched") or 0)
             result["gallery_vdp_urls_added"] = int(vdp_stats.get("gallery_vdp_urls_added") or 0)
@@ -1478,7 +1710,8 @@ async def run_dealer(
                 ):
                     g = [hero.strip()]
                 v["gallery"] = g
-            if gallery_vision_filter:
+            inline_gallery = gallery_vision_filter and gallery_vision_inline_enabled()
+            if inline_gallery:
                 try:
                     gv = await asyncio.to_thread(_apply_gallery_vision_filter_to_vehicles, all_vehicles)
                     result["gallery_vision"] = gv
@@ -1513,8 +1746,32 @@ async def run_dealer(
             if reg_id:
                 for v in all_vehicles:
                     v.setdefault("dealership_registry_id", reg_id)
+            from backend.parsers.vdp_urls import apply_vehicle_source_url
+
+            for v in all_vehicles:
+                apply_vehicle_source_url(v)
+            t_up0 = time.perf_counter()
             count = await _upsert_vehicles_serialized(write_lock, all_vehicles)
+            result["phase_secs"]["upsert"] = round(time.perf_counter() - t_up0, 2)
             result["upserted"] = count
+            if reg_id and url:
+                try:
+                    from backend.db.inventory_db import link_cars_to_dealership_registry
+
+                    linked = await asyncio.to_thread(
+                        link_cars_to_dealership_registry,
+                        int(reg_id),
+                        url,
+                        dealer_id_slug=dealer_id,
+                    )
+                    if linked:
+                        result["registry_linked"] = linked
+                except Exception as e:
+                    logger.debug(
+                        "link_cars_to_dealership_registry failed for %s: %s",
+                        name,
+                        e,
+                    )
             try:
                 from backend.scanner.inventory_reconcile import (
                     normalized_vin_set_from_vehicles,
@@ -1618,15 +1875,18 @@ async def main(
     post_interior_vision: bool = True,
     post_enrich: bool = False,
     post_enrich_vision_only: bool = False,
-    post_kbb: bool = False,
     post_listing_gap_fill: bool = False,
     post_window_sticker: bool = True,
+    post_gallery_vision: bool = False,
     enrichment_max_workers: int | None = None,
-    gallery_vision_filter: bool = True,
+    gallery_vision_filter: bool = False,
     monroney_vision: bool = True,
 ):
     if dealers is None:
         dealers = load_manifest()
+    apply_fast_mode_env_defaults()
+    if scanner_fast_mode_enabled():
+        logger.info("Scanner: SCANNER_FAST_MODE=1 (core inventory paths, reduced VDP defaults)")
     logger.info("Loading manifest: %s (resolved %s)", MANIFEST_PATH, MANIFEST_PATH.resolve())
 
     # Filter out OEM manufacturer websites (not dealerships)
@@ -1693,6 +1953,13 @@ async def main(
                 }
 
         async def bounded(dealer: dict) -> dict[str, Any]:
+            if _scanner_shutdown_requested:
+                return {
+                    "dealer_id": dealer.get("dealer_id", ""),
+                    "dealer_name": dealer.get("name", ""),
+                    "upserted": 0,
+                    "error": "shutdown_requested",
+                }
             async with sem:
                 await asyncio.sleep(random.uniform(0.5, 2.5))
                 return await one_dealer(dealer)
@@ -1701,7 +1968,7 @@ async def main(
             loop = asyncio.get_running_loop()
             for _sig in (signal.SIGTERM,):
                 with contextlib.suppress(Exception):
-                    loop.add_signal_handler(_sig, loop.stop)
+                    loop.add_signal_handler(_sig, _on_scanner_shutdown_signal)
             return await asyncio.gather(
                 *[bounded(d) for d in bmw_enhanced_dealers],
                 return_exceptions=True,
@@ -1755,7 +2022,6 @@ async def main(
         or post_interior_vision
         or post_enrich
         or post_enrich_vision_only
-        or post_kbb
         or post_window_sticker
     ):
         try:
@@ -1766,8 +2032,8 @@ async def main(
                 post_interior_vision=post_interior_vision,
                 post_enrich=post_enrich,
                 post_enrich_vision_only=post_enrich_vision_only,
-                post_kbb=post_kbb,
                 post_window_sticker=post_window_sticker,
+                post_gallery_vision=post_gallery_vision,
                 enrichment_max_workers=enrichment_max_workers,
             )
             logger.info("Post-scan summary: %s", json.dumps(post_summary, default=str)[:1800])
@@ -1822,10 +2088,19 @@ def run_cli_entry() -> None:
         description="Manifest-driven dealership inventory scanner (Playwright + stealth)."
     )
     ap.add_argument(
+        "--manifest",
+        metavar="PATH",
+        default=None,
+        help=(
+            "Dealer manifest JSON (default: dealers.json or DEALERS_MANIFEST_PATH). "
+            "Example: workspace/manifest_92694_25mi.json"
+        ),
+    )
+    ap.add_argument(
         "--dealer-id",
         metavar="ID",
         default=None,
-        help="Scan only this dealer_id from dealers.json (e.g. from the /dev console).",
+        help="Scan only this dealer_id from the manifest (e.g. from the /dev console).",
     )
     ap.add_argument(
         "--limit",
@@ -1884,7 +2159,12 @@ def run_cli_entry() -> None:
     ap.add_argument(
         "--enable-gallery-vision",
         action="store_true",
-        help="Enable Claude gallery cleanup before upsert (default is off; run separately via image_analyzer.py).",
+        help="Run Claude gallery cleanup after scan (post-scan batch; does not block upsert).",
+    )
+    ap.add_argument(
+        "--enable-gallery-vision-inline",
+        action="store_true",
+        help="Run Claude gallery cleanup inside each dealer before upsert (slow; may hit API rate limits).",
     )
     ap.add_argument(
         "--enable-monroney-vision",
@@ -1898,11 +2178,6 @@ def run_cli_entry() -> None:
         help="Worker threads for post-scan enrichment (default: ENRICHMENT_MAX_WORKERS or enricher default).",
     )
     ap.add_argument(
-        "--post-kbb",
-        action="store_true",
-        help="After scan, refresh KBB IDWS values for touched VINs (needs KBB_API_KEY; see SCANNER_POST_KBB).",
-    )
-    ap.add_argument(
         "--post-listing-gap-fill",
         action="store_true",
         help="After post-scan repair: backfill missing specs (EPA/vPIC → listing-page HTML via Playwright → DDG for mechanical only). Condition from listing sites only. Or set SCANNER_POST_LISTING_GAP_FILL=1.",
@@ -1913,11 +2188,25 @@ def run_cli_entry() -> None:
         help="Skip OEM window sticker PDF fetch during post-scan (default: on; SCANNER_POST_WINDOW_STICKER=0).",
     )
     args = ap.parse_args()
+    global MANIFEST_PATH
+    if args.manifest:
+        mp = Path(args.manifest).expanduser()
+        if not mp.is_absolute():
+            mp = (ROOT / mp).resolve()
+        MANIFEST_PATH = mp
+        os.environ["DEALERS_MANIFEST_PATH"] = str(mp)
     if is_inventory_postgres():
         from backend.db.inventory_db import init_inventory_db
 
         init_inventory_db()
-    to_run = load_manifest()
+    if not MANIFEST_PATH.is_file() and (os.environ.get("DEALERS_FROM_DB") or "").strip().lower() not in (
+        "1",
+        "true",
+        "yes",
+    ):
+        logger.error("Manifest not found: %s", MANIFEST_PATH.resolve())
+        sys.exit(1)
+    to_run = filter_skip_dealers(load_manifest())
     if args.dealer_id:
         to_run = filter_manifest_by_dealer_id(to_run, args.dealer_id)
         if not to_run:
@@ -1977,9 +2266,11 @@ def run_cli_entry() -> None:
     # Vision passes disabled by default (run separately via image_analyzer.py)
     # Enable with: --enable-gallery-vision, --enable-interior-vision, --enable-monroney-vision
     do_interior_vision = args.enable_interior_vision and post_interior_vision_env_enabled()
-    do_gallery_vision = args.enable_gallery_vision and gallery_vision_filter_env_enabled()
+    if args.enable_gallery_vision:
+        os.environ.setdefault("SCANNER_GALLERY_VISION_POST", "1")
+    do_post_gallery = args.enable_gallery_vision
+    do_gallery_vision = args.enable_gallery_vision_inline and gallery_vision_inline_enabled()
     do_monroney = args.enable_monroney_vision and monroney_vision_env_enabled()
-    do_kbb = bool(args.post_kbb) or post_kbb_env_enabled()
     do_listing_gap_fill = bool(args.post_listing_gap_fill) or post_listing_gap_fill_env_enabled()
     do_window_sticker = not args.no_post_window_sticker and post_window_sticker_env_enabled()
 
@@ -1992,9 +2283,9 @@ def run_cli_entry() -> None:
                 post_interior_vision=do_interior_vision,
                 post_enrich=do_enrich and not do_vision,
                 post_enrich_vision_only=do_vision,
-                post_kbb=do_kbb,
                 post_listing_gap_fill=do_listing_gap_fill,
                 post_window_sticker=do_window_sticker,
+                post_gallery_vision=do_post_gallery,
                 enrichment_max_workers=args.enrichment_workers,
                 gallery_vision_filter=do_gallery_vision,
                 monroney_vision=do_monroney,

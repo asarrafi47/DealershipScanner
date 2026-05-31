@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2008,Chevrolet,Avalanche,1500 2WD,5.3L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,5.3,14,20,16,,,,,
-2008,Chevrolet,Avalanche,1500 2WD,6.0L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,6.0,12,17,14,,,,,
-2008,Chevrolet,Avalanche,1500 4WD,6.0L V8,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,8,6.0,12,17,14,,,,,
-2008,Chevrolet,Avalanche,1500 2WD,FFV 5.3L V8 (390-540),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,8,5.3,14,20,16,,,,,
-2008,Chevrolet,Avalanche,1500 4WD,FFV 5.3L V8 (390-540),Automatic 4-spd,All-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 4WD,8,5.3,14,19,16,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2008,Chevrolet,Avalanche,1500 2WD,5.3L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,5.3,14,20,16,,,,,,5.3L V8,
+2008,Chevrolet,Avalanche,1500 2WD,6.0L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,6.0,12,17,14,,,,,,6.0L V8,
+2008,Chevrolet,Avalanche,1500 4WD,6.0L V8,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,8,6.0,12,17,14,,,,,,6.0L V8,
+2008,Chevrolet,Avalanche,1500 2WD,FFV 5.3L V8 (390-540),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 2WD,8,5.3,14,20,16,,,,,,5.3L V8,
+2008,Chevrolet,Avalanche,1500 4WD,FFV 5.3L V8 (390-540),Automatic 4-spd,All-Wheel Drive,Regular Gasoline / E85,Sport Utility Vehicle - 4WD,8,5.3,14,19,16,,,,,,5.3L V8,

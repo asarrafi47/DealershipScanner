@@ -64,7 +64,7 @@ def test_app_register_login_password_only(monkeypatch, tmp_path):
             follow_redirects=False,
         )
         assert r4.status_code in (302, 303)
-        assert r4.headers["Location"].endswith("/dashboard")
+        assert r4.headers["Location"].endswith("/home")
         assert session.get("mfa_ok") is True
 
 
@@ -92,7 +92,7 @@ def test_legacy_mfa_urls_redirect(monkeypatch, tmp_path):
         )
         rv2 = client.get("/mfa/verify", follow_redirects=False)
         assert rv2.status_code in (302, 303)
-        assert (rv2.headers.get("Location") or "").endswith("/dashboard")
+        assert (rv2.headers.get("Location") or "").endswith("/home")
 
 
 def test_dev_login_password_only_no_mfa(monkeypatch, tmp_path):

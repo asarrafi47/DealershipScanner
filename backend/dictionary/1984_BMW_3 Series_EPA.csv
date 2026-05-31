@@ -1,9 +1,9 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1984,BMW,3 Series,3 Series,1.8L I4 ((FFS)),Automatic 3-spd,,Regular Gasoline,Subcompact Cars,4,1.8,21,24,23,,,,,
-1984,BMW,3 Series,3 Series,1.8L I4 ((FFS)),Manual 5-spd,,Regular Gasoline,Subcompact Cars,4,1.8,21,27,24,,,,,
-1984,BMW,3 Series,3 Series,2.7L V6 ((FFS)),Automatic 4-spd,,Regular Gasoline,Subcompact Cars,6,2.7,18,25,20,,,,,
-1984,BMW,3 Series,3 Series,2.7L V6 ((FFS)),Manual 5-spd,,Regular Gasoline,Subcompact Cars,6,2.7,18,26,21,,,,,
-1984,BMW,3 Series,3 Series,1.8L I4 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Subcompact Cars,4,1.8,21,24,23,,,,,
-1984,BMW,3 Series,3 Series,1.8L I4 ((FFS) CA model),Manual 5-spd,,Regular Gasoline,Subcompact Cars,4,1.8,21,27,24,,,,,
-1984,BMW,3 Series,3 Series,2.7L V6 ((FFS) CA model),Automatic 4-spd,,Regular Gasoline,Subcompact Cars,6,2.7,18,25,20,,,,,
-1984,BMW,3 Series,3 Series,2.7L V6 ((FFS) CA model),Manual 5-spd,,Regular Gasoline,Subcompact Cars,6,2.7,18,26,21,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1984,BMW,3 Series,3 Series,1.8L I4 ((FFS)),Automatic 3-spd,,Regular Gasoline,Subcompact Cars,4,1.8,21,24,23,,,,,,1.8L I4 Turbo,Turbocharged
+1984,BMW,3 Series,3 Series,1.8L I4 ((FFS)),Manual 5-spd,,Regular Gasoline,Subcompact Cars,4,1.8,21,27,24,,,,,,1.8L I4 Turbo,Turbocharged
+1984,BMW,3 Series,3 Series,2.7L V6 ((FFS)),Automatic 4-spd,,Regular Gasoline,Subcompact Cars,6,2.7,18,25,20,,,,,,2.7L I6 Turbo,Turbocharged
+1984,BMW,3 Series,3 Series,2.7L V6 ((FFS)),Manual 5-spd,,Regular Gasoline,Subcompact Cars,6,2.7,18,26,21,,,,,,2.7L I6 Turbo,Turbocharged
+1984,BMW,3 Series,3 Series,1.8L I4 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Subcompact Cars,4,1.8,21,24,23,,,,,,1.8L I4 Turbo,Turbocharged
+1984,BMW,3 Series,3 Series,1.8L I4 ((FFS) CA model),Manual 5-spd,,Regular Gasoline,Subcompact Cars,4,1.8,21,27,24,,,,,,1.8L I4 Turbo,Turbocharged
+1984,BMW,3 Series,3 Series,2.7L V6 ((FFS) CA model),Automatic 4-spd,,Regular Gasoline,Subcompact Cars,6,2.7,18,25,20,,,,,,2.7L I6 Turbo,Turbocharged
+1984,BMW,3 Series,3 Series,2.7L V6 ((FFS) CA model),Manual 5-spd,,Regular Gasoline,Subcompact Cars,6,2.7,18,26,21,,,,,,2.7L I6 Turbo,Turbocharged

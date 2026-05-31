@@ -262,6 +262,9 @@ def init_postgres_inventory(conn: Any) -> None:
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_cars_dealer_listing ON cars(dealer_id, listing_active)"
     )
+    from backend.db.inventory_db import ensure_cars_listings_indexes
+
+    ensure_cars_listings_indexes(cur)
 
     cur.execute(
         """
@@ -414,6 +417,9 @@ def init_postgres_inventory(conn: Any) -> None:
             ("source_osm", "INTEGER NOT NULL DEFAULT 0"),
             ("source_web", "INTEGER NOT NULL DEFAULT 0"),
             ("osm_id", "TEXT"),
+            ("sticker_provider", "TEXT NOT NULL DEFAULT 'unknown'"),
+            ("sticker_ipacket_fail_count", "INTEGER NOT NULL DEFAULT 0"),
+            ("sticker_provider_updated_at", "TEXT"),
         ],
     )
     cur.execute(

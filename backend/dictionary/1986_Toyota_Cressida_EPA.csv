@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1986,Toyota,Cressida,Cressida,2.8L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.8,17,21,18,,,,,
-1986,Toyota,Cressida,Cressida,2.8L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.8,17,22,19,,,,,
-1986,Toyota,Cressida,Wagon,2.8L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Midsize-Large Station Wagons,6,2.8,17,21,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1986,Toyota,Cressida,Cressida,2.8L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.8,17,21,18,,,,,,2.8L V6,
+1986,Toyota,Cressida,Cressida,2.8L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.8,17,22,19,,,,,,2.8L V6,
+1986,Toyota,Cressida,Wagon,2.8L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Midsize-Large Station Wagons,6,2.8,17,21,18,,,,,,2.8L V6,

@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2006,Jaguar,S-type,S-Type 3.0 Litre,3.0L V6,Automatic 6-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,17,26,20,,,,,
-2006,Jaguar,S-type,S-Type 4.2 Litre,4.2L V8,Automatic 6-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.2,16,24,19,,,,,
-2006,Jaguar,S-type,S-Type R,4.2L V8,Automatic 6-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.2,15,22,17,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2006,Jaguar,S-type,S-Type 3.0 Litre,3.0L V6,Automatic 6-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,17,26,20,,,,,,3.0L V6 Turbo,Turbocharged
+2006,Jaguar,S-type,S-Type 4.2 Litre,4.2L V8,Automatic 6-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.2,16,24,19,,,,,,4.2L V8 Turbo,Turbocharged
+2006,Jaguar,S-type,S-Type R,4.2L V8,Automatic 6-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.2,15,22,17,,,,,,4.2L V8 Turbo,Turbocharged

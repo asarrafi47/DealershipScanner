@@ -145,6 +145,33 @@ def _merge_vdp_vehicle_history_url(vehicle: dict[str, Any], dom_urls: list[Any])
     return False
 
 
+def _pick_best_sticker_url(dom_urls: list[Any], vin: str | None = None) -> str | None:
+    from backend.scanner.window_sticker import pick_best_listing_sticker_url
+
+    urls = [str(u).strip() for u in dom_urls if isinstance(u, str) and str(u).strip().startswith("http")]
+    return pick_best_listing_sticker_url(urls, vin=vin)
+
+
+def _merge_vdp_sticker_url(vehicle: dict[str, Any], dom_urls: list[Any]) -> bool:
+    """Set ``window_sticker_url`` from VDP iPacket / Monroney links when missing or improved."""
+    picked = _pick_best_sticker_url(dom_urls, str(vehicle.get("vin") or ""))
+    if not picked:
+        return False
+    cur = str(vehicle.get("window_sticker_url") or "").strip()
+    if not cur.lower().startswith("http"):
+        vehicle["window_sticker_url"] = picked
+        return True
+    cur_low = cur.lower()
+    picked_low = picked.lower()
+    if "sticker-puller" in picked_low and "sticker-puller" not in cur_low:
+        vehicle["window_sticker_url"] = picked
+        return True
+    if "token=" in picked_low and "token=" not in cur_low:
+        vehicle["window_sticker_url"] = picked
+        return True
+    return False
+
+
 def _detach_response_handler(page: Any, handler: Any) -> None:
     """Playwright Python builds differ; detach without assuming a specific API name."""
     for meth_name in ("off", "remove_listener", "removeListener"):
@@ -222,6 +249,7 @@ def _vdp_field_gap_score(vehicle: dict[str, Any]) -> int:
         "drivetrain",
         "body_style",
         "condition",
+        "exterior_color",
         "interior_color",
         "engine_description",
     )
@@ -231,6 +259,16 @@ def _vdp_field_gap_score(vehicle: dict[str, Any]) -> int:
         if val is None or (isinstance(val, str) and not str(val).strip()):
             n += 1
     return n
+
+
+def _vdp_public_incomplete_gap_score(vehicle: dict[str, Any]) -> int:
+    """Boost rows that fail the public listings spec sheet (Phase 3 completeness passes)."""
+    try:
+        from backend.utils.listing_completeness import listing_missing_field_codes
+
+        return len(listing_missing_field_codes(vehicle, for_public_filter=True))
+    except Exception:
+        return 0
 
 
 def _vdp_max_per_dealer() -> int:
@@ -551,9 +589,13 @@ def _vdp_gallery_thin_boost(vehicle: dict[str, Any]) -> int:
     return (need - have) * 5
 
 
-def _vdp_visit_priority_tuple(vehicle: dict[str, Any]) -> tuple[int, int]:
-    """Sort key: gallery-thin boost first, then EP field-gap score."""
-    return (_vdp_gallery_thin_boost(vehicle) + _vdp_field_gap_score(vehicle), _vdp_field_gap_score(vehicle))
+def _vdp_visit_priority_tuple(vehicle: dict[str, Any]) -> tuple[int, int, int]:
+    """Sort key: public-incomplete boost, gallery-thin boost, then field-gap score."""
+    pub_gap = _vdp_public_incomplete_gap_score(vehicle)
+    field_gap = _vdp_field_gap_score(vehicle)
+    thin = _vdp_gallery_thin_boost(vehicle)
+    # Weight public spec gaps heavily so Phase 3 visits colors/transmission first.
+    return (pub_gap * 10 + thin + field_gap, pub_gap, field_gap)
 
 
 def _vdp_rotation_enabled() -> bool:
@@ -582,11 +624,11 @@ def _vdp_rotation_tie_hash(vehicle: dict[str, Any], seed: str) -> int:
 
 
 def _vdp_queue_sort_key(vehicle: dict[str, Any], seed: str, *, rotation: bool) -> tuple[Any, ...]:
-    """Descending priority: larger thin+gap first; tie-break by rotation hash or VIN."""
+    """Descending priority: public-incomplete + field gaps first; tie-break by rotation hash or VIN."""
     t = _vdp_visit_priority_tuple(vehicle)
     if rotation:
-        return (-t[0], -t[1], _vdp_rotation_tie_hash(vehicle, seed))
-    return (-t[0], -t[1], (vehicle.get("vin") or "").strip().upper())
+        return (-t[0], -t[1], -t[2], _vdp_rotation_tie_hash(vehicle, seed))
+    return (-t[0], -t[1], -t[2], (vehicle.get("vin") or "").strip().upper())
 
 
 def _looks_like_vin17(v: str) -> bool:
@@ -758,6 +800,7 @@ PAGE_EXTRACT_JS = r"""
     domGalleryUrls: [],
     jsonGalleryUrls: [],
     domVehicleHistoryUrls: [],
+    domStickerUrls: [],
     domMonroneyTextSnippets: [],
     domLocationSnippets: [],
     pageTextSample: "",
@@ -1122,7 +1165,7 @@ PAGE_EXTRACT_JS = r"""
   for (const sel of imgSelectorsSpecific) {
     try {
       document.querySelectorAll(sel).forEach((el, idx) => {
-        if (idx > 120 || result.domGalleryUrls.length >= 64) return;
+        if (idx > 160 || result.domGalleryUrls.length >= 96) return;
         if (isLikelyVdpJunkImage(el)) return;
         const s =
           el.getAttribute("src") ||
@@ -1138,13 +1181,13 @@ PAGE_EXTRACT_JS = r"""
         result.domGalleryUrls.push(t.slice(0, 900));
       });
     } catch (e) {}
-    if (result.domGalleryUrls.length >= 50) break;
+    if (result.domGalleryUrls.length >= 80) break;
   }
   if (result.domGalleryUrls.length < 4) {
     for (const sel of imgSelectorsWide) {
       try {
         document.querySelectorAll(sel).forEach((el, idx) => {
-          if (idx > 120 || result.domGalleryUrls.length >= 64) return;
+          if (idx > 160 || result.domGalleryUrls.length >= 96) return;
           if (isLikelyVdpJunkImage(el)) return;
           const s =
             el.getAttribute("src") ||
@@ -1170,7 +1213,7 @@ PAGE_EXTRACT_JS = r"""
     const t = s.trim();
     if (!/^https?:\/\//i.test(t)) return;
     if (!/\.(jpe?g|png|webp|gif)(\?|$)/i.test(t)) return;
-    if (jSeen.size >= 55) return;
+    if (jSeen.size >= 96) return;
     if (jSeen.has(t)) return;
     jSeen.add(t);
     result.jsonGalleryUrls.push(t.slice(0, 900));
@@ -1337,7 +1380,46 @@ PAGE_EXTRACT_JS = r"""
     } catch (e5) {}
   }
   result.domVehicleHistoryUrls = [];
+  result.domStickerUrls = [];
   result.domMonroneyTextSnippets = [];
+  function pushStickerUrl(raw) {
+    const h = absUrl(raw);
+    if (!/^https?:\\/\\//i.test(h)) return;
+    const low = h.toLowerCase();
+    if (
+      low.indexOf("sticker-puller") >= 0 ||
+      low.indexOf("autoipacket.com") >= 0 ||
+      low.indexOf("ipacket.com") >= 0 ||
+      /monroney|window-sticker|window_sticker|\\/sticker\\//i.test(low)
+    ) {
+      if (result.domStickerUrls.includes(h)) return;
+      result.domStickerUrls.push(h.slice(0, 900));
+    }
+  }
+  try {
+    const html = (document.documentElement && document.documentElement.innerHTML) || "";
+    const stickerRe = /https?:\\/\\/[^"'\\s<>]+sticker-puller\\/download\\/[^"'\\s<>]+/gi;
+    let sm;
+    while ((sm = stickerRe.exec(html)) !== null && result.domStickerUrls.length < 8) {
+      pushStickerUrl(sm[0]);
+    }
+  } catch (eStickerHtml) {}
+  try {
+    document
+      .querySelectorAll(
+        'a[href*="sticker-puller"], a[href*="autoipacket"], a[href*="monroney"], iframe[src*="autoipacket"], iframe[src*="ipacket"], [data-sticker-url], [data-msrp-url]'
+      )
+      .forEach((el, idx) => {
+        if (idx > 40 || result.domStickerUrls.length >= 8) return;
+        pushStickerUrl(
+          el.getAttribute("href") ||
+            el.getAttribute("src") ||
+            el.getAttribute("data-sticker-url") ||
+            el.getAttribute("data-msrp-url") ||
+            ""
+        );
+      });
+  } catch (eStickerDom) {}
   function absUrl(href) {
     try {
       if (!href || typeof href !== "string") return "";
@@ -1440,6 +1522,11 @@ PAGE_EXTRACT_JS = r"""
     let lm;
     while ((lm = locRe.exec(bodyTxt)) !== null && result.domLocationSnippets.length < 10) {
       pushLocSnippet(lm[1]);
+    }
+    const locRe2 = /(?:^|\\n)location\\s*:\\s*([^\\n,|.]{4,120})/gi;
+    let lm2;
+    while ((lm2 = locRe2.exec(bodyTxt)) !== null && result.domLocationSnippets.length < 10) {
+      pushLocSnippet(lm2[1]);
     }
   } catch (eBody) {}
   return result;
@@ -2331,12 +2418,49 @@ async def _vdp_visit_one(
         _push_g(extra_loop_gallery)
         _push_g(list(response_image_urls))
 
+        # HTTP/HTML gallery recovery when Playwright harvest is still thin
+        try:
+            from backend.scanner.vdp_html_recovery import (
+                count_https_gallery_urls,
+                recover_from_detail_page,
+                thin_gallery_threshold,
+                vdp_html_recovery_enabled,
+            )
+
+            if vdp_html_recovery_enabled() and count_https_gallery_urls(cand_gallery) <= thin_gallery_threshold():
+                rec = await asyncio.to_thread(
+                    recover_from_detail_page,
+                    success_u,
+                    existing_gallery=cand_gallery,
+                )
+                rec_urls = rec.get("gallery_urls") or []
+                if rec_urls:
+                    _push_g([u for u in rec_urls if isinstance(u, str)])
+                    out["html_gallery_recovery"] = {
+                        "added": rec.get("added"),
+                        "before": rec.get("before_count"),
+                        "after": rec.get("after_count"),
+                    }
+                rec_desc = rec.get("description")
+                if isinstance(rec_desc, str) and rec_desc.strip() and not v.get("description"):
+                    v["description"] = rec_desc.strip()[:2000]
+                    if "description" not in filled:
+                        filled.append("description")
+                rec_specs = rec.get("specs") if isinstance(rec.get("specs"), dict) else {}
+                for sk in ("transmission", "drivetrain", "fuel_type", "body_style", "mpg_city", "mpg_highway"):
+                    if rec_specs.get(sk) and not v.get(sk):
+                        v[sk] = rec_specs[sk]
+                        if sk not in filled:
+                            filled.append(sk)
+        except Exception as _hre:
+            log.debug("VDP HTML gallery recovery failed for %s: %s", vin[:17], _hre)
+
         # Inline gallery vision: filter images with Claude before merging into vehicle
         if cand_gallery:
             try:
                 from backend.vision.claude_vision import filter_gallery_urls_for_vehicle_listing
-                from backend.scanner.post_pipeline import gallery_vision_filter_env_enabled
-                if gallery_vision_filter_env_enabled():
+                from backend.scanner.scan_efficiency import gallery_vision_inline_enabled
+                if gallery_vision_inline_enabled():
                     cand_gallery = await asyncio.to_thread(
                         filter_gallery_urls_for_vehicle_listing,
                         cand_gallery,
@@ -2360,6 +2484,27 @@ async def _vdp_visit_one(
             if dom_carfax_updated:
                 filled.append("carfax_url")
                 out["filled"] = list(filled)
+            sticker_dom = last_bundle.get("domStickerUrls") or []
+            if _merge_vdp_sticker_url(v, sticker_dom):
+                filled.append("window_sticker_url")
+                out["filled"] = list(filled)
+            try:
+                from backend.scanner.dealer_sticker_provider import note_sticker_signals_from_vdp
+
+                page_html = ""
+                if isinstance(last_bundle, dict):
+                    snippets = last_bundle.get("domMonroneyTextSnippets") or []
+                    if isinstance(snippets, list):
+                        page_html = "\n".join(
+                            s for s in snippets if isinstance(s, str) and s.strip()
+                        )[:12000]
+                note_sticker_signals_from_vdp(
+                    v,
+                    sticker_urls=sticker_dom if isinstance(sticker_dom, list) else [],
+                    html=page_html,
+                )
+            except Exception:
+                pass
             snips = last_bundle.get("domMonroneyTextSnippets") or []
             if isinstance(snips, list):
                 clean_snips = [s for s in snips if isinstance(s, str) and s.strip()]
@@ -2374,8 +2519,11 @@ async def _vdp_visit_one(
 
         # Claude inline VDP extraction — fills missing fields from visible page text
         try:
-            from backend.scanner.claude_vdp_extract import extract_from_page_text, _enabled as _claude_vdp_enabled
-            if _claude_vdp_enabled():
+            from backend.scanner.claude_vdp_extract import (
+                extract_from_page_text,
+                should_extract_from_page,
+            )
+            if should_extract_from_page(v):
                 page_text = ""
                 try:
                     page_text = await wp.inner_text("body")

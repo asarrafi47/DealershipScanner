@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2018,Cadillac,XTS,AWD,3.6L V6 (SIDI),Automatic (S6),All-Wheel Drive,Premium Gasoline,Large Cars,6,3.6,16,23,18,,,,,
-2018,Cadillac,XTS,XTS,3.6L V6 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.6,19,28,22,,,,,
-2018,Cadillac,XTS,AWD,3.6L V6 (SIDI),Automatic (S6),All-Wheel Drive,Regular Gasoline,Large Cars,6,3.6,17,26,20,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2018,Cadillac,XTS,AWD,3.6L V6 (SIDI),Automatic (S6),All-Wheel Drive,Premium Gasoline,Large Cars,6,3.6,16,23,18,,,,,,3.6L V6,
+2018,Cadillac,XTS,XTS,3.6L V6 (SIDI),Automatic (S6),Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.6,19,28,22,,,,,,3.6L V6,
+2018,Cadillac,XTS,AWD,3.6L V6 (SIDI),Automatic (S6),All-Wheel Drive,Regular Gasoline,Large Cars,6,3.6,17,26,20,,,,,,3.6L V6,

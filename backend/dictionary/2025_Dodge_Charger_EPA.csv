@@ -1,8 +1,8 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2025,Dodge,Charger,Daytona R/T AWD 255/45R20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,104,91,98,,,,,
-2025,Dodge,Charger,Daytona Scat Pack AWD 325/35ZR20 Rear A/S,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,82,73,78,,,,,
-2025,Dodge,Charger,Daytona R/T AWD 245/55ZR18,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,92,81,87,,,,,
-2025,Dodge,Charger,Daytona R/T AWD 275/40R20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,90,79,85,,,,,
-2025,Dodge,Charger,Daytona R/T AWD 305/35ZR20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,94,82,88,,,,,
-2025,Dodge,Charger,Daytona Scat Pack AWD 305/35ZR20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,94,82,88,,,,,
-2025,Dodge,Charger,Daytona Scat Pack AWD 325/35ZR20 Rear,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,74,66,70,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2025,Dodge,Charger,Daytona R/T AWD 255/45R20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,104,91,98,,,,,,EV Electricity,
+2025,Dodge,Charger,Daytona Scat Pack AWD 325/35ZR20 Rear A/S,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,82,73,78,,,,,,EV Electricity,
+2025,Dodge,Charger,Daytona R/T AWD 245/55ZR18,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,92,81,87,,,,,,EV Electricity,
+2025,Dodge,Charger,Daytona R/T AWD 275/40R20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,90,79,85,,,,,,EV Electricity,
+2025,Dodge,Charger,Daytona R/T AWD 305/35ZR20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,94,82,88,,,,,,EV Electricity,
+2025,Dodge,Charger,Daytona Scat Pack AWD 305/35ZR20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,94,82,88,,,,,,EV Electricity,
+2025,Dodge,Charger,Daytona Scat Pack AWD 325/35ZR20 Rear,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Large Cars,,,74,66,70,,,,,,EV Electricity,

@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2012,Azure Dynamics,Transit Connect Electric Van/Wagon,Transit Connect Electric Van/Wagon,EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Special Purpose Vehicle 2WD,,,62,62,62,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2012,Azure Dynamics,Transit Connect Electric Van/Wagon,Transit Connect Electric Van/Wagon,EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Special Purpose Vehicle 2WD,,,62,62,62,,,,,,EV Electricity,

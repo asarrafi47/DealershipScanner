@@ -477,8 +477,14 @@ def _needs_vision(row: dict[str, Any]) -> bool:
         return True
     if _is_missing(row.get("interior_color")):
         return True
-    if _is_missing(row.get("packages")):
-        return True
+    try:
+        from backend.vision.equipment_vision import packages_lacks_photo_equipment
+
+        if packages_lacks_photo_equipment(row.get("packages")):
+            return True
+    except Exception:
+        if _is_missing(row.get("packages")):
+            return True
     return False
 
 
@@ -657,8 +663,10 @@ def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | No
         return None
 
     prompt = (
-        "Analyze this dealership car photo. Report ONLY what you can directly observe.\n\n"
-        "LOOK FOR THESE SPECIFIC FEATURES:\n"
+        "Analyze this dealership car photo. Report ONLY optional/upgraded equipment you can clearly see.\n\n"
+        "DO NOT list standard base-trim items that most vehicles have (alloy wheels, chrome grille, LED headlights, "
+        "power windows/locks/mirrors, fog lights, floor mats, steering-wheel controls, cup holders, generic trim badges).\n\n"
+        "LOOK FOR THESE SPECIFIC UPGRADES (only when clearly visible):\n"
         "- Adaptive Cruise Control: steering wheel buttons labeled SET+/SET-/CANC/RES with distance/car icons\n"
         "- Lane Keep Assist / Lane Departure: steering wheel buttons with lane-line icons, or windshield camera mount\n"
         "- Heads-Up Display (HUD): small frosted/clear rectangular projection zone on dashboard top\n"
@@ -675,8 +683,26 @@ def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | No
         "- Wireless Charging Pad: Qi symbol or phone charging pad on center console\n"
         "- Sunroof/Moonroof: glass panel in roof visible from interior\n"
         "- Sport/Performance Package: red brake calipers, sport seats, carbon fiber trim\n"
+        "- Premium audio: Bang & Olufsen (B&O), Bose, Harman Kardon, Burmester, Meridian, JBL, Sony badges on speakers or dash\n"
+        "- Tow package: visible trailer hitch receiver, tow hooks, trailer wiring connector at rear\n"
+        "- Exhaust: quad exhaust tips, dual exhaust, performance exhaust\n"
+        "- Red brake calipers: brightly colored (often red) calipers visible through wheel spokes\n"
+        "- 360° / surround-view cameras: bird's-eye view on infotainment screen, camera icons, mirror/grille camera lenses\n"
         "- Ventilated Seats: mesh perforations on seat surfaces\n"
         "- Window sticker / Monroney label: paper label on window — read ALL options/packages listed\n\n"
+        "AFTERMARKET & ADD-ON EQUIPMENT (always list in observed_features when visible):\n"
+        "- Aftermarket wheels / rims (non-OEM design, black/machined/custom finish unlike stock for trim)\n"
+        "- Suspension lift / leveling kit (raised ride height, oversized tires, extra wheel-well gap)\n"
+        "- Aftermarket side step rails / running boards / nerf bars (metal tubes or step-in rails under doors)\n"
+        "- Aftermarket drop steps or side steps (individual steps below each door)\n"
+        "- Aftermarket fender flares (bolt-on or wide body flares)\n"
+        "- Aftermarket grille, bull bar, or brush guard\n"
+        "- Aftermarket bed liner, tonneau cover, bed cap, or toolbox (trucks)\n"
+        "- Roof rack, cross bars, or cargo basket\n"
+        "- Aftermarket exhaust tips or performance exhaust\n"
+        "- Aftermarket hood scoop or vented hood\n"
+        "- Aftermarket tint (very dark windows)\n"
+        "- Aftermarket lighting (LED light bar, fog light pods)\n\n"
         "exterior_color: name the paint color if visible (e.g. 'Alpine White', 'Midnight Blue', 'Gray'). "
         "Set confidence.exterior_color to 'high' when certain, 'medium' when likely but not 100%.\n"
         "interior_color: name the cabin/seat color as a simple color word (e.g. 'Black', 'Tan', 'Gray', 'Beige', 'Red', 'Brown'). "
@@ -688,6 +714,9 @@ def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | No
         '"confidence": {"exterior_color": "low"|"medium"|"high"|null, "interior_color": "low"|"medium"|"high"|null}, '
         '"exterior_color": string|null, "interior_color": string|null, "interior_color_hint": string|null, '
         '"vin": string|null, "msrp": number|null, "sticker_options": string[]}\n\n'
+        "observed_features: optional/upgraded factory equipment and visible aftermarket add-ons only. "
+        "Use short plain-English labels. Skip standard trim equipment.\n"
+        "possible_packages: inferred OEM packages only when multiple upgraded features clearly suggest one.\n"
         "detected_adas: list confirmed ADAS features you SEE (ACC, LKA, HUD, 360_cameras, night_vision, blind_spot, etc.)\n"
         "sticker_options: if a window sticker is visible, list every option/package name from it\n"
         "Use null/[] when unknown."
@@ -700,9 +729,11 @@ def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | No
 
     _vision_payload = {
         "model": "claude-haiku-4-5-20251001",
-        "max_tokens": 512,
+        "max_tokens": 768,
         "system": (
-            "You are a JSON-only response engine. "
+            "You are a JSON-only response engine for dealership vehicle photo analysis. "
+            "List only clearly visible optional/upgraded equipment and aftermarket add-ons. "
+            "Do not guess standard base-trim features. "
             "Never output text other than a valid JSON object. "
             "If you are unsure about a field, return null. "
             "Do not explain yourself."
@@ -732,7 +763,9 @@ def _vision_analyze_car(row: dict[str, Any], prefetch_cache: _PrefetchCache | No
     for _attempt in range(_max_retries):
         try:
             import requests as _requests
+            from backend.vision.claude_rate_limit import acquire_vision_slot
 
+            acquire_vision_slot()
             r = _requests.post(
                 "https://api.anthropic.com/v1/messages",
                 headers=_vision_headers,
@@ -1038,49 +1071,64 @@ class InventoryEnricher:
         return out, heal
 
     def apply_vision(self, row: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
-        if not _needs_vision(row):
+        if not _row_has_any_image(row):
             return {}, []
         try:
-            vis = _vision_analyze_car(row, self._prefetch_cache)
+            from backend.vision.equipment_vision import analyze_car_equipment_from_gallery
+
+            def _analyze(row_in: dict[str, Any], url: str) -> dict[str, Any] | None:
+                return _vision_analyze_car(row_in, self._prefetch_cache, url_override=url)
+
+            merged_json, stats = analyze_car_equipment_from_gallery(
+                row,
+                gallery_urls=_all_gallery_urls_ordered(row),
+                analyze_url=_analyze,
+                merge_observations=_merge_vision_observations,
+            )
         except Exception as e:
-            _log_vision_skipped(e, context="apply_vision")
+            _log_vision_skipped(e, context="apply_vision equipment")
+            merged_json, stats = None, {}
+        if not merged_json:
             return {}, []
-        if not vis:
-            return {}, []
-        out: dict[str, Any] = {}
-        heal: list[str] = []
-        conf = vis.get("confidence") if isinstance(vis.get("confidence"), dict) else {}
-        ext_conf = str(conf.get("exterior_color", "") or "").strip().lower()
-        if (
-            vis.get("exterior_color")
-            and _is_missing(row.get("exterior_color"))
-            and ext_conf in ("high", "medium")
-        ):
-            out["exterior_color"] = str(vis["exterior_color"])[:120]
-            heal.append(f"exterior color ({out['exterior_color']})")
-        int_hint = (vis.get("interior_color") or vis.get("interior_color_hint") or "").strip()
-        if int_hint and _is_missing(row.get("interior_color")):
-            out["interior_color"] = int_hint[:120]
-            heal.append(f"interior color ({int_hint})")
 
-        # Second pass with interior-facing gallery image when interior_color still missing
-        if _is_missing(out.get("interior_color")) and _is_missing(row.get("interior_color")):
+        out: dict[str, Any] = {"packages": merged_json[:8000]}
+        heal: list[str] = ["vision_observations (packages JSON)"]
+        if stats.get("urls_analyzed"):
+            heal.append(
+                f"photo equipment scan ({stats.get('urls_analyzed')} images)"
+            )
+
+        # Best-effort color fill from a hero/interior pass when still missing
+        if _is_missing(row.get("exterior_color")) or _is_missing(row.get("interior_color")):
+            hero = _pick_vision_url(row)
             int_url = _pick_interior_url(row)
-            hero_url = _pick_vision_url(row)
-            if int_url and int_url != hero_url:
+            for url in (hero, int_url):
+                if not url:
+                    continue
                 try:
-                    vis2 = _vision_analyze_car(row, url_override=int_url)
-                    if vis2:
-                        int2 = (vis2.get("interior_color") or vis2.get("interior_color_hint") or "").strip()
-                        if int2:
-                            out["interior_color"] = int2[:120]
-                            heal.append(f"interior color via gallery ({int2})")
+                    vis = _vision_analyze_car(row, self._prefetch_cache, url_override=url)
                 except Exception as e:
-                    _log_vision_skipped(e, context="apply_vision interior pass")
+                    _log_vision_skipped(e, context="apply_vision color pass")
+                    continue
+                if not vis:
+                    continue
+                conf = vis.get("confidence") if isinstance(vis.get("confidence"), dict) else {}
+                ext_conf = str(conf.get("exterior_color", "") or "").strip().lower()
+                if (
+                    vis.get("exterior_color")
+                    and _is_missing(row.get("exterior_color"))
+                    and _is_missing(out.get("exterior_color"))
+                    and ext_conf in ("high", "medium")
+                ):
+                    out["exterior_color"] = str(vis["exterior_color"])[:120]
+                    heal.append(f"exterior color ({out['exterior_color']})")
+                int_hint = (vis.get("interior_color") or vis.get("interior_color_hint") or "").strip()
+                if int_hint and _is_missing(row.get("interior_color")) and _is_missing(out.get("interior_color")):
+                    out["interior_color"] = int_hint[:120]
+                    heal.append(f"interior color ({int_hint})")
+                if not _is_missing(out.get("exterior_color")) and not _is_missing(out.get("interior_color")):
+                    break
 
-        pkg = _merge_vision_observations(row.get("packages"), vis)
-        out["packages"] = pkg[:8000]
-        heal.append("vision_observations (packages JSON)")
         return out, heal
 
     def enrich_one(self, car_id: int, *, vision_only: bool = False) -> dict[str, Any]:

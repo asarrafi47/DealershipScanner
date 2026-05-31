@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1984,Mitsubishi,Montero,4WD,2.6L I4,Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,4,2.6,16,16,16,,,,,
-1984,Mitsubishi,Montero,4WD,2.6L I4 ((CAL)(FFS)),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,4,2.6,15,15,15,,,,,
-1984,Mitsubishi,Montero,4WD,2.6L I4,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,4,2.6,16,18,17,,,,,
-1984,Mitsubishi,Montero,4WD,2.6L I4 ((CAL)(FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,4,2.6,16,18,17,,,,,
-1984,Mitsubishi,Montero,4WD,2.6L I4 ((FFS) CA model),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,4,2.6,15,15,15,,,,,
-1984,Mitsubishi,Montero,4WD,2.6L I4 ((FFS) CA model),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,4,2.6,16,18,17,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1984,Mitsubishi,Montero,4WD,2.6L I4,Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,4,2.6,16,16,16,,,,,,2.6L I4,
+1984,Mitsubishi,Montero,4WD,2.6L I4 ((CAL)(FFS)),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,4,2.6,15,15,15,,,,,,2.6L I4,
+1984,Mitsubishi,Montero,4WD,2.6L I4,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,4,2.6,16,18,17,,,,,,2.6L I4,
+1984,Mitsubishi,Montero,4WD,2.6L I4 ((CAL)(FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,4,2.6,16,18,17,,,,,,2.6L I4,
+1984,Mitsubishi,Montero,4WD,2.6L I4 ((FFS) CA model),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,4,2.6,15,15,15,,,,,,2.6L I4,
+1984,Mitsubishi,Montero,4WD,2.6L I4 ((FFS) CA model),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,4,2.6,16,18,17,,,,,,2.6L I4,

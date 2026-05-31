@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2026,Volvo,V60,CC B5 AWD,Hybrid 2.0L I4 (SIDI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,23,31,26,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2026,Volvo,V60,CC B5 AWD,Hybrid 2.0L I4 (SIDI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,2.0,23,31,26,,,,,,2.0L I4 Turbo,Turbocharged

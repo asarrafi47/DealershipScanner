@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2011,Aston Martin,Vantage,V12 Vantage,5.9L V12,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,12,5.9,11,17,13,,,,,
-2011,Aston Martin,Vantage,V8 Vantage,4.7L V8,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,4.7,13,19,15,,,,,
-2011,Aston Martin,Vantage,V8 Vantage,4.7L V8,Automatic (AM6),Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,4.7,14,20,16,,,,,
-2011,Aston Martin,Vantage,V8 Vantage S,4.7L V8,Automatic (AM7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,4.7,14,21,16,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2011,Aston Martin,Vantage,V12 Vantage,5.9L V12,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,12,5.9,11,17,13,,,,,,5.9L V12,
+2011,Aston Martin,Vantage,V8 Vantage,4.7L V8,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,4.7,13,19,15,,,,,,4.7L V8,
+2011,Aston Martin,Vantage,V8 Vantage,4.7L V8,Automatic (AM6),Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,4.7,14,20,16,,,,,,4.7L V8,
+2011,Aston Martin,Vantage,V8 Vantage S,4.7L V8,Automatic (AM7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,4.7,14,21,16,,,,,,4.7L V8,

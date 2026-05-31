@@ -57,30 +57,105 @@ _CANONICAL_DRIVETRAIN: dict[str, str] = {
     "4x4": "AWD",
 }
 
-# Any free-text fuel_type value → canonical display name (Gas / Hybrid / Diesel / Electric / Hydrogen)
+# Buyer-facing fuel presets (facet order + storage normalization target).
+FUEL_TYPE_PRESETS: tuple[str, ...] = (
+    "Gasoline",
+    "Hybrid",
+    "Plug-In Hybrid",
+    "Diesel",
+    "Electric",
+    "Hydrogen",
+)
+
+# Any free-text fuel_type value → canonical display name (exact match, lowercased key).
 _CANONICAL_FUEL_TYPE: dict[str, str] = {
     "gasoline": "Gasoline",
     "gas": "Gasoline",
+    "gasoline fuel": "Gasoline",
     "regular gasoline": "Gasoline",
     "premium gasoline": "Gasoline",
+    "premium unleaded": "Gasoline",
+    "regular unleaded": "Gasoline",
     "midgrade gasoline": "Gasoline",
+    "midgrade unleaded": "Gasoline",
+    "unleaded": "Gasoline",
+    "regular unleaded fuel": "Gasoline",
+    "premium unleaded fuel": "Gasoline",
     "regular gasoline / e85": "Gasoline",
     "flex fuel": "Gasoline",
+    "flex fuel capability": "Gasoline",
     "e85": "Gasoline",
     "other": "Gasoline",
     "hybrid": "Hybrid",
+    "hybrid fuel": "Hybrid",
     "gas / mild hybrid": "Hybrid",
+    "gasoline/mild electric hybrid": "Hybrid",
+    "gasoline / electric": "Hybrid",
+    "full hybrid electric (fhev)": "Hybrid",
     "mild hybrid": "Hybrid",
     "plug-in hybrid": "Plug-In Hybrid",
     "plug in hybrid": "Plug-In Hybrid",
     "phev": "Plug-In Hybrid",
+    "performance plug-in hybrid": "Plug-In Hybrid",
+    "plug-in electric/gas": "Plug-In Hybrid",
     "electric": "Electric",
     "battery electric": "Electric",
     "bev": "Electric",
     "diesel": "Diesel",
+    "diesel fuel": "Diesel",
     "hydrogen": "Hydrogen",
     "hydrogen fuel cell": "Hydrogen",
     "fcev": "Hydrogen",
+}
+
+# Buyer-facing body-style presets (facet order + storage normalization target).
+BODY_STYLE_PRESETS: tuple[str, ...] = (
+    "Sedan",
+    "SUV",
+    "Truck",
+    "Coupe",
+    "Convertible",
+    "Hatchback",
+    "Wagon",
+    "Crossover",
+    "Minivan",
+    "Van",
+    "Roadster",
+)
+
+_CANONICAL_BODY_STYLE: dict[str, str] = {
+    "sedan": "Sedan",
+    "4dr sedan": "Sedan",
+    "4-door sedan": "Sedan",
+    "coupe": "Coupe",
+    "2dr coupe": "Coupe",
+    "gran coupe": "Coupe",
+    "convertible": "Convertible",
+    "cabriolet": "Convertible",
+    "hatchback": "Hatchback",
+    "5dr hatchback": "Hatchback",
+    "wagon": "Wagon",
+    "sport wagon": "Wagon",
+    "suv": "SUV",
+    "sport utility": "SUV",
+    "sport utility vehicle": "SUV",
+    "sport utility vehicle (suv)/multi-purpose vehicle (mpv)": "SUV",
+    "crossover": "Crossover",
+    "crossover utility vehicle (cuv)": "Crossover",
+    "cuv": "Crossover",
+    "pickup": "Truck",
+    "pickup truck": "Truck",
+    "truck": "Truck",
+    "crew cab": "Truck",
+    "double cab": "Truck",
+    "regular cab": "Truck",
+    "supercrew": "Truck",
+    "chassis cab": "Truck",
+    "minivan": "Minivan",
+    "van": "Van",
+    "cargo van": "Van",
+    "passenger van": "Van",
+    "roadster": "Roadster",
 }
 
 
@@ -149,16 +224,238 @@ def coerce_drivetrain_stored(val: Any) -> str | None:
     return _CANONICAL_DRIVETRAIN.get(s.lower(), s)
 
 
+def _fuel_type_key(s: str) -> str:
+    return re.sub(r"\s+", " ", s.strip().lower())
+
+
 def coerce_fuel_type_stored(val: Any) -> str | None:
     """
     Map any fuel type text to one of the canonical values:
     Gasoline / Hybrid / Plug-In Hybrid / Diesel / Electric / Hydrogen.
-    Returns None for empty/unknown inputs.
+    Returns None for empty/unknown inputs; unknown non-empty strings are returned as-is.
     """
     if is_effectively_empty(val):
         return None
     s = str(val).strip()
-    return _CANONICAL_FUEL_TYPE.get(s.lower(), s)
+    k = _fuel_type_key(s)
+    if k in _CANONICAL_FUEL_TYPE:
+        return _CANONICAL_FUEL_TYPE[k]
+    if s in FUEL_TYPE_PRESETS:
+        return s
+    if "hydrogen" in k or "fuel cell" in k or "fcev" in k:
+        return "Hydrogen"
+    if ("plug" in k and "hybrid" in k) or "phev" in k or "plug-in electric" in k:
+        return "Plug-In Hybrid"
+    if "diesel" in k:
+        return "Diesel"
+    if "gasoline" in k and "electric" in k:
+        if "plug" in k:
+            return "Plug-In Hybrid"
+        return "Hybrid"
+    if "hybrid" in k or "fhev" in k or "hev" in k or "mild electric" in k:
+        return "Hybrid"
+    if (
+        "electric" in k
+        and "gasoline" not in k
+        and "gas" not in k
+        and "diesel" not in k
+        and "hybrid" not in k
+    ):
+        return "Electric"
+    if any(
+        tok in k
+        for tok in (
+            "gasoline",
+            "unleaded",
+            "petrol",
+            "flex fuel",
+            "e85",
+            "regular fuel",
+            "premium fuel",
+        )
+    ):
+        return "Gasoline"
+    if re.search(r"\bgas\b", k) and "hybrid" not in k and "electric" not in k:
+        return "Gasoline"
+    return s
+
+
+def coerce_body_style_stored(val: Any) -> str | None:
+    """
+    Map free-text body style to a buyer-facing preset (see ``BODY_STYLE_PRESETS``).
+    Returns None for empty inputs; unknown non-empty strings are returned as-is.
+    """
+    if is_effectively_empty(val):
+        return None
+    s = str(val).strip()
+    k = _fuel_type_key(s)
+    if k in _CANONICAL_BODY_STYLE:
+        return _CANONICAL_BODY_STYLE[k]
+    if s in BODY_STYLE_PRESETS:
+        return s
+    if any(tok in k for tok in ("pickup", "crew cab", "double cab", "super cab", "chassis cab")):
+        return "Truck"
+    if "truck" in k:
+        return "Truck"
+    if any(
+        tok in k
+        for tok in (
+            "sport utility",
+            "suv",
+            "multi-purpose",
+            "mpv",
+            "4wd",
+            "4x4",
+        )
+    ) and "pickup" not in k:
+        return "SUV"
+    if "crossover" in k or "cuv" in k:
+        return "Crossover"
+    if "minivan" in k:
+        return "Minivan"
+    if re.search(r"\bvan\b", k) and "suv" not in k:
+        return "Van"
+    if "convertible" in k or "cabriolet" in k or "roadster" in k:
+        if "roadster" in k:
+            return "Roadster"
+        return "Convertible"
+    if "hatchback" in k or "hatch back" in k:
+        return "Hatchback"
+    if "wagon" in k:
+        return "Wagon"
+    if "coupe" in k or re.search(r"\b2\s*dr\b", k):
+        return "Coupe"
+    if "sedan" in k or re.search(r"\b4\s*dr\b", k):
+        return "Sedan"
+    return s
+
+
+def sort_fuel_type_presets(values: set[str] | list[str]) -> list[str]:
+    """Order facet fuel values using ``FUEL_TYPE_PRESETS`` then any extras."""
+    seen: dict[str, str] = {}
+    for v in values:
+        c = coerce_fuel_type_stored(v)
+        if c:
+            seen[c.lower()] = c
+    ordered = [p for p in FUEL_TYPE_PRESETS if p.lower() in seen]
+    extras = sorted(v for k, v in seen.items() if v not in ordered)
+    return ordered + extras
+
+
+def sort_body_style_presets(values: set[str] | list[str]) -> list[str]:
+    """Order facet body-style values using ``BODY_STYLE_PRESETS`` then any extras."""
+    seen: dict[str, str] = {}
+    for v in values:
+        c = coerce_body_style_stored(v)
+        if c:
+            seen[c.lower()] = c
+    ordered = [p for p in BODY_STYLE_PRESETS if p.lower() in seen]
+    extras = sorted(v for k, v in seen.items() if v not in ordered)
+    return ordered + extras
+
+
+def body_styles_for_filter(canonical: str) -> list[str]:
+    """Expand a canonical body-style filter to DB values that should match."""
+    c = coerce_body_style_stored(canonical) or canonical
+    out: list[str] = []
+    for v in (c, canonical):
+        if v and v not in out:
+            out.append(v)
+    _legacy_by_preset: dict[str, list[str]] = {
+        "SUV": ["Sport Utility Vehicle", "Sport Utility", "4WD"],
+        "Truck": ["Pickup", "Pickup Truck", "Crew Cab", "Double Cab", "Truck Double Cab"],
+        "Sedan": ["4dr Sedan", "4-Door Sedan"],
+        "Coupe": ["2dr Coupe", "Gran Coupe"],
+        "Crossover": ["Crossover Utility Vehicle (CUV)", "CUV"],
+    }
+    for leg in _legacy_by_preset.get(c, []):
+        if leg not in out:
+            out.append(leg)
+    return out
+
+
+def fuel_types_for_filter(canonical: str) -> list[str]:
+    """
+    Expand a canonical fuel filter to DB values that should match (canonical + common legacy).
+    """
+    c = coerce_fuel_type_stored(canonical) or canonical
+    out: list[str] = []
+    for v in (c, canonical):
+        if v and v not in out:
+            out.append(v)
+    _legacy_by_preset: dict[str, list[str]] = {
+        "Gasoline": [
+            "Gasoline Fuel",
+            "Premium Unleaded",
+            "Regular Unleaded",
+            "Gas",
+            "Gasoline/Mild Electric Hybrid",
+        ],
+        "Hybrid": [
+            "Hybrid Fuel",
+            "Full Hybrid Electric (FHEV)",
+            "Gasoline / Electric",
+        ],
+        "Plug-In Hybrid": [
+            "Performance Plug-In Hybrid",
+            "Plug-In Electric/Gas",
+        ],
+        "Diesel": ["Diesel Fuel"],
+    }
+    for leg in _legacy_by_preset.get(c, []):
+        if leg not in out:
+            out.append(leg)
+    return out
+
+
+def is_jeep_wrangler_car(
+    make: str | None,
+    model: str | None,
+    trim: str | None = None,
+    title: str | None = None,
+) -> bool:
+    """True for Jeep Wrangler and Wrangler Unlimited (not Gladiator)."""
+    mk = (make or "").strip().lower()
+    mo = (model or "").strip().lower()
+    blob = " ".join(
+        x.strip().lower() for x in (model, trim, title) if x and str(x).strip()
+    )
+
+    if mk == "wrangler" and (not mo or mo == "wrangler"):
+        return True
+
+    if "wrangler" not in blob and mo != "wrangler" and not mo.startswith("wrangler "):
+        return False
+
+    if mk not in ("jeep", "wrangler", ""):
+        return False
+
+    if "gladiator" in blob and "wrangler" not in blob:
+        return False
+
+    return bool(
+        mo == "wrangler"
+        or mo.startswith("wrangler ")
+        or re.search(r"\bwrangler\b", blob)
+    )
+
+
+def normalize_body_style_for_car(
+    body_style: str | None,
+    *,
+    make: str | None = None,
+    model: str | None = None,
+    trim: str | None = None,
+    title: str | None = None,
+) -> str | None:
+    """
+    Buyer-facing body style corrections (e.g. Wrangler → SUV, not Convertible).
+    """
+    if is_jeep_wrangler_car(make, model, trim, title):
+        return "SUV"
+    if body_style is None or is_effectively_empty(body_style):
+        return None
+    return coerce_body_style_stored(body_style)
 
 
 def normalize_optional_str(val: Any, *, max_len: int | None = None) -> str | None:
@@ -229,6 +526,16 @@ def clean_car_row_dict(d: dict[str, Any]) -> dict[str, Any]:
             out[k] = normalize_optional_str(coerce_drivetrain_stored(out.get(k)))
         elif k == "fuel_type":
             out[k] = normalize_optional_str(coerce_fuel_type_stored(out.get(k)))
+        elif k == "body_style":
+            out[k] = normalize_optional_str(
+                normalize_body_style_for_car(
+                    out.get(k),
+                    make=out.get("make"),
+                    model=out.get("model"),
+                    trim=out.get("trim"),
+                    title=out.get("title"),
+                )
+            )
         else:
             out[k] = normalize_optional_str(out.get(k))
 

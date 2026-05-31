@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2024,Kia,Seltos,FWD,2.0L I4,Automatic (AV-S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,28,34,31,,,,,
-2024,Kia,Seltos,AWD,1.6L I4 (SIDI),Automatic (S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,1.6,25,27,26,,,,,
-2024,Kia,Seltos,AWD,2.0L I4,Automatic (AV-S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,27,31,29,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2024,Kia,Seltos,FWD,2.0L I4,Automatic (AV-S8),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,28,34,31,,,,,,2.0L I4,
+2024,Kia,Seltos,AWD,1.6L I4 (SIDI),Automatic (S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,1.6,25,27,26,,,,,,1.6L I4 Turbo,Turbocharged
+2024,Kia,Seltos,AWD,2.0L I4,Automatic (AV-S8),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,27,31,29,,,,,,2.0L I4,

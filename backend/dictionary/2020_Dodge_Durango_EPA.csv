@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2020,Dodge,Durango,RWD,3.6L V6,Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.6,19,26,21,,,,,
-2020,Dodge,Durango,RWD,5.7L V8 Midgrade Gasoline,Automatic 8-spd,Rear-Wheel Drive,Midgrade Gasoline,Standard Sport Utility Vehicle 2WD,8,5.7,14,22,17,,,,,
-2020,Dodge,Durango,AWD,3.6L V6,Automatic 8-spd,All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.6,18,25,21,,,,,
-2020,Dodge,Durango,AWD,5.7L V8 Midgrade Gasoline,Automatic 8-spd,All-Wheel Drive,Midgrade Gasoline,Standard Sport Utility Vehicle 4WD,8,5.7,14,22,17,,,,,
-2020,Dodge,Durango,SRT AWD,6.4L V8,Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,6.4,13,19,15,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2020,Dodge,Durango,RWD,3.6L V6,Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.6,19,26,21,,,,,,3.6L V6,
+2020,Dodge,Durango,RWD,5.7L V8 Midgrade Gasoline,Automatic 8-spd,Rear-Wheel Drive,Midgrade Gasoline,Standard Sport Utility Vehicle 2WD,8,5.7,14,22,17,,,,,,5.7L V8,
+2020,Dodge,Durango,AWD,3.6L V6,Automatic 8-spd,All-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.6,18,25,21,,,,,,3.6L V6,
+2020,Dodge,Durango,AWD,5.7L V8 Midgrade Gasoline,Automatic 8-spd,All-Wheel Drive,Midgrade Gasoline,Standard Sport Utility Vehicle 4WD,8,5.7,14,22,17,,,,,,5.7L V8,
+2020,Dodge,Durango,SRT AWD,6.4L V8,Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,6.4,13,19,15,,,,,,6.4L V8,

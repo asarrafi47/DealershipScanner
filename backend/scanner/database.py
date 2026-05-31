@@ -153,6 +153,9 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
         now = datetime.utcnow().isoformat() + "Z"
         for raw in vehicles:
             merged = apply_ep_from_scanner_dict(dict(raw))
+            from backend.parsers.vdp_urls import apply_vehicle_source_url
+
+            apply_vehicle_source_url(merged)
             v = clean_car_row_dict(merged)
             if not v.get("transmission_type") and v.get("transmission"):
                 from backend.utils.transmission_normalize import normalize_transmission_standard

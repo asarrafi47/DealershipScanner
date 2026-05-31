@@ -11,8 +11,11 @@ if [ -f .env ]; then
     set +a
 fi
 
+export PYTHONPATH="${SCRIPT_DIR}/backend${PYTHONPATH:+:${PYTHONPATH}}"
+
 echo "[start] Launching cloudflared tunnel..."
-cloudflared tunnel run --url http://localhost:5001 sarraficars &
+# --loglevel is a `tunnel` command flag (before `run`), not a `run` subcommand flag.
+cloudflared tunnel --loglevel warn run --url http://localhost:5001 sarraficars &
 TUNNEL_PID=$!
 
 echo "[start] Starting Flask server (PUBLIC=1)..."

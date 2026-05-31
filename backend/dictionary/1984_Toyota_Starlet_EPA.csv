@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1984,Toyota,Starlet,Starlet,1.3L I4 ((CAL)(FFS)),Manual 4-spd,,Regular Gasoline,Minicompact Cars,4,1.3,32,38,34,,,,,
-1984,Toyota,Starlet,Starlet,1.3L I4 ((FFS)),Manual 5-spd,,Regular Gasoline,Minicompact Cars,4,1.3,33,40,36,,,,,
-1984,Toyota,Starlet,Starlet,1.3L I4 ((FFS) CA model),Manual 4-spd,,Regular Gasoline,Minicompact Cars,4,1.3,32,38,34,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1984,Toyota,Starlet,Starlet,1.3L I4 ((CAL)(FFS)),Manual 4-spd,,Regular Gasoline,Minicompact Cars,4,1.3,32,38,34,,,,,,1.3L I4,
+1984,Toyota,Starlet,Starlet,1.3L I4 ((FFS)),Manual 5-spd,,Regular Gasoline,Minicompact Cars,4,1.3,33,40,36,,,,,,1.3L I4,
+1984,Toyota,Starlet,Starlet,1.3L I4 ((FFS) CA model),Manual 4-spd,,Regular Gasoline,Minicompact Cars,4,1.3,32,38,34,,,,,,1.3L I4,

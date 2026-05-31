@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2013,Audi,A5,quattro,2.0L I4 (SIDI),Manual 6-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,22,32,26,,,,,
-2013,Audi,A5,Cabriolet,2.0L I4 (SIDI),Automatic (AV-S8),Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,24,31,26,,,,,
-2013,Audi,A5,quattro,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,20,30,24,,,,,
-2013,Audi,A5,Cabriolet quattro,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,20,30,24,,,,,
-2013,Audi,A5,quattro,FFV 2.0L I4 (SIDI; FFV),Automatic (S8),All-Wheel Drive,Premium Gasoline / E85,Subcompact Cars,4,2.0,20,29,23,,,,,
-2013,Audi,A5,Cabriolet quattro,FFV 2.0L I4 (SIDI; FFV),Automatic (S8),All-Wheel Drive,Premium Gasoline / E85,Subcompact Cars,4,2.0,20,29,23,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2013,Audi,A5,quattro,2.0L I4 (SIDI),Manual 6-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,22,32,26,,,,,,2.0L I4 Turbo,Turbocharged
+2013,Audi,A5,Cabriolet,2.0L I4 (SIDI),Automatic (AV-S8),Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,24,31,26,,,,,,2.0L I4 Turbo,Turbocharged
+2013,Audi,A5,quattro,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,20,30,24,,,,,,2.0L I4 Turbo,Turbocharged
+2013,Audi,A5,Cabriolet quattro,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,20,30,24,,,,,,2.0L I4 Turbo,Turbocharged
+2013,Audi,A5,quattro,FFV 2.0L I4 (SIDI; FFV),Automatic (S8),All-Wheel Drive,Premium Gasoline / E85,Subcompact Cars,4,2.0,20,29,23,,,,,,2.0L I4 Turbo,Turbocharged
+2013,Audi,A5,Cabriolet quattro,FFV 2.0L I4 (SIDI; FFV),Automatic (S8),All-Wheel Drive,Premium Gasoline / E85,Subcompact Cars,4,2.0,20,29,23,,,,,,2.0L I4 Turbo,Turbocharged

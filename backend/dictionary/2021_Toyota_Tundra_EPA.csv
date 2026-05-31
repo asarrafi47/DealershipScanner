@@ -1,3 +1,3 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2021,Toyota,Tundra,2WD,5.7L V8,Automatic (S6),Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.7,13,17,15,,,,,
-2021,Toyota,Tundra,4WD,5.7L V8,Automatic (S6),Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.7,13,17,14,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2021,Toyota,Tundra,2WD,5.7L V8,Automatic (S6),Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.7,13,17,15,,,,,,5.7L V8,
+2021,Toyota,Tundra,4WD,5.7L V8,Automatic (S6),Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.7,13,17,14,,,,,,5.7L V8,

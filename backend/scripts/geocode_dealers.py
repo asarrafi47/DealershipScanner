@@ -67,6 +67,10 @@ _DOMAIN_ZIP_FALLBACK: dict[str, tuple[str, str, str]] = {
     "hendrickchryslerdodgejeepramofconcord": ("Concord", "NC", "28027"),
     # Irvine/Long Beach, CA
     "irvinebmw":              ("Irvine",    "CA", "92612"),
+    "mcpeeks":                ("Anaheim",   "CA", "92806"),
+    "mcpeeksdodgeanaheim":    ("Anaheim",   "CA", "92806"),
+    "tuttleclickjeep":        ("Irvine",    "CA", "92618"),
+    "ocauto":                 ("Westminster","CA", "92683"),
     # Houston / South Texas
     "gillmanchevygmc":        ("Houston",   "TX", "77082"),
     "gillmanhondasanbenito":  ("San Benito","TX", "78586"),

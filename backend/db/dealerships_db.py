@@ -59,6 +59,9 @@ def ensure_dealerships_table(cursor: sqlite3.Cursor) -> None:
         ("source_osm",        "INTEGER NOT NULL DEFAULT 0"),
         ("source_web",        "INTEGER NOT NULL DEFAULT 0"),
         ("osm_id",            "TEXT"),
+        ("sticker_provider",  "TEXT NOT NULL DEFAULT 'unknown'"),
+        ("sticker_ipacket_fail_count", "INTEGER NOT NULL DEFAULT 0"),
+        ("sticker_provider_updated_at", "TEXT"),
     ]
     for col, coltype in additive:
         if col not in dcols:
@@ -280,6 +283,84 @@ def get_dealership_by_id(dealer_id: int) -> dict[str, Any] | None:
     row = cursor.fetchone()
     conn.close()
     return dict(row) if row else None
+
+
+def get_dealer_sticker_provider_row(dealer_id: int) -> dict[str, Any] | None:
+    conn = get_conn()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    ensure_dealerships_table(cursor)
+    cursor.execute(
+        """
+        SELECT id, sticker_provider, sticker_ipacket_fail_count, sticker_provider_updated_at
+        FROM dealerships WHERE id = ?
+        """,
+        (int(dealer_id),),
+    )
+    row = cursor.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+
+def update_dealer_sticker_provider(
+    dealer_id: int,
+    provider: str,
+    *,
+    source: str = "",
+    reset_fail_count: bool = False,
+) -> None:
+    conn = get_conn()
+    cursor = conn.cursor()
+    ensure_dealerships_table(cursor)
+    now = datetime.now(timezone.utc).isoformat()
+    if reset_fail_count:
+        cursor.execute(
+            """
+            UPDATE dealerships
+            SET sticker_provider = ?, sticker_ipacket_fail_count = 0, sticker_provider_updated_at = ?
+            WHERE id = ?
+            """,
+            (provider, now, int(dealer_id)),
+        )
+    else:
+        cursor.execute(
+            """
+            UPDATE dealerships
+            SET sticker_provider = ?, sticker_provider_updated_at = ?
+            WHERE id = ?
+            """,
+            (provider, now, int(dealer_id)),
+        )
+    conn.commit()
+    conn.close()
+    if source:
+        logger = __import__("logging").getLogger(__name__)
+        logger.debug("dealer %s sticker_provider=%s (%s)", dealer_id, provider, source)
+
+
+def bump_dealer_ipacket_fail_count(dealer_id: int) -> int:
+    conn = get_conn()
+    cursor = conn.cursor()
+    ensure_dealerships_table(cursor)
+    cursor.execute(
+        """
+        UPDATE dealerships
+        SET sticker_ipacket_fail_count = COALESCE(sticker_ipacket_fail_count, 0) + 1
+        WHERE id = ?
+        """,
+        (int(dealer_id),),
+    )
+    cursor.execute(
+        "SELECT sticker_ipacket_fail_count FROM dealerships WHERE id = ?",
+        (int(dealer_id),),
+    )
+    row = cursor.fetchone()
+    conn.commit()
+    conn.close()
+    try:
+        return int(row[0]) if row else 1
+    except (TypeError, ValueError, IndexError):
+        return 1
 
 
 def insert_dealership(row: dict[str, Any]) -> int:

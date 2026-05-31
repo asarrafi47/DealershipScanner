@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2016,Nissan,Juke,Juke,1.6L I4,Automatic (AV-S7),Front-Wheel Drive,Premium Gasoline,Small Station Wagons,4,1.6,28,32,29,,,,,
-2016,Nissan,Juke,Juke,1.6L I4,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Small Station Wagons,4,1.6,27,33,30,,,,,
-2016,Nissan,Juke,AWD,1.6L I4,Automatic (AV-S7),All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,1.6,26,31,28,,,,,
-2016,Nissan,Juke,Nismo RS,1.6L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Small Station Wagons,4,1.6,25,31,27,,,,,
-2016,Nissan,Juke,Nismo RS AWD,1.6L I4 (SIDI),Automatic (AV-S8),All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,1.6,25,29,26,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2016,Nissan,Juke,Juke,1.6L I4,Automatic (AV-S7),Front-Wheel Drive,Premium Gasoline,Small Station Wagons,4,1.6,28,32,29,,,,,,1.6L I4,
+2016,Nissan,Juke,Juke,1.6L I4,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Small Station Wagons,4,1.6,27,33,30,,,,,,1.6L I4,
+2016,Nissan,Juke,AWD,1.6L I4,Automatic (AV-S7),All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,1.6,26,31,28,,,,,,1.6L I4,
+2016,Nissan,Juke,Nismo RS,1.6L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Small Station Wagons,4,1.6,25,31,27,,,,,,1.6L I4,
+2016,Nissan,Juke,Nismo RS AWD,1.6L I4 (SIDI),Automatic (AV-S8),All-Wheel Drive,Premium Gasoline,Small Station Wagons,4,1.6,25,29,26,,,,,,1.6L I4,

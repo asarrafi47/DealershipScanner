@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2020,Acura,TLX,FWD,2.4L I4 (SIDI),Automatic (AM-S8),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.4,23,33,27,,,,,
-2020,Acura,TLX,FWD A-SPEC,2.4L I4 (SIDI),Automatic (AM-S8),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.4,23,32,26,,,,,
-2020,Acura,TLX,FWD,3.5L V6 (SIDI),Automatic (S9),Front-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,20,31,24,,,,,
-2020,Acura,TLX,FWD A-SPEC,3.5L V6 (SIDI),Automatic (S9),Front-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,20,30,23,,,,,
-2020,Acura,TLX,AWD,3.5L V6 (SIDI),Automatic (S9),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,20,29,23,,,,,
-2020,Acura,TLX,AWD A-SPEC,3.5L V6 (SIDI),Automatic (S9),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,20,29,23,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2020,Acura,TLX,FWD,2.4L I4 (SIDI),Automatic (AM-S8),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.4,23,33,27,,,,,,2.4L I4 Turbo,Turbocharged
+2020,Acura,TLX,FWD A-SPEC,2.4L I4 (SIDI),Automatic (AM-S8),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.4,23,32,26,,,,,,2.4L I4 Turbo,Turbocharged
+2020,Acura,TLX,FWD,3.5L V6 (SIDI),Automatic (S9),Front-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,20,31,24,,,,,,3.5L V6 Turbo,Turbocharged
+2020,Acura,TLX,FWD A-SPEC,3.5L V6 (SIDI),Automatic (S9),Front-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,20,30,23,,,,,,3.5L V6 Turbo,Turbocharged
+2020,Acura,TLX,AWD,3.5L V6 (SIDI),Automatic (S9),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,20,29,23,,,,,,3.5L V6 Turbo,Turbocharged
+2020,Acura,TLX,AWD A-SPEC,3.5L V6 (SIDI),Automatic (S9),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.5,20,29,23,,,,,,3.5L V6 Turbo,Turbocharged

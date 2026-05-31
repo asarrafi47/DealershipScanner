@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1995,Land Rover,Range Rover,Range Rover,3.9L V8 ((FFS)),Automatic 4-spd,All-Wheel Drive,Premium Gasoline,Special Purpose Vehicles,8,3.9,11,15,13,,,,,
-1995,Land Rover,Range Rover,County Classic,3.9L V8 ((FFS)),Automatic 4-spd,All-Wheel Drive,Premium Gasoline,Special Purpose Vehicles,8,3.9,11,17,13,,,,,
-1995,Land Rover,Range Rover,County LWB,4.3L V8 ((FFS)),Automatic 4-spd,All-Wheel Drive,Premium Gasoline,Special Purpose Vehicles,8,4.3,11,15,12,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1995,Land Rover,Range Rover,Range Rover,3.9L V8 ((FFS)),Automatic 4-spd,All-Wheel Drive,Premium Gasoline,Special Purpose Vehicles,8,3.9,11,15,13,,,,,,3.9L V8 Supercharged,Supercharged
+1995,Land Rover,Range Rover,County Classic,3.9L V8 ((FFS)),Automatic 4-spd,All-Wheel Drive,Premium Gasoline,Special Purpose Vehicles,8,3.9,11,17,13,,,,,,3.9L V8 Supercharged,Supercharged
+1995,Land Rover,Range Rover,County LWB,4.3L V8 ((FFS)),Automatic 4-spd,All-Wheel Drive,Premium Gasoline,Special Purpose Vehicles,8,4.3,11,15,12,,,,,,4.3L V8 Supercharged,Supercharged

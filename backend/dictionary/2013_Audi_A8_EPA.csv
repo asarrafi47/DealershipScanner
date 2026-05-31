@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2013,Audi,A8,A8,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,18,28,21,,,,,
-2013,Audi,A8,L,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,6,3.0,18,28,21,,,,,
-2013,Audi,A8,A8,4.0L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.0,17,28,21,,,,,
-2013,Audi,A8,L,4.0L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,8,4.0,16,26,19,,,,,
-2013,Audi,A8,L,6.3L V12 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,12,6.3,13,20,15,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2013,Audi,A8,A8,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,18,28,21,,,,,,3.0L V6 Turbo,Turbocharged
+2013,Audi,A8,L,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,6,3.0,18,28,21,,,,,,3.0L V6 Turbo,Turbocharged
+2013,Audi,A8,A8,4.0L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.0,17,28,21,,,,,,4.0L V8 Turbo,Turbocharged
+2013,Audi,A8,L,4.0L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,8,4.0,16,26,19,,,,,,4.0L V8 Turbo,Turbocharged
+2013,Audi,A8,L,6.3L V12 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,12,6.3,13,20,15,,,,,,6.3L V12 Turbo,Turbocharged

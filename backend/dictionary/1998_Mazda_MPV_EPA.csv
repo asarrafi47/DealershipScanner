@@ -1,3 +1,3 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1998,Mazda,MPV,MPV,3.0L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,6,3.0,15,20,17,,,,,
-1998,Mazda,MPV,4x4,3.0L V6,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,6,3.0,13,17,15,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1998,Mazda,MPV,MPV,3.0L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,6,3.0,15,20,17,,,,,,3.0L V6,
+1998,Mazda,MPV,4x4,3.0L V6,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,6,3.0,13,17,15,,,,,,3.0L V6,

@@ -153,6 +153,30 @@ def build_semantic_listing_document(
             )
             if desc_seg:
                 segments.append(f"Equipment hints: {desc_seg}")
+            extra_pkg_labels: list[str] = []
+            seen_extra: set[str] = set()
+            for label in (pj.get("possible_packages") or []):
+                if isinstance(label, str) and label.strip():
+                    low = label.strip().lower()
+                    if low not in seen_extra:
+                        seen_extra.add(low)
+                        extra_pkg_labels.append(label.strip())
+            for priced in (pj.get("sticker_options_priced") or []):
+                if isinstance(priced, dict):
+                    label = (priced.get("name") or priced.get("label") or "").strip()
+                    if label:
+                        low = label.lower()
+                        if low not in seen_extra:
+                            seen_extra.add(low)
+                            extra_pkg_labels.append(label)
+            for label in (pj.get("sticker_options") or []):
+                if isinstance(label, str) and label.strip():
+                    low = label.strip().lower()
+                    if low not in seen_extra:
+                        seen_extra.add(low)
+                        extra_pkg_labels.append(label.strip())
+            if extra_pkg_labels:
+                segments.append(f"Packages and options: {'; '.join(extra_pkg_labels[:12])}.")
 
     text = " ".join(segments)
     text = re.sub(r"\s+", " ", text).strip()

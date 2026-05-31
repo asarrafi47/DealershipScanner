@@ -1,3 +1,3 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2000,Nissan,Altima,Altima,2.4L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.4,18,26,21,,,,,
-2000,Nissan,Altima,Altima,2.4L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.4,21,28,24,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2000,Nissan,Altima,Altima,2.4L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.4,18,26,21,,,,,,2.4L I4,
+2000,Nissan,Altima,Altima,2.4L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.4,21,28,24,,,,,,2.4L I4,

@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2026,Kia,EV9,Standard Range RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,101,76,88,,,,,
-2026,Kia,EV9,Long Range RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,100,78,89,,,,,
-2026,Kia,EV9,Long Range AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,94,75,84,,,,,
-2026,Kia,EV9,Long Range AWD GT-Line,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,92,72,82,,,,,
-2026,Kia,EV9,GT,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,83,72,78,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2026,Kia,EV9,Standard Range RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,101,76,88,,,,,,EV Electricity,
+2026,Kia,EV9,Long Range RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Standard Sport Utility Vehicle 2WD,,,100,78,89,,,,,,EV Electricity,
+2026,Kia,EV9,Long Range AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,94,75,84,,,,,,EV Electricity,
+2026,Kia,EV9,Long Range AWD GT-Line,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,92,72,82,,,,,,EV Electricity,
+2026,Kia,EV9,GT,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,83,72,78,,,,,,EV Electricity,

@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1986,Volkswagen,Vanagon,Syncro 4WD,2.1L I4 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Vans,4,2.1,14,14,14,,,,,
-1986,Volkswagen,Vanagon,/Camper 2WD,2.1L I4 ((FFS)),Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.1,13,15,14,,,,,
-1986,Volkswagen,Vanagon,/Camper 2WD,2.1L I4 ((FFS)),Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.1,15,17,15,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1986,Volkswagen,Vanagon,Syncro 4WD,2.1L I4 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Vans,4,2.1,14,14,14,,,,,,2.1L I4 Turbo,Turbocharged
+1986,Volkswagen,Vanagon,/Camper 2WD,2.1L I4 ((FFS)),Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.1,13,15,14,,,,,,2.1L I4 Turbo,Turbocharged
+1986,Volkswagen,Vanagon,/Camper 2WD,2.1L I4 ((FFS)),Manual 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.1,15,17,15,,,,,,2.1L I4 Turbo,Turbocharged

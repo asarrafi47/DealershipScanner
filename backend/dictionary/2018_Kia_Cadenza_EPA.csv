@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2018,Kia,Cadenza,Cadenza,3.3L V6 (SIDI),Automatic (S8),Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.3,20,28,23,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2018,Kia,Cadenza,Cadenza,3.3L V6 (SIDI),Automatic (S8),Front-Wheel Drive,Regular Gasoline,Large Cars,6,3.3,20,28,23,,,,,,3.3L V6,

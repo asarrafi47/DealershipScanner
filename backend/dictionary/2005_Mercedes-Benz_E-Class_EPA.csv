@@ -1,11 +1,11 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2005,Mercedes-Benz,E-Class,E320,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.2,18,26,20,,,,,
-2005,Mercedes-Benz,E-Class,E320 4matic,3.2L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.2,17,23,19,,,,,
-2005,Mercedes-Benz,E-Class,E320 Cdi,Diesel 3.2L V6 Diesel,Automatic 5-spd,Rear-Wheel Drive,Diesel,Midsize Cars,6,3.2,23,33,27,,,,,
-2005,Mercedes-Benz,E-Class,E500,5.0L V8,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.0,15,23,18,,,,,
-2005,Mercedes-Benz,E-Class,E500 4matic,5.0L V8,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.0,14,19,16,,,,,
-2005,Mercedes-Benz,E-Class,E55 AMG,5.4L V8,Automatic (S5),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.4,13,19,15,,,,,
-2005,Mercedes-Benz,E-Class,E320 (Wagon),3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Station Wagons,6,3.2,17,25,20,,,,,
-2005,Mercedes-Benz,E-Class,E320 4matic (Wagon),3.2L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,6,3.2,16,22,19,,,,,
-2005,Mercedes-Benz,E-Class,E500 4matic (Wagon),5.0L V8,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,8,5.0,14,18,16,,,,,
-2005,Mercedes-Benz,E-Class,E55 AMG (Wagon),5.4L V8,Automatic (S5),Rear-Wheel Drive,Premium Gasoline,Midsize Station Wagons,8,5.4,13,19,15,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2005,Mercedes-Benz,E-Class,E320,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.2,18,26,20,,,,,,3.2L V6 Turbo,Turbocharged
+2005,Mercedes-Benz,E-Class,E320 4matic,3.2L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.2,17,23,19,,,,,,3.2L V6 Turbo,Turbocharged
+2005,Mercedes-Benz,E-Class,E320 Cdi,Diesel 3.2L V6 Diesel,Automatic 5-spd,Rear-Wheel Drive,Diesel,Midsize Cars,6,3.2,23,33,27,,,,,,3.2L V6 Turbo,Turbocharged
+2005,Mercedes-Benz,E-Class,E500,5.0L V8,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.0,15,23,18,,,,,,5.0L V8 Turbo,Turbocharged
+2005,Mercedes-Benz,E-Class,E500 4matic,5.0L V8,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.0,14,19,16,,,,,,5.0L V8 Turbo,Turbocharged
+2005,Mercedes-Benz,E-Class,E55 AMG,5.4L V8,Automatic (S5),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.4,13,19,15,,,,,,5.4L V8 Turbo,Turbocharged
+2005,Mercedes-Benz,E-Class,E320 (Wagon),3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Station Wagons,6,3.2,17,25,20,,,,,,3.2L V6 Turbo,Turbocharged
+2005,Mercedes-Benz,E-Class,E320 4matic (Wagon),3.2L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,6,3.2,16,22,19,,,,,,3.2L V6 Turbo,Turbocharged
+2005,Mercedes-Benz,E-Class,E500 4matic (Wagon),5.0L V8,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,8,5.0,14,18,16,,,,,,5.0L V8 Turbo,Turbocharged
+2005,Mercedes-Benz,E-Class,E55 AMG (Wagon),5.4L V8,Automatic (S5),Rear-Wheel Drive,Premium Gasoline,Midsize Station Wagons,8,5.4,13,19,15,,,,,,5.4L V8 Turbo,Turbocharged

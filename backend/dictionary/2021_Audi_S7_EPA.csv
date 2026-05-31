@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2021,Audi,S7,S7,Hybrid 2.9L V6 (SIDI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,2.9,18,28,22,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2021,Audi,S7,S7,Hybrid 2.9L V6 (SIDI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,2.9,18,28,22,,,,,,2.9L V6 Turbo,Turbocharged

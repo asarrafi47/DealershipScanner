@@ -1,8 +1,8 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2026,BMW,i4,eDrive35 Gran Coupe (19 inch Wheels),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Compact Cars,,,113,105,109,,,,,
-2026,BMW,i4,eDrive40 Gran Coupe (18 inch wheels),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Compact Cars,,,121,115,118,,,,,
-2026,BMW,i4,eDrive40 Gran Coupe (19 inch Wheels),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Compact Cars,,,112,105,108,,,,,
-2026,BMW,i4,M60 xDrive Gran Coupe (19 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Compact Cars,,,99,96,98,,,,,
-2026,BMW,i4,M60 xDrive Gran Coupe (20 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Compact Cars,,,82,80,81,,,,,
-2026,BMW,i4,xDrive40 Gran Coupe (18 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Compact Cars,,,99,103,101,,,,,
-2026,BMW,i4,xDrive40 Gran Coupe (19 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Compact Cars,,,93,95,94,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2026,BMW,i4,eDrive35 Gran Coupe (19 inch Wheels),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Compact Cars,,,113,105,109,,,,,,EV Electricity,
+2026,BMW,i4,eDrive40 Gran Coupe (18 inch wheels),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Compact Cars,,,121,115,118,,,,,,EV Electricity,
+2026,BMW,i4,eDrive40 Gran Coupe (19 inch Wheels),EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Compact Cars,,,112,105,108,,,,,,EV Electricity,
+2026,BMW,i4,M60 xDrive Gran Coupe (19 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Compact Cars,,,99,96,98,,,,,,EV Electricity,
+2026,BMW,i4,M60 xDrive Gran Coupe (20 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Compact Cars,,,82,80,81,,,,,,EV Electricity,
+2026,BMW,i4,xDrive40 Gran Coupe (18 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Compact Cars,,,99,103,101,,,,,,EV Electricity,
+2026,BMW,i4,xDrive40 Gran Coupe (19 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Compact Cars,,,93,95,94,,,,,,EV Electricity,

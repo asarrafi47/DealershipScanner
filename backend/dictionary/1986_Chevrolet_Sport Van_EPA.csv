@@ -1,3 +1,3 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1986,Chevrolet,Sport Van,G30 Sport Van 2WD,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.7,10,13,11,,,,,
-1986,Chevrolet,Sport Van,G30 Sport Van 2WD,5.7L V8 ((350 V8)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.7,10,12,11,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1986,Chevrolet,Sport Van,G30 Sport Van 2WD,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.7,10,13,11,,,,,,5.7L V8,
+1986,Chevrolet,Sport Van,G30 Sport Van 2WD,5.7L V8 ((350 V8)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.7,10,12,11,,,,,,5.7L V8,

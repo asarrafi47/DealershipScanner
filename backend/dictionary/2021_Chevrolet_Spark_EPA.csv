@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2021,Chevrolet,Spark,Spark,1.4L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.4,29,38,33,,,,,
-2021,Chevrolet,Spark,ACTIV,1.4L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.4,29,37,32,,,,,
-2021,Chevrolet,Spark,ACTIV,1.4L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.4,30,37,33,,,,,
-2021,Chevrolet,Spark,Spark,1.4L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.4,30,38,33,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2021,Chevrolet,Spark,Spark,1.4L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.4,29,38,33,,,,,,1.4L I4,
+2021,Chevrolet,Spark,ACTIV,1.4L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.4,29,37,32,,,,,,1.4L I4,
+2021,Chevrolet,Spark,ACTIV,1.4L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.4,30,37,33,,,,,,1.4L I4,
+2021,Chevrolet,Spark,Spark,1.4L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.4,30,38,33,,,,,,1.4L I4,

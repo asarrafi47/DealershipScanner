@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2004,Daewoo,Magnus,Magnus,2.5L V6,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,2.5,17,25,20,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2004,Daewoo,Magnus,Magnus,2.5L V6,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,2.5,17,25,20,,,,,,2.5L V6,

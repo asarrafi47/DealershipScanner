@@ -14,7 +14,7 @@
                class="{% if request.path.rstrip('/') == '/inventory' %}nav-link-active{% endif %}">Inventory dashboard</a>
             <a href="{{ url_for('dealer_portal.inventory_listings') }}"
                class="{% if request.path.startswith('/inventory/listings') %}nav-link-active{% endif %}">Listings</a>
-            <a href="{{ url_for('dashboard') }}">App dashboard</a>
+            <a href="{{ url_for('app_home') }}">App home</a>
             <a href="{{ url_for('listings') }}">Public listings</a>
             {% include "_app_logout.html" %}
         </div>

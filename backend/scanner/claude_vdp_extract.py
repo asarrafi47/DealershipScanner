@@ -217,8 +217,11 @@ def _call_claude_sync(prompt: str) -> dict[str, Any] | None:
         return None
     try:
         import anthropic
+        from backend.vision.claude_rate_limit import anthropic_messages_create
+
         client = anthropic.Anthropic(api_key=key)
-        resp = client.messages.create(
+        resp = anthropic_messages_create(
+            client,
             model=_MODEL,
             max_tokens=400,
             system=[{"type": "text", "text": _SYSTEM, "cache_control": {"type": "ephemeral", "ttl": "1h"}}],
@@ -279,6 +282,37 @@ def _clean_val(field: str, raw: Any) -> Any:
     return raw
 
 
+def _thin_gallery_threshold() -> int:
+    try:
+        return max(3, int((os.environ.get("SCANNER_CLAUDE_VDP_GALLERY_MIN") or "14").strip()))
+    except ValueError:
+        return 14
+
+
+def _gallery_count(vehicle: dict[str, Any]) -> int:
+    seen: set[str] = set()
+    n = 0
+    g = vehicle.get("gallery")
+    if isinstance(g, list):
+        for u in g:
+            if isinstance(u, str) and u.strip().lower().startswith("http") and u not in seen:
+                seen.add(u)
+                n += 1
+    hero = vehicle.get("image_url")
+    if isinstance(hero, str) and hero.strip().lower().startswith("http") and hero not in seen:
+        n += 1
+    return n
+
+
+def should_extract_from_page(vehicle: dict[str, Any]) -> bool:
+    """Run Claude VDP text extract when fields are missing or gallery is thin."""
+    if not _enabled():
+        return False
+    if _missing_fields(vehicle):
+        return True
+    return _gallery_count(vehicle) <= _thin_gallery_threshold()
+
+
 def extract_from_page_text(
     page_text: str,
     vehicle: dict[str, Any],
@@ -288,9 +322,16 @@ def extract_from_page_text(
     Returns dict of {field: value} for fields Claude found.
     Empty dict if disabled or nothing useful found.
     """
-    if not _enabled():
+    if not should_extract_from_page(vehicle):
         return {}
+    from backend.utils.field_clean import is_effectively_empty
+
     missing = _missing_fields(vehicle)
+    if not missing and _gallery_count(vehicle) <= _thin_gallery_threshold():
+        if is_effectively_empty(vehicle.get("description")):
+            missing.append("description")
+        if is_effectively_empty(vehicle.get("packages")):
+            missing.append("packages")
     if not missing:
         return {}
 

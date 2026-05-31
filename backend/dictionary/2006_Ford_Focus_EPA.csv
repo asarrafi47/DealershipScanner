@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2006,Ford,Focus,Focus,2.0L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,29,25,,,,,
-2006,Ford,Focus,Focus,2.0L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,23,31,26,,,,,
-2006,Ford,Focus,Focus,2.3L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.3,20,28,23,,,,,
-2006,Ford,Focus,Station Wagon,2.0L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,22,29,25,,,,,
-2006,Ford,Focus,Station Wagon,2.0L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,23,31,26,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2006,Ford,Focus,Focus,2.0L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,29,25,,,,,,2.0L I4 Turbo,Turbocharged
+2006,Ford,Focus,Focus,2.0L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,23,31,26,,,,,,2.0L I4 Turbo,Turbocharged
+2006,Ford,Focus,Focus,2.3L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.3,20,28,23,,,,,,2.3L I4 Turbo,Turbocharged
+2006,Ford,Focus,Station Wagon,2.0L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,22,29,25,,,,,,2.0L I4 Turbo,Turbocharged
+2006,Ford,Focus,Station Wagon,2.0L I4,Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,23,31,26,,,,,,2.0L I4 Turbo,Turbocharged

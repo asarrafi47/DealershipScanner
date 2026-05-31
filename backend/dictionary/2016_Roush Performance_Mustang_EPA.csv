@@ -1,3 +1,3 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2016,Roush Performance,Mustang,Stage 3 Mustang,5.0L V8,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.0,13,23,16,,,,,
-2016,Roush Performance,Mustang,Stage 3 Mustang,5.0L V8,Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.0,14,23,17,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2016,Roush Performance,Mustang,Stage 3 Mustang,5.0L V8,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.0,13,23,16,,,,,,5.0L V8,
+2016,Roush Performance,Mustang,Stage 3 Mustang,5.0L V8,Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,5.0,14,23,17,,,,,,5.0L V8,

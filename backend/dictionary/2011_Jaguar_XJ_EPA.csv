@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2011,Jaguar,XJ,LWB,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,15,22,18,,,,,
-2011,Jaguar,XJ,LWB,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,15,21,17,,,,,
-2011,Jaguar,XJ,XJ,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,16,23,19,,,,,
-2011,Jaguar,XJ,XJ,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,15,21,17,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2011,Jaguar,XJ,LWB,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,15,22,18,,,,,,5.0L V8 Turbo,Turbocharged
+2011,Jaguar,XJ,LWB,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,15,21,17,,,,,,5.0L V8 Turbo,Turbocharged
+2011,Jaguar,XJ,XJ,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,16,23,19,,,,,,5.0L V8 Turbo,Turbocharged
+2011,Jaguar,XJ,XJ,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Large Cars,8,5.0,15,21,17,,,,,,5.0L V8 Turbo,Turbocharged

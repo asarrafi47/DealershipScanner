@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2021,Audi,A8,L,Hybrid 3.0L V6 (SIDI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,6,3.0,17,26,21,,,,,
-2021,Audi,A8,L,Hybrid 4.0L V8 (SIDI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,8,4.0,15,23,18,,,,,
-2021,Audi,A8,L,Plug-in Hybrid 3.0L V6 (SIDI; PHEV),Automatic (S8),All-Wheel Drive,Premium Gasoline / Electricity,Large Cars,6,3.0,21,26,23,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2021,Audi,A8,L,Hybrid 3.0L V6 (SIDI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,6,3.0,17,26,21,,,,,,3.0L V6 Turbo,Turbocharged
+2021,Audi,A8,L,Hybrid 4.0L V8 (SIDI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Large Cars,8,4.0,15,23,18,,,,,,4.0L V8 Turbo,Turbocharged
+2021,Audi,A8,L,Plug-in Hybrid 3.0L V6 (SIDI; PHEV),Automatic (S8),All-Wheel Drive,Premium Gasoline / Electricity,Large Cars,6,3.0,21,26,23,,,,,,3.0L V6,

@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1994,Saab,9000,9000,"2.3L I4 ((FFS,TRBO))",Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.3,16,24,19,,,,,
-1994,Saab,9000,9000,2.3L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.3,15,24,18,,,,,
-1994,Saab,9000,9000,"2.3L I4 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Large Cars,4,2.3,18,26,21,,,,,
-1994,Saab,9000,9000,"2.3L I4 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.3,18,26,21,,,,,
-1994,Saab,9000,9000,2.3L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.3,17,25,20,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1994,Saab,9000,9000,"2.3L I4 ((FFS,TRBO))",Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.3,16,24,19,,,,,,2.3L I4,
+1994,Saab,9000,9000,2.3L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.3,15,24,18,,,,,,2.3L I4,
+1994,Saab,9000,9000,"2.3L I4 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Large Cars,4,2.3,18,26,21,,,,,,2.3L I4,
+1994,Saab,9000,9000,"2.3L I4 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.3,18,26,21,,,,,,2.3L I4,
+1994,Saab,9000,9000,2.3L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.3,17,25,20,,,,,,2.3L I4,

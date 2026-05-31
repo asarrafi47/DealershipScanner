@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2014,Infiniti,QX70,RWD,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 2WD,6,3.7,17,24,19,,,,,
-2014,Infiniti,QX70,AWD,5.0L V8 (SIDI),Automatic (S7),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,8,5.0,14,20,16,,,,,
-2014,Infiniti,QX70,AWD,3.7L V6,Automatic (S7),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,6,3.7,16,22,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2014,Infiniti,QX70,RWD,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 2WD,6,3.7,17,24,19,,,,,,3.7L V6,
+2014,Infiniti,QX70,AWD,5.0L V8 (SIDI),Automatic (S7),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,8,5.0,14,20,16,,,,,,5.0L V8,
+2014,Infiniti,QX70,AWD,3.7L V6,Automatic (S7),All-Wheel Drive,Premium Gasoline,Small Sport Utility Vehicle 4WD,6,3.7,16,22,18,,,,,,3.7L V6,

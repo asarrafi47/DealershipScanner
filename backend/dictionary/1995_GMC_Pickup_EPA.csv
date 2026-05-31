@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1995,GMC,Pickup,Rally G15/25 2WD,4.3L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,13,15,14,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1995,GMC,Pickup,Rally G15/25 2WD,4.3L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,13,15,14,,,,,,4.3L V6,

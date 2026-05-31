@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1993,Oldsmobile,Cutlass Cruiser,Cutlass Cruiser,2.2L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.2,18,26,21,,,,,
-1993,Oldsmobile,Cutlass Cruiser,Cutlass Cruiser,3.3L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,3.3,17,24,19,,,,,
-1993,Oldsmobile,Cutlass Cruiser,Cutlass Cruiser,3.3L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,3.3,18,26,21,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1993,Oldsmobile,Cutlass Cruiser,Cutlass Cruiser,2.2L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,4,2.2,18,26,21,,,,,,2.2L I4,
+1993,Oldsmobile,Cutlass Cruiser,Cutlass Cruiser,3.3L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,3.3,17,24,19,,,,,,3.3L V6,
+1993,Oldsmobile,Cutlass Cruiser,Cutlass Cruiser,3.3L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,6,3.3,18,26,21,,,,,,3.3L V6,

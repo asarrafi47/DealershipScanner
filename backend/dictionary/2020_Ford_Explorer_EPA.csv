@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2020,Ford,Explorer,RWD,2.3L I4 (SIDI),Automatic (S10),Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.3,21,28,24,,,,,
-2020,Ford,Explorer,AWD,2.3L I4 (SIDI),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.3,20,27,23,,,,,
-2020,Ford,Explorer,AWD,3.0L V6 (SIDI),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,18,24,20,,,,,
-2020,Ford,Explorer,FFV AWD,FFV 3.3L V6 (SIDI & PFI; FFV),Automatic (S10),Four-Wheel Drive,Regular Gasoline / E85,Standard Sport Utility Vehicle 4WD,6,3.3,16,23,19,,,,,
-2020,Ford,Explorer,HEV RWD,Hybrid 3.3L V6 (SIDI & PFI; Hybrid),Automatic (S10),Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.3,27,29,28,,,,,
-2020,Ford,Explorer,HEV AWD,Hybrid 3.3L V6 (SIDI & PFI; Hybrid),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.3,23,26,25,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2020,Ford,Explorer,RWD,2.3L I4 (SIDI),Automatic (S10),Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.3,21,28,24,,,,,,2.3L I4 Turbo,Turbocharged
+2020,Ford,Explorer,AWD,2.3L I4 (SIDI),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.3,20,27,23,,,,,,2.3L I4 Turbo,Turbocharged
+2020,Ford,Explorer,AWD,3.0L V6 (SIDI),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,18,24,20,,,,,,3.0L V6 Twin Turbo,Twin Turbocharged
+2020,Ford,Explorer,FFV AWD,FFV 3.3L V6 (SIDI & PFI; FFV),Automatic (S10),Four-Wheel Drive,Regular Gasoline / E85,Standard Sport Utility Vehicle 4WD,6,3.3,16,23,19,,,,,,3.3L V6 Twin Turbo,Twin Turbocharged
+2020,Ford,Explorer,HEV RWD,Hybrid 3.3L V6 (SIDI & PFI; Hybrid),Automatic (S10),Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.3,27,29,28,,,,,,3.3L V6 Twin Turbo,Twin Turbocharged
+2020,Ford,Explorer,HEV AWD,Hybrid 3.3L V6 (SIDI & PFI; Hybrid),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.3,23,26,25,,,,,,3.3L V6 Twin Turbo,Twin Turbocharged

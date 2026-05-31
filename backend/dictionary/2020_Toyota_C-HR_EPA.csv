@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2020,Toyota,C-HR,C-HR,2.0L I4,Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,27,31,29,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2020,Toyota,C-HR,C-HR,2.0L I4,Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,27,31,29,,,,,,2.0L I4,

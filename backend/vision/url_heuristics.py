@@ -172,6 +172,19 @@ def heuristic_listing_gallery_fluff_url(url: str) -> bool:
     return False
 
 
+_CARSCOMMERCE_THUMB_PATH_RE = re.compile(r"/thumbnails/(?:large|medium|small)/", re.I)
+
+
+def prefer_full_gallery_url(url: str) -> str:
+    """Upgrade syndicated thumbnail paths to full-size assets when the CDN supports both."""
+    s = (url or "").strip()
+    if not s:
+        return ""
+    if "vehicle-images.carscommerce.inc" in s.lower() and _CARSCOMMERCE_THUMB_PATH_RE.search(s):
+        return _CARSCOMMERCE_THUMB_PATH_RE.sub("/", s, count=1)
+    return s
+
+
 def filter_public_gallery_urls(urls: list[str] | None) -> list[str]:
     """
     Drop non-vehicle gallery URLs for public car pages. Prefer dealer lot photos when sorting.
@@ -193,7 +206,14 @@ def filter_public_gallery_urls(urls: list[str] | None) -> list[str]:
     if not kept:
         return []
     kept.sort(key=dealer_lot_photo_score, reverse=True)
-    return kept
+    out: list[str] = []
+    seen_full: set[str] = set()
+    for u in kept:
+        full = prefer_full_gallery_url(u)
+        if full and full not in seen_full:
+            seen_full.add(full)
+            out.append(full)
+    return out
 
 
 def heuristic_drop_gallery_listing_url(url: str) -> bool:

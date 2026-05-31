@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2024,Volvo,V90,CC B6 AWD,Hybrid 2.0L I4 (SIDI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,4,2.0,22,29,25,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2024,Volvo,V90,CC B6 AWD,Hybrid 2.0L I4 (SIDI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,4,2.0,22,29,25,,,,,,2.0L I4 Turbo,Turbocharged

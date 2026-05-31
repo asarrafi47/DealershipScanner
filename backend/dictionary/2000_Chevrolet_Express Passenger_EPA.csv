@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2000,Chevrolet,Express Passenger,Express 1500/2500 2WD,4.3L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.3,13,16,14,,,,,
-2000,Chevrolet,Express Passenger,Express 1500/2500 2WD,5.0L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.0,13,16,14,,,,,
-2000,Chevrolet,Express Passenger,Express 1500/2500 2WD,5.7L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.7,12,17,14,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2000,Chevrolet,Express Passenger,Express 1500/2500 2WD,4.3L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.3,13,16,14,,,,,,4.3L V6,
+2000,Chevrolet,Express Passenger,Express 1500/2500 2WD,5.0L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.0,13,16,14,,,,,,5.0L V8,
+2000,Chevrolet,Express Passenger,Express 1500/2500 2WD,5.7L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.7,12,17,14,,,,,,5.7L V8,

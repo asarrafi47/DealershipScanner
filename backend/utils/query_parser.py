@@ -1,8 +1,12 @@
 """
-Deterministic natural-language query parser for inventory search (no LLM).
+Deterministic natural-language query parser for inventory search.
+
+Used by the listings search bar and ``POST /api/search/smart`` — local regex/fuzzy
+only; no Claude or other LLM calls. Premium chat/compare features use separate modules.
 """
 from __future__ import annotations
 
+import os
 import re
 from functools import lru_cache
 from typing import Any
@@ -91,16 +95,41 @@ def _extract_best_token(tokens: list[str], choices: list[str], threshold: int = 
     return None
 
 
-def _load_inventory_keywords() -> tuple[list[tuple[str, str]], list[str], list[str], list[str], list[str]]:
+def _inventory_db_cache_key() -> str:
+    """Cache token so parser reloads when inventory DB path or file changes."""
+    from backend.db import inventory_db as inv_db
+
+    path = os.environ.get("INVENTORY_DB_PATH") or getattr(inv_db, "DB_PATH", "") or ""
+    try:
+        st = os.stat(path)
+        return f"{path}:{st.st_mtime_ns}:{st.st_size}"
+    except OSError:
+        return str(path)
+
+
+def clear_query_parser_caches() -> None:
+    """Drop cached inventory keywords (tests, DB path changes)."""
+    _load_inventory_keywords.cache_clear()
+    _load_package_names.cache_clear()
+
+
+@lru_cache(maxsize=4)
+def _load_inventory_keywords(cache_key: str) -> tuple[tuple[tuple[str, str], ...], tuple[str, ...], tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    import sqlite3
+
     conn = get_conn()
     cur = conn.cursor()
-    cur.execute(
-        """
-        SELECT DISTINCT make, model FROM cars
-        WHERE make IS NOT NULL AND model IS NOT NULL
-        ORDER BY make, model
-        """
-    )
+    try:
+        cur.execute(
+            """
+            SELECT DISTINCT make, model FROM cars
+            WHERE make IS NOT NULL AND model IS NOT NULL
+            ORDER BY make, model
+            """
+        )
+    except sqlite3.OperationalError:
+        conn.close()
+        return (), (), (), (), ()
     pairs = [(r[0], r[1]) for r in cur.fetchall()]
     cur.execute(
         """
@@ -138,13 +167,66 @@ def _load_inventory_keywords() -> tuple[list[tuple[str, str]], list[str], list[s
     )
     trims = [r[0] for r in cur.fetchall() if r[0]]
     conn.close()
-    return pairs, ext_colors, int_colors, body_styles, trims
+    return tuple(pairs), tuple(ext_colors), tuple(int_colors), tuple(body_styles), tuple(trims)
+
+
+@lru_cache(maxsize=4)
+def _load_package_names(cache_key: str) -> tuple[str, ...]:
+    """Distinct OEM package / option names from active inventory (longest first for substring match)."""
+    import json
+
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT packages FROM cars
+        WHERE (COALESCE(listing_active, 1) = 1)
+          AND packages IS NOT NULL
+          AND packages NOT IN ('{}', '[]', 'null', '')
+        """
+    )
+    seen: set[str] = set()
+    names: list[str] = []
+    for (pkg_raw,) in cur.fetchall():
+        try:
+            pj = json.loads(pkg_raw)
+        except Exception:
+            continue
+        if not isinstance(pj, dict):
+            continue
+        row_names: list[str] = []
+        for entry in pj.get("packages_normalized") or []:
+            if isinstance(entry, dict):
+                n = (entry.get("canonical_name") or entry.get("name") or "").strip()
+                if n:
+                    row_names.append(n)
+        for n in pj.get("possible_packages") or []:
+            if isinstance(n, str) and n.strip():
+                row_names.append(n.strip())
+        for priced in pj.get("sticker_options_priced") or []:
+            if isinstance(priced, dict):
+                n = (priced.get("name") or priced.get("label") or "").strip()
+                if n:
+                    row_names.append(n)
+        for n in pj.get("sticker_options") or []:
+            if isinstance(n, str) and n.strip():
+                row_names.append(n.strip())
+        for n in row_names:
+            low = n.lower()
+            if low not in seen:
+                seen.add(low)
+                names.append(n)
+    conn.close()
+    names.sort(key=lambda s: len(s), reverse=True)
+    return tuple(names)
 
 
 # Phrases in user text → body type cue, with keywords to match against DB values
 _BODY_STYLE_CUES: list[tuple[re.Pattern[str], str, list[str]]] = [
-    (re.compile(r"\b(suv|crossovers?|cuv|sport\s+utility|family\s+(?:car|vehicle|suv))\b", re.I), "SUV sport utility",
-     ["suv", "sport utility", "crossover", "cuv", "utility vehicle"]),
+    (re.compile(r"\b(suv|sport\s+utility|family\s+(?:car|vehicle|suv))\b", re.I), "SUV sport utility",
+     ["suv", "sport utility", "utility vehicle"]),
+    (re.compile(r"\b(crossovers?|cuv)\b", re.I), "Crossover",
+     ["crossover", "cuv"]),
     (re.compile(r"\b(sedan|saloon|4[-\s]?door(?!\s+coupe))\b", re.I), "Sedan",
      ["sedan", "saloon"]),
     (re.compile(r"\b(coupe|sports?\s+car|2[-\s]?door)\b", re.I), "Coupe",
@@ -277,14 +359,53 @@ def _interior_color_cue(text: str) -> bool:
     )
 
 
+def _exterior_color_cue(text: str) -> bool:
+    low = text.lower()
+    return any(w in low for w in ("exterior", "outside", "paint", "body color", "body colour"))
+
+
+def _resolve_color_token(token: str, distinct_colors: list[str]) -> str | None:
+    tok = (token or "").strip().lower()
+    if not tok or tok not in _COLOR_HINTS:
+        return None
+    _, process_mod = _fuzz_module()
+    if process_mod is not None:
+        m = process_mod.extractOne(tok, distinct_colors)
+        if m and m[1] >= 82:
+            return m[0]
+    return _extract_one(tok, distinct_colors, threshold=60)
+
+
+_CONTEXTUAL_INTERIOR_COLOR_RE = re.compile(
+    r"\b(?:(?:interior|inside|cabin|upholstery)\s+(?:is\s+)?(\w+)|(\w+)\s+(?:interior|inside|cabin|upholstery))\b",
+    re.I,
+)
+_CONTEXTUAL_EXTERIOR_COLOR_RE = re.compile(
+    r"\b(?:(?:exterior|outside|paint)\s+(?:is\s+)?(\w+)|(\w+)\s+(?:exterior|outside|paint))\b",
+    re.I,
+)
+
+
+def _extract_contextual_color(text: str, pattern: re.Pattern[str], distinct_colors: list[str]) -> str | None:
+    for m in pattern.finditer(text):
+        raw = (m.group(1) or m.group(2) or "").strip()
+        hit = _resolve_color_token(raw, distinct_colors)
+        if hit:
+            return hit
+    return None
+
+
 def _match_interior_color(text: str, distinct_colors: list[str]) -> str | None:
-    if not distinct_colors or not _interior_color_cue(text):
+    if not distinct_colors:
+        return None
+    hit = _extract_contextual_color(text, _CONTEXTUAL_INTERIOR_COLOR_RE, distinct_colors)
+    if hit:
+        return hit
+    if not _interior_color_cue(text):
         return None
     tokens = _tokenize(text)
     _, process_mod = _fuzz_module()
     for tok in tokens:
-        # Only consider tokens that are themselves known color words — prevents
-        # model names like "silverado" fuzzy-matching to "silver"
         if tok not in _COLOR_HINTS:
             continue
         if process_mod is not None:
@@ -298,16 +419,18 @@ def _match_interior_color(text: str, distinct_colors: list[str]) -> str | None:
     return None
 
 
-def _match_exterior_color(text: str, distinct_colors: list[str]) -> str | None:
+def _match_exterior_color(text: str, distinct_colors: list[str], *, interior_color: str | None = None) -> str | None:
     if not distinct_colors:
         return None
-    tokens = _tokenize(text)
+    hit = _extract_contextual_color(text, _CONTEXTUAL_EXTERIOR_COLOR_RE, distinct_colors)
+    if hit:
+        return hit
+    interior_tok = (interior_color or "").strip().lower()
+    tokens = [t for t in _tokenize(text) if t in _COLOR_HINTS and t != interior_tok]
+    if _interior_color_cue(text) and not _exterior_color_cue(text):
+        return None
     _, process_mod = _fuzz_module()
     for tok in tokens:
-        # Only consider tokens that are themselves known color words — prevents
-        # model names like "silverado", "mustang" fuzzy-matching to colors
-        if tok not in _COLOR_HINTS:
-            continue
         if process_mod is not None:
             m = process_mod.extractOne(tok, distinct_colors)
             if m and m[1] >= 82:
@@ -330,7 +453,7 @@ def _extract_max_price(text: str) -> tuple[float | None, str]:
 
     for m in re.finditer(
         r"\b(?:under|below|less\s+than|max(?:imum)?|at\s+most)\s*"
-        r"(?:\$?\s*)?([\d,]+(?:\.\d+)?)\s*(k|thousand)?\b",
+        r"(?:\$?\s*)?([\d,]+(?:\.\d+)?)\s*(k|thousand)?\b(?!\s*miles?\b)",
         low,
     ):
         raw, suffix = m.group(1), m.group(2) or ""
@@ -494,15 +617,89 @@ _FEATURE_MAP: list[tuple[re.Pattern, str]] = [
     (re.compile(r"\blane\s+(?:assist|departure|keep|warning)\b", re.I), "lane"),
     (re.compile(r"\badaptive\s+cruise\b", re.I), "adaptive cruise"),
     (re.compile(r"\b(heads?\s*[\s-]?up\s*display|hud)\b", re.I), "head-up"),
+    (re.compile(r"\bbowers[\s&-]*(?:and[\s-]*)?wilkins\b", re.I), "bowers"),
+    (re.compile(r"\b(?:harman[\s/-]*kardon|harman)\b", re.I), "harman"),
+    (re.compile(r"\b(?:360\s*°?\s*cam(?:era)?s?|surround[\s-]?view(?:\s+cam(?:era)?s?)?)\b", re.I), "360"),
+    (re.compile(r"\bpremium\s+audio\b", re.I), "premium audio"),
 ]
+
+
+_FULLY_LOADED_RE = re.compile(
+    r"\b(?:fully[\s-]?loaded|fully[\s-]?equipped|every\s+option|all\s+the\s+options|max(?:imum)?\s+options)\b",
+    re.I,
+)
+
+
+def _extract_feature_keywords(text: str) -> list[str]:
+    """Return all matching feature keywords for packages_json_contains_list."""
+    hits: list[str] = []
+    seen: set[str] = set()
+    for rx, keyword in _FEATURE_MAP:
+        if rx.search(text):
+            low = keyword.lower()
+            if low not in seen:
+                seen.add(low)
+                hits.append(keyword)
+    return hits
 
 
 def _extract_feature_keyword(text: str) -> str | None:
     """Return the first matching feature keyword for packages_json_contains, or None."""
-    for rx, keyword in _FEATURE_MAP:
-        if rx.search(text):
-            return keyword
-    return None
+    hits = _extract_feature_keywords(text)
+    return hits[0] if hits else None
+
+
+_WITH_EQUIPMENT_RE = re.compile(
+    r"\b(?:with|w/)\s+(?:the\s+)?([\w\s/&.+-]{2,48}?)(?:\s+package)?(?:\s|$|,|·)",
+    re.I,
+)
+_NAMED_PACKAGE_RE = re.compile(
+    r"\b([\w\s/&.+-]{2,48}?\s+package)\b",
+    re.I,
+)
+
+
+def _extract_all_package_search_terms(text: str, package_names: tuple[str, ...] | list[str]) -> list[str]:
+    """Collect every equipment / package substring mentioned in the query."""
+    needles: list[str] = []
+    seen: set[str] = set()
+
+    def add(raw: str) -> None:
+        needle = (raw or "").strip().lower()
+        if not needle or len(needle) < 2 or needle in seen:
+            return
+        if len(needle) > 200:
+            needle = needle[:200]
+        seen.add(needle)
+        needles.append(needle)
+
+    for feature in _extract_feature_keywords(text):
+        add(feature)
+
+    low = text.lower()
+    for name in package_names:
+        nlow = name.lower().strip()
+        if len(nlow) >= 4 and nlow in low:
+            core = re.sub(r"\s+package$", "", nlow).strip()
+            add(core if len(core) >= 3 else nlow)
+
+    for m in _NAMED_PACKAGE_RE.finditer(text):
+        phrase = m.group(1).strip().lower()
+        core = re.sub(r"\s+package$", "", phrase).strip()
+        add(core if len(core) >= 3 else phrase)
+
+    for m in _WITH_EQUIPMENT_RE.finditer(text):
+        phrase = m.group(1).strip().lower()
+        if phrase and phrase not in {"a", "the", "an"}:
+            add(phrase)
+
+    return needles
+
+
+def _extract_package_search_term(text: str, package_names: tuple[str, ...] | list[str]) -> str | None:
+    """Map free text to a single packages_json_contains needle (legacy helper)."""
+    hits = _extract_all_package_search_terms(text, package_names)
+    return hits[0] if hits else None
 
 
 def _extract_fuel_type(text: str) -> str | None:
@@ -538,8 +735,65 @@ def _extract_engine_liters(text: str) -> float | None:
 _TRIM_SKIP_ALONE = frozenset(
     "sport se le xle xse lx ex s premium base limited touring "
     "plus max pro platinum signature gt rs type r edition special "
-    "ultra advance prestige elite luxury value standard entry".split()
+    "ultra advance prestige elite luxury value standard entry "
+    "and or with inside outside under loaded fully miles mile camera display".split()
 )
+
+# Mercedes-Benz line codes: S580, E 350, GLC300 (inventory uses S-Class + trim "S 580", etc.)
+_MB_LINE_PREFIXES = (
+    "GLC", "GLE", "GLS", "CLA", "CLE", "CLS", "GLA", "GLB", "SL", "A", "C", "E", "G", "S"
+)
+_MB_PREFIX_TO_MODEL = {
+    "A": "A-Class",
+    "C": "C-Class",
+    "E": "E-Class",
+    "G": "G-Class",
+    "S": "S-Class",
+    "GLC": "GLC",
+    "GLE": "GLE",
+    "GLS": "GLS",
+    "CLA": "CLA",
+    "CLE": "CLE",
+    "CLS": "CLS",
+    "GLA": "GLA",
+    "GLB": "GLB",
+    "SL": "SL",
+}
+_MB_LINE_RE = re.compile(
+    r"(?i)\b(" + "|".join(re.escape(p) for p in _MB_LINE_PREFIXES) + r")\s*(\d{2,3})\b"
+)
+
+
+def _resolve_mercedes_inventory_model(prefix: str, models: set[str]) -> str | None:
+    """Map line prefix to the model name used in inventory."""
+    base = _MB_PREFIX_TO_MODEL.get(prefix.upper())
+    if not base:
+        return None
+    if not models or base in models:
+        return base
+    for alt in (f"{prefix.upper()}-Class", prefix.upper(), f"{prefix.upper()} Class"):
+        if alt in models:
+            return alt
+    return base
+
+
+def _extract_mercedes_benz_line(
+    raw: str, models_by_make: dict[str, list[str]]
+) -> tuple[str | None, str | None, str | None]:
+    """
+    Parse Mercedes shorthand (S580, E 350, GLC300) into make, model, trim digits.
+    Returns (make, model, trim_contains) with unset fields as None.
+    """
+    m = _MB_LINE_RE.search(raw or "")
+    if not m:
+        return None, None, None
+    prefix = m.group(1).upper()
+    digits = m.group(2)
+    mb_models = set(models_by_make.get("Mercedes-Benz", []))
+    model = _resolve_mercedes_inventory_model(prefix, mb_models)
+    if not model:
+        return None, None, None
+    return "Mercedes-Benz", model, digits
 
 
 def _extract_trim_hint(working_stripped: str, trims: list[str], make: str | None) -> str | None:
@@ -580,9 +834,243 @@ def _extract_trim_hint(working_stripped: str, trims: list[str], make: str | None
             continue
         if re.match(r"^\d+\.?\d*$", tok):  # pure numeric / decimal → skip
             continue
-        if any(tok in tl for tl in trim_lowers):
+        if any(re.search(rf"(?<![a-z0-9]){re.escape(tok)}(?![a-z0-9])", tl) for tl in trim_lowers):
             return tok
     return None
+
+
+_VEHICLE_SEGMENT_SPLIT_RE = re.compile(r"\s+(?:or|\|)\s+", re.I)
+
+
+def _strip_vehicle_identity_noise(text: str) -> str:
+    """Remove price/year/color/drivetrain tokens before make/model matching."""
+    working = _apply_make_synonyms(text)
+    working = _strip_price_and_year_segments(working)
+    working = re.sub(
+        r"\b(?:awd|4wd|4x4|fwd|rwd|xdrive|quattro|4matic)\b",
+        " ",
+        working,
+        flags=re.I,
+    )
+    working = _CYLINDER_RE.sub(" ", working)
+    working = _ENGINE_L_RE.sub(" ", working)
+    for rx, _ in _FUEL_RE:
+        working = rx.sub(" ", working)
+    for rx, *_ in _BODY_STYLE_CUES:
+        working = rx.sub(" ", working)
+    for rx, _ in _FEATURE_MAP:
+        working = rx.sub(" ", working)
+    working = _FULLY_LOADED_RE.sub(" ", working)
+    working = _CONTEXTUAL_INTERIOR_COLOR_RE.sub(" ", working)
+    working = _CONTEXTUAL_EXTERIOR_COLOR_RE.sub(" ", working)
+    for tok in _tokenize(working):
+        if tok in _COLOR_HINTS:
+            working = re.sub(rf"\b{re.escape(tok)}\b", " ", working, flags=re.I)
+    return re.sub(r"\s+", " ", working).strip()
+
+
+def _segment_looks_vehicle(segment: str, makes: list[str], all_models: list[str]) -> bool:
+    seg = (segment or "").strip()
+    if not seg:
+        return False
+    for mk in makes:
+        if _make_appears_in_text(mk, seg):
+            return True
+    for md in all_models:
+        if _model_appears_in_text(md, seg):
+            return True
+    return bool(re.search(r"\b(?:19|20)\d{2}\b", seg))
+
+
+def _split_vehicle_segments(raw: str, makes: list[str], all_models: list[str]) -> list[str]:
+    """Split a query into OR vehicle clauses (e.g. BMW X5 or Honda Accord)."""
+    text = (raw or "").strip()
+    if not text:
+        return []
+    parts = [p.strip() for p in _VEHICLE_SEGMENT_SPLIT_RE.split(text) if p.strip()]
+    if len(parts) > 1:
+        return parts
+    if ";" in text:
+        parts = [p.strip() for p in text.split(";") if p.strip()]
+        if len(parts) > 1:
+            return parts
+    if "," in text:
+        parts = [p.strip() for p in text.split(",") if p.strip()]
+        if len(parts) >= 2 and all(_segment_looks_vehicle(p, makes, all_models) for p in parts):
+            return parts
+    return [text]
+
+
+def _inherit_make_across_segments(hits: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Carry make forward: 'BMW X5 or X3' → second segment inherits BMW."""
+    last_make: str | None = None
+    out: list[dict[str, Any]] = []
+    for hit in hits:
+        row = dict(hit)
+        if row.get("make"):
+            last_make = str(row["make"])
+        elif last_make and (row.get("model") or row.get("trim_contains")):
+            row["make"] = last_make
+        out.append(row)
+    return out
+
+
+def _merge_vehicle_hits(hits: list[dict[str, Any]]) -> dict[str, Any]:
+    """Combine per-segment make/model/trim into single- or multi-value filters."""
+    hits = [h for h in hits if h.get("make") or h.get("model") or h.get("trim_contains")]
+    if not hits:
+        return {}
+    if len(hits) == 1:
+        return dict(hits[0])
+
+    hits = _inherit_make_across_segments(hits)
+    all_makes = list(dict.fromkeys(str(h["make"]) for h in hits if h.get("make")))
+    all_models = list(dict.fromkeys(str(h["model"]) for h in hits if h.get("model")))
+    all_trims = list(dict.fromkeys(str(h["trim_contains"]) for h in hits if h.get("trim_contains")))
+    unique_pairs = list(
+        dict.fromkeys((str(h["make"]), str(h["model"])) for h in hits if h.get("make") and h.get("model"))
+    )
+
+    out: dict[str, Any] = {}
+
+    if len(unique_pairs) >= 2:
+        out["vehicle_or"] = [{"make": mk, "model": md} for mk, md in unique_pairs]
+        for h in hits:
+            if h.get("make") and not h.get("model"):
+                branch = {"make": str(h["make"])}
+                if h.get("trim_contains"):
+                    branch["trim_contains"] = str(h["trim_contains"])
+                if branch not in out["vehicle_or"]:
+                    out["vehicle_or"].append(branch)
+    elif len(all_makes) == 1 and len(all_models) >= 2:
+        out["make"] = all_makes[0]
+        out["model"] = all_models
+    elif len(all_makes) >= 2 and not all_models:
+        out["make"] = all_makes
+    elif len(all_models) >= 2 and not all_makes:
+        out["model"] = all_models
+    elif len(hits) >= 2:
+        branches: list[dict[str, str]] = []
+        for h in hits:
+            branch: dict[str, str] = {}
+            if h.get("make"):
+                branch["make"] = str(h["make"])
+            if h.get("model"):
+                branch["model"] = str(h["model"])
+            if h.get("trim_contains"):
+                branch["trim_contains"] = str(h["trim_contains"])
+            if branch and branch not in branches:
+                branches.append(branch)
+        if len(branches) >= 2:
+            out["vehicle_or"] = branches
+        elif len(branches) == 1:
+            out.update(branches[0])
+    else:
+        out.update(hits[0])
+
+    if all_trims:
+        out["trim_contains"] = all_trims if len(all_trims) > 1 else all_trims[0]
+    return out
+
+
+def _parse_single_vehicle_identity(
+    segment_raw: str,
+    *,
+    pairs: list[tuple[str, str]],
+    makes: list[str],
+    models_by_make: dict[str, list[str]],
+    all_models: list[str],
+    trims: list[str],
+) -> dict[str, Any]:
+    """Extract make/model/trim from one vehicle clause."""
+    raw = (segment_raw or "").strip()
+    if not raw:
+        return {}
+
+    working = _strip_vehicle_identity_noise(raw)
+    tokens = _tokenize(working)
+    out: dict[str, Any] = {}
+
+    pair_labels = [f"{a} {b}" for a, b in pairs]
+    fuzz_mod, process_mod = _fuzz_module()
+    best_make, best_model = None, None
+    if working:
+        if process_mod is not None and fuzz_mod is not None:
+            pm = process_mod.extractOne(
+                working, pair_labels, scorer=fuzz_mod.WRatio, score_cutoff=75
+            )
+            if pm:
+                label = pm[0]
+                try:
+                    idx = pair_labels.index(label)
+                    best_make, best_model = pairs[idx]
+                except ValueError:
+                    pass
+        if best_make is None:
+            for mk, md in sorted(pairs, key=lambda x: len(x[1]), reverse=True):
+                if re.search(rf"(?i)\b{re.escape(md)}\b", working):
+                    best_make, best_model = mk, md
+                    break
+
+    if best_make is None and tokens:
+        best_make = _extract_best_token(tokens, makes, threshold=82)
+        if best_make:
+            mdl_list = models_by_make.get(best_make, all_models)
+            best_model = _extract_best_token(tokens, mdl_list, threshold=82)
+
+    if best_make is None and tokens:
+        best_model = _extract_best_token(tokens, all_models, threshold=85)
+        if best_model:
+            for mk, md in pairs:
+                if md == best_model:
+                    best_make = mk
+                    break
+
+    if best_make and best_model:
+        def _all_nonnum_dist_in_query(mdl: str, rq: str) -> bool:
+            ml = mdl.lower().strip()
+            pts = [p for p in re.split(r"[\s\-/]+", ml) if len(p) >= 2]
+            dist = [p for p in pts if p not in _MODEL_GENERIC_WORDS]
+            nonnum = [p for p in dist if not p.isdigit()]
+            if not nonnum:
+                return True
+            return all(re.search(rf"(?i)\b{re.escape(p)}\b", rq) for p in nonnum)
+
+        if not _all_nonnum_dist_in_query(best_model, raw):
+            mdl_list = models_by_make.get(best_make, [])
+            valid = [
+                md for md in mdl_list
+                if _all_nonnum_dist_in_query(md, raw) and _model_appears_in_text(md, raw)
+            ]
+            best_model = min(valid, key=len) if valid else None
+
+    mb_make, mb_model, mb_trim = _extract_mercedes_benz_line(raw, models_by_make)
+    if mb_make:
+        out["make"] = mb_make
+        if mb_model:
+            out["model"] = mb_model
+        if mb_trim:
+            out["trim_contains"] = mb_trim
+    elif best_make and _make_appears_in_text(best_make, raw):
+        out["make"] = best_make
+        if best_model and _model_appears_in_text(best_model, raw):
+            out["model"] = best_model
+    elif best_model and _model_appears_in_text(best_model, raw):
+        out["model"] = best_model
+        if best_make:
+            out["make"] = best_make
+
+    if not out.get("trim_contains"):
+        trim_working = working
+        if out.get("make"):
+            trim_working = re.sub(rf"\b{re.escape(str(out['make']))}\b", " ", trim_working, flags=re.I)
+        if out.get("model"):
+            trim_working = re.sub(rf"\b{re.escape(str(out['model']))}\b", " ", trim_working, flags=re.I)
+        trim_working = re.sub(r"\s+", " ", trim_working).strip()
+        trim_hint = _extract_trim_hint(trim_working, trims, out.get("make"))
+        if trim_hint:
+            out["trim_contains"] = trim_hint
+    return out
 
 
 def _extract_years(text: str) -> tuple[int | None, int | None]:
@@ -610,7 +1098,8 @@ def parse_natural_query(query_text: str) -> dict[str, Any]:
     if not raw:
         return {}
 
-    pairs, ext_colors, int_colors, body_styles, trims = _load_inventory_keywords()
+    pairs, ext_colors, int_colors, body_styles, trims = _load_inventory_keywords(_inventory_db_cache_key())
+    package_names = _load_package_names(_inventory_db_cache_key())
     makes = sorted({p[0] for p in pairs}, key=len, reverse=True)
     models_by_make: dict[str, list[str]] = {}
     for mk, md in pairs:
@@ -658,114 +1147,30 @@ def parse_natural_query(query_text: str) -> dict[str, Any]:
     if ic:
         out["interior_color"] = [ic]
 
-    ec = _match_exterior_color(raw, ext_colors)
+    ec = _match_exterior_color(raw, ext_colors, interior_color=ic)
     if ec:
         out["exterior_color"] = [ec]
 
-    working = _apply_make_synonyms(raw)
-    working = _strip_price_and_year_segments(working)
-    working = re.sub(
-        r"\b(?:awd|4wd|4x4|fwd|rwd|xdrive|quattro|4matic)\b",
-        " ",
-        working,
-        flags=re.I,
-    )
-    # Strip cylinder tokens so "v6" / "v8" don't fuzzy-match make/model names
-    working = _CYLINDER_RE.sub(" ", working)
-    # Strip engine displacement (e.g. "5.0L", "3.5 liter") so it doesn't skew model matching
-    working = _ENGINE_L_RE.sub(" ", working)
-    # Strip fuel type cues
-    for rx, _ in _FUEL_RE:
-        working = rx.sub(" ", working)
-    for rx, *_ in _BODY_STYLE_CUES:
-        working = rx.sub(" ", working)
-    for tok in _tokenize(working):
-        if tok in _COLOR_HINTS:
-            working = re.sub(rf"\b{re.escape(tok)}\b", " ", working, flags=re.I)
-    working = re.sub(r"\s+", " ", working).strip()
+    if _FULLY_LOADED_RE.search(raw):
+        out["fully_loaded"] = True
 
-    tokens = _tokenize(working)
+    segments = _split_vehicle_segments(raw, makes, all_models)
+    vehicle_hits = [
+        _parse_single_vehicle_identity(
+            seg,
+            pairs=pairs,
+            makes=makes,
+            models_by_make=models_by_make,
+            all_models=all_models,
+            trims=trims,
+        )
+        for seg in segments
+    ]
+    out.update(_merge_vehicle_hits(vehicle_hits))
 
-    # Prefer full "Make Model" pair match (WRatio handles multi-word makes/models)
-    pair_labels = [f"{a} {b}" for a, b in pairs]
-    fuzz_mod, process_mod = _fuzz_module()
-    best_make, best_model = None, None
-    if working:
-        if process_mod is not None and fuzz_mod is not None:
-            pm = process_mod.extractOne(
-                working, pair_labels, scorer=fuzz_mod.WRatio, score_cutoff=75
-            )
-            if pm:
-                label = pm[0]
-                try:
-                    idx = pair_labels.index(label)
-                    best_make, best_model = pairs[idx]
-                except ValueError:
-                    pass
-        if best_make is None:
-            for mk, md in sorted(pairs, key=lambda x: len(x[1]), reverse=True):
-                if re.search(rf"(?i)\b{re.escape(md)}\b", working):
-                    best_make, best_model = mk, md
-                    break
-
-    if best_make is None and tokens:
-        best_make = _extract_best_token(tokens, makes, threshold=82)
-        if best_make:
-            mdl_list = models_by_make.get(best_make, all_models)
-            best_model = _extract_best_token(tokens, mdl_list, threshold=82)
-
-    if best_make is None and tokens:
-        best_model = _extract_best_token(tokens, all_models, threshold=85)
-        if best_model:
-            for mk, md in pairs:
-                if md == best_model:
-                    best_make = mk
-                    break
-
-    # Prefer the model whose non-numeric distinctive words ALL appear in query.
-    # "x5 40i" → pair picks "X5 sDrive40i"; "sdrive40i" ∉ query → downgrade to "X5".
-    # "silverado high country" → pair picks "Silverado MD"; "md" ∉ query → "Silverado 1500".
-    if best_make and best_model:
-        def _all_nonnum_dist_in_query(mdl: str, rq: str) -> bool:
-            ml = mdl.lower().strip()
-            pts = [p for p in re.split(r"[\s\-/]+", ml) if len(p) >= 2]
-            dist = [p for p in pts if p not in _MODEL_GENERIC_WORDS]
-            nonnum = [p for p in dist if not p.isdigit()]
-            if not nonnum:
-                return True
-            return all(re.search(rf"(?i)\b{re.escape(p)}\b", rq) for p in nonnum)
-
-        if not _all_nonnum_dist_in_query(best_model, raw):
-            mdl_list = models_by_make.get(best_make, [])
-            valid = [
-                md for md in mdl_list
-                if _all_nonnum_dist_in_query(md, raw) and _model_appears_in_text(md, raw)
-            ]
-            best_model = min(valid, key=len) if valid else None
-
-    if best_make and _make_appears_in_text(best_make, raw):
-        out["make"] = best_make
-        if best_model and _model_appears_in_text(best_model, raw):
-            out["model"] = best_model
-    elif best_model and _model_appears_in_text(best_model, raw):
-        out["model"] = best_model
-        out["make"] = best_make  # keep inferred make when model is confirmed
-
-    # Detect trim keyword from remaining working string (after stripping known signals)
-    # Strip make/model names so they don't re-match as trim keywords
-    trim_working = working
-    if out.get("make"):
-        trim_working = re.sub(rf"\b{re.escape(out['make'])}\b", " ", trim_working, flags=re.I)
-    if out.get("model"):
-        trim_working = re.sub(rf"\b{re.escape(out['model'])}\b", " ", trim_working, flags=re.I)
-    trim_working = re.sub(r"\s+", " ", trim_working).strip()
-    trim_hint = _extract_trim_hint(trim_working, trims, out.get("make"))
-    if trim_hint:
-        out["trim_contains"] = trim_hint
-
-    feature = _extract_feature_keyword(raw)
-    if feature:
-        out["packages_json_contains"] = feature
+    pkg_terms = _extract_all_package_search_terms(raw, package_names)
+    if pkg_terms:
+        out["packages_json_contains_list"] = pkg_terms
 
     # Drop body_style values that are really fuel-type labels (e.g. "PLUG-IN HYBRID" as body_style)
     if out.get("fuel_type") and out.get("body_style"):
@@ -782,123 +1187,3 @@ def parse_natural_query(query_text: str) -> dict[str, Any]:
             out.pop("body_style", None)
 
     return out
-
-
-_AI_SYSTEM_PROMPT = """Extract car inventory search filters from a user query. Return ONLY a JSON object.
-
-STRICT RULE: Only include "make" or "model" if the user EXPLICITLY names a car brand or model (e.g. "Honda", "Accord", "Toyota Camry"). Do NOT infer make from body style, engine, or other attributes.
-
-Available fields (omit any not mentioned):
-- "make": explicit brand name only (e.g. "Honda", "Toyota", "BMW")
-- "model": explicit model name only (e.g. "Accord", "Camry", "F-150")
-- "min_year": integer
-- "max_year": integer
-- "max_price": integer dollars ("30k"=30000, "under 35"=35000 treating bare numbers as thousands)
-- "max_mileage": integer miles ("50k miles"=50000)
-- "drivetrain": list, values only from ["AWD","4WD","FWD","RWD"]
-- "body_style": list, values only from ["Sedan","SUV","Truck","Coupe","Hatchback","Convertible","Minivan","Wagon"]
-- "fuel_type": one of ["Gasoline","Hybrid","Electric","Plug-In Hybrid","Diesel"]
-- "exterior_color": list of color families ["red","white","black","silver","blue","gray","green","brown","gold","orange","yellow"]
-- "cylinders": integer (V8→8, V6→6, "4-cylinder"/"inline-4"/"I4"→4, "6-cylinder"→6)
-- "engine_displacement_l_min": float liters
-- "engine_displacement_l_max": float liters
-- "packages_json_contains": MOST important single feature word the user mentions (sunroof, heated seats, navigation, carplay, leather, blind spot, backup camera, panoramic)
-
-Mappings:
-- AWD/4x4/all-wheel/quattro/xDrive/4MATIC → drivetrain:["AWD","4WD"]
-- FWD/front-wheel → drivetrain:["FWD"]
-- RWD/rear-wheel → drivetrain:["RWD"]
-- hybrid → fuel_type:"Hybrid"
-- plug-in hybrid/PHEV → fuel_type:"Plug-In Hybrid"
-- electric/EV/battery → fuel_type:"Electric"
-- SUV/crossover/CUV → body_style:["SUV"]
-- truck/pickup → body_style:["Truck"]
-- van/minivan → body_style:["Minivan"]
-- hatchback/hatch → body_style:["Hatchback"]
-- "2.0L" → engine_displacement_l_min:1.9, engine_displacement_l_max:2.1
-- "turbo 4" → cylinders:4
-- sporty/performance with no explicit engine → cylinders:6
-
-Return valid JSON only. No explanation."""
-
-
-def ai_parse_natural_query(query_text: str) -> dict[str, Any]:
-    """Parse query with Claude Haiku; falls back to parse_natural_query on error."""
-    import json
-    import os
-
-    raw = (query_text or "").strip()
-    if not raw:
-        return {}
-
-    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
-    if not api_key:
-        return parse_natural_query(raw)
-
-    try:
-        import anthropic
-        client = anthropic.Anthropic(api_key=api_key)
-        resp = client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=256,
-            system=_AI_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": raw}],
-        )
-        text = resp.content[0].text.strip()
-        if text.startswith("```"):
-            text = re.sub(r"^```(?:json)?\n?", "", text)
-            text = re.sub(r"\n?```$", "", text)
-        filters = json.loads(text)
-        if not isinstance(filters, dict):
-            return parse_natural_query(raw)
-
-        _, _ext, _int, body_styles_distinct, _trims = _load_inventory_keywords()
-
-        # Drop make/model from AI output — the regex parser handles these reliably.
-        # AI is only trusted for signals it does better: cylinders, fuel_type, features, engine, body_style.
-        filters.pop("make", None)
-        filters.pop("model", None)
-
-        # Expand canonical body_style values to actual DB variants via existing matcher
-        if filters.get("body_style"):
-            canonical = filters["body_style"]
-            hint = " ".join(canonical) if isinstance(canonical, list) else str(canonical)
-            expanded = _match_body_style_filters(hint, body_styles_distinct)
-            if expanded:
-                filters["body_style"] = expanded
-            else:
-                filters.pop("body_style", None)
-
-        # Merge: regex parser is authoritative for structured fields
-        regex = parse_natural_query(raw)
-        if regex.get("make"):
-            filters["make"] = regex["make"]
-        if regex.get("model"):
-            filters["model"] = regex["model"]
-        # Regex values take precedence over AI; AI fills in if regex found nothing
-        for k in ("min_year", "max_year", "max_price", "max_mileage", "drivetrain",
-                  "cylinders", "fuel_type"):
-            if regex.get(k) is not None:
-                filters[k] = regex[k]  # regex wins
-            # else: AI value (if any) stays in filters
-        # body_style: prefer expanded AI value if present, otherwise use regex
-        if not filters.get("body_style") and regex.get("body_style"):
-            filters["body_style"] = regex["body_style"]
-        # Remove fuel-type-labeled DB body_style values (e.g. "PLUG-IN HYBRID" stored as body_style)
-        # when we already have a fuel_type filter for the same concept.
-        if filters.get("fuel_type") and filters.get("body_style"):
-            cleaned = [
-                b for b in filters["body_style"]
-                if b.lower().strip() not in _FUEL_TYPE_BODY_STYLES
-                and "hybrid" not in b.lower()
-                and "electric" not in b.lower()
-                and "plug" not in b.lower()
-            ]
-            if cleaned:
-                filters["body_style"] = cleaned
-            else:
-                filters.pop("body_style", None)
-
-        return filters
-    except Exception:
-        return parse_natural_query(raw)

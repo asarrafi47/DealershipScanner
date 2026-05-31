@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2014,Infiniti,Q60,AWD Coupe,3.7L V6,Automatic (S7),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,18,25,20,,,,,
-2014,Infiniti,Q60,Convertible,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,18,25,20,,,,,
-2014,Infiniti,Q60,Convertible,3.7L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,16,24,19,,,,,
-2014,Infiniti,Q60,Coupe,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,19,27,22,,,,,
-2014,Infiniti,Q60,Coupe,3.7L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,17,25,20,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2014,Infiniti,Q60,AWD Coupe,3.7L V6,Automatic (S7),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,18,25,20,,,,,,3.7L V6,
+2014,Infiniti,Q60,Convertible,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,18,25,20,,,,,,3.7L V6,
+2014,Infiniti,Q60,Convertible,3.7L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,16,24,19,,,,,,3.7L V6,
+2014,Infiniti,Q60,Coupe,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,19,27,22,,,,,,3.7L V6,
+2014,Infiniti,Q60,Coupe,3.7L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,17,25,20,,,,,,3.7L V6,

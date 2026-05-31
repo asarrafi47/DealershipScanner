@@ -1,16 +1,16 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2022,Ford,Explorer,RWD,3.0L V6 (SIDI),Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.0,18,26,21,,,,,
-2022,Ford,Explorer,RWD,3.0L V6 (SIDI),Automatic (S10),Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.0,18,25,20,,,,,
-2022,Ford,Explorer,AWD,3.0L V6 (SIDI),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,18,24,20,,,,,
-2022,Ford,Explorer,HEV AWD,Hybrid 3.3L V6 (SIDI & PFI; Hybrid),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.3,23,26,25,,,,,
-2022,Ford,Explorer,FFV AWD,FFV 3.3L V6 (SIDI & PFI; FFV),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Sport Utility Vehicle 4WD,6,3.3,16,24,19,,,,,
-2022,Ford,Explorer,AWD,3.0L V6 (SIDI),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,18,24,20,,,,,
-2022,Ford,Explorer,Platinum HEV RWD,Hybrid 3.3L V6 (SIDI & PFI; Hybrid),Automatic (S10),Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.3,25,26,26,,,,,
-2022,Ford,Explorer,HEV RWD,Hybrid 3.3L V6 (SIDI & PFI; Hybrid),Automatic (S10),Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.3,27,28,27,,,,,
-2022,Ford,Explorer,RWD,2.3L I4 (SIDI; Stop-Start),Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.3,21,28,24,,,,,
-2022,Ford,Explorer,RWD,2.3L I4 (SIDI),Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.3,20,28,23,,,,,
-2022,Ford,Explorer,AWD,2.3L I4 (SIDI; Stop-Start),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.3,20,27,23,,,,,
-2022,Ford,Explorer,Timberline AWD,2.3L I4 (SIDI; Stop-Start),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.3,19,22,21,,,,,
-2022,Ford,Explorer,Platinum HEV AWD,Hybrid 3.3L V6 (SIDI & PFI; Hybrid),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.3,23,24,23,,,,,
-2022,Ford,Explorer,AWD,2.3L I4 (SIDI; Stop-Start),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.3,20,26,22,,,,,
-2022,Ford,Explorer,Timberline AWD,2.3L I4 (SIDI),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.3,19,21,20,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2022,Ford,Explorer,RWD,3.0L V6 (SIDI),Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.0,18,26,21,,,,,,3.0L V6 Twin Turbo,Twin Turbocharged
+2022,Ford,Explorer,RWD,3.0L V6 (SIDI),Automatic (S10),Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.0,18,25,20,,,,,,3.0L V6 Twin Turbo,Twin Turbocharged
+2022,Ford,Explorer,AWD,3.0L V6 (SIDI),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,18,24,20,,,,,,3.0L V6 Twin Turbo,Twin Turbocharged
+2022,Ford,Explorer,HEV AWD,Hybrid 3.3L V6 (SIDI & PFI; Hybrid),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.3,23,26,25,,,,,,3.3L V6 Twin Turbo,Twin Turbocharged
+2022,Ford,Explorer,FFV AWD,FFV 3.3L V6 (SIDI & PFI; FFV),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Sport Utility Vehicle 4WD,6,3.3,16,24,19,,,,,,3.3L V6 Twin Turbo,Twin Turbocharged
+2022,Ford,Explorer,AWD,3.0L V6 (SIDI),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.0,18,24,20,,,,,,3.0L V6 Twin Turbo,Twin Turbocharged
+2022,Ford,Explorer,Platinum HEV RWD,Hybrid 3.3L V6 (SIDI & PFI; Hybrid),Automatic (S10),Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.3,25,26,26,,,,,,3.3L V6 Twin Turbo,Twin Turbocharged
+2022,Ford,Explorer,HEV RWD,Hybrid 3.3L V6 (SIDI & PFI; Hybrid),Automatic (S10),Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,6,3.3,27,28,27,,,,,,3.3L V6 Twin Turbo,Twin Turbocharged
+2022,Ford,Explorer,RWD,2.3L I4 (SIDI; Stop-Start),Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.3,21,28,24,,,,,,2.3L I4 Turbo,Turbocharged
+2022,Ford,Explorer,RWD,2.3L I4 (SIDI),Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 2WD,4,2.3,20,28,23,,,,,,2.3L I4 Turbo,Turbocharged
+2022,Ford,Explorer,AWD,2.3L I4 (SIDI; Stop-Start),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.3,20,27,23,,,,,,2.3L I4 Turbo,Turbocharged
+2022,Ford,Explorer,Timberline AWD,2.3L I4 (SIDI; Stop-Start),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.3,19,22,21,,,,,,2.3L I4 Turbo,Turbocharged
+2022,Ford,Explorer,Platinum HEV AWD,Hybrid 3.3L V6 (SIDI & PFI; Hybrid),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,6,3.3,23,24,23,,,,,,3.3L V6 Twin Turbo,Twin Turbocharged
+2022,Ford,Explorer,AWD,2.3L I4 (SIDI; Stop-Start),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.3,20,26,22,,,,,,2.3L I4 Turbo,Turbocharged
+2022,Ford,Explorer,Timberline AWD,2.3L I4 (SIDI),Automatic (S10),Four-Wheel Drive,Regular Gasoline,Standard Sport Utility Vehicle 4WD,4,2.3,19,21,20,,,,,,2.3L I4 Turbo,Turbocharged

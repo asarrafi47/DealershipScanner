@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2025,Lexus,RZ,300e (18 inch wheels),EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,137,112,125,,,,,
-2025,Lexus,RZ,300e (20 inch wheels),EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,114,96,105,,,,,
-2025,Lexus,RZ,450e AWD (18 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,115,98,107,,,,,
-2025,Lexus,RZ,450e AWD (20 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,102,87,95,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2025,Lexus,RZ,300e (18 inch wheels),EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,137,112,125,,,,,,EV Electricity,
+2025,Lexus,RZ,300e (20 inch wheels),EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,114,96,105,,,,,,EV Electricity,
+2025,Lexus,RZ,450e AWD (18 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,115,98,107,,,,,,EV Electricity,
+2025,Lexus,RZ,450e AWD (20 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,102,87,95,,,,,,EV Electricity,

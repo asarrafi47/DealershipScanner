@@ -84,6 +84,16 @@ def merge_inventory_rows_same_vin(dst: dict[str, Any], src: dict[str, Any]) -> N
         if nu:
             dst[k] = nu
 
+    for k in ("_detail_url", "detail_url"):
+        if normalize_optional_url(dst.get("source_url")):
+            break
+        nu = normalize_optional_url(src.get(k))
+        if nu:
+            dst.setdefault("_detail_url", nu)
+            if not normalize_optional_url(dst.get("source_url")):
+                dst["source_url"] = nu
+            break
+
     for k in _MERGE_INT_KEYS:
         dv = dst.get(k)
         if k == "mileage":

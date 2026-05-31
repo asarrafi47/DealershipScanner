@@ -57,6 +57,10 @@
                             "Premium subscription required. Open /premium to unlock car chat.",
                             "error"
                         );
+                    } else if (data.error === "login_required") {
+                        appendBubble("Sign in to use car chat.", "error");
+                    } else if (data.error === "user_chat_limit_reached") {
+                        appendBubble("Daily chat limit reached. Try again tomorrow.", "error");
                     } else {
                         appendBubble(
                             data.error || "Request failed (" + (wrapped.status || "?") + ").",

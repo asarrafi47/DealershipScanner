@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1994,GMC,Yukon,K1500 4WD,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.7,11,15,12,,,,,
-1994,GMC,Yukon,K1500 4WD,5.7L V8 ((350 V8) (FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.7,11,15,12,,,,,
-1994,GMC,Yukon,K1500 4WD,Diesel 6.5L V8 ((MPFI) (TURBO)) Diesel,Automatic 4-spd,All-Wheel Drive,Diesel,Special Purpose Vehicles,8,6.5,14,17,15,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1994,GMC,Yukon,K1500 4WD,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.7,11,15,12,,,,,,5.7L V8,
+1994,GMC,Yukon,K1500 4WD,5.7L V8 ((350 V8) (FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.7,11,15,12,,,,,,5.7L V8,
+1994,GMC,Yukon,K1500 4WD,Diesel 6.5L V8 ((MPFI) (TURBO)) Diesel,Automatic 4-spd,All-Wheel Drive,Diesel,Special Purpose Vehicles,8,6.5,14,17,15,,,,,,6.5L V8 Turbo,Turbocharged

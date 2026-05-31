@@ -1,0 +1,19 @@
+[Unit]
+Description=Sarrafi Cars Flask web app
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=sarraficars
+Group=sarraficars
+WorkingDirectory=/opt/DealershipScanner
+EnvironmentFile=/opt/DealershipScanner/.env
+Environment=PUBLIC=1
+Environment=PORT=5001
+ExecStart=/usr/bin/python3 /opt/DealershipScanner/run.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

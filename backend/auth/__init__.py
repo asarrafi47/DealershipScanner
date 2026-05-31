@@ -1,1 +1,1 @@
-"""Authentication: login, registration, MFA (TOTP + QR), session management."""
+"""App authentication helpers (registration, OAuth)."""

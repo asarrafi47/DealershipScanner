@@ -5,7 +5,9 @@ from __future__ import annotations
 import pytest
 
 from backend.scanner.scrapers.scanner_intercept_filter import (
+    effective_lot_total_from_intercepts,
     intercept_url_allowed,
+    max_algolia_nb_hits_from_intercepts,
     payload_has_inventory_json_structure_signal,
     payload_qualifies_for_inventory_intercept,
     pick_total_count_from_intercepts,
@@ -107,6 +109,29 @@ def test_pick_total_count_falls_back_to_tail_when_no_total() -> None:
         (f"{dealer}/b", {"totalCount": 99, "inventory": vehicles}),
     ]
     assert pick_total_count_from_intercepts(records, dealer) == 99
+
+
+def test_max_algolia_nb_hits_and_effective_lot_total() -> None:
+    dealer = "https://www.tustintoyota.com"
+    page_local = {
+        "results": [
+            {"hits": _vin_list(20), "nbHits": 53, "page": 0},
+            {"hits": [], "nbHits": 959, "page": 0},
+        ]
+    }
+    records = [(f"{dealer}/algolia", page_local)]
+    assert pick_total_count_from_intercepts(records, dealer) == 53
+    assert max_algolia_nb_hits_from_intercepts(records, dealer) == 53
+    # Facet-only block (nbHits 959, no hits) is ignored.
+    full_index = {
+        "results": [
+            {"hits": _vin_list(20), "nbHits": 387, "page": 0},
+            {"hits": [], "nbHits": 959, "page": 0},
+        ]
+    }
+    records2 = [(f"{dealer}/algolia", full_index)]
+    assert max_algolia_nb_hits_from_intercepts(records2, dealer) == 387
+    assert effective_lot_total_from_intercepts(records2, dealer) == 387
 
 
 def test_pick_total_count_ignores_denied_hosts(monkeypatch: pytest.MonkeyPatch) -> None:

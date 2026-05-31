@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2026,Bentley,Flying Spur,Flying Spur,Plug-in Hybrid 4.0L V8 (SIDI; PHEV),Automatic (AM-S8),All-Wheel Drive,Premium Gasoline / Electricity,Midsize Cars,8,4.0,17,22,19,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2026,Bentley,Flying Spur,Flying Spur,Plug-in Hybrid 4.0L V8 (SIDI; PHEV),Automatic (AM-S8),All-Wheel Drive,Premium Gasoline / Electricity,Midsize Cars,8,4.0,17,22,19,,,,,,4.0L V8,

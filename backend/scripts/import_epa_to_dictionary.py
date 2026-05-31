@@ -29,7 +29,8 @@ DEFAULT_EPA_CSV = Path("/tmp/vehicles.csv")
 
 DICT_COLUMNS = [
     "Year", "Make", "Model", "Trim",
-    "engineOptions", "transmissionOptions", "drivetrainOptions",
+    "engineOptions", "engineDisplay", "forcedInduction",
+    "transmissionOptions", "drivetrainOptions",
     "fuelType", "bodyStyle", "cylinders", "displacement",
     "mpg_city", "mpg_highway", "mpg_combined",
     "exteriorColors", "Packages", "packageDetails", "Options", "optionDetails",
@@ -161,6 +162,12 @@ def process_epa_csv(epa_csv: Path, min_year: int, dictionary_dir: Path):
                 "Options": "",
                 "optionDetails": "",
             }
+            try:
+                from backend.dictionary.epa_engine import catalog_engine_fields
+
+                dict_row.update(catalog_engine_fields(dict_row))
+            except Exception:
+                pass
 
             file_key = f"{year}_{safe_filename(make)}_{safe_filename(base_model)}"
             rows_by_file[file_key].append(dict_row)

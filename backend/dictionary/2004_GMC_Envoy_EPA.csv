@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2004,GMC,Envoy,2WD,4.2L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.2,14,19,16,,,,,
-2004,GMC,Envoy,XL 2WD,4.2L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.2,13,18,15,,,,,
-2004,GMC,Envoy,XL 2WD,5.3L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,5.3,14,18,16,,,,,
-2004,GMC,Envoy,4WD,4.2L V6,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.2,14,19,16,,,,,
-2004,GMC,Envoy,XL 4WD,4.2L V6,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.2,13,18,15,,,,,
-2004,GMC,Envoy,XL 4WD,5.3L V8,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,8,5.3,13,17,15,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2004,GMC,Envoy,2WD,4.2L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.2,14,19,16,,,,,,4.2L V6 Turbo,Turbocharged
+2004,GMC,Envoy,XL 2WD,4.2L V6,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,4.2,13,18,15,,,,,,4.2L V6 Turbo,Turbocharged
+2004,GMC,Envoy,XL 2WD,5.3L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,8,5.3,14,18,16,,,,,,5.3L V8 Turbo,Turbocharged
+2004,GMC,Envoy,4WD,4.2L V6,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.2,14,19,16,,,,,,4.2L V6 Turbo,Turbocharged
+2004,GMC,Envoy,XL 4WD,4.2L V6,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,4.2,13,18,15,,,,,,4.2L V6 Turbo,Turbocharged
+2004,GMC,Envoy,XL 4WD,5.3L V8,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,8,5.3,13,17,15,,,,,,5.3L V8 Turbo,Turbocharged

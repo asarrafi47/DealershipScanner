@@ -101,7 +101,7 @@ def _map_vehicle(
     condition = _parse_condition(vehicle)
     stock = str(vehicle.get("stock") or "").strip() or None
 
-    return {
+    out = {
         "vin": vin,
         "year": year,
         "make": make_raw,
@@ -120,11 +120,14 @@ def _map_vehicle(
         "stock_number": stock,
         "image_url": "",
         "gallery": [],
-        "source_url": None,
         "dealer_name": dealer_name,
         "dealer_url": dealer_url,
         "dealer_id": dealer_id,
     }
+    from backend.parsers.vdp_urls import apply_vehicle_source_url
+
+    apply_vehicle_source_url(out)
+    return out
 
 
 async def _browser_fetch_json(page: Any, url: str) -> Any:

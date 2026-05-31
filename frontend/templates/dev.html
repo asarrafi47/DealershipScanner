@@ -14,7 +14,7 @@
     <nav class="topbar">
         <div class="logo">Sarrafi Cars</div>
         <div class="nav-links">
-            <a href="/dashboard">Dashboard</a>
+            <a href="{{ url_for('app_home') }}">Home</a>
             <a href="{{ url_for('listings') }}">Listings</a>
             {% if admin_username %}
             <span class="nav-links-meta">Admin: {{ admin_username }}</span>

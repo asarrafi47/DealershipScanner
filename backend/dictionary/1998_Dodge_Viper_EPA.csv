@@ -1,3 +1,3 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1998,Dodge,Viper,Convertible,8.0L V10,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,10,8.0,11,20,13,,,,,
-1998,Dodge,Viper,Coupe,8.0L V10,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,10,8.0,11,20,13,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1998,Dodge,Viper,Convertible,8.0L V10,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,10,8.0,11,20,13,,,,,,8.0L V10,
+1998,Dodge,Viper,Coupe,8.0L V10,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,10,8.0,11,20,13,,,,,,8.0L V10,

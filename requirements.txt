@@ -38,3 +38,15 @@ pymupdf>=1.24
 # SQLCipher for at-rest encryption of credential DBs (dev_users.db, users.db).
 # Requires native lib: brew install sqlcipher (macOS) / apt install libsqlcipher-dev (Linux)
 sqlcipher3>=0.5.4
+
+# Transitive dependency security floors (SEC-076; validate with scripts/security_check.sh)
+urllib3>=2.7.0
+idna>=3.15
+langchain-core>=1.3.3
+langchain-openai>=1.1.14
+langchain-text-splitters>=1.1.2
+langsmith>=0.8.0
+pygments>=2.20.0
+starlette>=1.0.1
+tornado>=6.5.5
+# lxml: PYSEC-2026-87 fixed in 6.1.0; crawl4ai 0.8.x pins lxml~=5.3 — see SEC-076 until upstream allows 6.x.

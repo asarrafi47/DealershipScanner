@@ -18,6 +18,27 @@ def get_total_count(obj) -> int | None:
     v = obj.get("totalCount") or obj.get("total_count") or obj.get("totalRecords")
     if v is not None and isinstance(v, (int, float)):
         return int(v)
+    # Algolia multi-query: prefer nbHits on the block that carries vehicle hits (not facet-only blocks).
+    results = obj.get("results")
+    if isinstance(results, list) and results:
+        best_nb: int | None = None
+        best_hit_len = -1
+        for block in results:
+            if not isinstance(block, dict):
+                continue
+            hits = block.get("hits")
+            hit_len = len(hits) if isinstance(hits, list) else 0
+            nb = block.get("nbHits") or block.get("nb_hits")
+            if nb is not None and isinstance(nb, (int, float)) and hit_len > 0:
+                n = int(nb)
+                if hit_len > best_hit_len or (hit_len == best_hit_len and (best_nb is None or n < best_nb)):
+                    best_hit_len = hit_len
+                    best_nb = n
+        if best_nb is not None and best_nb > 0:
+            return best_nb
+    nb = obj.get("nbHits") or obj.get("nb_hits")
+    if nb is not None and isinstance(nb, (int, float)):
+        return int(nb)
     pi = obj.get("pageInfo") or obj.get("page_info") or obj.get("pagination")
     if isinstance(pi, dict):
         v = pi.get("totalCount") or pi.get("total") or pi.get("totalRecords")

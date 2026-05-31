@@ -1,0 +1,60 @@
+{# Guest / marketing navigation — discovery & sign-up. #}
+
+{% from '_icons.html' import icon %}
+
+<nav class="topbar topbar--marketing" aria-label="Site">
+
+    <a href="{{ url_for('home') }}" class="logo logo--link">Sarrafi Cars</a>
+
+    {% include "_nav_search.html" %}
+
+    <div class="nav-links nav-links--site">
+
+        <a href="{{ url_for('listings') }}" class="nav-mkt-link{% if nav_active == 'listings' %} nav-mkt-link--active{% endif %}"
+
+            {% if nav_active == 'listings' %}aria-current="page"{% endif %}>
+
+            {{ icon('inventory', 17, 'nav-mkt-link__icon') }}
+
+            <span>Browse inventory</span>
+
+        </a>
+
+        <a href="{{ url_for('find_dealers_page') }}" class="nav-mkt-link{% if nav_active == 'dealers' %} nav-mkt-link--active{% endif %}"
+
+            {% if nav_active == 'dealers' %}aria-current="page"{% endif %}>
+
+            {{ icon('dealers', 17, 'nav-mkt-link__icon') }}
+
+            <span>Find dealers</span>
+
+        </a>
+
+    </div>
+
+    <div class="nav-links nav-links--account">
+
+        {% if nav_active == "login" %}
+
+        <a href="/login" class="nav-mkt-link nav-mkt-link--active" aria-current="page">Sign in</a>
+
+        {% else %}
+
+        <a href="/login" class="nav-mkt-link">Sign in</a>
+
+        {% endif %}
+
+        {% if nav_active == "register" %}
+
+        <a href="/register" class="nav-link-cta" aria-current="page">Get started</a>
+
+        {% else %}
+
+        <a href="/register" class="nav-link-cta">Get started</a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+

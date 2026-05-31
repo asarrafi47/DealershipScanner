@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2025,Genesis,GV60,RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,125,99,112,,,,,
-2025,Genesis,GV60,AWD Advanced (20 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,103,86,95,,,,,
-2025,Genesis,GV60,AWD Performance,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,97,82,90,,,,,
-2025,Genesis,GV60,AWD (19 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,110,90,100,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2025,Genesis,GV60,RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,125,99,112,,,,,,EV Electricity,
+2025,Genesis,GV60,AWD Advanced (20 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,103,86,95,,,,,,EV Electricity,
+2025,Genesis,GV60,AWD Performance,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,97,82,90,,,,,,EV Electricity,
+2025,Genesis,GV60,AWD (19 inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,110,90,100,,,,,,EV Electricity,

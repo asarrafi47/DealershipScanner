@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2020,BMW,5 Series,530i,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,25,33,28,,,,,
-2020,BMW,5 Series,530i xDrive,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,24,31,27,,,,,
-2020,BMW,5 Series,540i xDrive,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,22,29,25,,,,,
-2020,BMW,5 Series,530e,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),Automatic (S8),Rear-Wheel Drive,Premium Gasoline / Electricity,Compact Cars,4,2.0,25,31,27,,,,,
-2020,BMW,5 Series,530e xDrive,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),Automatic (S8),All-Wheel Drive,Premium Gasoline / Electricity,Compact Cars,4,2.0,23,29,25,,,,,
-2020,BMW,5 Series,540i,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,22,30,25,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2020,BMW,5 Series,530i,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,25,33,28,,,,,,2.0L I4 Turbo,Turbocharged
+2020,BMW,5 Series,530i xDrive,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,24,31,27,,,,,,2.0L I4 Turbo,Turbocharged
+2020,BMW,5 Series,540i xDrive,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,22,29,25,,,,,,3.0L I6 Turbo,Turbocharged
+2020,BMW,5 Series,530e,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),Automatic (S8),Rear-Wheel Drive,Premium Gasoline / Electricity,Compact Cars,4,2.0,25,31,27,,,,,,2.0L I4,
+2020,BMW,5 Series,530e xDrive,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),Automatic (S8),All-Wheel Drive,Premium Gasoline / Electricity,Compact Cars,4,2.0,23,29,25,,,,,,2.0L I4,
+2020,BMW,5 Series,540i,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,22,30,25,,,,,,3.0L I6 Turbo,Turbocharged

@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2024,Maserati,Granturismo,Folgore,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Subcompact Cars,,,90,85,87,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2024,Maserati,Granturismo,Folgore,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Subcompact Cars,,,90,85,87,,,,,,EV Electricity,

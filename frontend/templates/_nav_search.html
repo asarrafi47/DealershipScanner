@@ -1,0 +1,33 @@
+{# Global inventory search — GET to listings (smart search runs on ?q=). #}
+{% from '_icons.html' import icon %}
+<form class="nav-search" method="get" action="{{ url_for('listings') }}" role="search">
+    <div class="nav-search__query">
+        <label class="nav-search__label" for="nav-search-input">Search inventory</label>
+        <span class="nav-search__icon" aria-hidden="true">{{ icon('inventory', 16) }}</span>
+        <input
+            type="search"
+            id="nav-search-input"
+            name="q"
+            class="nav-search__input"
+            placeholder="Accord with sunroof under $30k · M Sport · VIN…"
+            value="{{ request.args.get('q', '') if request else '' }}"
+            autocomplete="off"
+            spellcheck="false"
+            enterkeyhint="search"
+        >
+        <button type="submit" class="nav-search__submit">Search</button>
+    </div>
+    <label class="nav-search__zip-label">
+        <span class="nav-search__label">ZIP code</span>
+        <input
+            type="text"
+            name="zip_code"
+            class="nav-search__zip"
+            placeholder="ZIP"
+            maxlength="5"
+            inputmode="numeric"
+            value="{{ request.args.get('zip_code', '') if request else '' }}"
+            autocomplete="postal-code"
+        >
+    </label>
+</form>

@@ -1,13 +1,13 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2026,BMW,4 Series,430i Coupe,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,28,36,31,,,,,
-2026,BMW,4 Series,430i xDrive Coupe,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,27,34,30,,,,,
-2026,BMW,4 Series,430i Convertible,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,27,35,30,,,,,
-2026,BMW,4 Series,430i xDrive Convertible,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,24,33,28,,,,,
-2026,BMW,4 Series,M440i Coupe,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,27,34,30,,,,,
-2026,BMW,4 Series,M440i xDrive Coupe,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,26,33,29,,,,,
-2026,BMW,4 Series,M440i Convertible,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,27,33,29,,,,,
-2026,BMW,4 Series,M440i xDrive Convertible,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,25,32,28,,,,,
-2026,BMW,4 Series,430i Gran Coupe,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,27,35,30,,,,,
-2026,BMW,4 Series,430i xDrive Gran Coupe,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,25,34,29,,,,,
-2026,BMW,4 Series,M440i Gran Coupe,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,26,32,28,,,,,
-2026,BMW,4 Series,M440i xDrive Gran Coupe,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,25,31,27,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2026,BMW,4 Series,430i Coupe,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,28,36,31,,,,,,2.0L I4 Turbo,Turbocharged
+2026,BMW,4 Series,430i xDrive Coupe,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,27,34,30,,,,,,2.0L I4 Turbo,Turbocharged
+2026,BMW,4 Series,430i Convertible,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,27,35,30,,,,,,2.0L I4 Turbo,Turbocharged
+2026,BMW,4 Series,430i xDrive Convertible,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,24,33,28,,,,,,2.0L I4 Turbo,Turbocharged
+2026,BMW,4 Series,M440i Coupe,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,27,34,30,,,,,,3.0L I6 Turbo,Turbocharged
+2026,BMW,4 Series,M440i xDrive Coupe,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,26,33,29,,,,,,3.0L I6 Turbo,Turbocharged
+2026,BMW,4 Series,M440i Convertible,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,27,33,29,,,,,,3.0L I6 Turbo,Turbocharged
+2026,BMW,4 Series,M440i xDrive Convertible,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,25,32,28,,,,,,3.0L I6 Turbo,Turbocharged
+2026,BMW,4 Series,430i Gran Coupe,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,27,35,30,,,,,,2.0L I4 Turbo,Turbocharged
+2026,BMW,4 Series,430i xDrive Gran Coupe,Hybrid 2.0L I4 (SIDI & PFI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,25,34,29,,,,,,2.0L I4 Turbo,Turbocharged
+2026,BMW,4 Series,M440i Gran Coupe,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,26,32,28,,,,,,3.0L I6 Turbo,Turbocharged
+2026,BMW,4 Series,M440i xDrive Gran Coupe,Hybrid 3.0L V6 (SIDI & PFI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,25,31,27,,,,,,3.0L I6 Turbo,Turbocharged

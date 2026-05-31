@@ -35,7 +35,7 @@ After large inventory imports or schema changes affecting indexed fields, re-run
 
 ## Query flow
 
-1. **Smart search (JS)** — User types in “Smart search”; `POST /api/search/smart` runs `parse_natural_query()` for structured hints, then **`hybrid_smart_search()`**.
+1. **Smart search (JS)** — User types in “Smart search”; `POST /api/search/smart` runs **`parse_natural_query()` only** (deterministic, no Claude/Haiku), then **`hybrid_smart_search()`**. Premium car chat/compare use separate AI routes.
 2. **GET `/search?q=...`** — Same hybrid pipeline with filters from the form (`flask_request_to_search_cars_kwargs`).
 3. **Hybrid pipeline** (`backend/hybrid_inventory_search.py`):
    - If there is free text: **`query_cars(query, n_results=100)`** → ordered candidate `car_id` list (pgvector).

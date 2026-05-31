@@ -8,8 +8,6 @@ each car's ``description`` (deterministic + optional LLM; see ``listing_descript
 Interior vision runs by default after each scan; set ``SCANNER_POST_INTERIOR_VISION=0`` or
 ``--no-post-interior-vision`` to skip. Requires ``ANTHROPIC_API_KEY``.
 Enrichment is optional and requires an indexed EPA master catalog unless ``vision_only``.
-Optional KBB IDWS valuation for touched VINs (``SCANNER_POST_KBB=1`` / ``--post-kbb``;
-requires ``KBB_API_KEY``).
 OEM window sticker PDF fetch + parse for touched VINs (``SCANNER_POST_WINDOW_STICKER=1``,
 default on; ``--no-post-window-sticker`` to skip). Reliable: Stellantis + Ford/Lincoln.
 GM: ``WINDOW_STICKER_GM_EXPERIMENTAL=1``. Stores PDF under ``car_window_stickers/``.
@@ -54,11 +52,6 @@ def post_interior_vision_env_enabled() -> bool:
     return raw not in ("0", "false", "no", "off")
 
 
-def post_kbb_env_enabled() -> bool:
-    """Licensed KBB IDWS refresh for VINs touched in this scan (requires ``KBB_API_KEY``)."""
-    return (os.environ.get("SCANNER_POST_KBB") or "").strip().lower() in ("1", "true", "yes", "on")
-
-
 def post_window_sticker_env_enabled() -> bool:
     """
     Fetch OEM Monroney PDFs for scanned VINs (Jeep, Ford, GM, etc.) and persist locally.
@@ -87,7 +80,11 @@ def run_window_sticker_for_vins(vins: list[str]) -> dict[str, Any]:
         ensure_window_sticker_for_car,
         window_sticker_available,
     )
-    from backend.scanner.window_sticker import get_window_sticker_url
+    from backend.scanner.window_sticker import (
+        car_listing_may_have_sticker,
+        get_window_sticker_url,
+        should_auto_fetch_oem_window_sticker,
+    )
 
     stats: dict[str, Any] = {
         "vins": len(vins),
@@ -96,6 +93,7 @@ def run_window_sticker_for_vins(vins: list[str]) -> dict[str, Any]:
         "already_cached": 0,
         "reanalyzed": 0,
         "no_oem_endpoint": 0,
+        "listing_sticker": 0,
         "failed": 0,
         "skipped_cap": 0,
     }
@@ -107,11 +105,14 @@ def run_window_sticker_for_vins(vins: list[str]) -> dict[str, Any]:
         vnorm = (vin or "").strip().upper()
         if len(vnorm) != 17:
             continue
-        if not get_window_sticker_url(vnorm):
-            stats["no_oem_endpoint"] += 1
-            continue
         row = get_car_by_vin(vnorm)
         if not row:
+            continue
+        oem_url = get_window_sticker_url(vnorm)
+        can_oem = bool(oem_url) and should_auto_fetch_oem_window_sticker(row)
+        can_listing = car_listing_may_have_sticker(row)
+        if not can_oem and not can_listing:
+            stats["no_oem_endpoint"] += 1
             continue
         if window_sticker_available(row) and not car_sticker_packages_need_analysis(row):
             stats["already_cached"] += 1
@@ -125,6 +126,8 @@ def run_window_sticker_for_vins(vins: list[str]) -> dict[str, Any]:
             )
             if out.get("fetch_error"):
                 stats["failed"] += 1
+            elif out.get("listing_sticker"):
+                stats["listing_sticker"] += 1
             elif out.get("analyzed") and had_local:
                 stats["reanalyzed"] += 1
             elif out.get("window_sticker_available") and out.get("stored"):
@@ -192,9 +195,225 @@ def run_dictionary_enrich_for_vins(vins: list[str]) -> dict[str, Any]:
 
 
 def gallery_vision_filter_env_enabled() -> bool:
-    """Claude gallery-image classification. Default on; set SCANNER_GALLERY_VISION_FILTER=0 to opt out."""
-    raw = (os.environ.get("SCANNER_GALLERY_VISION_FILTER") or "1").strip().lower()
+    """Any gallery vision stage enabled (inline during scan or post-scan batch)."""
+    from backend.scanner.scan_efficiency import (
+        gallery_vision_inline_enabled,
+        gallery_vision_post_enabled,
+    )
+
+    raw = (os.environ.get("SCANNER_GALLERY_VISION_FILTER") or "").strip().lower()
+    if raw in ("0", "false", "no", "off"):
+        return False
+    if raw in ("1", "true", "yes", "on"):
+        return True
+    return gallery_vision_inline_enabled() or gallery_vision_post_enabled()
+
+
+def apply_gallery_vision_filter_to_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, int]:
+    """
+    Mutate each vehicle's ``gallery`` and ``image_url`` to drop non-vehicle images.
+    Uses Claude Haiku when ANTHROPIC_API_KEY is set.
+    """
+    anthropic_key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
+    if anthropic_key:
+        from backend.vision import claude_vision as _vis
+
+        _filter_fn = _vis.filter_gallery_urls_for_vehicle_listing
+        logger.info("Gallery vision filter: using Claude Haiku")
+    else:
+        logger.info(
+            "Gallery vision filter: ANTHROPIC_API_KEY not set — returning URLs as-is (no filtering)"
+        )
+
+        def _filter_fn(urls, *, page_referer=None, **kw):  # type: ignore[misc]
+            return [u for u in urls if isinstance(u, str) and u.strip().lower().startswith("http")]
+
+    total_before = 0
+    total_after = 0
+    for v in vehicles:
+        hero = v.get("image_url")
+        raw_g = v.get("gallery")
+        g_list = raw_g if isinstance(raw_g, list) else []
+        urls: list[str] = []
+        if isinstance(hero, str) and hero.strip().lower().startswith("http"):
+            urls.append(hero.strip())
+        for u in g_list:
+            if isinstance(u, str) and u.strip().lower().startswith("http"):
+                urls.append(u.strip())
+        seen_u: set[str] = set()
+        n_before = 0
+        for u in urls:
+            if u not in seen_u:
+                seen_u.add(u)
+                n_before += 1
+        total_before += n_before
+        ref = str(v.get("_detail_url") or v.get("detail_url") or v.get("source_url") or "").strip()
+        page_referer = ref if ref.lower().startswith("http") else None
+        filtered = _filter_fn(urls, page_referer=page_referer)
+        seen_f: set[str] = set()
+        n_after = 0
+        for u in filtered:
+            if u not in seen_f:
+                seen_f.add(u)
+                n_after += 1
+        total_after += n_after
+        v["gallery"] = filtered
+        v["image_url"] = filtered[0] if filtered else ""
+    dropped = max(0, total_before - total_after)
+    return {
+        "gallery_vision_unique_before": total_before,
+        "gallery_vision_unique_after": total_after,
+        "gallery_vision_unique_dropped": dropped,
+    }
+
+
+def post_gallery_recovery_env_enabled() -> bool:
+    """Re-fetch VDP HTML for thin galleries before vision filter. Default on."""
+    raw = (os.environ.get("SCANNER_POST_GALLERY_RECOVERY") or "1").strip().lower()
     return raw not in ("0", "false", "no", "off")
+
+
+def run_gallery_recovery_for_vins(vins: list[str]) -> dict[str, Any]:
+    """
+    Post-scan: HTTP/Playwright HTML harvest for listings with thin galleries.
+    Runs before gallery vision filter so Claude sees more real photos.
+    """
+    import json
+
+    from backend.db.inventory_db import get_car_by_vin, update_car_row_partial
+    from backend.scanner.vdp_html_recovery import (
+        count_https_gallery_urls,
+        recover_from_detail_page,
+        thin_gallery_threshold,
+    )
+    from backend.utils.gallery_merge import merge_vdp_gallery_into_vehicle
+
+    stats: dict[str, Any] = {
+        "vins": len(vins),
+        "rows_found": 0,
+        "rows_updated": 0,
+        "rows_recovered": 0,
+        "urls_added_total": 0,
+    }
+    thresh = thin_gallery_threshold()
+
+    for vin in vins:
+        vnorm = (vin or "").strip().upper()
+        if len(vnorm) != 17:
+            continue
+        row = get_car_by_vin(vnorm)
+        if not row:
+            continue
+        stats["rows_found"] += 1
+        g_raw = row.get("gallery")
+        if isinstance(g_raw, str):
+            try:
+                g_list = json.loads(g_raw) if g_raw.strip() else []
+            except json.JSONDecodeError:
+                g_list = []
+        elif isinstance(g_raw, list):
+            g_list = list(g_raw)
+        else:
+            g_list = []
+        if count_https_gallery_urls(g_list) > thresh:
+            continue
+        detail = (
+            str(row.get("source_url") or row.get("listing_vdp_url") or row.get("_detail_url") or "")
+            .strip()
+        )
+        if not detail.lower().startswith("http"):
+            continue
+        rec = recover_from_detail_page(detail, existing_gallery=g_list)
+        rec_urls = rec.get("gallery_urls") or []
+        if not rec_urls and not rec.get("description"):
+            continue
+        veh = {
+            "gallery": g_list,
+            "image_url": row.get("image_url"),
+        }
+        patch: dict[str, Any] = {}
+        if rec_urls:
+            gmerge = merge_vdp_gallery_into_vehicle(veh, rec_urls)
+            if int(gmerge.get("added") or 0) > 0:
+                patch["gallery"] = json.dumps(veh.get("gallery") or [])
+                patch["image_url"] = veh.get("image_url")
+                stats["urls_added_total"] += int(gmerge.get("added") or 0)
+                stats["rows_recovered"] += 1
+        desc = rec.get("description")
+        if isinstance(desc, str) and desc.strip() and not (row.get("description") or "").strip():
+            patch["description"] = desc.strip()[:2000]
+        if patch:
+            update_car_row_partial(int(row["id"]), patch)
+            stats["rows_updated"] += 1
+    return stats
+
+
+def run_gallery_vision_for_vins(vins: list[str]) -> dict[str, Any]:
+    """Post-scan gallery cleanup: load rows by VIN, filter galleries, write back."""
+    import json
+
+    from backend.db.inventory_db import get_car_by_vin, update_car_row_partial
+
+    stats: dict[str, Any] = {
+        "vins": len(vins),
+        "rows_found": 0,
+        "rows_updated": 0,
+        "gallery_vision_unique_before": 0,
+        "gallery_vision_unique_after": 0,
+        "gallery_vision_unique_dropped": 0,
+    }
+    batch: list[dict[str, Any]] = []
+    batch_meta: list[tuple[int, dict[str, Any]]] = []
+
+    for vin in vins:
+        vnorm = (vin or "").strip().upper()
+        if len(vnorm) != 17:
+            continue
+        row = get_car_by_vin(vnorm)
+        if not row:
+            continue
+        stats["rows_found"] += 1
+        g_raw = row.get("gallery")
+        if isinstance(g_raw, str):
+            try:
+                g_list = json.loads(g_raw) if g_raw.strip() else []
+            except json.JSONDecodeError:
+                g_list = []
+        elif isinstance(g_raw, list):
+            g_list = g_raw
+        else:
+            g_list = []
+        veh = {
+            "vin": vnorm,
+            "image_url": row.get("image_url"),
+            "gallery": g_list,
+            "source_url": row.get("source_url"),
+        }
+        batch.append(veh)
+        batch_meta.append((int(row["id"]), dict(row)))
+
+    if not batch:
+        return stats
+
+    gv = apply_gallery_vision_filter_to_vehicles(batch)
+    stats["gallery_vision_unique_before"] = gv.get("gallery_vision_unique_before", 0)
+    stats["gallery_vision_unique_after"] = gv.get("gallery_vision_unique_after", 0)
+    stats["gallery_vision_unique_dropped"] = gv.get("gallery_vision_unique_dropped", 0)
+
+    for (car_id, _row), veh in zip(batch_meta, batch):
+        g_out = veh.get("gallery")
+        if not isinstance(g_out, list):
+            g_out = []
+        hero = veh.get("image_url") if isinstance(veh.get("image_url"), str) else ""
+        update_car_row_partial(
+            car_id,
+            {
+                "gallery": json.dumps(g_out),
+                "image_url": hero or None,
+            },
+        )
+        stats["rows_updated"] += 1
+    return stats
 
 
 def monroney_vision_env_enabled() -> bool:
@@ -748,46 +967,6 @@ def run_listing_description_parse_for_vins(vins: list[str]) -> dict[str, Any]:
     return stats
 
 
-def run_kbb_for_vins(vins: list[str]) -> dict[str, Any]:
-    """Call KBB IDWS for each VIN (rate-limited); skips rows without a valid VIN or API key."""
-    from backend.db.inventory_db import get_car_by_vin, refresh_car_data_quality_score, update_car_row_partial
-    from backend.enrichment.kbb_idws import kbb_api_configured, patch_from_refresh_result, refresh_kbb_for_vehicle_row
-
-    stats: dict[str, Any] = {
-        "vins": len(vins),
-        "rows_found": 0,
-        "rows_applied": 0,
-        "rows_skipped": 0,
-        "skip_reasons": {},
-    }
-    if not kbb_api_configured():
-        stats["skipped"] = True
-        stats["reason"] = "kbb_api_key_missing"
-        return stats
-
-    reasons: dict[str, int] = stats["skip_reasons"]
-    for vin in vins:
-        row = get_car_by_vin(vin)
-        if not row:
-            stats["rows_skipped"] += 1
-            reasons["not_in_db"] = reasons.get("not_in_db", 0) + 1
-            continue
-        stats["rows_found"] += 1
-        res = refresh_kbb_for_vehicle_row(row)
-        if not res.ok:
-            stats["rows_skipped"] += 1
-            r = res.message
-            reasons[r] = reasons.get(r, 0) + 1
-            continue
-        patch = patch_from_refresh_result(res)
-        cid = int(row["id"])
-        if patch:
-            update_car_row_partial(cid, patch)
-            refresh_car_data_quality_score(cid)
-        stats["rows_applied"] += 1
-    return stats
-
-
 def run_post_scan(
     scanned_vins: list[str],
     *,
@@ -796,8 +975,8 @@ def run_post_scan(
     post_interior_vision: bool,
     post_enrich: bool,
     post_enrich_vision_only: bool,
-    post_kbb: bool = False,
     post_window_sticker: bool = True,
+    post_gallery_vision: bool = False,
     enrichment_max_workers: int | None = None,
 ) -> dict[str, Any]:
     """
@@ -813,8 +992,9 @@ def run_post_scan(
         "listing_description": None,
         "interior_vision": None,
         "enrich": None,
-        "kbb": None,
         "window_sticker": None,
+        "gallery_vision": None,
+        "gallery_recovery": None,
     }
     if post_repair and scanned_vins:
         logger.info("Post-scan repair: %d VIN(s) from this run", len(scanned_vins))
@@ -869,6 +1049,33 @@ def run_post_scan(
     elif post_interior_vision:
         logger.info("Post-scan interior vision skipped (no VINs in this run)")
 
+    if post_gallery_vision and scanned_vins and post_gallery_recovery_env_enabled():
+        logger.info("Post-scan gallery HTML recovery (thin galleries): %d VIN(s)", len(scanned_vins))
+        summary["gallery_recovery"] = run_gallery_recovery_for_vins(scanned_vins)
+        gr = summary["gallery_recovery"]
+        logger.info(
+            "Post-scan gallery recovery done: rows_found=%s rows_updated=%s rows_recovered=%s urls_added=%s",
+            gr.get("rows_found"),
+            gr.get("rows_updated"),
+            gr.get("rows_recovered"),
+            gr.get("urls_added_total"),
+        )
+
+    if post_gallery_vision and scanned_vins:
+        logger.info("Post-scan gallery vision (Claude Haiku): %d VIN(s)", len(scanned_vins))
+        summary["gallery_vision"] = run_gallery_vision_for_vins(scanned_vins)
+        gv = summary["gallery_vision"]
+        logger.info(
+            "Post-scan gallery vision done: rows_found=%s rows_updated=%s dropped=%s unique_urls %s→%s",
+            gv.get("rows_found"),
+            gv.get("rows_updated"),
+            gv.get("gallery_vision_unique_dropped"),
+            gv.get("gallery_vision_unique_before"),
+            gv.get("gallery_vision_unique_after"),
+        )
+    elif post_gallery_vision:
+        logger.info("Post-scan gallery vision skipped (no VINs in this run)")
+
     want_enrich = post_enrich or post_enrich_vision_only
     if want_enrich and scanned_vins:
         ids = _car_ids_for_vins(scanned_vins)
@@ -889,21 +1096,5 @@ def run_post_scan(
             )
     elif want_enrich:
         logger.info("Post-scan enrichment skipped (no VINs in this run)")
-
-    if post_kbb and scanned_vins:
-        logger.info("Post-scan KBB IDWS: %d VIN(s)", len(scanned_vins))
-        summary["kbb"] = run_kbb_for_vins(scanned_vins)
-        kb = summary["kbb"]
-        if kb.get("skipped"):
-            logger.info("Post-scan KBB skipped: %s", kb.get("reason"))
-        else:
-            logger.info(
-                "Post-scan KBB done: rows_found=%s rows_applied=%s rows_skipped=%s",
-                kb.get("rows_found"),
-                kb.get("rows_applied"),
-                kb.get("rows_skipped"),
-            )
-    elif post_kbb:
-        logger.info("Post-scan KBB skipped (no VINs in this run)")
 
     return summary

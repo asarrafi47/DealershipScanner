@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2022,Hyundai,Ioniq,Ioniq,Hybrid 1.6L I4 (SIDI; Hybrid),Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.6,54,57,55,,,,,
-2022,Hyundai,Ioniq,Blue,Hybrid 1.6L I4 (SIDI; Hybrid),Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.6,58,60,59,,,,,
-2022,Hyundai,Ioniq,Plug-in Hybrid,Plug-in Hybrid 1.6L I4 (SIDI; PHEV),Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline / Electricity,Midsize Cars,4,1.6,52,51,52,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2022,Hyundai,Ioniq,Ioniq,Hybrid 1.6L I4 (SIDI; Hybrid),Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.6,54,57,55,,,,,,1.6L I4,
+2022,Hyundai,Ioniq,Blue,Hybrid 1.6L I4 (SIDI; Hybrid),Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.6,58,60,59,,,,,,1.6L I4,
+2022,Hyundai,Ioniq,Plug-in Hybrid,Plug-in Hybrid 1.6L I4 (SIDI; PHEV),Automatic (AM-S6),Front-Wheel Drive,Regular Gasoline / Electricity,Midsize Cars,4,1.6,52,51,52,,,,,,1.6L I4,

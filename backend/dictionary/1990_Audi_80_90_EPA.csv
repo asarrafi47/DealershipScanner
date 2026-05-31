@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1990,Audi,80/90,80,2.0L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,20,24,22,,,,,
-1990,Audi,80/90,80,2.0L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,19,28,22,,,,,
-1990,Audi,80/90,80 quattro,2.3L V5 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.3,16,22,19,,,,,
-1990,Audi,80/90,90,2.3L V5 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.3,17,20,18,,,,,
-1990,Audi,80/90,90,2.3L V5 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.3,18,24,20,,,,,
-1990,Audi,80/90,90 quattro 20v,2.3L V5 ((20-VALVE) (FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.3,16,22,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1990,Audi,80/90,80,2.0L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,20,24,22,,,,,,2.0L I4 Turbo,Turbocharged
+1990,Audi,80/90,80,2.0L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,19,28,22,,,,,,2.0L I4 Turbo,Turbocharged
+1990,Audi,80/90,80 quattro,2.3L V5 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.3,16,22,19,,,,,,2.3L V5 Turbo,Turbocharged
+1990,Audi,80/90,90,2.3L V5 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.3,17,20,18,,,,,,2.3L V5 Turbo,Turbocharged
+1990,Audi,80/90,90,2.3L V5 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.3,18,24,20,,,,,,2.3L V5 Turbo,Turbocharged
+1990,Audi,80/90,90 quattro 20v,2.3L V5 ((20-VALVE) (FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.3,16,22,18,,,,,,2.3L V5 Turbo,Turbocharged

@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2013,Toyota,RAV4,EV,EV Electricity,Automatic (variable gear ratios),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,78,74,76,,,,,
-2013,Toyota,RAV4,2WD,2.5L I4,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.5,23,30,26,,,,,
-2013,Toyota,RAV4,AWD,2.5L I4,Automatic (S6),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,22,28,25,,,,,
-2013,Toyota,RAV4,Limited AWD,2.5L I4,Automatic (S6),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,22,29,25,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2013,Toyota,RAV4,EV,EV Electricity,Automatic (variable gear ratios),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,78,74,76,,,,,,EV Electricity,
+2013,Toyota,RAV4,2WD,2.5L I4,Automatic (S6),Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.5,23,30,26,,,,,,2.5L I4,
+2013,Toyota,RAV4,AWD,2.5L I4,Automatic (S6),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,22,28,25,,,,,,2.5L I4,
+2013,Toyota,RAV4,Limited AWD,2.5L I4,Automatic (S6),All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.5,22,29,25,,,,,,2.5L I4,

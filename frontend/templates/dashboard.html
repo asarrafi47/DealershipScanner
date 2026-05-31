@@ -6,199 +6,136 @@
     <title>Dashboard — Sarrafi Cars</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
 </head>
-<body class="db-page">
+<body class="hub-page">
 
-<div class="page">
+<div class="page hub-shell">
 
-    <nav class="topbar">
-        <div class="logo">Sarrafi Cars</div>
-        <div class="nav-links">
-            {% if not has_paid_access %}
-            <a href="{{ url_for('premium_page') }}" class="nav-link-cta nav-premium-btn">✦ Premium</a>
-            {% endif %}
-            <a href="{{ url_for('listings') }}">Listings</a>
-            {% if logged_in_user %}
-            <a href="/inventory">My inventory</a>
-            {% endif %}
+    {% set nav_active = "dashboard" %}
+    {% from '_icons.html' import icon %}
+    {% include "_nav_public.html" %}
 
-            {% if logged_in_user %}
-            {% include "_app_logout.html" %}
-            {% else %}
-            <a href="{{ url_for('login_page') }}">Sign in</a>
-            {% endif %}
+    <div class="hub-topbar hub-topbar--compact db-reveal">
+        <div class="hub-topbar__copy">
+            <p class="hub-kicker">Stats &amp; actions</p>
+            <h1 class="hub-title">Dashboard</h1>
+            <p class="hub-lead">Counts and shortcuts — your car feed is on <a href="{{ personal_home_url }}">Home</a>.</p>
         </div>
-    </nav>
+        <a href="{{ personal_home_url }}" class="secondary-button hub-topbar__back">{{ icon('arrow-left', 16) }} Home</a>
+    </div>
 
-    <header class="db-welcome db-reveal">
-        <div class="db-welcome-glow" aria-hidden="true"></div>
-        <div class="db-welcome-inner">
-            <p class="db-welcome-eyebrow">Your garage</p>
-            <h1 class="db-welcome-title">
-                {% if logged_in_user %}
-                Welcome back, {{ logged_in_user }}
-                {% else %}
-                Welcome back
-                {% endif %}
-            </h1>
-            <p class="db-welcome-sub">
-                Search live inventory, skim picks tailored to you, and keep saved cars in one place.
-            </p>
-            <div class="db-welcome-actions">
-                <a href="{{ url_for('listings') }}" class="primary-button db-welcome-cta">
-                    Enter listings
-                    <svg class="db-welcome-cta-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </a>
-                <a href="#saved-section" class="secondary-button db-welcome-secondary">Saved cars</a>
-            </div>
-        </div>
-    </header>
+    <main class="hub-main hub-main--compact">
 
-    <div class="db-layout">
-
-        {# ── Find Cars ── #}
-        <section class="db-section db-reveal" id="browse-section">
-            <div class="db-section-header">
-                <p class="db-eyebrow">Browse Inventory</p>
-                <h2 class="db-section-title">Find Cars</h2>
-            </div>
-            <a href="{{ url_for('listings') }}" class="find-cars-card">
-                <div class="find-cars-card-inner">
-                    <div class="find-cars-text">
-                        <p class="find-cars-label">Ready to search?</p>
-                        <p class="find-cars-sub">Filter by make, model, price, mileage, drivetrain and more across local inventory.</p>
-                    </div>
-                    <span class="find-cars-arrow">
-                        <svg viewBox="0 0 24 24" width="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14M13 6l6 6-6 6"/>
-                        </svg>
-                    </span>
+        <section class="hub-card hub-card--stats db-reveal" aria-labelledby="hub-stats-heading">
+            <h2 id="hub-stats-heading" class="hub-card__title">Activity</h2>
+            <div class="dash-hub-stats">
+                <div class="dash-hub-stat">
+                    <p class="dash-hub-stat__value">{{ viewed_count }}</p>
+                    <p class="dash-hub-stat__label">Cars viewed</p>
                 </div>
-                <div class="find-cars-tags">
-                    <span class="tag">Make &amp; Model</span>
-                    <span class="tag">Price Range</span>
-                    <span class="tag">Mileage</span>
-                    <span class="tag">Drivetrain</span>
-                    <span class="tag">Fuel Type</span>
-                    <span class="tag">Zip + Radius</span>
+                <div class="dash-hub-stat">
+                    <p class="dash-hub-stat__value">{{ saved_count }}</p>
+                    <p class="dash-hub-stat__label">Saved</p>
                 </div>
-            </a>
+                <div class="dash-hub-stat">
+                    <p class="dash-hub-stat__value">{{ reco_count }}</p>
+                    <p class="dash-hub-stat__label">Active picks</p>
+                </div>
+                <div class="dash-hub-stat dash-hub-stat--geo">
+                    {% if geo_zip %}
+                    <p class="dash-hub-stat__value">{{ geo_zip }}</p>
+                    <p class="dash-hub-stat__label">{{ geo_radius|round(0)|int }} mi radius</p>
+                    {% else %}
+                    <p class="dash-hub-stat__value dash-hub-stat__value--muted">—</p>
+                    <p class="dash-hub-stat__label">ZIP not set</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% if not geo_zip %}
+            <p class="hub-note">Set ZIP + radius on <a href="{{ url_for('listings') }}">Browse inventory</a> to tune Home recommendations.</p>
+            {% endif %}
         </section>
 
-        {# ── Recommendations ── #}
-        {% if recommendations %}
-        <section class="db-section db-reveal" id="reco-section">
-            <div class="db-section-header">
-                <p class="db-eyebrow">{{ recommendations_eyebrow or "Based on your history" }}</p>
-                <h2 class="db-section-title">{{ recommendations_title or "Recommended for You" }}</h2>
-                {% if recommendations_hint %}
-                <p class="db-section-hint">{{ recommendations_hint }}</p>
-                {% endif %}
-            </div>
-            <div class="reco-carousel-wrap">
-                <div class="reco-track-outer">
-                    <div class="reco-track" id="reco-track">
-                        {% for car in recommendations %}
-                        <a href="/car/{{ car.id }}" class="reco-card">
-                            {% set img = car.gallery[0] if car.gallery else (car.image_url or '') %}
-                            <div class="reco-card-image" style="background-image:url('{{ img or '/static/placeholder.svg' }}')"></div>
-                            <div class="reco-card-body">
-                                <p class="reco-card-title">{{ car.title }}</p>
-                                {% if car.trim %}<p class="reco-card-trim">{{ car.trim }}</p>{% endif %}
-                                <p class="reco-card-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
-                                <p class="reco-card-meta">{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi &middot; {{ car.fuel_type or '' }}</p>
-                            </div>
-                        </a>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="reco-nav">
-                    <button class="reco-nav-btn" id="reco-prev" aria-label="Previous" disabled>
-                        <svg viewBox="0 0 16 16" width="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 3L5 8l5 5"/></svg>
-                    </button>
-                    <button class="reco-nav-btn" id="reco-next" aria-label="Next">
-                        <svg viewBox="0 0 16 16" width="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
-                    </button>
-                </div>
-            </div>
+        {% if browse_trends %}
+        <section class="hub-card db-reveal" aria-labelledby="hub-trends-heading">
+            <h2 id="hub-trends-heading" class="hub-card__title">Browsing trends</h2>
+            <p class="hub-card__sub">Makes you opened most recently.</p>
+            <ul class="dash-hub-trends">
+                {% for label, count in browse_trends %}
+                <li class="dash-hub-trend">
+                    <span class="dash-hub-trend__label">{{ label }}</span>
+                    <span class="dash-hub-trend__count">{{ count }} viewed</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% else %}
+        <section class="hub-card hub-card--empty db-reveal">
+            <h2 class="hub-card__title">Browsing trends</h2>
+            <p class="hub-card__sub">Open a few listings to see which makes you browse most.</p>
+            <a href="{{ url_for('listings') }}" class="primary-button" data-nav-listings>Browse inventory</a>
         </section>
         {% endif %}
 
-        {# ── Saved Cars ── #}
-        <section class="db-section db-reveal" id="saved-section">
-            <div class="db-section-header">
-                <p class="db-eyebrow">Your List</p>
-                <h2 class="db-section-title">Saved Cars</h2>
-            </div>
-
-            {% if saved_cars %}
-            <div class="saved-grid">
-                {% for car in saved_cars %}
-                <a href="/car/{{ car.id }}" class="saved-card">
-                    <div class="saved-image" style="background-image: url('{{ car.image_url or "/static/placeholder.svg" }}')"></div>
-                    <div class="saved-info">
-                        <p class="saved-title">{{ car.title }}</p>
-                        <p class="saved-trim">{{ car.trim }}</p>
-                        <p class="saved-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
-                        <p class="saved-meta">{{ "{:,}".format(car.mileage) }} mi &middot; {{ car.fuel_type }}</p>
-                    </div>
+        <section class="hub-card db-reveal" aria-labelledby="hub-actions-heading">
+            <h2 id="hub-actions-heading" class="hub-card__title">Quick actions</h2>
+            <div class="dash-hub-actions">
+                <a href="{{ personal_home_url }}#saved-section" class="dash-hub-action">
+                    <span class="dash-hub-action__title">Saved cars</span>
+                    <span class="dash-hub-action__sub">{{ saved_count }} on your list</span>
                 </a>
-                {% endfor %}
+                <a href="{{ personal_home_url }}#reco-section" class="dash-hub-action">
+                    <span class="dash-hub-action__title">Recommendations</span>
+                    <span class="dash-hub-action__sub">On your Home feed</span>
+                </a>
+                <a href="{{ url_for('listings') }}" class="dash-hub-action" data-nav-listings>
+                    <span class="dash-hub-action__title">Search inventory</span>
+                    <span class="dash-hub-action__sub">Filters &amp; smart search</span>
+                </a>
+                {% if has_paid_access is defined and not has_paid_access %}
+                <a href="{{ url_for('premium_page') }}" class="dash-hub-action dash-hub-action--accent">
+                    <span class="dash-hub-action__title">{{ icon('premium', 16) }} Premium</span>
+                    <span class="dash-hub-action__sub">AI chat &amp; market stats</span>
+                </a>
+                {% endif %}
+                {% if show_dealer_inventory_nav %}
+                <a href="/inventory" class="dash-hub-action">
+                    <span class="dash-hub-action__title">Dealer tools</span>
+                    <span class="dash-hub-action__sub">Inventory &amp; scans</span>
+                </a>
+                {% endif %}
             </div>
-            {% else %}
-            <div class="saved-empty">
-                <p class="saved-empty-title">No saved cars yet.</p>
-                <p class="saved-empty-sub">When you find a car you like, save it and it will appear here.</p>
-                <a href="{{ url_for('listings') }}" class="primary-button saved-empty-cta">Browse listings</a>
-            </div>
-            {% endif %}
         </section>
 
-    </div>
+    </main>
 
 </div>
 
 <script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
 <script nonce="{{ csp_nonce }}">
 (function () {
-    const track = document.getElementById("reco-track");
-    const prevBtn = document.getElementById("reco-prev");
-    const nextBtn = document.getElementById("reco-next");
-    if (!track || !prevBtn || !nextBtn) return;
-
-    const cards = track.querySelectorAll(".reco-card");
-    if (!cards.length) return;
-
-    const CARD_W = 220 + 16; // card width + gap
-    const VISIBLE = Math.max(1, Math.floor(track.parentElement.offsetWidth / CARD_W));
-    const MAX_IDX = Math.max(0, cards.length - VISIBLE);
-    let idx = 0;
-    let autoTimer = null;
-
-    function goTo(i) {
-        idx = Math.max(0, Math.min(i, MAX_IDX));
-        track.style.transform = `translateX(-${idx * CARD_W}px)`;
-        prevBtn.disabled = idx === 0;
-        nextBtn.disabled = idx >= MAX_IDX;
+    let carsPrefetchStarted = false;
+    function prefetchListingsCars() {
+        if (carsPrefetchStarted) return;
+        carsPrefetchStarted = true;
+        fetch("/listings", { credentials: "same-origin" }).catch(() => {});
+        fetch("/api/listings/cars", { credentials: "same-origin" })
+            .then((r) => {
+                if (!r.ok) return null;
+                const etag = r.headers.get("ETag");
+                if (etag) window.__DS_listingsCarsEtag = etag;
+                if (r.status === 304) return null;
+                return r.json();
+            })
+            .then((data) => {
+                if (!data || !data.ok || !Array.isArray(data.cars)) return;
+                window.__DS_prefetchCars = data.cars;
+            })
+            .catch(() => {});
     }
-
-    function startAuto() {
-        stopAuto();
-        autoTimer = setInterval(() => {
-            goTo(idx >= MAX_IDX ? 0 : idx + 1);
-        }, 5000);
-    }
-
-    function stopAuto() {
-        clearInterval(autoTimer);
-    }
-
-    prevBtn.addEventListener("click", () => { goTo(idx - 1); startAuto(); });
-    nextBtn.addEventListener("click", () => { goTo(idx + 1); startAuto(); });
-    track.parentElement.addEventListener("mouseenter", stopAuto);
-    track.parentElement.addEventListener("mouseleave", startAuto);
-
-    goTo(0);
-    startAuto();
+    document.querySelectorAll("[data-nav-listings]").forEach((el) => {
+        el.addEventListener("mouseenter", prefetchListingsCars, { once: true });
+        el.addEventListener("focus", prefetchListingsCars, { once: true });
+    });
 })();
 </script>
 </body>

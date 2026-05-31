@@ -54,9 +54,11 @@ def test_hybrid_search_resolves_vin_and_car_id_short_circuit(
 
 def test_filters_dict_maps_body_style_list() -> None:
     kw = filters_dict_to_search_cars_kwargs({"body_style": ["SUV", "Sedan"]})
-    assert kw.get("body_styles") == ["SUV", "Sedan"]
+    styles = kw.get("body_styles") or []
+    assert "SUV" in styles and "Sedan" in styles
+    assert "Sport Utility Vehicle" in styles
     kw2 = filters_dict_to_search_cars_kwargs({"body_style": "Coupe"})
-    assert kw2.get("body_styles") == ["Coupe"]
+    assert "Coupe" in (kw2.get("body_styles") or [])
 
 
 def test_match_body_style_exact_token() -> None:
@@ -65,9 +67,10 @@ def test_match_body_style_exact_token() -> None:
 
 
 def test_match_body_style_cue_fuzzy() -> None:
-    distinct = ["Sport Utility Vehicle", "Sedan"]
+    distinct = ["Crossover", "Sport Utility Vehicle", "Sedan"]
     got = qp._match_body_style_filters("awd crossover under 40k", distinct)
-    assert got and "Sport Utility Vehicle" in got
+    assert got and "Crossover" in got
+    assert "Sport Utility Vehicle" not in got
 
 
 def test_filters_dict_package_contains_kwarg() -> None:
@@ -267,6 +270,79 @@ def test_search_cars_packages_substring_is_literal_not_like_wildcard(
     found = search_cars(makes=["Prco"], packages_json_contains="50%")
     assert len(found) == 1
     assert "50%" in (found[0].get("packages") or "")
+
+
+def test_search_cars_packages_json_contains_list_or(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    dbp = tmp_path / "inv_pkg_list.db"
+    monkeypatch.setattr(inventory_db, "DB_PATH", str(dbp))
+    init_inventory_db()
+    conn = sqlite3.connect(str(dbp))
+    cur = conn.cursor()
+    now = "2026-01-01T00:00:00Z"
+    rows = [
+        (
+            "AAAAAAAAAAAAAAAAA",
+            '{"packages_normalized": [{"canonical_name": "Premium Package"}]}',
+        ),
+        (
+            "BBBBBBBBBBBBBBBBB",
+            '{"possible_packages": ["M Sport Package"]}',
+        ),
+        (
+            "CCCCCCCCCCCCCCCCC",
+            "{}",
+        ),
+    ]
+    for vin, pkg in rows:
+        cur.execute(
+            """
+            INSERT INTO cars (
+                vin, title, year, make, model, trim, price, mileage,
+                image_url, dealer_name, dealer_url, dealer_id, scraped_at,
+                zip_code, fuel_type, cylinders, transmission, drivetrain,
+                exterior_color, interior_color, packages, stock_number, gallery,
+                listing_active, listing_removed_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                vin,
+                "t",
+                2023,
+                "PkgCo",
+                "M",
+                "B",
+                1,
+                0,
+                "https://h/x.jpg",
+                "D",
+                "https://d.test/",
+                "d1",
+                now,
+                "90210",
+                "G",
+                4,
+                "A",
+                "F",
+                "x",
+                "i",
+                pkg,
+                "S",
+                "[]",
+                1,
+                None,
+            ),
+        )
+    conn.commit()
+    conn.close()
+
+    found = search_cars(
+        makes=["PkgCo"],
+        packages_json_contains_list=["Premium Package", "M Sport"],
+    )
+    vins = {c["vin"] for c in found}
+    assert vins == {"AAAAAAAAAAAAAAAAA", "BBBBBBBBBBBBBBBBB"}
 
 
 def test_link_cars_falls_back_to_dealer_id_slug(

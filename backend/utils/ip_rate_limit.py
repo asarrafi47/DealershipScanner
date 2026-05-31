@@ -57,6 +57,12 @@ def _sqlite_init_conn(conn: sqlite3.Connection) -> None:
     conn.execute("CREATE INDEX IF NOT EXISTS _rate_hits_kt ON _rate_hits (k, t)")
 
 
+def clear_rate_limit_state() -> None:
+    """Reset in-process counters (pytest isolation)."""
+    with _lock:
+        _events.clear()
+
+
 def allow_request(key: str, *, max_events: int, window_seconds: float) -> bool:
     """
     Record one event for ``key``. Return True if under limit, False if rate limited.

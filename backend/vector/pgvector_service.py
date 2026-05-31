@@ -64,6 +64,11 @@ def _pg_url() -> str:
     return (os.environ.get("PGVECTOR_URL") or os.environ.get("DATABASE_URL") or "").strip()
 
 
+def pgvector_configured() -> bool:
+    """True when Postgres pgvector connection env is set (semantic search available)."""
+    return bool(_pg_url())
+
+
 def _encode_model():
     global _st_model
     if _st_model is None:

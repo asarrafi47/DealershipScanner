@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1988,Audi,80/90,80/90,2.0L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,21,24,22,,,,,
-1988,Audi,80/90,80/90,2.0L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,19,27,22,,,,,
-1988,Audi,80/90,80/90,2.3L V5 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.3,18,23,20,,,,,
-1988,Audi,80/90,quattro,2.3L V5 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.3,16,22,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1988,Audi,80/90,80/90,2.0L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,21,24,22,,,,,,2.0L I4 Turbo,Turbocharged
+1988,Audi,80/90,80/90,2.0L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,19,27,22,,,,,,2.0L I4 Turbo,Turbocharged
+1988,Audi,80/90,80/90,2.3L V5 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.3,18,23,20,,,,,,2.3L V5 Turbo,Turbocharged
+1988,Audi,80/90,quattro,2.3L V5 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.3,16,22,18,,,,,,2.3L V5 Turbo,Turbocharged

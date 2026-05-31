@@ -1,12 +1,12 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2016,BMW,2 Series,M235i Convertible,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,20,30,24,,,,,
-2016,BMW,2 Series,228i,2.0L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,22,33,26,,,,,
-2016,BMW,2 Series,228i xDrive,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,34,27,,,,,
-2016,BMW,2 Series,228i xDrive Convertible,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,22,33,26,,,,,
-2016,BMW,2 Series,M235i,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,20,30,24,,,,,
-2016,BMW,2 Series,M235i,3.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,19,27,22,,,,,
-2016,BMW,2 Series,M235i Convertible,3.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,19,26,22,,,,,
-2016,BMW,2 Series,228i Convertible,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,34,27,,,,,
-2016,BMW,2 Series,M235i xDrive,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,20,30,23,,,,,
-2016,BMW,2 Series,M235i xDrive Convertible,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,20,30,23,,,,,
-2016,BMW,2 Series,228i,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,35,27,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2016,BMW,2 Series,M235i Convertible,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,20,30,24,,,,,,3.0L I6 Turbo,Turbocharged
+2016,BMW,2 Series,228i,2.0L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,22,33,26,,,,,,2.0L I4 Turbo,Turbocharged
+2016,BMW,2 Series,228i xDrive,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,34,27,,,,,,2.0L I4 Turbo,Turbocharged
+2016,BMW,2 Series,228i xDrive Convertible,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,22,33,26,,,,,,2.0L I4 Turbo,Turbocharged
+2016,BMW,2 Series,M235i,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,20,30,24,,,,,,3.0L I6 Turbo,Turbocharged
+2016,BMW,2 Series,M235i,3.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,19,27,22,,,,,,3.0L I6 Turbo,Turbocharged
+2016,BMW,2 Series,M235i Convertible,3.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,19,26,22,,,,,,3.0L I6 Turbo,Turbocharged
+2016,BMW,2 Series,228i Convertible,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,34,27,,,,,,2.0L I4 Turbo,Turbocharged
+2016,BMW,2 Series,M235i xDrive,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,20,30,23,,,,,,3.0L I6 Turbo,Turbocharged
+2016,BMW,2 Series,M235i xDrive Convertible,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,20,30,23,,,,,,3.0L I6 Turbo,Turbocharged
+2016,BMW,2 Series,228i,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,35,27,,,,,,2.0L I4 Turbo,Turbocharged

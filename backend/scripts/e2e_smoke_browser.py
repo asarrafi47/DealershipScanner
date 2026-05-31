@@ -151,8 +151,8 @@ def _test_login_spam(page, report: RunReport) -> None:
     if not _goto(page, path, report):
         return
     for _ in range(6):
-        page.fill('input[name="login"]', "not-a-real-user@example.com", timeout=2000)
-        page.fill('input[name="password"]', "wrong-password-12345", timeout=2000)
+        page.fill('input[name="login"]', "not-a-real-user@example.com", timeout=5000)
+        page.fill('input[name="password"]', "wrong-password-12345", timeout=5000)
         try:
             page.locator('form button[type="submit"], form input[type="submit"]').first.click(timeout=2000)
             page.wait_for_timeout(150)

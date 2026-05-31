@@ -485,6 +485,7 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
     }
     if detail_url:
         out["_detail_url"] = detail_url
+        out["source_url"] = detail_url
     if detail_alternates:
         out["_detail_url_alternates"] = detail_alternates[:12]
     if lot_location:

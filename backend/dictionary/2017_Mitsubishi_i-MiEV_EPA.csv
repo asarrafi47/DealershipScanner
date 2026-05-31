@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2017,Mitsubishi,i-MiEV,i-MiEV,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Subcompact Cars,,,121,102,112,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2017,Mitsubishi,i-MiEV,i-MiEV,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Subcompact Cars,,,121,102,112,,,,,,EV Electricity,

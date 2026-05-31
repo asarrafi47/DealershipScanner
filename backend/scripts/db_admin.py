@@ -1,37 +1,80 @@
 #!/usr/bin/env python3
 """
-Simple database admin UI to view/edit model_specs dictionary.
+Local-only model_specs dictionary editor (operator tool — not the store ``/admin`` UI).
 
-Run: python db_admin.py
+Requires ``DB_ADMIN_TOKEN`` (min 16 chars). Binds ``127.0.0.1`` only.
 
-Then open: http://127.0.0.1:5001/admin
+Run from repo root::
+
+    export DB_ADMIN_TOKEN="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
+    python -m backend.scripts.db_admin
+
+Then open: http://127.0.0.1:5001/model-specs-admin
 """
+from __future__ import annotations
+
+import hmac
 import os
+import sqlite3
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
 
 try:
     from backend.utils.project_env import load_project_dotenv
+
     load_project_dotenv()
 except ImportError:
     pass
 
-from flask import Flask, render_template_string, request, jsonify
-import sqlite3
+from flask import Flask, abort, jsonify, render_template_string, request
+
+from backend.utils.runtime_env import is_production_env
 
 app = Flask(__name__)
 
 DB_PATH = os.environ.get("INVENTORY_DB_PATH", "inventory.db")
+_MODEL_SPEC_COLUMNS = frozenset({"transmission", "drivetrain", "cylinders"})
+_MIN_TOKEN_LEN = 16
+
+
+def _expected_token() -> str:
+    return (os.environ.get("DB_ADMIN_TOKEN") or "").strip()
+
+
+def _token_ok(provided: str) -> bool:
+    expected = _expected_token()
+    if not expected or len(expected) < _MIN_TOKEN_LEN:
+        return False
+    got = (provided or "").strip()
+    if not got:
+        return False
+    return hmac.compare_digest(got, expected)
+
+
+def _auth_header_token() -> str:
+    auth = (request.headers.get("Authorization") or "").strip()
+    if auth.lower().startswith("bearer "):
+        return auth[7:].strip()
+    return (request.headers.get("X-DB-Admin-Token") or "").strip()
+
+
+@app.before_request
+def _require_db_admin_token() -> None:
+    if request.endpoint == "db_admin_ui":
+        return
+    if not _token_ok(_auth_header_token()):
+        abort(401)
+
 
 HTML = """
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Database Admin - Model Specs</title>
+    <title>Model Specs Dictionary (local)</title>
     <style>
         * { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { padding: 20px; background: #f5f5f5; }
@@ -52,88 +95,90 @@ HTML = """
         input[type="number"] { width: 100%; }
         .stats { background: white; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
         .stats p { margin: 5px 0; color: #666; }
+        .auth { background: #fff3cd; padding: 12px; border-radius: 4px; margin-bottom: 16px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🗄️ Model Specs Dictionary</h1>
+        <h1>Model Specs Dictionary (local)</h1>
+        <div class="auth">
+            <label for="admin_token">DB_ADMIN_TOKEN</label>
+            <input type="password" id="admin_token" style="width:100%;max-width:480px" placeholder="Paste token from your shell env">
+            <button type="button" onclick="saveToken()">Save token</button>
+        </div>
 
         <div class="stats">
             <p><strong>Total entries:</strong> <span id="total">0</span></p>
-            <p><strong>Database:</strong> inventory.db (model_specs table)</p>
+            <p><strong>Database:</strong> model_specs</p>
         </div>
 
         <div class="form">
-            <h2>➕ Add New Entry</h2>
+            <h2>Add entry</h2>
             <div class="form-row">
-                <div>
-                    <label>Make</label>
-                    <input type="text" id="new_make" placeholder="e.g., BMW">
-                </div>
-                <div>
-                    <label>Model</label>
-                    <input type="text" id="new_model" placeholder="e.g., X3">
-                </div>
-                <div>
-                    <label>Transmission</label>
-                    <input type="text" id="new_transmission" placeholder="e.g., 8-Speed Automatic">
-                </div>
-                <div>
-                    <label>Cylinders</label>
-                    <input type="number" id="new_cylinders" placeholder="0" min="0">
-                </div>
+                <div><label>Make</label><input type="text" id="new_make"></div>
+                <div><label>Model</label><input type="text" id="new_model"></div>
+                <div><label>Transmission</label><input type="text" id="new_transmission"></div>
+                <div><label>Cylinders</label><input type="number" id="new_cylinders" min="0"></div>
             </div>
             <div class="form-row">
-                <div style="grid-column: 1/3;">
-                    <label>Drivetrain</label>
-                    <input type="text" id="new_drivetrain" placeholder="e.g., All-Wheel Drive">
-                </div>
-                <div style="grid-column: 3/5;">
-                    <label>&nbsp;</label>
-                    <button onclick="addEntry()">➕ Add Entry</button>
-                </div>
+                <div style="grid-column: 1/3;"><label>Drivetrain</label><input type="text" id="new_drivetrain"></div>
+                <div style="grid-column: 3/5;"><label>&nbsp;</label><button type="button" onclick="addEntry()">Add</button></div>
             </div>
         </div>
 
-        <h2>📋 All Entries</h2>
+        <h2>All entries</h2>
         <table>
             <thead>
-                <tr>
-                    <th>Make</th>
-                    <th>Model</th>
-                    <th>Transmission</th>
-                    <th>Drivetrain</th>
-                    <th>Cylinders</th>
-                    <th>Actions</th>
-                </tr>
+                <tr><th>Make</th><th>Model</th><th>Transmission</th><th>Drivetrain</th><th>Cylinders</th><th></th></tr>
             </thead>
-            <tbody id="table_body">
-            </tbody>
+            <tbody id="table_body"></tbody>
         </table>
     </div>
 
     <script>
+        const TOKEN_KEY = 'db_admin_token';
+
+        function esc(s) {
+            const d = document.createElement('div');
+            d.textContent = s == null ? '' : String(s);
+            return d.innerHTML;
+        }
+
+        function saveToken() {
+            const t = document.getElementById('admin_token').value.trim();
+            if (t) sessionStorage.setItem(TOKEN_KEY, t);
+            loadData();
+        }
+
+        function headers() {
+            const t = sessionStorage.getItem(TOKEN_KEY) || '';
+            return t ? { 'Authorization': 'Bearer ' + t, 'Content-Type': 'application/json' } : {};
+        }
+
         async function loadData() {
-            const resp = await fetch('/admin/api/specs');
+            const resp = await fetch('/model-specs-admin/api/specs', { headers: headers() });
+            if (!resp.ok) { alert('Unauthorized — set DB_ADMIN_TOKEN'); return; }
             const data = await resp.json();
-
             document.getElementById('total').textContent = data.specs.length;
-
             const tbody = document.getElementById('table_body');
             tbody.innerHTML = '';
-
             for (const spec of data.specs) {
                 const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${spec.make}</td>
-                    <td>${spec.model}</td>
-                    <td><input type="text" value="${spec.transmission || ''}" onchange="updateSpec(${spec.id}, 'transmission', this.value)"></td>
-                    <td><input type="text" value="${spec.drivetrain || ''}" onchange="updateSpec(${spec.id}, 'drivetrain', this.value)"></td>
-                    <td><input type="number" value="${spec.cylinders || 0}" onchange="updateSpec(${spec.id}, 'cylinders', this.value)"></td>
-                    <td><button class="delete" onclick="deleteSpec(${spec.id})">🗑️ Delete</button></td>
-                `;
+                row.innerHTML =
+                    '<td>' + esc(spec.make) + '</td>' +
+                    '<td>' + esc(spec.model) + '</td>' +
+                    '<td><input type="text" value="' + esc(spec.transmission || '') + '" data-id="' + spec.id + '" data-field="transmission"></td>' +
+                    '<td><input type="text" value="' + esc(spec.drivetrain || '') + '" data-id="' + spec.id + '" data-field="drivetrain"></td>' +
+                    '<td><input type="number" value="' + esc(spec.cylinders || 0) + '" data-id="' + spec.id + '" data-field="cylinders"></td>' +
+                    '<td><button class="delete" type="button" data-del="' + spec.id + '">Delete</button></td>';
                 tbody.appendChild(row);
             }
+            tbody.querySelectorAll('input[data-field]').forEach((inp) => {
+                inp.addEventListener('change', () => updateSpec(inp.dataset.id, inp.dataset.field, inp.value));
+            });
+            tbody.querySelectorAll('button[data-del]').forEach((btn) => {
+                btn.addEventListener('click', () => deleteSpec(btn.dataset.del));
+            });
         }
 
         async function addEntry() {
@@ -142,57 +187,29 @@ HTML = """
                 model: document.getElementById('new_model').value.trim(),
                 transmission: document.getElementById('new_transmission').value.trim(),
                 drivetrain: document.getElementById('new_drivetrain').value.trim(),
-                cylinders: parseInt(document.getElementById('new_cylinders').value) || 0,
+                cylinders: parseInt(document.getElementById('new_cylinders').value, 10) || 0,
             };
-
-            if (!spec.make || !spec.model) {
-                alert('Make and Model are required');
-                return;
-            }
-
-            const resp = await fetch('/admin/api/specs', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(spec)
+            if (!spec.make || !spec.model) { alert('Make and Model required'); return; }
+            const resp = await fetch('/model-specs-admin/api/specs', {
+                method: 'POST', headers: headers(), body: JSON.stringify(spec),
             });
-
-            if (resp.ok) {
-                document.getElementById('new_make').value = '';
-                document.getElementById('new_model').value = '';
-                document.getElementById('new_transmission').value = '';
-                document.getElementById('new_drivetrain').value = '';
-                document.getElementById('new_cylinders').value = '';
-                loadData();
-            } else {
-                alert('Error adding entry');
-            }
+            if (resp.ok) loadData(); else alert('Error adding entry');
         }
 
         async function updateSpec(id, field, value) {
-            const resp = await fetch(`/admin/api/specs/${id}`, {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    field: field,
-                    value: field === 'cylinders' ? (parseInt(value) || 0) : value
-                })
+            const body = { field, value: field === 'cylinders' ? (parseInt(value, 10) || 0) : value };
+            const resp = await fetch('/model-specs-admin/api/specs/' + id, {
+                method: 'PUT', headers: headers(), body: JSON.stringify(body),
             });
-
-            if (!resp.ok) {
-                alert('Error updating');
-                loadData();
-            }
+            if (!resp.ok) { alert('Error updating'); loadData(); }
         }
 
         async function deleteSpec(id) {
-            if (!confirm('Delete this entry?')) return;
-
-            const resp = await fetch(`/admin/api/specs/${id}`, {method: 'DELETE'});
-            if (resp.ok) {
-                loadData();
-            } else {
-                alert('Error deleting');
-            }
+            if (!confirm('Delete?')) return;
+            const resp = await fetch('/model-specs-admin/api/specs/' + id, {
+                method: 'DELETE', headers: headers(),
+            });
+            if (resp.ok) loadData(); else alert('Error deleting');
         }
 
         loadData();
@@ -202,112 +219,137 @@ HTML = """
 """
 
 
-@app.route("/admin")
-def admin():
+@app.route("/model-specs-admin")
+def db_admin_ui():
     return render_template_string(HTML)
 
 
-@app.route("/admin/api/specs", methods=["GET"])
+@app.route("/model-specs-admin/api/specs", methods=["GET"])
 def get_specs():
-    """List all model specs."""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    cursor.execute("SELECT ROWID as id, make, model, transmission, drivetrain, cylinders FROM model_specs ORDER BY make, model")
-    specs = [dict(row) for row in cursor.fetchall()]
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT ROWID AS id, make, model, transmission, drivetrain, cylinders "
+        "FROM model_specs ORDER BY make, model"
+    )
+    specs = [dict(row) for row in cur.fetchall()]
     conn.close()
     return jsonify({"specs": specs})
 
 
-@app.route("/admin/api/specs", methods=["POST"])
-def add_spec():
-    """Add a new model spec."""
-    data = request.json
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+def _row_by_display_id(conn: sqlite3.Connection, spec_id: int) -> tuple[str, str] | None:
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT make, model FROM model_specs ORDER BY make, model LIMIT 1 OFFSET ?",
+        (max(0, spec_id - 1),),
+    )
+    row = cur.fetchone()
+    if not row:
+        return None
+    return str(row[0]), str(row[1])
 
+
+@app.route("/model-specs-admin/api/specs", methods=["POST"])
+def add_spec():
+    data = request.get_json(silent=True) or {}
+    make = (data.get("make") or "").strip()
+    model = (data.get("model") or "").strip()
+    if not make or not model:
+        return jsonify({"error": "make and model required"}), 400
     try:
-        cursor.execute(
+        cylinders = int(data.get("cylinders") or 0)
+    except (TypeError, ValueError):
+        cylinders = 0
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        conn.execute(
             """
             INSERT OR REPLACE INTO model_specs (make, model, transmission, drivetrain, cylinders)
             VALUES (?, ?, ?, ?, ?)
             """,
             (
-                data.get("make"),
-                data.get("model"),
-                data.get("transmission"),
-                data.get("drivetrain"),
-                data.get("cylinders", 0)
-            )
+                make,
+                model,
+                (data.get("transmission") or "").strip() or None,
+                (data.get("drivetrain") or "").strip() or None,
+                cylinders,
+            ),
         )
         conn.commit()
-        conn.close()
         return jsonify({"ok": True})
-    except Exception as e:
-        conn.close()
+    except sqlite3.Error as e:
         return jsonify({"error": str(e)}), 400
+    finally:
+        conn.close()
 
 
-@app.route("/admin/api/specs/<int:spec_id>", methods=["PUT"])
-def update_spec(spec_id):
-    """Update a spec field."""
-    data = request.json
-    field = data.get("field")
+@app.route("/model-specs-admin/api/specs/<int:spec_id>", methods=["PUT"])
+def update_spec(spec_id: int):
+    data = request.get_json(silent=True) or {}
+    field = (data.get("field") or "").strip()
+    if field not in _MODEL_SPEC_COLUMNS:
+        return jsonify({"error": "invalid_field"}), 400
     value = data.get("value")
+    if field == "cylinders":
+        try:
+            value = int(value)
+        except (TypeError, ValueError):
+            value = 0
 
     conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    # Get current row
-    cursor.execute("SELECT ROWID, make, model FROM model_specs LIMIT 1 OFFSET ?", (spec_id - 1,))
-    row = cursor.fetchone()
-
-    if not row:
-        conn.close()
-        return jsonify({"error": "Not found"}), 404
-
-    make, model = row[1], row[2]
-
     try:
-        cursor.execute(
+        pair = _row_by_display_id(conn, spec_id)
+        if not pair:
+            return jsonify({"error": "not_found"}), 404
+        make, model = pair
+        conn.execute(
             f"UPDATE model_specs SET {field} = ? WHERE make = ? AND model = ?",
-            (value, make, model)
+            (value, make, model),
         )
         conn.commit()
-        conn.close()
         return jsonify({"ok": True})
-    except Exception as e:
-        conn.close()
+    except sqlite3.Error as e:
         return jsonify({"error": str(e)}), 400
+    finally:
+        conn.close()
 
 
-@app.route("/admin/api/specs/<int:spec_id>", methods=["DELETE"])
-def delete_spec(spec_id):
-    """Delete a spec."""
+@app.route("/model-specs-admin/api/specs/<int:spec_id>", methods=["DELETE"])
+def delete_spec(spec_id: int):
     conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    # Get current row
-    cursor.execute("SELECT ROWID, make, model FROM model_specs LIMIT 1 OFFSET ?", (spec_id - 1,))
-    row = cursor.fetchone()
-
-    if not row:
-        conn.close()
-        return jsonify({"error": "Not found"}), 404
-
-    make, model = row[1], row[2]
-
     try:
-        cursor.execute("DELETE FROM model_specs WHERE make = ? AND model = ?", (make, model))
+        pair = _row_by_display_id(conn, spec_id)
+        if not pair:
+            return jsonify({"error": "not_found"}), 404
+        make, model = pair
+        conn.execute("DELETE FROM model_specs WHERE make = ? AND model = ?", (make, model))
         conn.commit()
-        conn.close()
         return jsonify({"ok": True})
-    except Exception as e:
-        conn.close()
+    except sqlite3.Error as e:
         return jsonify({"error": str(e)}), 400
+    finally:
+        conn.close()
+
+
+def _startup_checks() -> None:
+    token = _expected_token()
+    if len(token) < _MIN_TOKEN_LEN:
+        raise RuntimeError(
+            f"Set DB_ADMIN_TOKEN (min {_MIN_TOKEN_LEN} chars) before running db_admin (SEC-080)."
+        )
+    if is_production_env() and os.environ.get("DB_ADMIN_DEBUG", "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    ):
+        raise RuntimeError("DB_ADMIN_DEBUG is not allowed when FLASK_ENV=production.")
 
 
 if __name__ == "__main__":
+    _startup_checks()
     print(f"Database: {DB_PATH}")
-    print("Open: http://127.0.0.1:5001/admin")
-    app.run(port=5001, debug=True)
+    print("Open: http://127.0.0.1:5001/model-specs-admin")
+    debug = os.environ.get("DB_ADMIN_DEBUG", "").strip().lower() in ("1", "true", "yes", "on")
+    app.run(host="127.0.0.1", port=5001, debug=debug)

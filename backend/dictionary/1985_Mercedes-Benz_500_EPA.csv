@@ -1,11 +1,11 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1985,Mercedes-Benz,500,SL,5.0L V8 ((GUZZLER) (FFS) CA model),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Two Seaters,8,5.0,13,15,14,,,,,
-1985,Mercedes-Benz,500,SEC,5.0L V8 ((GUZZLER) (FFS) CA model),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,8,5.0,13,15,14,,,,,
-1985,Mercedes-Benz,500,SE,5.0L V8 ((GUZZLER) (FFS) CA model),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,13,15,14,,,,,
-1985,Mercedes-Benz,500,SEL,5.0L V8 ((GUZZLER) (FFS) CA model),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,13,15,14,,,,,
-1985,Mercedes-Benz,500,SL,5.0L V8 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Two Seaters,8,5.0,13,15,14,,,,,
-1985,Mercedes-Benz,500,SEC,5.0L V8 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,8,5.0,13,15,14,,,,,
-1985,Mercedes-Benz,500,SEC,5.0L V8 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,8,5.0,12,15,13,,,,,
-1985,Mercedes-Benz,500,SE,5.0L V8 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,13,15,14,,,,,
-1985,Mercedes-Benz,500,SEL,5.0L V8 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,13,15,14,,,,,
-1985,Mercedes-Benz,500,SEL,5.0L V8 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,12,15,13,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1985,Mercedes-Benz,500,SL,5.0L V8 ((GUZZLER) (FFS) CA model),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Two Seaters,8,5.0,13,15,14,,,,,,5.0L V8 Turbo,Turbocharged
+1985,Mercedes-Benz,500,SEC,5.0L V8 ((GUZZLER) (FFS) CA model),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,8,5.0,13,15,14,,,,,,5.0L V8 Turbo,Turbocharged
+1985,Mercedes-Benz,500,SE,5.0L V8 ((GUZZLER) (FFS) CA model),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,13,15,14,,,,,,5.0L V8 Turbo,Turbocharged
+1985,Mercedes-Benz,500,SEL,5.0L V8 ((GUZZLER) (FFS) CA model),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,13,15,14,,,,,,5.0L V8 Turbo,Turbocharged
+1985,Mercedes-Benz,500,SL,5.0L V8 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Two Seaters,8,5.0,13,15,14,,,,,,5.0L V8 Turbo,Turbocharged
+1985,Mercedes-Benz,500,SEC,5.0L V8 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,8,5.0,13,15,14,,,,,,5.0L V8 Turbo,Turbocharged
+1985,Mercedes-Benz,500,SEC,5.0L V8 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,8,5.0,12,15,13,,,,,,5.0L V8 Turbo,Turbocharged
+1985,Mercedes-Benz,500,SE,5.0L V8 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,13,15,14,,,,,,5.0L V8 Turbo,Turbocharged
+1985,Mercedes-Benz,500,SEL,5.0L V8 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,13,15,14,,,,,,5.0L V8 Turbo,Turbocharged
+1985,Mercedes-Benz,500,SEL,5.0L V8 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,12,15,13,,,,,,5.0L V8 Turbo,Turbocharged

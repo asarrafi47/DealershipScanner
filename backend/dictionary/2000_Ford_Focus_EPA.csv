@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2000,Ford,Focus,Focus,2.0L I4 (2.0L CVH),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,23,30,26,,,,,
-2000,Ford,Focus,Focus,2.0L I4 (2.0Z),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,28,24,,,,,
-2000,Ford,Focus,Focus,2.0L I4 (2.0L CVH),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,24,32,27,,,,,
-2000,Ford,Focus,Focus,2.0L I4 (2.0Z),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,31,25,,,,,
-2000,Ford,Focus,Station Wagon,2.0L I4 (2.0L CVH),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,23,30,26,,,,,
-2000,Ford,Focus,Station Wagon,2.0L I4 (2.0Z),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,22,29,25,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2000,Ford,Focus,Focus,2.0L I4 (2.0L CVH),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,23,30,26,,,,,,2.0L I4 Turbo,Turbocharged
+2000,Ford,Focus,Focus,2.0L I4 (2.0Z),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,28,24,,,,,,2.0L I4 Turbo,Turbocharged
+2000,Ford,Focus,Focus,2.0L I4 (2.0L CVH),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,24,32,27,,,,,,2.0L I4 Turbo,Turbocharged
+2000,Ford,Focus,Focus,2.0L I4 (2.0Z),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,22,31,25,,,,,,2.0L I4 Turbo,Turbocharged
+2000,Ford,Focus,Station Wagon,2.0L I4 (2.0L CVH),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,23,30,26,,,,,,2.0L I4 Turbo,Turbocharged
+2000,Ford,Focus,Station Wagon,2.0L I4 (2.0Z),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Station Wagons,4,2.0,22,29,25,,,,,,2.0L I4 Turbo,Turbocharged

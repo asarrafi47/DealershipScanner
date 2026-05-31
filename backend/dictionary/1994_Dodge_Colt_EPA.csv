@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1994,Dodge,Colt,Colt,1.5L I4 (SOHC (FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,24,29,26,,,,,
-1994,Dodge,Colt,Colt,1.5L I4 (SOHC (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,28,35,31,,,,,
-1994,Dodge,Colt,Colt,1.8L I4 (SOHC-4 (FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,23,30,26,,,,,
-1994,Dodge,Colt,Colt,1.8L I4 (SOHC-4 (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,23,30,26,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1994,Dodge,Colt,Colt,1.5L I4 (SOHC (FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,24,29,26,,,,,,1.5L I4,
+1994,Dodge,Colt,Colt,1.5L I4 (SOHC (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,28,35,31,,,,,,1.5L I4,
+1994,Dodge,Colt,Colt,1.8L I4 (SOHC-4 (FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,23,30,26,,,,,,1.8L I4,
+1994,Dodge,Colt,Colt,1.8L I4 (SOHC-4 (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,23,30,26,,,,,,1.8L I4,

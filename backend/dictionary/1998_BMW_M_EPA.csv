@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1998,BMW,M,Roadster,3.2L V6,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Two Seaters,6,3.2,18,26,21,,,,,
-1998,BMW,M,3 Convertible,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Minicompact Cars,6,3.2,15,23,18,,,,,
-1998,BMW,M,3 Convertible,3.2L V6,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Minicompact Cars,6,3.2,18,26,21,,,,,
-1998,BMW,M,3,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.2,17,26,20,,,,,
-1998,BMW,M,3,3.2L V6,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.2,18,26,21,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1998,BMW,M,Roadster,3.2L V6,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Two Seaters,6,3.2,18,26,21,,,,,,3.2L I6 Turbo,Turbocharged
+1998,BMW,M,3 Convertible,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Minicompact Cars,6,3.2,15,23,18,,,,,,3.2L I6 Turbo,Turbocharged
+1998,BMW,M,3 Convertible,3.2L V6,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Minicompact Cars,6,3.2,18,26,21,,,,,,3.2L I6 Turbo,Turbocharged
+1998,BMW,M,3,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.2,17,26,20,,,,,,3.2L I6 Turbo,Turbocharged
+1998,BMW,M,3,3.2L V6,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.2,18,26,21,,,,,,3.2L I6 Turbo,Turbocharged

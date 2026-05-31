@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1996,GMC,Sonoma,2WD,2.2L I4 ((FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,4,2.2,18,25,20,,,,,
-1996,GMC,Sonoma,2WD,2.2L I4 ((FFS) (MPFI)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,4,2.2,20,27,23,,,,,
-1996,GMC,Sonoma,2WD,4.3L V6 ((FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,6,4.3,17,22,19,,,,,
-1996,GMC,Sonoma,2WD,4.3L V6 ((FFS) (MPFI)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,6,4.3,16,23,19,,,,,
-1996,GMC,Sonoma,4WD,4.3L V6 ((FFS) (MPFI)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,4.3,15,20,17,,,,,
-1996,GMC,Sonoma,4WD,4.3L V6 ((FFS) (MPFI)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,4.3,15,20,17,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1996,GMC,Sonoma,2WD,2.2L I4 ((FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,4,2.2,18,25,20,,,,,,2.2L I4,
+1996,GMC,Sonoma,2WD,2.2L I4 ((FFS) (MPFI)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,4,2.2,20,27,23,,,,,,2.2L I4,
+1996,GMC,Sonoma,2WD,4.3L V6 ((FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,6,4.3,17,22,19,,,,,,4.3L V6,
+1996,GMC,Sonoma,2WD,4.3L V6 ((FFS) (MPFI)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks,6,4.3,16,23,19,,,,,,4.3L V6,
+1996,GMC,Sonoma,4WD,4.3L V6 ((FFS) (MPFI)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,4.3,15,20,17,,,,,,4.3L V6,
+1996,GMC,Sonoma,4WD,4.3L V6 ((FFS) (MPFI)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks,6,4.3,15,20,17,,,,,,4.3L V6,

@@ -103,6 +103,48 @@ def test_semantic_snippet_caps_length() -> None:
     assert len(sn) <= 80
 
 
+def test_extract_prose_mercedes_style_features() -> None:
+    text = (
+        "This 2022 Mercedes-Benz S-Class S 580 4MATIC is Mercedes-Benz Factory Certified. "
+        "Features include Burmester 3D Surround Sound System, MBUX multimedia system with navigation, "
+        "power-heated and ventilated front seats, panoramic moonroof, and 20-inch AMG multi-spoke "
+        "painted wheels with gloss black finish. The interior features nappa leather upholstery, "
+        "genuine wood trim, and adaptive suspension. Safety equipment includes blind spot monitoring "
+        "and a surround view camera system."
+    )
+    parsed = extract_listing_description(
+        text,
+        {"make": "Mercedes-Benz", "model": "S-Class", "year": 2022, "trim": "S 580"},
+    )
+    feats = [f.lower() for f in (parsed.get("standalone_features") or [])]
+    blob = " ".join(feats)
+    assert "burmester" in blob
+    assert "mbux" in blob or "navigation" in blob
+    assert "moonroof" in blob or "panoramic" in blob
+    assert "amg" in blob or "wheel" in blob
+    assert "blind spot" in blob or "surround" in blob
+
+
+def test_collect_equipment_options_merges_description_and_photos() -> None:
+    from backend.utils.listing_description_extract import collect_equipment_options_from_packages
+
+    pj = {
+        "standalone_features_from_description": [
+            "Burmester 3D Surround Sound System",
+            "Panoramic moonroof",
+        ],
+        "observed_features": ["Red brake calipers"],
+    }
+    out = collect_equipment_options_from_packages(
+        pj,
+        photo_equipment=["Aftermarket wheels"],
+    )
+    assert "Burmester 3D Surround Sound System" in out
+    assert "Panoramic moonroof" in out
+    assert "Red brake calipers" in out
+    assert "Aftermarket wheels" in out
+
+
 def test_listing_description_parse_is_current_matches_fingerprint() -> None:
     text = "Interior: Black.\nCold Weather Package\n- heated seats\n"
     norm = normalize_listing_description(text)

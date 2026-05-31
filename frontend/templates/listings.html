@@ -6,35 +6,26 @@
     <title>Search inventory — Sarrafi Cars</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+    <link rel="prefetch" href="{{ url_for('api_listings_cars') }}" as="fetch" crossorigin="same-origin">
+    <link rel="prefetch" href="{{ url_for('api_listings_geo_coords') }}" as="fetch" crossorigin="same-origin">
 </head>
-<body class="listings-page" data-listings-poll-ms="{{ listings_poll_ms | default(0) | int }}">
+<body class="listings-page" data-listings-poll-ms="{{ listings_poll_ms | default(0) | int }}"{% if logged_in_user %} data-logged-in="1"{% endif %}>
 
 <script type="application/json" id="ds-listings-car-rows" nonce="{{ csp_nonce }}">{{ options.car_rows | tojson }}</script>
-<script type="application/json" id="ds-listings-all-cars" nonce="{{ csp_nonce }}">{{ options.all_cars | tojson }}</script>
+<script type="application/json" id="ds-listings-all-cars" nonce="{{ csp_nonce }}">[]</script>
 <script type="application/json" id="ds-listings-country-to-makes" nonce="{{ csp_nonce }}">{{ options.country_to_makes | tojson }}</script>
-<script type="application/json" id="ds-listings-zip-coords" nonce="{{ csp_nonce }}">{{ (options.zip_coords if options.zip_coords is defined else {}) | tojson }}</script>
+<script type="application/json" id="ds-listings-zip-coords" nonce="{{ csp_nonce }}">{{ (listings_zip_coords_boot if listings_zip_coords_boot is defined else {}) | tojson }}</script>
 <script type="application/json" id="ds-listings-dealer-coords" nonce="{{ csp_nonce }}">{{ (options.dealer_coords if options.dealer_coords is defined else {}) | tojson }}</script>
 <script type="application/json" id="ds-listings-initial-grid" nonce="{{ csp_nonce }}">{{ (initial_grid_cars or []) | tojson }}</script>
+<script type="application/json" id="ds-listings-bootstrap-grid" nonce="{{ csp_nonce }}">{{ (bootstrap_grid_cars or []) | tojson }}</script>
 <script type="application/json" id="ds-listings-package-rows" nonce="{{ csp_nonce }}">{{ (options.package_rows or []) | tojson }}</script>
 <script type="application/json" id="ds-listings-premium" nonce="{{ csp_nonce }}">{{ has_paid_access | tojson }}</script>
+<script type="application/json" id="ds-listings-saved-ids" nonce="{{ csp_nonce }}">{{ (saved_car_ids or []) | tojson }}</script>
 
-<div class="page">
+<div class="page listings-page-wrap">
 
-    <nav class="topbar listings-topbar">
-        <a href="{{ url_for('home') }}" class="logo logo--link">Sarrafi Cars</a>
-        <div class="nav-links">
-            {% if not has_paid_access %}
-            <a href="{{ url_for('premium_page') }}" class="nav-link-cta nav-premium-btn">✦ Premium</a>
-            {% endif %}
-            {% if logged_in_user %}
-            <a href="{{ url_for('dashboard') }}">Dashboard</a>
-            <a href="/inventory">My inventory</a>
-            {% include "_app_logout.html" %}
-            {% else %}
-            <a href="{{ url_for('login_page') }}">Sign in</a>
-            {% endif %}
-        </div>
-    </nav>
+    {% set nav_active = "listings" %}
+    {% include "_nav_public.html" %}
 
     {% if not logged_in_user %}
     <div class="guest-banner" id="guest-banner">
@@ -48,30 +39,24 @@
     </div>
     {% endif %}
 
-    {# ── Filters in left sidebar; results grid in main column ── #}
     <div class="filter-bar listings-filter-shell" id="filter-bar">
-        <form method="GET" action="{{ url_for('listings') }}" id="search-form">
+        <form method="GET" action="{{ url_for('listings') }}" id="search-form" class="listings-form">
             <input type="hidden" name="q" id="form-q-sync" value="{{ active.get('q', '') if active else '' }}">
-            <input type="hidden" name="dealership_registry_id" id="dealership-registry-id"
-                value="{{ active.dealership_registry_id if active and active.get('dealership_registry_id') else '' }}">
 
             <div class="listings-layout">
-            <aside class="listings-sidebar" aria-label="Search filters">
-            {# Search + pill filters (compact vertical strip) #}
+            <aside class="listings-sidebar" id="listings-sidebar-panel" aria-label="Search filters">
             <div class="filter-top-row" id="filter-top-row">
                 <div class="listings-filter-inner">
-                <header class="listings-intro" aria-labelledby="listings-intro-heading">
+                <header class="listings-intro listings-intro--dense" aria-labelledby="listings-intro-heading">
                     <p class="listings-intro-eyebrow">Inventory search</p>
                     <h2 class="listings-intro-heading" id="listings-intro-heading">Browse live listings</h2>
-                    <p class="listings-intro-sub">Filter by location and make, or describe what you want in plain English.</p>
                 </header>
 
-                <p class="smart-search-hint" id="smart-search-hint">
-                    <span class="smart-search-hint__label">Example</span>
-                    white BMW X5 under $70k · or paste a VIN
+                <p class="smart-search-hint smart-search-hint--sr" id="smart-search-hint">
+                    Example: white BMW X5 under $70k, or paste a VIN
                 </p>
 
-                <div class="listings-search-card">
+                <div class="listings-search-card listings-search-card--flat">
                 <div class="filter-search-row">
                     <div class="smart-search-wrap">
                         <label class="smart-search-label" for="smart-search-input">Smart search</label>
@@ -86,6 +71,10 @@
 
                 <div class="listings-geo-bar" id="listings-geo-bar">
                     <p class="listings-geo-bar-label">Near you</p>
+                    <p class="listings-geo-hint" id="listings-geo-hint" role="status" aria-live="polite" hidden></p>
+                    <div class="listings-zip-callout" id="listings-zip-callout" role="status" aria-live="polite" hidden>
+                        Enter your ZIP code to search nearby inventory and use the filters below.
+                    </div>
                     <div class="listings-geo-bar-controls">
                         <div class="pill-group pill-select-group listings-geo-field">
                             <label class="pill-select-label" for="listings-zip-input">ZIP</label>
@@ -125,6 +114,32 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="filter-basics-row filter-grid" id="filter-basics-row">
+                <div class="pill-group pill-select-group" data-filter-param="max_price">
+                    <label class="pill-select-label" for="listings-max-price">Price</label>
+                    <select name="max_price" id="listings-max-price" class="pill-select">
+                        <option value="" {% if not active or not active.max_price %}selected{% endif %}>Any</option>
+                        <option value="25000"  {% if active and active.max_price == '25000'  %}selected{% endif %}>$25k</option>
+                        <option value="35000"  {% if active and active.max_price == '35000'  %}selected{% endif %}>$35k</option>
+                        <option value="50000"  {% if active and active.max_price == '50000'  %}selected{% endif %}>$50k</option>
+                        <option value="75000"  {% if active and active.max_price == '75000'  %}selected{% endif %}>$75k</option>
+                        <option value="100000" {% if active and active.max_price == '100000' %}selected{% endif %}>$100k</option>
+                        <option value="150000" {% if active and active.max_price == '150000' %}selected{% endif %}>$150k</option>
+                    </select>
+                </div>
+                <div class="pill-group pill-select-group" data-filter-param="max_mileage">
+                    <label class="pill-select-label" for="listings-max-mileage">Mileage</label>
+                    <select name="max_mileage" id="listings-max-mileage" class="pill-select">
+                        <option value="" {% if not active or not active.max_mileage %}selected{% endif %}>Any</option>
+                        {% for mi in [5000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 75000, 100000] %}
+                        <option value="{{ mi }}" {% if active and active.max_mileage == mi|string %}selected{% endif %}>
+                            &lt;{{ "{:,}".format(mi) }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
                 </div>
 
                 <div class="filter-controls-row filter-grid" id="filter-controls-row">
@@ -288,53 +303,9 @@
                 {% endcall %}
                 {% endif %}
 
-                {# Price / Mileage / Zip inline selects #}
-                <div class="pill-group pill-select-group" data-filter-param="max_price">
-                    <label class="pill-select-label">Price</label>
-                    <select name="max_price" class="pill-select">
-                        <option value="" {% if not active or not active.max_price %}selected{% endif %}>Any</option>
-                        <option value="25000"  {% if active and active.max_price == '25000'  %}selected{% endif %}>$25k</option>
-                        <option value="35000"  {% if active and active.max_price == '35000'  %}selected{% endif %}>$35k</option>
-                        <option value="50000"  {% if active and active.max_price == '50000'  %}selected{% endif %}>$50k</option>
-                        <option value="75000"  {% if active and active.max_price == '75000'  %}selected{% endif %}>$75k</option>
-                        <option value="100000" {% if active and active.max_price == '100000' %}selected{% endif %}>$100k</option>
-                        <option value="150000" {% if active and active.max_price == '150000' %}selected{% endif %}>$150k</option>
-                    </select>
-                </div>
-
-                <div class="pill-group pill-select-group" data-filter-param="max_mileage">
-                    <label class="pill-select-label">Mileage</label>
-                    <select name="max_mileage" class="pill-select">
-                        <option value="" {% if not active or not active.max_mileage %}selected{% endif %}>Any</option>
-                        {% for mi in [5000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 75000, 100000] %}
-                        <option value="{{ mi }}" {% if active and active.max_mileage == mi|string %}selected{% endif %}>
-                            &lt;{{ "{:,}".format(mi) }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="pill-group pill-select-group" data-filter-param="engine_l_min">
-                    <label class="pill-select-label">Eng. min (L)</label>
-                    <select name="engine_l_min" class="pill-select">
-                        <option value="" {% if not active or not active.engine_l_min %}selected{% endif %}>Any</option>
-                        {% for e in ["1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.4", "5.0", "5.2", "6.0", "6.2"] %}
-                        <option value="{{ e }}" {% if active and active.engine_l_min == e %}selected{% endif %}>{{ e }}+</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="pill-group pill-select-group" data-filter-param="engine_l_max">
-                    <label class="pill-select-label">Eng. max (L)</label>
-                    <select name="engine_l_max" class="pill-select">
-                        <option value="" {% if not active or not active.engine_l_max %}selected{% endif %}>Any</option>
-                        {% for e in ["2.0", "2.5", "3.0", "3.5", "4.0", "4.4", "5.0", "5.2", "6.0", "6.2", "8.0"] %}
-                        <option value="{{ e }}" {% if active and active.engine_l_max == e %}selected{% endif %}>≤{{ e }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
                 <div class="pill-actions">
                     <a href="{{ url_for('listings') }}" class="pill-clear-btn">Clear all</a>
+                    <button type="button" class="listings-filters-sheet-done primary-button">Show results</button>
                 </div>
                 </div>
                 </div>
@@ -342,11 +313,52 @@
             </div>
             </aside>
 
-            <main class="listings-main-column">
-                {# ── Main content — rendered entirely by JS ── #}
+            <main class="listings-main-column" id="listings-results">
                 <div class="dash-content listings-main" id="dash-content">
-                    <p class="results-count" id="results-count"></p>
+                    <div class="listings-toolbar" id="listings-toolbar">
+                        <div class="listings-toolbar__start">
+                            <button type="button" class="listings-filters-mobile-btn" id="listings-filters-open" aria-expanded="false" aria-controls="listings-sidebar-panel">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+                                <span>Filters</span>
+                                <span class="listings-filters-mobile-count" id="listings-filters-mobile-count" hidden></span>
+                            </button>
+                            <p class="results-count" id="results-count" aria-live="polite"></p>
+                        </div>
+                        <div class="listings-toolbar__end">
+                            <label class="listings-per-page-label" for="listings-per-page">Per page</label>
+                            <select id="listings-per-page" class="listings-per-page-select" aria-label="Results per page">
+                                <option value="12">12</option>
+                                <option value="24" selected>24</option>
+                                <option value="48">48</option>
+                            </select>
+                            <label class="listings-sort-label" for="listings-sort">Sort</label>
+                            <select id="listings-sort" class="listings-sort-select" aria-label="Sort results">
+                                <option value="relevance">Best match</option>
+                                <option value="price_asc">Price: low to high</option>
+                                <option value="price_desc">Price: high to low</option>
+                                <option value="mileage_asc">Mileage: low to high</option>
+                                <option value="year_desc">Year: newest</option>
+                                <option value="deal">Best deal vs market</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="listings-active-chips-wrap" id="listings-active-chips-wrap" hidden>
+                        <div class="listings-active-chips" id="listings-active-chips" aria-label="Active filters"></div>
+                        <button type="button" class="listings-chips-clear" id="listings-chips-clear">Clear all</button>
+                    </div>
+                    <p class="listings-zero-hint" id="listings-zero-hint" hidden role="status">
+                        No matches with these filters.
+                        <button type="button" class="listings-undo-filter" id="listings-undo-filter">Undo last filter</button>
+                    </p>
                     <div class="results-grid" id="results-grid"></div>
+                    <nav class="listings-pagination" id="listings-pagination" aria-label="Results pages" hidden>
+                        <p class="listings-pagination__summary" id="listings-range" aria-live="polite"></p>
+                        <div class="listings-pagination__controls">
+                            <button type="button" class="listings-page-btn listings-page-btn--prev" id="listings-page-prev" disabled>Previous</button>
+                            <div class="listings-pagination__pages" id="listings-pagination-pages" role="group" aria-label="Page numbers"></div>
+                            <button type="button" class="listings-page-btn listings-page-btn--next" id="listings-page-next" disabled>Next</button>
+                        </div>
+                    </nav>
                     <div class="empty-state" id="empty-state" style="display:none" role="status">
                         <div class="listings-empty-card">
                             <div class="listings-empty-icon" aria-hidden="true">
@@ -569,25 +581,6 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="acc-plain-group" data-filter-param="engine_l_min">
-                        <div class="acc-plain-label">Engine min (L)</div>
-                        <select name="engine_l_min" class="sidebar-select">
-                            <option value="" {% if not active or not active.engine_l_min %}selected{% endif %}>Any</option>
-                            {% for e in ["1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.4", "5.0", "5.2", "6.0", "6.2"] %}
-                            <option value="{{ e }}" {% if active and active.engine_l_min == e %}selected{% endif %}>{{ e }} L or larger</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="acc-plain-group" data-filter-param="engine_l_max">
-                        <div class="acc-plain-label">Engine max (L)</div>
-                        <select name="engine_l_max" class="sidebar-select">
-                            <option value="" {% if not active or not active.engine_l_max %}selected{% endif %}>Any</option>
-                            {% for e in ["2.0", "2.5", "3.0", "3.5", "4.0", "4.4", "5.0", "5.2", "6.0", "6.2", "8.0"] %}
-                            <option value="{{ e }}" {% if active and active.engine_l_max == e %}selected{% endif %}>Up to {{ e }} L</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
                 </div>
 
                 <div class="docked-footer">
@@ -600,7 +593,20 @@
 
 </div>
 
+<div class="listings-filter-backdrop" id="listings-filter-backdrop" hidden aria-hidden="true"></div>
+
+<div class="compare-tray" id="compare-tray" hidden role="region" aria-label="Compare vehicles">
+    <div class="compare-tray__inner">
+        <div class="compare-tray__slots" id="compare-tray-slots"></div>
+        <div class="compare-tray__actions">
+            <a href="/compare" class="primary-button compare-tray__go" id="compare-tray-go">Compare</a>
+            <button type="button" class="compare-tray__clear" id="compare-tray-clear">Clear all</button>
+        </div>
+    </div>
+</div>
+
 <script src="{{ url_for('static', filename='main.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+<script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
 <script src="{{ url_for('static', filename='listings.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
 <script type="application/json" id="ds-listings-paid-access" nonce="{{ csp_nonce }}">{{ has_paid_access | tojson }}</script>
 <script nonce="{{ csp_nonce }}">
@@ -616,7 +622,8 @@
         hasPaid = el && JSON.parse(el.textContent || "false");
     } catch (_) {}
 
-    const activeIds = new Set({{ (active.dealer_registry_ids or []) | tojson }});
+    let activeIds = new Set({{ (active.dealer_registry_ids or []) | tojson }});
+    let activeIdsGeoKey = "";
     const metaEl = document.getElementById("dealer-filter-meta");
     let lastKey = "";
     let dealerReloadTimer = null;
@@ -732,11 +739,29 @@
         if (key === lastKey) return;
         lastKey = key;
 
+        const geoKey = String(zip || "").trim() + "|" + String(radius || "");
+        if (geoKey !== activeIdsGeoKey) {
+            activeIdsGeoKey = geoKey;
+            activeIds = new Set();
+        }
+
+        const loggedIn = document.body.getAttribute("data-logged-in") === "1";
         const r = parseFloat(radius);
         if (!zip || zip.length < 5 || isNaN(r) || r > 50) {
             if (picker) picker.style.display = "none";
             closeDealerPanel();
             if (premiumHint) premiumHint.hidden = true;
+            listEl.innerHTML = '<p class="dealer-filter-empty">Dealer filter is available for radius ≤ 50 mi.</p>';
+            updateDealerPillUi();
+            return;
+        }
+
+        if (!loggedIn || !hasPaid) {
+            if (picker) picker.style.display = "none";
+            closeDealerPanel();
+            if (premiumHint) premiumHint.hidden = true;
+            listEl.innerHTML = "";
+            updateDealerPillUi();
             return;
         }
 
@@ -815,8 +840,11 @@
     }
 
     function getZipAndRadius() {
-        const zipEl = document.querySelector('[name="zip_code"]');
-        const radEl = document.querySelector('[name="radius"]');
+        // Canonical geo controls (pill bar). Avoid duplicate sidebar inputs returning a stale ZIP.
+        const zipEl = document.getElementById("listings-zip-input")
+            || document.querySelector('[name="zip_code"]');
+        const radEl = document.getElementById("listings-radius-select")
+            || document.querySelector('[name="radius"]');
         return {
             zip: zipEl ? zipEl.value.trim() : "",
             radius: radEl ? radEl.value : "25",
@@ -828,6 +856,7 @@
         clearTimeout(dealerReloadTimer);
         dealerReloadTimer = setTimeout(function () {
             lastKey = "";
+            activeIdsGeoKey = "";
             loadDealers(z, r);
         }, 350);
     }
@@ -838,18 +867,28 @@
         loadDealers(z, r);
     };
 
+    window.__DS_scheduleReloadNearbyDealers = scheduleLoadDealers;
+
+    function zipReadyForDealers(z) {
+        return /^\d{5}$/.test(String(z || "").trim());
+    }
+
     const { zip, radius } = getZipAndRadius();
-    if (zip) loadDealers(zip, radius, currentSearchQuery());
+    if (zipReadyForDealers(zip)) loadDealers(zip, radius, currentSearchQuery());
 
     document.addEventListener("change", function (e) {
         if (!e.target) return;
-        if (e.target.name === "zip_code" || e.target.name === "radius") {
+        if (e.target.name === "radius") {
+            scheduleLoadDealers();
+            return;
+        }
+        if (e.target.name === "zip_code" && zipReadyForDealers(e.target.value)) {
             scheduleLoadDealers();
         }
     });
     document.addEventListener("input", function (e) {
         if (!e.target) return;
-        if (e.target.name === "zip_code" && e.target.value.length === 5) {
+        if (e.target.name === "zip_code" && zipReadyForDealers(e.target.value)) {
             scheduleLoadDealers();
         }
         if (e.target.id === "smart-search-input") {

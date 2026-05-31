@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2003,Mercedes-Benz,E-Class,E320,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.2,17,24,20,,,,,
-2003,Mercedes-Benz,E-Class,E500,5.0L V8 (GUZZLER),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.0,15,21,17,,,,,
-2003,Mercedes-Benz,E-Class,E320 (Wagon),3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Station Wagons,6,3.2,17,25,20,,,,,
-2003,Mercedes-Benz,E-Class,E320 4Matic (Wagon),3.2L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,6,3.2,17,24,20,,,,,
-2003,Mercedes-Benz,E-Class,E55 AMG,5.4L V8 (GUZZLER),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.4,13,19,15,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2003,Mercedes-Benz,E-Class,E320,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.2,17,24,20,,,,,,3.2L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,E-Class,E500,5.0L V8 (GUZZLER),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.0,15,21,17,,,,,,5.0L V8 Turbo,Turbocharged
+2003,Mercedes-Benz,E-Class,E320 (Wagon),3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Station Wagons,6,3.2,17,25,20,,,,,,3.2L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,E-Class,E320 4Matic (Wagon),3.2L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Midsize Station Wagons,6,3.2,17,24,20,,,,,,3.2L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,E-Class,E55 AMG,5.4L V8 (GUZZLER),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,8,5.4,13,19,15,,,,,,5.4L V8 Turbo,Turbocharged

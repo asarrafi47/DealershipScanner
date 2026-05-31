@@ -305,7 +305,6 @@ async def _run_async(
         post_interior_vision=post_interior,
         post_enrich=post_enrich and not post_enrich_vision_only,
         post_enrich_vision_only=post_enrich_vision_only,
-        post_kbb=False,
         post_window_sticker=True,
     )
     if run_spec_bfill:

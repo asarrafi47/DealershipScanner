@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2026,Subaru,Uncharted,Uncharted,EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,140,118,129,,,,,
-2026,Subaru,Uncharted,20 inch AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,123,101,112,,,,,
-2026,Subaru,Uncharted,AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,127,106,117,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2026,Subaru,Uncharted,Uncharted,EV Electricity,Automatic (A1),Front-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,140,118,129,,,,,,EV Electricity,
+2026,Subaru,Uncharted,20 inch AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,123,101,112,,,,,,EV Electricity,
+2026,Subaru,Uncharted,AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,127,106,117,,,,,,EV Electricity,

@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1989,Chevrolet,Astro Cargo,Astro 2WD (cargo),2.5L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.5,17,23,19,,,,,
-1989,Chevrolet,Astro Cargo,Astro 2WD (cargo),2.5L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.5,18,24,20,,,,,
-1989,Chevrolet,Astro Cargo,Astro 2WD (cargo),4.3L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,20,17,,,,,
-1989,Chevrolet,Astro Cargo,Astro 2WD (cargo),4.3L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,22,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1989,Chevrolet,Astro Cargo,Astro 2WD (cargo),2.5L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.5,17,23,19,,,,,,2.5L I4 Turbo,Turbocharged
+1989,Chevrolet,Astro Cargo,Astro 2WD (cargo),2.5L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.5,18,24,20,,,,,,2.5L I4 Turbo,Turbocharged
+1989,Chevrolet,Astro Cargo,Astro 2WD (cargo),4.3L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,20,17,,,,,,4.3L V6,
+1989,Chevrolet,Astro Cargo,Astro 2WD (cargo),4.3L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,22,18,,,,,,4.3L V6,

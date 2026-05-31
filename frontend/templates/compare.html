@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Compare vehicles — Sarrafi Cars</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+</head>
+<body class="compare-page" data-compare-ids="{{ compare_ids | join(',') }}">
+
+<div class="page">
+
+    {% set nav_active = "listings" %}
+    {% from '_icons.html' import icon %}
+    {% include "_nav_public.html" %}
+
+    <section class="compare-page-section">
+        <a href="{{ url_for('listings') }}" class="vdp-back" aria-label="Back to inventory">
+            {{ icon('arrow-left', 18) }}
+            <span class="vdp-back__label">Back to inventory</span>
+        </a>
+        <header class="compare-page-header">
+            <h1>Compare vehicles</h1>
+            <p class="compare-page-lead">Side-by-side specs for up to four listings. Rows highlighted in blue differ across the vehicles you selected.</p>
+        </header>
+
+        {% if cars %}
+        <div class="compare-table-wrap" role="region" aria-label="Vehicle comparison">
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th scope="col" class="compare-table__label-col">Spec</th>
+                        {% for car in cars %}
+                        <th scope="col" class="compare-table__car-col" data-car-id="{{ car.id }}">
+                            <button type="button" class="compare-table__remove" data-compare-remove="{{ car.id }}" aria-label="Remove from compare">×</button>
+                            <a href="/car/{{ car.id }}" class="compare-table__photo-link">
+                                <span class="compare-table__photo" style="background-image:url('{{ (car.compare_image_url or car.image_url or url_for('static', filename='placeholder.svg')) | e }}')"></span>
+                            </a>
+                            <a href="/car/{{ car.id }}" class="compare-table__title">{{ car.title }}</a>
+                            <p class="compare-table__trim">{{ car.trim | fmt_spec }}</p>
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in compare_rows %}
+                    <tr class="compare-table__row{% if row.differs %} compare-table__row--diff{% endif %}">
+                        <th scope="row">{{ row.label }}</th>
+                        {% for val in row.cells %}
+                        <td>{{ val }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                    <tr class="compare-table__actions-row">
+                        <th scope="row"></th>
+                        {% for car in cars %}
+                        <td><a href="/car/{{ car.id }}" class="primary-button compare-table__view-btn">View listing</a></td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        {% if show_compare_chat %}
+        <section class="compare-chat-section" id="compare-chat-section" aria-label="Compare assistant">
+            <h2 class="compare-chat-title">Ask about this comparison</h2>
+            <p class="compare-chat-hint">Premium intelligent comparison uses the specs above plus public reference data. Confirm details on window stickers, CARFAX, and with each dealer before you buy.</p>
+            <div id="compare-chat-messages" class="compare-chat-messages car-chat-messages" aria-live="polite"></div>
+            <div class="compare-chat-input-row car-chat-input-row">
+                <input type="text" id="compare-chat-input" class="compare-chat-input car-chat-input" placeholder="e.g. Which is better value for a family? How do engines compare?" autocomplete="off" />
+                <button type="button" id="compare-chat-send" class="compare-chat-send primary-button car-chat-send">Ask</button>
+            </div>
+        </section>
+        {% elif billing_stripe_enabled and not has_paid_access %}
+        <section class="compare-chat-upsell" aria-label="Premium compare assistant">
+            <h2 class="compare-chat-title">Intelligent comparison</h2>
+            <p class="compare-chat-hint">Unlock side-by-side intelligent analysis — trade-offs, value, and feature differences across these listings.</p>
+            <a href="{{ url_for('premium_page') }}" class="primary-button">Upgrade to Premium</a>
+        </section>
+        {% elif not logged_in_user %}
+        <section class="compare-chat-upsell" aria-label="Sign in for compare assistant">
+            <h2 class="compare-chat-title">Intelligent comparison</h2>
+            <p class="compare-chat-hint"><a href="{{ url_for('login_page') }}">Sign in</a> to ask questions about these vehicles side by side.</p>
+        </section>
+        {% endif %}
+
+        {% else %}
+        <div class="compare-empty">
+            <p class="compare-empty-title">No vehicles to compare yet</p>
+            <p class="compare-empty-sub">Use the <strong>Compare</strong> checkbox on search results or the compare button on a vehicle page (up to four cars). Compare is available to signed-in accounts.</p>
+            <a href="{{ url_for('listings') }}" class="primary-button">Browse inventory</a>
+        </div>
+        {% endif %}
+    </section>
+
+</div>
+
+{% if cars %}
+<script type="application/json" id="compare-cars-json" nonce="{{ csp_nonce }}">{{ cars | tojson }}</script>
+{% endif %}
+<script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+{% if show_compare_chat %}
+<script src="{{ url_for('static', filename='compare_chat.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+{% endif %}
+</body>
+</html>

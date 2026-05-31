@@ -1,9 +1,9 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1994,Honda,Civic,Civic,1.5L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,25,33,28,,,,,
-1994,Honda,Civic,Civic,1.5L I4 ((8-VALVE) (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,35,41,38,,,,,
-1994,Honda,Civic,Civic,1.5L I4 ((8-VALVE) (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,33,41,36,,,,,
-1994,Honda,Civic,Civic,1.5L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,29,36,32,,,,,
-1994,Honda,Civic,Civic,1.6L I4 ((VTEC) (FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,23,30,26,,,,,
-1994,Honda,Civic,Civic,1.6L I4 ((VTEC) (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,25,32,28,,,,,
-1994,Honda,Civic,HB VX,1.5L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,39,50,43,,,,,
-1994,Honda,Civic,HB VX,1.5L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,37,45,40,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1994,Honda,Civic,Civic,1.5L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,25,33,28,,,,,,1.5L I4,
+1994,Honda,Civic,Civic,1.5L I4 ((8-VALVE) (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,35,41,38,,,,,,1.5L I4,
+1994,Honda,Civic,Civic,1.5L I4 ((8-VALVE) (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,33,41,36,,,,,,1.5L I4,
+1994,Honda,Civic,Civic,1.5L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,29,36,32,,,,,,1.5L I4,
+1994,Honda,Civic,Civic,1.6L I4 ((VTEC) (FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,23,30,26,,,,,,1.6L I4,
+1994,Honda,Civic,Civic,1.6L I4 ((VTEC) (FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.6,25,32,28,,,,,,1.6L I4,
+1994,Honda,Civic,HB VX,1.5L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,39,50,43,,,,,,1.5L I4,
+1994,Honda,Civic,HB VX,1.5L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,37,45,40,,,,,,1.5L I4,

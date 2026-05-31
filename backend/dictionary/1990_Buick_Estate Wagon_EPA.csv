@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1990,Buick,Estate Wagon,Estate Wagon,5.0L V8 ((GM-OLDS) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,8,5.0,15,22,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1990,Buick,Estate Wagon,Estate Wagon,5.0L V8 ((GM-OLDS) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize-Large Station Wagons,8,5.0,15,22,18,,,,,,5.0L V8,

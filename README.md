@@ -55,6 +55,28 @@ python backend/scripts/car_data_scraper.py --batch-nhtsa --output-dir backend/di
 
 These are separate from EPA `*_EPA.csv` files (see `backend/scripts/import_epa_to_dictionary.py` header comment).
 
+**Trim ladders (premium VDP):** `backend/dictionary/trim_ladders.json` (hand-curated) and `trim_ladders_generated.json` (built from `*_Complete_Options.csv`). Regenerate after dictionary updates:
+
+```bash
+python -m backend.scripts.build_trim_ladders
+```
+
+**EPA master index (VDP efficiency + trim lookups):** `backend/enrichment/knowledge_engine.py` reads `epa_master` in `inventory.db` for fast MPG lookups. Populate it from dictionary `*_EPA.csv` files after imports or dictionary updates:
+
+```bash
+python -m backend.scripts.build_epa_master           # insert missing rows
+python -m backend.scripts.build_epa_master --rebuild # full reload
+```
+
+The knowledge engine falls back to dictionary CSVs when `epa_master` is empty, but the SQLite index is faster and should be rebuilt in any environment that serves vehicle detail pages.
+
+**Trim ladder audit (regression check):**
+
+```bash
+python backend/scripts/audit_trim_ladders.py
+pytest backend/tests/test_trim_ladder_audit.py -q
+```
+
 ### 6. Semantic search (Postgres + pgvector)
 
 Listing embeddings are stored in **Postgres**, not in git. Local legacy/cache dirs under `data/vectors/` and `backend/data/chroma/` are ignored.
@@ -111,6 +133,9 @@ python discovery.py --help
 
 ## More documentation
 
+- `ios/README.md` — **Sarrafi Cars iOS** (native SwiftUI app; separate from the website)  
+- `ios/ARCHITECTURE.md` — iOS module boundaries (`App/`, `Features/`, `Networking/`, …)  
+- `docs/IOS_APP.md` — TestFlight / App Store signing  
 - `docs/DATA_QUALITY_ROLLOUT.md` — data quality and migrations  
 - `docs/SCANNER_NODE.md` — Node scanner notes  
 - `docs/SECURITY_MASTER_TODO.md` — security configuration and SEC items  

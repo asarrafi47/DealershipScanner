@@ -1,9 +1,9 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1987,Chevrolet,Camaro,Camaro,5.0L V8 ((GM-CHEV) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,24,18,,,,,
-1987,Chevrolet,Camaro,Camaro,2.8L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,2.8,17,25,20,,,,,
-1987,Chevrolet,Camaro,Camaro,2.8L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,2.8,15,24,18,,,,,
-1987,Chevrolet,Camaro,Camaro,5.0L V8 ((FFS) 4 barrel carb),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,22,18,,,,,
-1987,Chevrolet,Camaro,Camaro,5.0L V8 ((FFS) 4 barrel carb),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,23,17,,,,,
-1987,Chevrolet,Camaro,Camaro,5.0L V8 ((FFS) fuel injection),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,23,18,,,,,
-1987,Chevrolet,Camaro,Camaro,5.0L V8 ((FFS) fuel injection),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,24,18,,,,,
-1987,Chevrolet,Camaro,Camaro,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.7,15,23,17,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1987,Chevrolet,Camaro,Camaro,5.0L V8 ((GM-CHEV) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,24,18,,,,,,5.0L V8,
+1987,Chevrolet,Camaro,Camaro,2.8L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,2.8,17,25,20,,,,,,2.8L V6,
+1987,Chevrolet,Camaro,Camaro,2.8L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,2.8,15,24,18,,,,,,2.8L V6,
+1987,Chevrolet,Camaro,Camaro,5.0L V8 ((FFS) 4 barrel carb),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,22,18,,,,,,5.0L V8,
+1987,Chevrolet,Camaro,Camaro,5.0L V8 ((FFS) 4 barrel carb),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,23,17,,,,,,5.0L V8,
+1987,Chevrolet,Camaro,Camaro,5.0L V8 ((FFS) fuel injection),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,23,18,,,,,,5.0L V8,
+1987,Chevrolet,Camaro,Camaro,5.0L V8 ((FFS) fuel injection),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.0,15,24,18,,,,,,5.0L V8,
+1987,Chevrolet,Camaro,Camaro,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,5.7,15,23,17,,,,,,5.7L V8,

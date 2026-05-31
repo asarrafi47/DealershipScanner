@@ -1,12 +1,12 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2022,Honda,Civic,4Dr,1.5L I4 (SIDI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.5,33,42,36,,,,,
-2022,Honda,Civic,4Dr,1.5L I4 (SIDI),Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.5,31,38,34,,,,,
-2022,Honda,Civic,4Dr,2.0L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,31,40,35,,,,,
-2022,Honda,Civic,4Dr,2.0L I4,Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,30,37,33,,,,,
-2022,Honda,Civic,5Dr,1.5L I4 (SIDI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.5,31,39,35,,,,,
-2022,Honda,Civic,5Dr,1.5L I4 (SIDI),Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.5,30,37,33,,,,,
-2022,Honda,Civic,5Dr,1.5L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.5,28,37,31,,,,,
-2022,Honda,Civic,5Dr,2.0L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,30,38,33,,,,,
-2022,Honda,Civic,5Dr,2.0L I4,Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,29,37,32,,,,,
-2022,Honda,Civic,5Dr,2.0L I4,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,26,36,29,,,,,
-2022,Honda,Civic,4Dr,1.5L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,1.5,27,37,31,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2022,Honda,Civic,4Dr,1.5L I4 (SIDI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.5,33,42,36,,,,,,1.5L I4 Turbo,Turbocharged
+2022,Honda,Civic,4Dr,1.5L I4 (SIDI),Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.5,31,38,34,,,,,,1.5L I4 Turbo,Turbocharged
+2022,Honda,Civic,4Dr,2.0L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,31,40,35,,,,,,2.0L I4,
+2022,Honda,Civic,4Dr,2.0L I4,Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,30,37,33,,,,,,2.0L I4,
+2022,Honda,Civic,5Dr,1.5L I4 (SIDI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.5,31,39,35,,,,,,1.5L I4 Turbo,Turbocharged
+2022,Honda,Civic,5Dr,1.5L I4 (SIDI),Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.5,30,37,33,,,,,,1.5L I4 Turbo,Turbocharged
+2022,Honda,Civic,5Dr,1.5L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,1.5,28,37,31,,,,,,1.5L I4 Turbo,Turbocharged
+2022,Honda,Civic,5Dr,2.0L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,30,38,33,,,,,,2.0L I4,
+2022,Honda,Civic,5Dr,2.0L I4,Automatic (AV-S7),Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,29,37,32,,,,,,2.0L I4,
+2022,Honda,Civic,5Dr,2.0L I4,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Large Cars,4,2.0,26,36,29,,,,,,2.0L I4,
+2022,Honda,Civic,4Dr,1.5L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,1.5,27,37,31,,,,,,1.5L I4 Turbo,Turbocharged

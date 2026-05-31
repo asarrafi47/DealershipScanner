@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1991,Oldsmobile,Cutlass Supreme,Cutlass Supreme,2.3L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,19,26,21,,,,,
-1991,Oldsmobile,Cutlass Supreme,Cutlass Supreme,3.1L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.1,17,27,20,,,,,
-1991,Oldsmobile,Cutlass Supreme,Cutlass Supreme,3.4L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.4,15,24,18,,,,,
-1991,Oldsmobile,Cutlass Supreme,Cutlass Supreme,3.4L V6 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.4,15,24,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1991,Oldsmobile,Cutlass Supreme,Cutlass Supreme,2.3L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,19,26,21,,,,,,2.3L I4,
+1991,Oldsmobile,Cutlass Supreme,Cutlass Supreme,3.1L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.1,17,27,20,,,,,,3.1L V6,
+1991,Oldsmobile,Cutlass Supreme,Cutlass Supreme,3.4L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.4,15,24,18,,,,,,3.4L V6,
+1991,Oldsmobile,Cutlass Supreme,Cutlass Supreme,3.4L V6 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.4,15,24,18,,,,,,3.4L V6,

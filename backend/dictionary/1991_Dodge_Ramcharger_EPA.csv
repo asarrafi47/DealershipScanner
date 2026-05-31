@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1991,Dodge,Ramcharger,AD100/AD150 Ramcharger 2WD,5.2L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,8,5.2,11,15,13,,,,,
-1991,Dodge,Ramcharger,AD100/AD150 Ramcharger 2WD,5.9L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,8,5.9,10,12,11,,,,,
-1991,Dodge,Ramcharger,AW100/AW150 Ramcharger 4WD,5.2L V8 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.2,11,12,11,,,,,
-1991,Dodge,Ramcharger,AW100/AW150 Ramcharger 4WD,5.2L V8 ((FFS)),Manual 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.2,10,13,11,,,,,
-1991,Dodge,Ramcharger,AW100/AW150 Ramcharger 4WD,5.9L V8 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.9,10,12,11,,,,,
-1991,Dodge,Ramcharger,AW100/AW150 Ramcharger 4WD,5.9L V8 ((FFS)),Manual 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.9,8,12,10,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1991,Dodge,Ramcharger,AD100/AD150 Ramcharger 2WD,5.2L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,8,5.2,11,15,13,,,,,,5.2L V8,
+1991,Dodge,Ramcharger,AD100/AD150 Ramcharger 2WD,5.9L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,8,5.9,10,12,11,,,,,,5.9L V8,
+1991,Dodge,Ramcharger,AW100/AW150 Ramcharger 4WD,5.2L V8 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.2,11,12,11,,,,,,5.2L V8,
+1991,Dodge,Ramcharger,AW100/AW150 Ramcharger 4WD,5.2L V8 ((FFS)),Manual 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.2,10,13,11,,,,,,5.2L V8,
+1991,Dodge,Ramcharger,AW100/AW150 Ramcharger 4WD,5.9L V8 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.9,10,12,11,,,,,,5.9L V8,
+1991,Dodge,Ramcharger,AW100/AW150 Ramcharger 4WD,5.9L V8 ((FFS)),Manual 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.9,8,12,10,,,,,,5.9L V8,

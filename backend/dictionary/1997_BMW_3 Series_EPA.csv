@@ -1,16 +1,16 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1997,BMW,3 Series,318i Convertible,1.9L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.9,19,28,22,,,,,
-1997,BMW,3 Series,318i Convertible,1.9L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.9,20,29,23,,,,,
-1997,BMW,3 Series,328ic,2.8L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,6,2.8,17,24,19,,,,,
-1997,BMW,3 Series,328ic,2.8L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,6,2.8,18,26,21,,,,,
-1997,BMW,3 Series,318i/318is,1.9L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.9,19,28,22,,,,,
-1997,BMW,3 Series,318i/318is,1.9L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.9,20,29,23,,,,,
-1997,BMW,3 Series,328i/328is,2.8L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,2.8,17,24,19,,,,,
-1997,BMW,3 Series,328i/328is,2.8L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,2.8,18,26,21,,,,,
-1997,BMW,3 Series,318ti,1.9L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.9,20,29,23,,,,,
-1997,BMW,3 Series,318ti,1.9L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.9,20,29,23,,,,,
-1997,BMW,3 Series,318i Convertible,1.9L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.9,20,28,23,,,,,
-1997,BMW,3 Series,318i/318is,1.9L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.9,19,28,23,,,,,
-1997,BMW,3 Series,318i/318is,1.9L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.9,20,29,24,,,,,
-1997,BMW,3 Series,318ti,1.9L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.9,20,28,23,,,,,
-1997,BMW,3 Series,318ti,1.9L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.9,20,29,24,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1997,BMW,3 Series,318i Convertible,1.9L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.9,19,28,22,,,,,,1.9L I4 Turbo,Turbocharged
+1997,BMW,3 Series,318i Convertible,1.9L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.9,20,29,23,,,,,,1.9L I4 Turbo,Turbocharged
+1997,BMW,3 Series,328ic,2.8L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,6,2.8,17,24,19,,,,,,2.8L I6 Turbo,Turbocharged
+1997,BMW,3 Series,328ic,2.8L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,6,2.8,18,26,21,,,,,,2.8L I6 Turbo,Turbocharged
+1997,BMW,3 Series,318i/318is,1.9L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.9,19,28,22,,,,,,1.9L I4 Turbo,Turbocharged
+1997,BMW,3 Series,318i/318is,1.9L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.9,20,29,23,,,,,,1.9L I4 Turbo,Turbocharged
+1997,BMW,3 Series,328i/328is,2.8L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,2.8,17,24,19,,,,,,2.8L I6 Turbo,Turbocharged
+1997,BMW,3 Series,328i/328is,2.8L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,2.8,18,26,21,,,,,,2.8L I6 Turbo,Turbocharged
+1997,BMW,3 Series,318ti,1.9L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.9,20,29,23,,,,,,1.9L I4 Turbo,Turbocharged
+1997,BMW,3 Series,318ti,1.9L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.9,20,29,23,,,,,,1.9L I4 Turbo,Turbocharged
+1997,BMW,3 Series,318i Convertible,1.9L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.9,20,28,23,,,,,,1.9L I4 Turbo,Turbocharged
+1997,BMW,3 Series,318i/318is,1.9L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.9,19,28,23,,,,,,1.9L I4 Turbo,Turbocharged
+1997,BMW,3 Series,318i/318is,1.9L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.9,20,29,24,,,,,,1.9L I4 Turbo,Turbocharged
+1997,BMW,3 Series,318ti,1.9L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.9,20,28,23,,,,,,1.9L I4 Turbo,Turbocharged
+1997,BMW,3 Series,318ti,1.9L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.9,20,29,24,,,,,,1.9L I4 Turbo,Turbocharged

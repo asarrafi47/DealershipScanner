@@ -1,3 +1,3 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2003,Daewoo,Lanos,Lanos,1.6L I4 (DOHC-IL4),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,20,29,23,,,,,
-2003,Daewoo,Lanos,Lanos,1.6L I4 (DOHC-IL4),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,20,30,24,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2003,Daewoo,Lanos,Lanos,1.6L I4 (DOHC-IL4),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,20,29,23,,,,,,1.6L I4,
+2003,Daewoo,Lanos,Lanos,1.6L I4 (DOHC-IL4),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.6,20,30,24,,,,,,1.6L I4,

@@ -13,6 +13,8 @@ def test_verify_premium_checkout_session_requires_paid_and_metadata(monkeypatch:
     from backend.billing.stripe_billing import verify_premium_checkout_session
 
     paid = {
+        "status": "complete",
+        "mode": "subscription",
         "payment_status": "paid",
         "metadata": {"user_id": "42", "premium": "1"},
     }
@@ -20,6 +22,20 @@ def test_verify_premium_checkout_session_requires_paid_and_metadata(monkeypatch:
         assert verify_premium_checkout_session(session_id="cs_test", user_id=42) is True
         assert verify_premium_checkout_session(session_id="cs_test", user_id=99) is False
 
-    unpaid = {"payment_status": "unpaid", "metadata": {"user_id": "42", "premium": "1"}}
+    unpaid = {
+        "status": "complete",
+        "mode": "subscription",
+        "payment_status": "unpaid",
+        "metadata": {"user_id": "42", "premium": "1"},
+    }
     with patch("stripe.checkout.Session.retrieve", return_value=unpaid):
+        assert verify_premium_checkout_session(session_id="cs_test", user_id=42) is False
+
+    wrong_mode = {
+        "status": "complete",
+        "mode": "payment",
+        "payment_status": "paid",
+        "metadata": {"user_id": "42", "premium": "1"},
+    }
+    with patch("stripe.checkout.Session.retrieve", return_value=wrong_mode):
         assert verify_premium_checkout_session(session_id="cs_test", user_id=42) is False

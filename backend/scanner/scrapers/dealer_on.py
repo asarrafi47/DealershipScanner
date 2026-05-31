@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 import re
 from typing import Any
 from urllib.parse import urlparse, urlunparse
@@ -33,6 +34,22 @@ _SRP_PATHS = [
 ]
 _NAV_TIMEOUT = 20_000
 _API_WAIT_TIMEOUT = 10.0
+
+
+def _dealer_on_max_pages() -> int:
+    raw = (os.environ.get("SCANNER_DEALER_ON_MAX_PAGES") or "60").strip()
+    try:
+        return max(1, int(raw))
+    except ValueError:
+        return 60
+
+
+def _dealer_on_max_total() -> int:
+    raw = (os.environ.get("SCANNER_DEALER_ON_MAX_TOTAL") or "5000").strip()
+    try:
+        return max(50, int(raw))
+    except ValueError:
+        return 5000
 
 
 def _is_dealer_on_html(html: str) -> bool:
@@ -251,7 +268,25 @@ async def _scrape_srp_all_pages(
     # Must happen BEFORE navigating away since the search session is page-context-specific.
     _PAGE_SIZE = 96
     total_count = int(paging.get("TotalCount") or total_pages * 12)
+    cap_total = _dealer_on_max_total()
+    if total_count > cap_total:
+        logger.warning(
+            "DealerOn: capping TotalCount %d to %d for %s",
+            total_count,
+            cap_total,
+            dealer_name,
+        )
+        total_count = cap_total
     http_total_pages = max(1, -(-total_count // _PAGE_SIZE))  # ceiling division
+    max_pages = _dealer_on_max_pages()
+    if http_total_pages > max_pages:
+        logger.warning(
+            "DealerOn: capping pagination %d pages to %d for %s",
+            http_total_pages,
+            max_pages,
+            dealer_name,
+        )
+        http_total_pages = max_pages
 
     # Strip any existing query params from the intercepted URL to avoid duplicate pg/pn params
     # (DealerOn's initial XHR may include ?pg=1&pn=12; we supply our own pagination params).

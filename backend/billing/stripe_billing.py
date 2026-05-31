@@ -38,6 +38,10 @@ def stripe_premium_webhook_secret() -> str:
     return _require_env("STRIPE_PREMIUM_WEBHOOK_SECRET")
 
 
+def stripe_subscription_active(status: str | None) -> bool:
+    return (status or "").strip().lower() in ("active", "trialing")
+
+
 def base_url_from_request(request) -> str:
     forced = (os.environ.get("PUBLIC_BASE_URL") or "").strip().rstrip("/")
     if forced:
@@ -112,16 +116,16 @@ def create_premium_checkout_session(
     base = base_url_from_request(request)
     success = f"{base}/billing/premium/success?session_id={{CHECKOUT_SESSION_ID}}"
     cancel = f"{base}/premium"
+    uid = str(int(user_id))
+    premium_md = {"user_id": uid, "premium": "1"}
     cs = stripe.checkout.Session.create(
-        mode="payment",
+        mode="subscription",
         line_items=[{"price": price, "quantity": 1}],
         success_url=success,
         cancel_url=cancel,
         customer_email=(user_email or "").strip() or None,
-        metadata={
-            "user_id": str(int(user_id)),
-            "premium": "1",
-        },
+        metadata=premium_md,
+        subscription_data={"metadata": premium_md},
         allow_promotion_codes=True,
     )
     return cs
@@ -140,7 +144,7 @@ def construct_webhook_event(payload: bytes, sig_header: str) -> dict[str, Any]:
 
 def verify_premium_checkout_session(*, session_id: str, user_id: int) -> bool:
     """
-    Confirm a Stripe Checkout Session is paid and belongs to *user_id* (consumer premium).
+    Confirm a Stripe Checkout Session completed for consumer premium (recurring subscription).
 
     Returns False on any mismatch or Stripe error (caller should log).
     """
@@ -159,7 +163,13 @@ def verify_premium_checkout_session(*, session_id: str, user_id: int) -> bool:
     cs = stripe.checkout.Session.retrieve(sid)
     if not isinstance(cs, dict):
         cs = dict(cs)
-    if (cs.get("payment_status") or "").strip().lower() != "paid":
+    if (cs.get("status") or "").strip().lower() != "complete":
+        return False
+    pay = (cs.get("payment_status") or "").strip().lower()
+    if pay not in ("paid", "no_payment_required"):
+        return False
+    mode = (cs.get("mode") or "").strip().lower()
+    if mode and mode != "subscription":
         return False
     md = cs.get("metadata") if isinstance(cs.get("metadata"), dict) else {}
     if str(md.get("user_id") or "").strip() != str(uid):

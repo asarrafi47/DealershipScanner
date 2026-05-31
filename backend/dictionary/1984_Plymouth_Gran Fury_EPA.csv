@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1984,Plymouth,Gran Fury,Gran Fury,5.2L V8 ((FFS)),Automatic 3-spd,,Regular Gasoline,Midsize Cars,8,5.2,14,18,15,,,,,
-1984,Plymouth,Gran Fury,Gran Fury,5.2L V8 ((GUZZLER)),Automatic 3-spd,,Regular Gasoline,Midsize Cars,8,5.2,12,15,13,,,,,
-1984,Plymouth,Gran Fury,Gran Fury,5.2L V8 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Midsize Cars,8,5.2,14,18,15,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1984,Plymouth,Gran Fury,Gran Fury,5.2L V8 ((FFS)),Automatic 3-spd,,Regular Gasoline,Midsize Cars,8,5.2,14,18,15,,,,,,5.2L V8,
+1984,Plymouth,Gran Fury,Gran Fury,5.2L V8 ((GUZZLER)),Automatic 3-spd,,Regular Gasoline,Midsize Cars,8,5.2,12,15,13,,,,,,5.2L V8,
+1984,Plymouth,Gran Fury,Gran Fury,5.2L V8 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Midsize Cars,8,5.2,14,18,15,,,,,,5.2L V8,

@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1987,Suzuki,Forsa,Turbo,"1.0L I3 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,3,1.0,31,39,34,,,,,
-1987,Suzuki,Forsa,Forsa,1.0L I3 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,3,1.0,32,36,34,,,,,
-1987,Suzuki,Forsa,Forsa,1.0L I3 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,3,1.0,36,43,39,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1987,Suzuki,Forsa,Turbo,"1.0L I3 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Minicompact Cars,3,1.0,31,39,34,,,,,,1.0L I3,
+1987,Suzuki,Forsa,Forsa,1.0L I3 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,3,1.0,32,36,34,,,,,,1.0L I3,
+1987,Suzuki,Forsa,Forsa,1.0L I3 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,3,1.0,36,43,39,,,,,,1.0L I3,

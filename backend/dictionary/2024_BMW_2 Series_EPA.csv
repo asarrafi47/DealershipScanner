@@ -1,8 +1,8 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2024,BMW,2 Series,230i Coupe,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,26,35,30,,,,,
-2024,BMW,2 Series,M240i Coupe,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,22,32,26,,,,,
-2024,BMW,2 Series,228i xDrive Gran Coupe,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,23,33,27,,,,,
-2024,BMW,2 Series,228i Gran Coupe,2.0L I4 (SIDI),Automatic (S8),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,34,28,,,,,
-2024,BMW,2 Series,M235i xDrive Gran Coupe,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,33,27,,,,,
-2024,BMW,2 Series,230i xDrive Coupe,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,25,33,28,,,,,
-2024,BMW,2 Series,M240i xDrive Coupe,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,23,32,26,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2024,BMW,2 Series,230i Coupe,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,26,35,30,,,,,,2.0L I4 Turbo,Turbocharged
+2024,BMW,2 Series,M240i Coupe,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,22,32,26,,,,,,3.0L I6 Turbo,Turbocharged
+2024,BMW,2 Series,228i xDrive Gran Coupe,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,23,33,27,,,,,,2.0L I4 Turbo,Turbocharged
+2024,BMW,2 Series,228i Gran Coupe,2.0L I4 (SIDI),Automatic (S8),Front-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,34,28,,,,,,2.0L I4 Turbo,Turbocharged
+2024,BMW,2 Series,M235i xDrive Gran Coupe,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,33,27,,,,,,2.0L I4 Turbo,Turbocharged
+2024,BMW,2 Series,230i xDrive Coupe,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,25,33,28,,,,,,2.0L I4 Turbo,Turbocharged
+2024,BMW,2 Series,M240i xDrive Coupe,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,23,32,26,,,,,,3.0L I6 Turbo,Turbocharged

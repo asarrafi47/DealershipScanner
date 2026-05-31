@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1987,Mitsubishi,Mirage,Mirage,1.5L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,25,30,27,,,,,
-1987,Mitsubishi,Mirage,Mirage,1.5L I4 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,29,34,31,,,,,
-1987,Mitsubishi,Mirage,Mirage,1.5L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,27,34,30,,,,,
-1987,Mitsubishi,Mirage,Mirage,"1.6L I4 ((FFS,TRBO))",Automatic 3-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.6,21,24,22,,,,,
-1987,Mitsubishi,Mirage,Mirage,"1.6L I4 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.6,22,29,25,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1987,Mitsubishi,Mirage,Mirage,1.5L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,25,30,27,,,,,,1.5L I4,
+1987,Mitsubishi,Mirage,Mirage,1.5L I4 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,29,34,31,,,,,,1.5L I4,
+1987,Mitsubishi,Mirage,Mirage,1.5L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.5,27,34,30,,,,,,1.5L I4,
+1987,Mitsubishi,Mirage,Mirage,"1.6L I4 ((FFS,TRBO))",Automatic 3-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.6,21,24,22,,,,,,1.6L I4,
+1987,Mitsubishi,Mirage,Mirage,"1.6L I4 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,1.6,22,29,25,,,,,,1.6L I4,

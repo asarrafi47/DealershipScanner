@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1988,Mercedes-Benz,300,CE,3.0L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,20,18,,,,,
-1988,Mercedes-Benz,300,E,3.0L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,16,20,18,,,,,
-1988,Mercedes-Benz,300,E,3.0L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,15,23,18,,,,,
-1988,Mercedes-Benz,300,SE,3.0L V6 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,15,17,16,,,,,
-1988,Mercedes-Benz,300,SEL,3.0L V6 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,15,17,16,,,,,
-1988,Mercedes-Benz,300,TE,3.0L V6 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Midsize-Large Station Wagons,6,3.0,15,19,16,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1988,Mercedes-Benz,300,CE,3.0L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,20,18,,,,,,3.0L V6 Turbo,Turbocharged
+1988,Mercedes-Benz,300,E,3.0L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,16,20,18,,,,,,3.0L V6 Turbo,Turbocharged
+1988,Mercedes-Benz,300,E,3.0L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,15,23,18,,,,,,3.0L V6 Turbo,Turbocharged
+1988,Mercedes-Benz,300,SE,3.0L V6 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,15,17,16,,,,,,3.0L V6 Turbo,Turbocharged
+1988,Mercedes-Benz,300,SEL,3.0L V6 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.0,15,17,16,,,,,,3.0L V6 Turbo,Turbocharged
+1988,Mercedes-Benz,300,TE,3.0L V6 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Midsize-Large Station Wagons,6,3.0,15,19,16,,,,,,3.0L V6 Turbo,Turbocharged

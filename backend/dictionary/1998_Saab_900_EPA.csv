@@ -1,11 +1,11 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1998,Saab,900,SE Convertible,"2.0L I4 (B204L3 FFS,TURBO)",Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,17,23,19,,,,,
-1998,Saab,900,S Convertible,2.3L I4 (B234I3),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.3,20,26,22,,,,,
-1998,Saab,900,SE Convertible,"2.0L I4 (B204L3 FFS,TURBO)",Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,18,25,21,,,,,
-1998,Saab,900,S Convertible,2.3L I4 (B234I3),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.3,18,24,20,,,,,
-1998,Saab,900,SE,"2.0L I4 (B204L3 FFS,TURBO)",Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,17,23,19,,,,,
-1998,Saab,900,S,"2.0L I4 (B204L3 FFS,TURBO)",Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,17,23,19,,,,,
-1998,Saab,900,S,2.0L I4 (B234I3),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,20,26,22,,,,,
-1998,Saab,900,S,"2.0L I4 (B204L3 FFS,TURBO)",Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,18,24,21,,,,,
-1998,Saab,900,SE,"2.0L I4 (B204L3 FFS,TURBO)",Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,18,25,21,,,,,
-1998,Saab,900,S,2.3L I4 (B234I3),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,18,24,20,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1998,Saab,900,SE Convertible,"2.0L I4 (B204L3 FFS,TURBO)",Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,17,23,19,,,,,,2.0L I4 Turbo,Turbocharged
+1998,Saab,900,S Convertible,2.3L I4 (B234I3),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.3,20,26,22,,,,,,2.3L I4,
+1998,Saab,900,SE Convertible,"2.0L I4 (B204L3 FFS,TURBO)",Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.0,18,25,21,,,,,,2.0L I4 Turbo,Turbocharged
+1998,Saab,900,S Convertible,2.3L I4 (B234I3),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,2.3,18,24,20,,,,,,2.3L I4,
+1998,Saab,900,SE,"2.0L I4 (B204L3 FFS,TURBO)",Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,17,23,19,,,,,,2.0L I4 Turbo,Turbocharged
+1998,Saab,900,S,"2.0L I4 (B204L3 FFS,TURBO)",Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,17,23,19,,,,,,2.0L I4 Turbo,Turbocharged
+1998,Saab,900,S,2.0L I4 (B234I3),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,20,26,22,,,,,,2.0L I4,
+1998,Saab,900,S,"2.0L I4 (B204L3 FFS,TURBO)",Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,18,24,21,,,,,,2.0L I4 Turbo,Turbocharged
+1998,Saab,900,SE,"2.0L I4 (B204L3 FFS,TURBO)",Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,18,25,21,,,,,,2.0L I4 Turbo,Turbocharged
+1998,Saab,900,S,2.3L I4 (B234I3),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.3,18,24,20,,,,,,2.3L I4,

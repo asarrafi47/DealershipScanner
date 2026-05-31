@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2016,Honda,Civic,4Dr,1.5L I4 (SIDI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.5,31,42,35,,,,,
-2016,Honda,Civic,4Dr,2.0L I4,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,27,38,31,,,,,
-2016,Honda,Civic,4Dr,2.0L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,30,40,34,,,,,
-2016,Honda,Civic,2Dr,1.5L I4 (SIDI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.5,31,41,35,,,,,
-2016,Honda,Civic,2Dr,2.0L I4,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,26,37,30,,,,,
-2016,Honda,Civic,2Dr,2.0L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,30,39,34,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2016,Honda,Civic,4Dr,1.5L I4 (SIDI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,1.5,31,42,35,,,,,,1.5L I4 Turbo,Turbocharged
+2016,Honda,Civic,4Dr,2.0L I4,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,27,38,31,,,,,,2.0L I4,
+2016,Honda,Civic,4Dr,2.0L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,30,40,34,,,,,,2.0L I4,
+2016,Honda,Civic,2Dr,1.5L I4 (SIDI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.5,31,41,35,,,,,,1.5L I4 Turbo,Turbocharged
+2016,Honda,Civic,2Dr,2.0L I4,Manual 6-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,26,37,30,,,,,,2.0L I4,
+2016,Honda,Civic,2Dr,2.0L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,30,39,34,,,,,,2.0L I4,

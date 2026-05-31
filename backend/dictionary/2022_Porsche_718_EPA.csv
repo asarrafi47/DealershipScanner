@@ -1,21 +1,21 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2022,Porsche,718,Boxster,2.0L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,20,26,22,,,,,
-2022,Porsche,718,Boxster,2.0L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,21,27,24,,,,,
-2022,Porsche,718,Cayman,2.0L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,20,26,22,,,,,
-2022,Porsche,718,Cayman,2.0L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,21,27,24,,,,,
-2022,Porsche,718,Boxster S,2.5L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.5,19,24,21,,,,,
-2022,Porsche,718,Boxster S,2.5L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.5,19,25,22,,,,,
-2022,Porsche,718,Boxster GTS,4.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,17,24,19,,,,,
-2022,Porsche,718,Boxster GTS,4.0L V6 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,19,24,21,,,,,
-2022,Porsche,718,Spyder,4.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,17,23,19,,,,,
-2022,Porsche,718,Spyder,4.0L V6 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,18,24,20,,,,,
-2022,Porsche,718,Cayman GTS,4.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,17,24,19,,,,,
-2022,Porsche,718,Cayman GTS,4.0L V6 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,19,24,21,,,,,
-2022,Porsche,718,Cayman S,2.5L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.5,19,24,21,,,,,
-2022,Porsche,718,Cayman S,2.5L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.5,19,25,22,,,,,
-2022,Porsche,718,Boxster T,2.0L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,20,26,22,,,,,
-2022,Porsche,718,Boxster T,2.0L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,21,27,23,,,,,
-2022,Porsche,718,Cayman GT4,4.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,17,23,19,,,,,
-2022,Porsche,718,Cayman GT4,4.0L V6 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,18,24,20,,,,,
-2022,Porsche,718,Cayman T,2.0L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,20,26,22,,,,,
-2022,Porsche,718,Cayman T,2.0L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,21,27,23,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2022,Porsche,718,Boxster,2.0L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,20,26,22,,,,,,2.0L I4 Turbo,Turbocharged
+2022,Porsche,718,Boxster,2.0L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,21,27,24,,,,,,2.0L I4 Turbo,Turbocharged
+2022,Porsche,718,Cayman,2.0L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,20,26,22,,,,,,2.0L I4 Turbo,Turbocharged
+2022,Porsche,718,Cayman,2.0L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,21,27,24,,,,,,2.0L I4 Turbo,Turbocharged
+2022,Porsche,718,Boxster S,2.5L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.5,19,24,21,,,,,,2.5L I4 Turbo,Turbocharged
+2022,Porsche,718,Boxster S,2.5L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.5,19,25,22,,,,,,2.5L I4 Turbo,Turbocharged
+2022,Porsche,718,Boxster GTS,4.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,17,24,19,,,,,,4.0L V6 Turbo,Turbocharged
+2022,Porsche,718,Boxster GTS,4.0L V6 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,19,24,21,,,,,,4.0L V6 Turbo,Turbocharged
+2022,Porsche,718,Spyder,4.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,17,23,19,,,,,,4.0L V6 Turbo,Turbocharged
+2022,Porsche,718,Spyder,4.0L V6 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,18,24,20,,,,,,4.0L V6 Turbo,Turbocharged
+2022,Porsche,718,Cayman GTS,4.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,17,24,19,,,,,,4.0L V6 Turbo,Turbocharged
+2022,Porsche,718,Cayman GTS,4.0L V6 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,19,24,21,,,,,,4.0L V6 Turbo,Turbocharged
+2022,Porsche,718,Cayman S,2.5L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.5,19,24,21,,,,,,2.5L I4 Turbo,Turbocharged
+2022,Porsche,718,Cayman S,2.5L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.5,19,25,22,,,,,,2.5L I4 Turbo,Turbocharged
+2022,Porsche,718,Boxster T,2.0L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,20,26,22,,,,,,2.0L I4 Turbo,Turbocharged
+2022,Porsche,718,Boxster T,2.0L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,21,27,23,,,,,,2.0L I4 Turbo,Turbocharged
+2022,Porsche,718,Cayman GT4,4.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,17,23,19,,,,,,4.0L V6 Turbo,Turbocharged
+2022,Porsche,718,Cayman GT4,4.0L V6 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,4.0,18,24,20,,,,,,4.0L V6 Turbo,Turbocharged
+2022,Porsche,718,Cayman T,2.0L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,20,26,22,,,,,,2.0L I4 Turbo,Turbocharged
+2022,Porsche,718,Cayman T,2.0L I4 (SIDI),Automatic (AM-S7),Rear-Wheel Drive,Premium Gasoline,Two Seaters,4,2.0,21,27,23,,,,,,2.0L I4 Turbo,Turbocharged

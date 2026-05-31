@@ -1,0 +1,1623 @@
+{
+  "version": 1,
+  "ladders": [
+    {
+      "id": "ram_1500_dt",
+      "make": "Ram",
+      "models": [
+        "1500",
+        "1500 (DT)",
+        "Ram 1500",
+        "1500 DT"
+      ],
+      "year_min": 2019,
+      "year_max": 2030,
+      "label": "Ram 1500 trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "Tradesman",
+          "aliases": [
+            "Tradesman Quad Cab",
+            "Tradesman Crew Cab"
+          ],
+          "adds": [
+            "Entry work-truck trim with vinyl or cloth seating",
+            "Uconnect 3 with 5-inch display",
+            "Halogen headlamps and black plastic grille"
+          ]
+        },
+        {
+          "name": "Tradesman HFE",
+          "aliases": [
+            "HFE"
+          ],
+          "adds": [
+            "High fuel-efficiency package on Tradesman",
+            "Night Edition appearance: black wheels, grille, and badging"
+          ]
+        },
+        {
+          "name": "Big Horn",
+          "aliases": [
+            "Big Horn/Lone Star",
+            "Bighorn"
+          ],
+          "adds": [
+            "Chrome bumpers and expanded convenience features",
+            "Black Appearance Package available",
+            "Multifunction tailgate available"
+          ]
+        },
+        {
+          "name": "Lone Star",
+          "aliases": [],
+          "adds": [
+            "Texas-market edition with regional styling",
+            "Off-Road Group available: locking rear diff, skid plates, tow hooks",
+            "Available air suspension"
+          ]
+        },
+        {
+          "name": "Rebel",
+          "aliases": [],
+          "adds": [
+            "Off-road suspension and aggressive styling",
+            "Advanced Safety Group: adaptive cruise, lane keep, surround view",
+            "Panoramic sunroof available"
+          ]
+        },
+        {
+          "name": "Laramie",
+          "aliases": [],
+          "adds": [
+            "Leather seating and upgraded Uconnect infotainment",
+            "LED projector headlamps",
+            "Bed Utility Group: spray-in liner, LED bed lighting"
+          ]
+        },
+        {
+          "name": "Laramie Longhorn",
+          "aliases": [
+            "Longhorn",
+            "Laramie Longhorn Edition"
+          ],
+          "adds": [
+            "Western luxury interior with wood and leather",
+            "Navigation and premium audio standard",
+            "Trailer Tow Group with integrated trailer aids"
+          ]
+        },
+        {
+          "name": "Limited",
+          "aliases": [],
+          "adds": [
+            "Top luxury trim before specialty models",
+            "12-inch Uconnect display and Harman Kardon audio available",
+            "Four-corner air suspension and advanced safety standard"
+          ]
+        },
+        {
+          "name": "TRX",
+          "aliases": [
+            "TRX Launch Edition"
+          ],
+          "adds": [
+            "Supercharged 6.2L Hemi performance truck",
+            "Wide-body flares and desert-rated suspension",
+            "Level 2 equipment: heated seats, remote start, ParkSense"
+          ]
+        },
+        {
+          "name": "Tungsten",
+          "aliases": [
+            "Tungsten Edition"
+          ],
+          "year_min": 2025,
+          "adds": [
+            "Flagship luxury trim (2025+)",
+            "Elite interior with quilted leather and suede headliner",
+            "Power deployable running boards and premium sound"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ford_f150",
+      "make": "Ford",
+      "models": [
+        "F-150",
+        "F150",
+        "F 150"
+      ],
+      "year_min": 2021,
+      "year_max": 2030,
+      "label": "Ford F-150 trim lineup",
+      "steps": [
+        {
+          "name": "XL",
+          "aliases": [
+            "F-150 XL"
+          ],
+          "adds": [
+            "Base fleet/work trim",
+            "12-inch Sync 4 screen (2024+)",
+            "LED headlights standard (2024+)"
+          ]
+        },
+        {
+          "name": "STX",
+          "aliases": [
+            "F-150 STX"
+          ],
+          "adds": [
+            "Sport appearance on XL foundation",
+            "FX4 off-road package available"
+          ]
+        },
+        {
+          "name": "XLT",
+          "aliases": [
+            "F-150 XLT"
+          ],
+          "adds": [
+            "Chrome trim and expanded comfort",
+            "Heritage Edition appearance available"
+          ]
+        },
+        {
+          "name": "Lariat",
+          "aliases": [
+            "F-150 Lariat"
+          ],
+          "adds": [
+            "Leather seating and premium interior",
+            "Pro Access tailgate available",
+            "4WD standard on many configs (2024+)"
+          ]
+        },
+        {
+          "name": "King Ranch",
+          "aliases": [
+            "King Ranch\u00ae"
+          ],
+          "adds": [
+            "Western luxury with unique leather",
+            "Premium tech and towing features"
+          ]
+        },
+        {
+          "name": "Platinum",
+          "aliases": [
+            "F-150 Platinum",
+            "Platinum Plus"
+          ],
+          "adds": [
+            "Top luxury trim",
+            "Platinum Plus package adds exclusive equipment"
+          ]
+        },
+        {
+          "name": "Tremor",
+          "aliases": [
+            "F-150 Tremor"
+          ],
+          "adds": [
+            "Off-road oriented with factory lift",
+            "All-terrain tires and locking rear diff"
+          ]
+        },
+        {
+          "name": "Raptor",
+          "aliases": [
+            "F-150 Raptor",
+            "Raptor R"
+          ],
+          "adds": [
+            "High-performance off-road",
+            "Raptor R adds supercharged V8"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "toyota_camry",
+      "make": "Toyota",
+      "models": [
+        "Camry"
+      ],
+      "year_min": 2025,
+      "year_max": 2030,
+      "label": "Toyota Camry trim lineup",
+      "steps": [
+        {
+          "name": "LE",
+          "aliases": [],
+          "adds": [
+            "Base hybrid trim",
+            "Core safety and comfort features"
+          ]
+        },
+        {
+          "name": "SE",
+          "aliases": [
+            "Camry SE"
+          ],
+          "adds": [
+            "Sport-tuned suspension and styling",
+            "Nightshade Edition based on SE"
+          ]
+        },
+        {
+          "name": "XLE",
+          "aliases": [],
+          "adds": [
+            "Upgraded comfort and convenience",
+            "Premium audio available"
+          ]
+        },
+        {
+          "name": "XSE",
+          "aliases": [],
+          "adds": [
+            "Sport luxury with XLE features",
+            "Larger wheels and sport trim"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jeep_compass",
+      "make": "Jeep",
+      "models": ["Compass"],
+      "year_min": 2017,
+      "year_max": 2030,
+      "label": "Jeep Compass trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "Limited", "aliases": ["Compass Limited"], "adds": ["Leather-trimmed seats", "Available power sunroof", "Remote start on later model years"]},
+        {"name": "Trailhawk", "aliases": ["Compass Trailhawk"], "adds": ["Trail Rated 4x4 capability", "Off-road tuned suspension", "Selec-Terrain with Rock mode"]},
+        {"name": "High Altitude", "aliases": ["High Altitude Edition"], "adds": ["Blacked-out exterior accents", "Sport appearance package", "Limited trim special edition"]},
+        {"name": "Latitude Lux", "aliases": ["Latitude LUX", "Latitude Lux"], "adds": ["Enhanced comfort and technology", "Slots above Latitude", "2022+ model year"]},
+        {"name": "Latitude", "aliases": ["Compass Latitude"], "adds": ["Mid-level convenience features", "Uconnect infotainment", "Available 4x4"]},
+        {"name": "Altitude", "aliases": ["Compass Altitude"], "adds": ["Dark accent exterior styling", "Black wheels and grille", "Latitude appearance package"]},
+        {"name": "Sport", "aliases": ["Compass Sport"], "adds": ["Entry Compass equipment", "Core Jeep capability", "Manual or automatic by model year"]}
+      ]
+    },
+    {
+      "id": "jeep_gladiator",
+      "make": "Jeep",
+      "models": [
+        "Gladiator",
+        "Gladiator Pickup"
+      ],
+      "year_min": 2020,
+      "year_max": 2030,
+      "label": "Jeep Gladiator trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "Sport",
+          "aliases": [
+            "Willys Sport",
+            "Gladiator Sport"
+          ],
+          "adds": [
+            "Base trim with Command-Trac part-time 4WD",
+            "Removable doors and folding windshield",
+            "Uconnect 3 with 5-inch display (2020\u20132021); Uconnect 4 7.0 standard on later years"
+          ]
+        },
+        {
+          "name": "Sport S",
+          "aliases": [
+            "Gladiator Sport S"
+          ],
+          "adds": [
+            "Adds air conditioning and power windows/locks",
+            "Available Trailer Tow and Safety groups",
+            "Altitude appearance package available on Sport S"
+          ]
+        },
+        {
+          "name": "Willys",
+          "aliases": [
+            "Willys Sport",
+            "Gladiator Willys"
+          ],
+          "adds": [
+            "Trail-rated styling with rock rails and all-terrain tires",
+            "Trac-Lok limited-slip rear differential",
+            "LED lighting and blacked-out exterior accents"
+          ]
+        },
+        {
+          "name": "Overland",
+          "aliases": [],
+          "adds": [
+            "Leather-trimmed seats and premium interior",
+            "Selec-Trac full-time 4WD available",
+            "Uconnect 4C 8.4 with navigation on later model years"
+          ]
+        },
+        {
+          "name": "Mojave",
+          "aliases": [],
+          "adds": [
+            "Desert-rated suspension with front bypass shocks",
+            "Hood air scoop and front jounce off-road bump stops",
+            "Off-road Plus with front camera and rock-crawl mode"
+          ]
+        },
+        {
+          "name": "Rubicon",
+          "aliases": [
+            "Rubicon Launch Edition"
+          ],
+          "adds": [
+            "Rock-Trac 4:1 low-range transfer case",
+            "Electronic sway-bar disconnect and Tru-Lock lockers",
+            "Heavy-duty Dana 44 axles front and rear"
+          ]
+        },
+        {
+          "name": "High Altitude",
+          "aliases": [
+            "High Altitude Edition",
+            "Gladiator High Altitude"
+          ],
+          "adds": [
+            "Luxury-oriented trim with body-color roof and fenders",
+            "Leather seating and premium audio standard",
+            "Advanced safety and convenience features"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dodge_charger",
+      "make": "Dodge",
+      "models": [
+        "Charger",
+        "Charger SRT"
+      ],
+      "year_min": 2015,
+      "year_max": 2030,
+      "label": "Dodge Charger trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "SRT Hellcat Redeye Widebody",
+          "aliases": [
+            "Hellcat Redeye Widebody"
+          ],
+          "year_min": 2020,
+          "year_max": 2023,
+          "adds": [
+            "Most powerful Charger with widebody flares and adaptive suspension."
+          ]
+        },
+        {
+          "name": "SRT Hellcat Redeye",
+          "aliases": [
+            "Hellcat Redeye"
+          ],
+          "year_min": 2019,
+          "year_max": 2023,
+          "adds": [
+            "Supercharged Hellcat V8 with track-oriented cooling."
+          ]
+        },
+        {
+          "name": "SRT Hellcat",
+          "aliases": [
+            "Hellcat"
+          ],
+          "year_min": 2015,
+          "year_max": 2023,
+          "adds": [
+            "707+ hp supercharged HEMI and performance brakes."
+          ]
+        },
+        {
+          "name": "Scat Pack Widebody",
+          "aliases": [],
+          "year_min": 2019,
+          "year_max": 2023,
+          "adds": [
+            "Naturally aspirated 6.4L HEMI with widebody stance."
+          ]
+        },
+        {
+          "name": "Scat Pack",
+          "aliases": [
+            "Scat Pack 2-door",
+            "Scat Pack Plus"
+          ],
+          "adds": [
+            "Performance HEMI, sport suspension, and Brembo brakes."
+          ]
+        },
+        {
+          "name": "R/T Scat Pack",
+          "aliases": [],
+          "year_min": 2024,
+          "adds": [
+            "R/T with Scat Pack performance hardware."
+          ]
+        },
+        {
+          "name": "Daytona Scat Pack",
+          "aliases": [
+            "Daytona R/T Scat Pack"
+          ],
+          "year_min": 2023,
+          "adds": [
+            "Daytona appearance and Scat Pack powertrain."
+          ]
+        },
+        {
+          "name": "Daytona",
+          "aliases": [
+            "Daytona R/T"
+          ],
+          "adds": [
+            "Heritage Daytona styling and R/T equipment."
+          ]
+        },
+        {
+          "name": "R/T Plus",
+          "aliases": [],
+          "adds": [
+            "R/T with added comfort and convenience features."
+          ]
+        },
+        {
+          "name": "R/T",
+          "aliases": [
+            "R/T 4-door"
+          ],
+          "adds": [
+            "5.7L HEMI V8 and sport-tuned suspension."
+          ]
+        },
+        {
+          "name": "GT",
+          "aliases": [],
+          "year_min": 2017,
+          "year_max": 2023,
+          "adds": [
+            "V6 AWD performance trim with sport appearance."
+          ]
+        },
+        {
+          "name": "SXT",
+          "aliases": [],
+          "year_min": 2015,
+          "year_max": 2023,
+          "adds": [
+            "Entry V6 trim with Uconnect and cloth or leather seating."
+          ]
+        },
+        {
+          "name": "SE",
+          "aliases": [],
+          "year_min": 2015,
+          "year_max": 2019,
+          "adds": [
+            "Value-oriented base equipment."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ram_hd_chassis",
+      "make": "Ram",
+      "models": [
+        "4500",
+        "5500",
+        "3500",
+        "3500 HD",
+        "Ram 4500",
+        "Ram 5500"
+      ],
+      "year_min": 2019,
+      "year_max": 2030,
+      "label": "Ram heavy-duty chassis trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "Limited",
+          "aliases": [],
+          "adds": [
+            "Top luxury chassis trim with premium interior and safety tech."
+          ]
+        },
+        {
+          "name": "Laramie",
+          "aliases": [],
+          "adds": [
+            "Leather seating, chrome accents, and upgraded Uconnect."
+          ]
+        },
+        {
+          "name": "Big Horn",
+          "aliases": [
+            "Lone Star"
+          ],
+          "adds": [
+            "Chrome grille and bumpers above Tradesman."
+          ]
+        },
+        {
+          "name": "Tradesman",
+          "aliases": [],
+          "adds": [
+            "Work-focused trim with vinyl or cloth seats and halogen lighting."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bmw_m3_m4",
+      "make": "BMW",
+      "models": [
+        "M3",
+        "M4",
+        "M3 Competition",
+        "M4 Competition"
+      ],
+      "year_min": 2014,
+      "year_max": 2030,
+      "label": "BMW M3 / M4 trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "M Competition",
+          "aliases": [
+            "Competition Package",
+            "Competition"
+          ],
+          "adds": [
+            "20 hp power increase and M Competition suspension",
+            "Carbon fiber interior trim and M Competition exhaust",
+            "Revised chassis bushings for track performance"
+          ]
+        },
+        {
+          "name": "M Sport",
+          "aliases": [
+            "CS",
+            "GTS",
+            "CSL"
+          ],
+          "adds": [
+            "CS/GTS track-focused equipment with carbon roof",
+            "Race-derived aero kit and carbon bucket seats",
+            "Reduced weight vs standard M"
+          ]
+        },
+        {
+          "name": "Base",
+          "aliases": [
+            "Standard"
+          ],
+          "adds": [
+            "S55/S58 twin-turbo inline-6",
+            "M xDrive or RWD with 6-speed manual available",
+            "M-calibrated suspension and brakes"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bmw_3_series",
+      "make": "BMW",
+      "models": [
+        "3 Series",
+        "328i",
+        "328d",
+        "330i",
+        "330e",
+        "340i",
+        "320i",
+        "335i",
+        "335d",
+        "330d",
+        "ActiveHybrid 3"
+      ],
+      "year_min": 2012,
+      "year_max": 2030,
+      "label": "BMW 3 Series trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "M Sport",
+          "aliases": [
+            "M-Sport",
+            "MSport"
+          ],
+          "adds": [
+            "M aerodynamics, M Sport suspension, M leather steering wheel",
+            "M Sport brakes with blue calipers",
+            "Sport seats with M logo stitching"
+          ]
+        },
+        {
+          "name": "Sport Line",
+          "aliases": [
+            "Sportline",
+            "Sport"
+          ],
+          "adds": [
+            "Sport-tuned exterior with gloss black accents",
+            "Sport seats with contrast stitching",
+            "Sport suspension"
+          ]
+        },
+        {
+          "name": "Luxury Line",
+          "aliases": [
+            "Luxury",
+            "Luxuryline"
+          ],
+          "adds": [
+            "Dakota leather upholstery and wood trim",
+            "Chrome window surrounds and door sills",
+            "Comfort Access keyless entry"
+          ]
+        },
+        {
+          "name": "Modern Line",
+          "aliases": [
+            "Modernline",
+            "Modern"
+          ],
+          "adds": [
+            "Distinctive mesh grille and satin silver trim accents",
+            "Sensatec leatherette with contrast stitching",
+            "Clean, contemporary styling package"
+          ]
+        },
+        {
+          "name": "Base",
+          "aliases": [
+            "Standard"
+          ],
+          "adds": [
+            "Standard iDrive navigation",
+            "Cloth or leatherette seating",
+            "Xenon or LED headlights"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bmw_5_series",
+      "make": "BMW",
+      "models": [
+        "5 Series",
+        "530i",
+        "540i",
+        "530e",
+        "M550i",
+        "550i",
+        "528i",
+        "535i",
+        "535d",
+        "520d",
+        "525d"
+      ],
+      "year_min": 2010,
+      "year_max": 2030,
+      "label": "BMW 5 Series trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "M550i xDrive",
+          "aliases": [
+            "M550i",
+            "550i xDrive"
+          ],
+          "year_min": 2017,
+          "year_max": 2023,
+          "adds": [
+            "523 hp twin-turbo V8 with xDrive AWD",
+            "M Sport exhaust and adaptive M suspension",
+            "M Sport brakes and styling"
+          ]
+        },
+        {
+          "name": "550e xDrive",
+          "aliases": [
+            "550e",
+            "550 e xDrive"
+          ],
+          "year_min": 2025,
+          "adds": [
+            "Plug-in hybrid inline-six with xDrive AWD",
+            "Electric driving range for daily commuting",
+            "489 hp combined system output"
+          ]
+        },
+        {
+          "name": "540i xDrive",
+          "aliases": [
+            "540i xDrive Sedan"
+          ],
+          "adds": [
+            "375 hp turbocharged inline-six with xDrive AWD",
+            "Standard BMW Live Cockpit Professional",
+            "Adaptive suspension"
+          ]
+        },
+        {
+          "name": "540i",
+          "aliases": [
+            "540i Sedan"
+          ],
+          "year_max": 2023,
+          "adds": [
+            "375 hp turbocharged inline-six with rear-wheel drive",
+            "Standard luxury and driver assistance features",
+            "Mid-tier 5 Series powertrain"
+          ]
+        },
+        {
+          "name": "530i xDrive",
+          "aliases": [
+            "530i xDrive Sedan"
+          ],
+          "adds": [
+            "248 hp turbocharged 2.0L with xDrive AWD",
+            "Standard BMW Live Cockpit",
+            "All-wheel drive convenience"
+          ]
+        },
+        {
+          "name": "530i",
+          "aliases": [
+            "530i Sedan",
+            "530"
+          ],
+          "adds": [
+            "248 hp turbocharged 2.0L with rear-wheel drive",
+            "Standard iDrive with navigation",
+            "Entry 5 Series powertrain"
+          ]
+        },
+        {
+          "name": "530e xDrive",
+          "aliases": [
+            "530e xDrive Sedan"
+          ],
+          "year_min": 2018,
+          "year_max": 2023,
+          "adds": [
+            "Plug-in hybrid 2.0L with xDrive AWD",
+            "Electric driving range for commuting",
+            "Combined turbo and electric output"
+          ]
+        },
+        {
+          "name": "530e",
+          "aliases": [
+            "530e Sedan"
+          ],
+          "year_min": 2018,
+          "year_max": 2023,
+          "adds": [
+            "Plug-in hybrid 2.0L with rear-wheel drive",
+            "Electric driving range for commuting",
+            "Efficient hybrid powertrain"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bmw_x3",
+      "make": "BMW",
+      "models": [
+        "X3",
+        "X3 M",
+        "X3 M40i",
+        "X3 xDrive30i",
+        "X3 sDrive30i",
+        "X3 xDrive28i"
+      ],
+      "year_min": 2011,
+      "year_max": 2030,
+      "label": "BMW X3 trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "M Competition",
+          "aliases": [
+            "X3 M Competition"
+          ],
+          "adds": [
+            "503 hp twin-turbo inline-six (X3 M Competition)",
+            "M-specific suspension, brakes, and exhaust",
+            "Track-focused M sport interior and exterior"
+          ]
+        },
+        {
+          "name": "M",
+          "aliases": [
+            "X3 M"
+          ],
+          "adds": [
+            "473 hp twin-turbo inline-six",
+            "M chassis and adaptive M suspension",
+            "M sport exhaust and styling"
+          ]
+        },
+        {
+          "name": "M40i",
+          "aliases": [
+            "X3 M40i"
+          ],
+          "adds": [
+            "382 hp turbocharged inline-six",
+            "M Sport differential and adaptive suspension",
+            "M Sport brakes and styling"
+          ]
+        },
+        {
+          "name": "xDrive30i",
+          "aliases": [
+            "X3 xDrive30i",
+            "30 xDrive",
+            "xDrive 30i"
+          ],
+          "adds": [
+            "248 hp turbocharged 2.0L with xDrive AWD",
+            "Standard BMW Live Cockpit",
+            "Sport-tuned suspension"
+          ]
+        },
+        {
+          "name": "xDrive30e",
+          "aliases": [
+            "X3 xDrive30e"
+          ],
+          "adds": [
+            "Plug-in hybrid 2.0L with xDrive AWD",
+            "Electric driving range for daily commuting",
+            "Combined turbo and electric output"
+          ]
+        },
+        {
+          "name": "sDrive30i",
+          "aliases": [
+            "X3 sDrive30i"
+          ],
+          "adds": [
+            "248 hp turbocharged 2.0L with rear-wheel drive",
+            "Standard convenience and safety features",
+            "Entry X3 powertrain"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bmw_x5",
+      "make": "BMW",
+      "models": [
+        "X5",
+        "X5 M",
+        "X5 xDrive40i",
+        "X5 xDrive50i",
+        "X5 xDrive45e",
+        "X5 M60i",
+        "X5 M50i"
+      ],
+      "year_min": 2014,
+      "year_max": 2030,
+      "label": "BMW X5 trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "M Competition",
+          "aliases": [
+            "X5 M Competition"
+          ],
+          "adds": [
+            "617 hp twin-turbo V8",
+            "M-specific chassis, brakes, and exhaust",
+            "M Carbon exterior package and bucket seats"
+          ]
+        },
+        {
+          "name": "M60i xDrive",
+          "aliases": [
+            "X5 M60i",
+            "M60i"
+          ],
+          "adds": [
+            "523 hp twin-turbo V8 with mild hybrid",
+            "Adaptive M Professional suspension",
+            "M Sport exhaust and styling"
+          ]
+        },
+        {
+          "name": "xDrive40i",
+          "aliases": [
+            "X5 xDrive40i"
+          ],
+          "adds": [
+            "375 hp turbocharged inline-six with xDrive AWD",
+            "Standard BMW Live Cockpit Professional",
+            "Adaptive air suspension"
+          ]
+        },
+        {
+          "name": "sDrive40i",
+          "aliases": [
+            "X5 sDrive40i"
+          ],
+          "adds": [
+            "375 hp turbocharged inline-six with rear-wheel drive",
+            "Standard luxury and safety equipment",
+            "Entry X5 powertrain"
+          ]
+        },
+        {
+          "name": "xDrive45e",
+          "aliases": [
+            "X5 xDrive45e"
+          ],
+          "adds": [
+            "Plug-in hybrid inline-six with xDrive AWD",
+            "Extended electric driving range",
+            "Combined turbo and electric output"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bmw_x6",
+      "make": "BMW",
+      "models": [
+        "X6",
+        "X6 M",
+        "X6 M60i",
+        "X6 xDrive40i"
+      ],
+      "year_min": 2015,
+      "year_max": 2030,
+      "label": "BMW X6 trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "M Competition",
+          "aliases": [
+            "X6 M Competition"
+          ],
+          "adds": [
+            "617 hp twin-turbo V8",
+            "M-specific chassis, brakes, and exhaust",
+            "Coupe-SUV M styling and bucket seats"
+          ]
+        },
+        {
+          "name": "M60i xDrive",
+          "aliases": [
+            "X6 M60i",
+            "M60i"
+          ],
+          "adds": [
+            "523 hp twin-turbo V8 with mild hybrid",
+            "Adaptive M Professional suspension",
+            "Sport exhaust and M styling"
+          ]
+        },
+        {
+          "name": "xDrive40i",
+          "aliases": [
+            "X6 xDrive40i"
+          ],
+          "adds": [
+            "375 hp turbocharged inline-six with xDrive AWD",
+            "Sloping coupe roofline with xDrive",
+            "Standard BMW Live Cockpit Professional"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bmw_x7",
+      "make": "BMW",
+      "models": [
+        "X7",
+        "X7 M60i",
+        "X7 xDrive40i",
+        "Alpina XB7"
+      ],
+      "year_min": 2019,
+      "year_max": 2030,
+      "label": "BMW X7 trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "Alpina XB7",
+          "aliases": [
+            "XB7"
+          ],
+          "adds": [
+            "612 hp Alpina-tuned twin-turbo V8",
+            "Alpina-specific suspension and exhaust",
+            "Exclusive Alpina interior and exterior trim"
+          ]
+        },
+        {
+          "name": "M60i xDrive",
+          "aliases": [
+            "X7 M60i",
+            "M60i"
+          ],
+          "adds": [
+            "523 hp twin-turbo V8 with mild hybrid",
+            "Three-row luxury with M Sport performance",
+            "Adaptive air suspension"
+          ]
+        },
+        {
+          "name": "xDrive40i",
+          "aliases": [
+            "X7 xDrive40i"
+          ],
+          "adds": [
+            "375 hp turbocharged inline-six with xDrive AWD",
+            "Three-row seating and full-size luxury",
+            "Standard BMW Live Cockpit Professional"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bmw_7_series",
+      "make": "BMW",
+      "models": [
+        "7 Series",
+        "740i",
+        "750i",
+        "760i",
+        "745e",
+        "745Le",
+        "M760i",
+        "730d",
+        "740d"
+      ],
+      "year_min": 2008,
+      "year_max": 2030,
+      "label": "BMW 7 Series trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "M Sport",
+          "aliases": [
+            "M-Sport",
+            "MSport",
+            "M760i"
+          ],
+          "adds": [
+            "M aerodynamics and adaptive M suspension",
+            "M Sport seats and steering wheel",
+            "Sport exhaust"
+          ]
+        },
+        {
+          "name": "Luxury Line",
+          "aliases": [
+            "Luxury",
+            "Luxury Package"
+          ],
+          "adds": [
+            "Full Merino leather and burl walnut trim",
+            "Rear seat entertainment and massage",
+            "Executive Lounge seating available"
+          ]
+        },
+        {
+          "name": "Executive",
+          "aliases": [
+            "Executive Package"
+          ],
+          "adds": [
+            "Heated/ventilated front and rear seats",
+            "Four-zone climate control",
+            "Rear comfort seats with footrests"
+          ]
+        },
+        {
+          "name": "Premium",
+          "aliases": [
+            "Premium Package"
+          ],
+          "adds": [
+            "Panoramic moonroof",
+            "Park Distance Control",
+            "Comfort Access keyless entry"
+          ]
+        },
+        {
+          "name": "Base",
+          "aliases": [
+            "Standard",
+            "740i",
+            "750i",
+            "760i"
+          ],
+          "adds": [
+            "Standard iDrive with gesture control",
+            "LED laser headlights",
+            "Rear-wheel steering"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bmw_x2",
+      "make": "BMW",
+      "models": [
+        "X2",
+        "X2 M35i",
+        "X2 xDrive28i",
+        "X2 sDrive28i"
+      ],
+      "year_min": 2018,
+      "year_max": 2030,
+      "label": "BMW X2 trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "M35i",
+          "aliases": [
+            "X2 M35i",
+            "M35i xDrive"
+          ],
+          "adds": [
+            "302 hp turbocharged 2.0L with M Sport tuning",
+            "M Sport suspension and brakes",
+            "M-specific styling and exhaust"
+          ]
+        },
+        {
+          "name": "xDrive28i",
+          "aliases": [
+            "X2 xDrive28i",
+            "xDrive28i Sports Activity Vehicle"
+          ],
+          "adds": [
+            "228 hp turbocharged 2.0L with xDrive AWD",
+            "Sport-tuned suspension",
+            "Standard BMW Live Cockpit"
+          ]
+        },
+        {
+          "name": "sDrive28i",
+          "aliases": [
+            "X2 sDrive28i",
+            "sDrive28i Sports Activity Vehicle"
+          ],
+          "adds": [
+            "228 hp turbocharged 2.0L with front-wheel drive",
+            "Standard convenience and safety features",
+            "Entry X2 powertrain"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "audi_a8",
+      "make": "Audi",
+      "models": ["A8", "A8 L", "S8"],
+      "year_min": 2018,
+      "year_max": 2030,
+      "label": "Audi A8 trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "L", "aliases": ["A8 L", "L 55 TFSI quattro", "L 60 TFSI quattro"], "adds": ["Long-wheelbase A8 L with extended rear legroom", "Executive rear seating and comfort features", "Flagship luxury appointments"]},
+        {"name": "60 TFSI", "aliases": ["A8 60 TFSI", "60 TFSI quattro"], "adds": ["4.0L twin-turbo V8 mild hybrid", "Top non-S8 powertrain", "Full luxury feature set"]},
+        {"name": "55 TFSI", "aliases": ["A8 55 TFSI", "55 TFSI quattro"], "adds": ["3.0L turbocharged V6 mild hybrid", "quattro all-wheel drive", "Standard A8 luxury equipment"]},
+        {"name": "Premium Plus", "aliases": ["Premium Plus quattro"], "adds": ["Bang & Olufsen audio available", "Matrix LED headlights", "Ventilated front seats"]},
+        {"name": "Premium", "aliases": ["Premium quattro"], "adds": ["Leather seating surfaces", "MMI navigation plus", "Audi pre sense basic"]}
+      ]
+    },
+    {
+      "id": "audi_q5",
+      "make": "Audi",
+      "models": ["Q5", "Q5 Sportback", "SQ5", "SQ5 Sportback"],
+      "year_min": 2018,
+      "year_max": 2030,
+      "label": "Audi Q5 trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "Prestige", "aliases": ["Prestige 45 TFSI quattro"], "adds": ["Head-up display and full LED matrix lighting", "Heated and ventilated front seats", "Top Q5 equipment level"]},
+        {"name": "Premium Plus", "aliases": ["Premium Plus 45 TFSI quattro", "Premium Plus 40 TFSI quattro"], "adds": ["Bang & Olufsen audio available", "Panoramic sunroof", "Power tailgate"]},
+        {"name": "Premium", "aliases": ["Premium 45 TFSI quattro", "Premium 40 TFSI quattro"], "adds": ["Leather seating surfaces", "Audi MMI touch display", "quattro all-wheel drive"]},
+        {"name": "S line", "aliases": ["S line quattro", "S Line"], "adds": ["S line exterior and interior styling", "Sport suspension tuning", "S line badges and trim"]},
+        {"name": "Sport", "aliases": ["Sport 45 TFSI quattro"], "adds": ["Sport-oriented styling package", "Standard Q5 convenience features", "Entry sport appearance"]}
+      ]
+    },
+    {
+      "id": "audi_q6_etron",
+      "make": "Audi",
+      "models": ["Q6 e-tron", "Q6 Sportback e-tron", "SQ6 e-tron"],
+      "year_min": 2024,
+      "year_max": 2030,
+      "label": "Audi Q6 e-tron trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "Prestige", "aliases": ["Prestige quattro"], "adds": ["Top Q6 e-tron equipment level", "Advanced lighting and driver assistance", "Premium interior materials"]},
+        {"name": "Premium Plus", "aliases": ["Premium Plus quattro"], "adds": ["Enhanced audio and comfort features", "Panoramic glass roof available", "quattro all-wheel drive"]},
+        {"name": "Premium", "aliases": ["Premium quattro"], "adds": ["Electric SUV with Premium trim equipment", "Audi MMI and digital cockpit", "Standard driver assistance"]},
+        {"name": "Ultra", "aliases": ["Ultra RWD"], "adds": ["Efficiency-focused rear-wheel-drive configuration", "Extended range tuning", "Core e-tron feature set"]}
+      ]
+    },
+    {
+      "id": "audi_a4",
+      "make": "Audi",
+      "models": ["A4", "A4 Sedan", "A4 allroad", "A5", "A5 Sportback", "A5 Coupe", "S4", "S5 Sportback"],
+      "year_min": 2017,
+      "year_max": 2030,
+      "label": "Audi A4 / A5 trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "Prestige", "aliases": ["Prestige 45 TFSI quattro", "Prestige 40 TFSI quattro"], "adds": ["Top Prestige equipment package", "Matrix LED lighting and advanced tech", "Premium interior trim"]},
+        {"name": "Premium Plus", "aliases": ["Premium Plus 45 TFSI quattro", "Premium Plus 40 TFSI quattro", "S line Premium Plus"], "adds": ["Bang & Olufsen audio available", "Audi virtual cockpit plus", "Heated front seats"]},
+        {"name": "Premium", "aliases": ["Premium 45 TFSI quattro", "Premium 40 TFSI quattro"], "adds": ["Leather seating surfaces", "MMI navigation plus", "quattro all-wheel drive"]},
+        {"name": "S line", "aliases": ["S line quattro", "S Line Premium Plus"], "adds": ["S line sport appearance", "Sport suspension tuning", "S line interior accents"]}
+      ]
+    },
+    {
+      "id": "audi_a3",
+      "make": "Audi",
+      "models": ["A3", "A3 Sedan", "S3", "S3 Sportback"],
+      "year_min": 2015,
+      "year_max": 2030,
+      "label": "Audi A3 trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "Premium Plus", "aliases": ["Premium Plus 40 TFSI quattro", "Premium Plus quattro"], "adds": ["Top A3 equipment level", "Audi virtual cockpit", "Leather seating surfaces"]},
+        {"name": "Premium", "aliases": ["Premium 40 TFSI quattro", "Premium quattro"], "adds": ["Standard Premium convenience features", "MMI touch display", "quattro all-wheel drive available"]},
+        {"name": "S line", "aliases": ["S line quattro"], "adds": ["S line exterior styling", "Sport suspension", "S line interior trim"]}
+      ]
+    },
+    {
+      "id": "audi_q7",
+      "make": "Audi",
+      "models": ["Q7", "SQ7"],
+      "year_min": 2017,
+      "year_max": 2030,
+      "label": "Audi Q7 trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "Prestige", "aliases": ["Prestige 55 TFSI quattro"], "adds": ["Three-row luxury with top equipment", "Matrix LED lighting", "Executive rear package available"]},
+        {"name": "Premium Plus", "aliases": ["Premium Plus 55 TFSI quattro", "Premium Plus 45 TFSI quattro"], "adds": ["Bang & Olufsen audio available", "Panoramic sunroof", "Power soft-close doors available"]},
+        {"name": "Premium", "aliases": ["Premium 55 TFSI quattro", "Premium 45 TFSI quattro"], "adds": ["Three-row seating", "quattro all-wheel drive", "Standard Q7 luxury features"]},
+        {"name": "S line", "aliases": ["S line quattro"], "adds": ["S line styling and sport suspension", "S line interior accents", "Sport appearance package"]}
+      ]
+    },
+    {
+      "id": "audi_q8",
+      "make": "Audi",
+      "models": ["Q8", "SQ8", "RS Q8"],
+      "year_min": 2019,
+      "year_max": 2030,
+      "label": "Audi Q8 trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "Prestige", "aliases": ["Prestige 55 TFSI quattro"], "adds": ["Coupe-SUV flagship equipment", "Top lighting and assistance packages", "Premium leather and trim"]},
+        {"name": "Premium Plus", "aliases": ["Premium Plus 55 TFSI quattro"], "adds": ["Bang & Olufsen audio available", "HD Matrix design headlights available", "Sport rear differential available"]},
+        {"name": "Premium", "aliases": ["Premium 55 TFSI quattro"], "adds": ["Sloping roofline Q8 styling", "quattro all-wheel drive", "Standard luxury equipment"]},
+        {"name": "S line", "aliases": ["S line quattro"], "adds": ["S line sport appearance", "Adaptive air suspension", "S line interior package"]}
+      ]
+    },
+    {
+      "id": "land_rover_range_rover",
+      "make": "Land Rover",
+      "models": ["Range Rover", "Range Rover Sport", "Range Rover Velar"],
+      "year_min": 2013,
+      "year_max": 2030,
+      "label": "Land Rover Range Rover trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "Autobiography", "aliases": ["Autobiography LWB", "Range Rover Autobiography"], "adds": ["Flagship luxury specification", "Executive rear seating options", "Premium interior materials"]},
+        {"name": "SV", "aliases": ["SV Autobiography"], "adds": ["Special Vehicle Operations tuning", "Enhanced performance and luxury", "Exclusive SV interior"]},
+        {"name": "HSE", "aliases": ["HSE Dynamic", "Range Rover HSE"], "adds": ["High specification equipment level", "Advanced driver assistance", "Premium audio and comfort"]},
+        {"name": "HST", "aliases": ["HST Dynamic"], "adds": ["Sport-oriented HSE variant", "Performance tuning", "Sport exterior accents"]},
+        {"name": "SE", "aliases": ["Range Rover SE"], "adds": ["Standard luxury equipment", "Land Rover Terrain Response", "Core Range Rover feature set"]}
+      ]
+    },
+    {
+      "id": "tesla_model_3",
+      "make": "Tesla",
+      "models": ["Model 3"],
+      "year_min": 2017,
+      "year_max": 2030,
+      "label": "Tesla Model 3 trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "Plaid", "aliases": ["Model 3 Plaid"], "adds": ["Tri-motor performance", "Track Mode", "Top Model 3 acceleration"]},
+        {"name": "Performance", "aliases": ["Model 3 Performance"], "adds": ["Dual-motor performance tuning", "Performance brakes and suspension", "20-inch wheels"]},
+        {"name": "Long Range", "aliases": ["Model 3 Long Range", "Long Range AWD"], "adds": ["Extended range battery", "Dual-motor all-wheel drive", "Premium interior"]},
+        {"name": "Standard Range", "aliases": ["Standard Range Plus", "Standard Range RWD"], "adds": ["Rear-wheel-drive efficiency", "Core Autopilot hardware", "Entry Model 3 equipment"]}
+      ]
+    },
+    {
+      "id": "tesla_model_y",
+      "make": "Tesla",
+      "models": ["Model Y"],
+      "year_min": 2020,
+      "year_max": 2030,
+      "label": "Tesla Model Y trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "Plaid", "aliases": ["Model Y Plaid"], "adds": ["Tri-motor performance SUV", "Track Mode", "Top Model Y acceleration"]},
+        {"name": "Performance", "aliases": ["Model Y Performance"], "adds": ["Dual-motor performance tuning", "Performance brakes", "21-inch wheels"]},
+        {"name": "Long Range", "aliases": ["Model Y Long Range", "Long Range AWD"], "adds": ["Extended range battery", "Dual-motor all-wheel drive", "Premium interior"]},
+        {"name": "Standard Range", "aliases": ["Standard Range RWD"], "adds": ["Rear-wheel-drive efficiency", "Core Autopilot hardware", "Entry Model Y equipment"]}
+      ]
+    },
+    {
+      "id": "volvo_xc90",
+      "make": "Volvo",
+      "models": ["XC90", "XC90 Recharge"],
+      "year_min": 2016,
+      "year_max": 2030,
+      "label": "Volvo XC90 trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "T8", "aliases": ["T8 Recharge", "T8 eAWD", "T8 Ultra"], "adds": ["Plug-in hybrid powertrain", "Recharge extended range", "Top XC90 electrified equipment"]},
+        {"name": "B6", "aliases": ["B6 Ultra", "B6 Core", "B6 Plus", "B6 AWD"], "adds": ["Mild-hybrid inline-six", "AWD standard", "Mid-tier luxury equipment"]},
+        {"name": "B5", "aliases": ["B5 Core", "B5 Plus", "B5 AWD"], "adds": ["Mild-hybrid turbo-four", "Core luxury features", "Volvo safety suite"]}
+      ]
+    },
+    {
+      "id": "gmc_yukon",
+      "make": "GMC",
+      "models": ["Yukon", "Yukon XL", "Yukon Denali", "Yukon AT4"],
+      "year_min": 2021,
+      "year_max": 2030,
+      "label": "GMC Yukon trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "Denali Ultimate", "aliases": ["Denali Ultimate Package"], "adds": ["Top Denali equipment", "Executive rear seating options", "Premium interior and tech"]},
+        {"name": "Denali", "aliases": ["Yukon Denali", "Yukon XL Denali"], "adds": ["Denali chrome styling", "Premium leather seating", "Advanced driver assistance"]},
+        {"name": "AT4", "aliases": ["AT4 Ultimate", "AT4X", "Yukon AT4", "Yukon XL AT4"], "adds": ["Off-road suspension tuning", "All-terrain tires", "AT4 exclusive styling"]},
+        {"name": "SLT", "aliases": ["Yukon SLT", "Yukon XL SLT"], "adds": ["Leather-appointed seating", "Power liftgate", "Enhanced convenience features"]},
+        {"name": "Elevation", "aliases": ["Yukon Elevation"], "adds": ["Dark accent exterior", "Unique wheels and grille", "Mid-level equipment"]},
+        {"name": "SLE", "aliases": ["Yukon SLE", "Yukon XL SLE"], "adds": ["Standard Yukon equipment", "Three-row seating", "Core GMC utility features"]}
+      ]
+    },
+    {
+      "id": "toyota_tacoma",
+      "make": "Toyota",
+      "models": ["Tacoma", "Tacoma i-FORCE MAX"],
+      "year_min": 2016,
+      "year_max": 2030,
+      "label": "Toyota Tacoma trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "TRD Pro", "aliases": ["Tacoma TRD Pro"], "adds": ["Fox internal bypass shocks", "TRD Pro skid plate", "Heritage grille"]},
+        {"name": "TRD Off-Road", "aliases": ["TRD Off Road", "Tacoma TRD Off-Road"], "adds": ["Bilstein off-road suspension", "Multi-Terrain Select", "Crawl Control"]},
+        {"name": "TRD Sport", "aliases": ["Tacoma TRD Sport"], "adds": ["Sport-tuned suspension", "17-inch alloy wheels", "Sport appearance"]},
+        {"name": "Limited", "aliases": ["Tacoma Limited"], "adds": ["Leather-trimmed seating", "Smart key system", "Premium audio"]},
+        {"name": "SR5", "aliases": ["Tacoma SR5"], "adds": ["Mid-level convenience features", "Available 4WD", "Composite or alloy wheels"]},
+        {"name": "SR", "aliases": ["Tacoma SR"], "adds": ["Work-ready base equipment", "Core Tacoma utility", "Entry pricing"]}
+      ]
+    },
+    {
+      "id": "nissan_pathfinder",
+      "make": "Nissan",
+      "models": ["Pathfinder", "Pathfinder Rock Creek"],
+      "year_min": 2022,
+      "year_max": 2030,
+      "label": "Nissan Pathfinder trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "Platinum", "aliases": ["Pathfinder Platinum"], "adds": ["Top Pathfinder equipment", "Premium leather seating", "Panoramic moonroof"]},
+        {"name": "SL", "aliases": ["Pathfinder SL"], "adds": ["Leather-appointed seats", "Power liftgate", "Enhanced tech package"]},
+        {"name": "SV", "aliases": ["Pathfinder SV"], "adds": ["Mid-level convenience", "Available AWD", "Standard safety features"]},
+        {"name": "S", "aliases": ["Pathfinder S"], "adds": ["Three-row seating", "Core Pathfinder utility", "Entry equipment level"]}
+      ]
+    },
+    {
+      "id": "porsche_taycan",
+      "make": "Porsche",
+      "models": ["Taycan", "Taycan Cross Turismo", "Taycan Sport Turismo"],
+      "year_min": 2020,
+      "year_max": 2030,
+      "label": "Porsche Taycan trim lineup",
+      "source": "curated",
+      "steps": [
+        {"name": "Turbo S", "aliases": ["Taycan Turbo S"], "adds": ["Top Taycan performance", "Carbon ceramic brakes", "Maximum power output"]},
+        {"name": "Turbo", "aliases": ["Taycan Turbo"], "adds": ["High-performance dual motor", "Adaptive air suspension", "Sport Chrono package"]},
+        {"name": "GTS", "aliases": ["Taycan GTS"], "adds": ["Sport-tuned GTS specification", "Performance battery plus", "GTS styling"]},
+        {"name": "4S", "aliases": ["Taycan 4S"], "adds": ["Dual-motor all-wheel drive", "Performance battery", "Premium interior"]},
+        {"name": "Base", "aliases": ["Taycan"], "adds": ["Rear-wheel-drive Taycan", "Core electric sports sedan", "Porsche Electric Sport Sound"]}
+      ]
+    },
+    {
+      "id": "jeep_wagoneer",
+      "make": "Jeep",
+      "models": [
+        "Wagoneer",
+        "Wagoneer L"
+      ],
+      "year_min": 2022,
+      "year_max": 2030,
+      "label": "Jeep Wagoneer trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "L Series III",
+          "aliases": [
+            "Wagoneer L Series III",
+            "Series III L"
+          ],
+          "adds": [
+            "Extended-wheelbase Wagoneer L with top Series III equipment",
+            "Premium leather and wood trim",
+            "Advanced driver assistance and rear entertainment"
+          ]
+        },
+        {
+          "name": "L Series II",
+          "aliases": [
+            "Wagoneer L Series II"
+          ],
+          "adds": [
+            "Extended-wheelbase with mid-level Series II content",
+            "Upgraded audio and convenience features"
+          ]
+        },
+        {
+          "name": "L Series I",
+          "aliases": [
+            "Wagoneer L Series I"
+          ],
+          "adds": [
+            "Extended-wheelbase entry Series I trim",
+            "Three-row seating and standard luxury appointments"
+          ]
+        },
+        {
+          "name": "Series III",
+          "aliases": [
+            "Wagoneer Series III"
+          ],
+          "adds": [
+            "Top standard-wheelbase Series III trim",
+            "Premium interior and technology package"
+          ]
+        },
+        {
+          "name": "Series II",
+          "aliases": [
+            "Wagoneer Series II"
+          ],
+          "adds": [
+            "Mid-level Series II equipment",
+            "Expanded comfort and convenience features"
+          ]
+        },
+        {
+          "name": "Series I",
+          "aliases": [
+            "Wagoneer Series I"
+          ],
+          "adds": [
+            "Entry Wagoneer Series I trim",
+            "Standard luxury SUV appointments"
+          ]
+        },
+        {
+          "name": "Carbide",
+          "aliases": [],
+          "adds": [
+            "Dark-themed appearance package",
+            "Black exterior accents and wheels"
+          ]
+        },
+        {
+          "name": "Obsidian",
+          "aliases": [],
+          "adds": [
+            "Blacked-out exterior and interior theme",
+            "Premium dark-accent trim"
+          ]
+        },
+        {
+          "name": "Launch Edition",
+          "aliases": [],
+          "adds": [
+            "Early production launch trim with unique content",
+            "Limited availability equipment package"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jeep_grand_wagoneer",
+      "make": "Jeep",
+      "models": [
+        "Grand Wagoneer",
+        "Grand Wagoneer L"
+      ],
+      "year_min": 2022,
+      "year_max": 2030,
+      "label": "Jeep Grand Wagoneer trim lineup",
+      "source": "curated",
+      "steps": [
+        {
+          "name": "Summit Reserve",
+          "aliases": [
+            "Grand Wagoneer Summit Reserve"
+          ],
+          "adds": [
+            "Top Grand Wagoneer with premium leather and real wood",
+            "McIntosh audio and advanced driver assistance",
+            "Rear-seat entertainment and luxury appointments"
+          ]
+        },
+        {
+          "name": "Summit",
+          "aliases": [],
+          "adds": [
+            "High-end Summit trim with premium interior content",
+            "Expanded technology and comfort features"
+          ]
+        },
+        {
+          "name": "Obsidian",
+          "aliases": [],
+          "adds": [
+            "Dark-themed appearance package",
+            "Blacked-out exterior accents"
+          ]
+        },
+        {
+          "name": "Series III",
+          "aliases": [
+            "Grand Wagoneer Series III"
+          ],
+          "adds": [
+            "Top Series III equipment package",
+            "Premium luxury SUV appointments"
+          ]
+        },
+        {
+          "name": "Series II",
+          "aliases": [],
+          "adds": [
+            "Mid-level Series II trim content"
+          ]
+        },
+        {
+          "name": "Series I",
+          "aliases": [],
+          "adds": [
+            "Entry Series I Grand Wagoneer trim"
+          ]
+        },
+        {
+          "name": "Carbide",
+          "aliases": [],
+          "adds": [
+            "Dark accent appearance package"
+          ]
+        },
+        {
+          "name": "Upland",
+          "aliases": [],
+          "adds": [
+            "Outdoor-themed trim with rugged styling cues"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,16 +1,16 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2023,BMW,M,8 Competition Coupe,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.4,15,22,17,,,,,
-2023,BMW,M,8 Competition Convertible,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.4,15,22,17,,,,,
-2023,BMW,M,8 Competition Gran Coupe,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.4,15,22,17,,,,,
-2023,BMW,M,4 Coupe,3.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,23,19,,,,,
-2023,BMW,M,4 Competition Coupe,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,23,19,,,,,
-2023,BMW,M,4 Competition M xDrive Coupe,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,22,18,,,,,
-2023,BMW,M,4 Competition M xDrive Convertible,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,23,18,,,,,
-2023,BMW,M,3 Sedan,3.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,16,23,19,,,,,
-2023,BMW,M,3 Competition Sedan,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,16,23,19,,,,,
-2023,BMW,M,3 Competition M xDrive Sedan,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,16,22,18,,,,,
-2023,BMW,M,5 Sedan,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.4,15,21,17,,,,,
-2023,BMW,M,5 Competition Sedan,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.4,15,21,17,,,,,
-2023,BMW,M,4 CSL Coupe,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,23,18,,,,,
-2023,BMW,M,2 Coupe,3.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,24,19,,,,,
-2023,BMW,M,2 Coupe,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,23,19,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2023,BMW,M,8 Competition Coupe,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.4,15,22,17,,,,,,4.4L V8 Twin Turbo,Twin Turbocharged
+2023,BMW,M,8 Competition Convertible,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.4,15,22,17,,,,,,4.4L V8 Twin Turbo,Twin Turbocharged
+2023,BMW,M,8 Competition Gran Coupe,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.4,15,22,17,,,,,,4.4L V8 Twin Turbo,Twin Turbocharged
+2023,BMW,M,4 Coupe,3.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,23,19,,,,,,3.0L I6 Turbo,Turbocharged
+2023,BMW,M,4 Competition Coupe,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,23,19,,,,,,3.0L I6 Turbo,Turbocharged
+2023,BMW,M,4 Competition M xDrive Coupe,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,22,18,,,,,,3.0L I6 Turbo,Turbocharged
+2023,BMW,M,4 Competition M xDrive Convertible,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,23,18,,,,,,3.0L I6 Turbo,Turbocharged
+2023,BMW,M,3 Sedan,3.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,16,23,19,,,,,,3.0L I6 Turbo,Turbocharged
+2023,BMW,M,3 Competition Sedan,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,16,23,19,,,,,,3.0L I6 Turbo,Turbocharged
+2023,BMW,M,3 Competition M xDrive Sedan,3.0L V6 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,16,22,18,,,,,,3.0L I6 Turbo,Turbocharged
+2023,BMW,M,5 Sedan,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.4,15,21,17,,,,,,4.4L V8 Twin Turbo,Twin Turbocharged
+2023,BMW,M,5 Competition Sedan,4.4L V8 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,8,4.4,15,21,17,,,,,,4.4L V8 Twin Turbo,Twin Turbocharged
+2023,BMW,M,4 CSL Coupe,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,23,18,,,,,,3.0L I6 Turbo,Turbocharged
+2023,BMW,M,2 Coupe,3.0L V6 (SIDI),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,24,19,,,,,,3.0L I6 Turbo,Turbocharged
+2023,BMW,M,2 Coupe,3.0L V6 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,16,23,19,,,,,,3.0L I6 Turbo,Turbocharged

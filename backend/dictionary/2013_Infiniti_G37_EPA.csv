@@ -1,9 +1,9 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2013,Infiniti,G37,Convertible,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,17,25,20,,,,,
-2013,Infiniti,G37,Convertible,3.7L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,16,24,19,,,,,
-2013,Infiniti,G37,Coupe,3.7L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,17,25,20,,,,,
-2013,Infiniti,G37,Coupe,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,19,26,22,,,,,
-2013,Infiniti,G37,x Coupe,3.7L V6,Automatic (S7),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,18,25,20,,,,,
-2013,Infiniti,G37,G37,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.7,19,26,22,,,,,
-2013,Infiniti,G37,G37,3.7L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.7,17,25,20,,,,,
-2013,Infiniti,G37,x,3.7L V6,Automatic (S7),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.7,18,25,20,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2013,Infiniti,G37,Convertible,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,17,25,20,,,,,,3.7L V6,
+2013,Infiniti,G37,Convertible,3.7L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,16,24,19,,,,,,3.7L V6,
+2013,Infiniti,G37,Coupe,3.7L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,17,25,20,,,,,,3.7L V6,
+2013,Infiniti,G37,Coupe,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,19,26,22,,,,,,3.7L V6,
+2013,Infiniti,G37,x Coupe,3.7L V6,Automatic (S7),All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.7,18,25,20,,,,,,3.7L V6,
+2013,Infiniti,G37,G37,3.7L V6,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.7,19,26,22,,,,,,3.7L V6,
+2013,Infiniti,G37,G37,3.7L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.7,17,25,20,,,,,,3.7L V6,
+2013,Infiniti,G37,x,3.7L V6,Automatic (S7),All-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.7,18,25,20,,,,,,3.7L V6,

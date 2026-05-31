@@ -23,8 +23,8 @@ def web_research_playwright_allowed(session_user_id: int | None) -> bool:
         ``WEB_RESEARCH_ALLOWED_HOSTS`` and built-in href blocklist when configured).
 
     CAR_CHAT_WEB_RESEARCH_PUBLIC
-        When ``1`` and policy mode is ``auto`` in production, anonymous users may
-        trigger Playwright (same as legacy behavior; higher abuse risk).
+        Dev-only: when ``1`` and policy mode is ``auto``, anonymous users may trigger
+        Playwright. Ignored in production (logged-in session required).
     """
     raw = (os.environ.get("CAR_CHAT_WEB_RESEARCH") or "").strip().lower()
     if raw in ("0", "false", "no", "off"):
@@ -33,19 +33,21 @@ def web_research_playwright_allowed(session_user_id: int | None) -> bool:
         return True
 
     if not is_production_env():
-        return True
-
-    pub = (os.environ.get("CAR_CHAT_WEB_RESEARCH_PUBLIC") or "").strip().lower()
-    if pub in ("1", "true", "yes", "on"):
+        pub = (os.environ.get("CAR_CHAT_WEB_RESEARCH_PUBLIC") or "").strip().lower()
+        if pub in ("1", "true", "yes", "on"):
+            return True
         return True
 
     return session_user_id is not None
 
 
-def car_chat_listing_daily_limit() -> int:
-    """Max chat messages allowed per listing per 24h (0 = disabled)."""
+def car_chat_user_daily_limit() -> int:
+    """Max chat messages allowed per authenticated user per 24h (0 = disabled)."""
+    raw = os.environ.get("CAR_CHAT_MAX_PER_USER_DAILY")
+    if raw is None or not str(raw).strip():
+        raw = os.environ.get("CAR_CHAT_MAX_PER_LISTING_DAILY", "10")
     try:
-        return max(0, int(os.environ.get("CAR_CHAT_MAX_PER_LISTING_DAILY", "10")))
+        return max(0, int(raw))
     except (TypeError, ValueError):
         return 10
 

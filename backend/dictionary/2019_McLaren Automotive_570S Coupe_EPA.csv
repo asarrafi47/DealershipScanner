@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2019,McLaren Automotive,570S Coupe,570S Coupe,3.8L V8,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,3.8,15,22,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2019,McLaren Automotive,570S Coupe,570S Coupe,3.8L V8,Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,3.8,15,22,18,,,,,,3.8L V8,

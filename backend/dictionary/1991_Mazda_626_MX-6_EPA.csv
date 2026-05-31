@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1991,Mazda,626/MX-6,626/MX-6,"2.2L I4 ((FFS,TRBO))",Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.2,17,23,19,,,,,
-1991,Mazda,626/MX-6,626/MX-6,2.2L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.2,19,26,22,,,,,
-1991,Mazda,626/MX-6,626/MX-6,"2.2L I4 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.2,18,26,21,,,,,
-1991,Mazda,626/MX-6,626/MX-6,2.2L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.2,21,29,24,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1991,Mazda,626/MX-6,626/MX-6,"2.2L I4 ((FFS,TRBO))",Automatic 4-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.2,17,23,19,,,,,,2.2L I4,
+1991,Mazda,626/MX-6,626/MX-6,2.2L I4 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.2,19,26,22,,,,,,2.2L I4,
+1991,Mazda,626/MX-6,626/MX-6,"2.2L I4 ((FFS,TRBO))",Manual 5-spd,Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.2,18,26,21,,,,,,2.2L I4,
+1991,Mazda,626/MX-6,626/MX-6,2.2L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.2,21,29,24,,,,,,2.2L I4,

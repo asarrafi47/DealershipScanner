@@ -66,6 +66,25 @@ def account_has_env_admin_privilege(email: str | None, username: str | None) -> 
     return email_is_admin(email) or username_is_admin(username)
 
 
+def registration_blocked_by_env_admin(email: str | None, username: str | None) -> bool:
+    """Public self-registration must not grant admin via env lists (promotion happens on login only)."""
+    return account_has_env_admin_privilege(email, username)
+
+
+REGISTRATION_ADMIN_BLOCKED_MSG = (
+    "This email or username is reserved. Contact the site administrator to create an account."
+)
+
+
 def is_admin_role(role: str | None) -> bool:
     return normalize_role(role) == ROLE_ADMIN
+
+
+def is_dealer_portal_role(role: str | None) -> bool:
+    """Dealership org accounts that use ``/inventory`` dealer portal."""
+    return normalize_role(role) in (
+        ROLE_DEALERSHIP_OWNER,
+        ROLE_DEALERSHIP_ADMIN,
+        ROLE_DEALERSHIP_MEMBER,
+    )
 

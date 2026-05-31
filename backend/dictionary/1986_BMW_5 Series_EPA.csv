@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1986,BMW,5 Series,5 Series,"Diesel 2.4L V6 ((DSL,TRBO) (NO-CAT)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Compact Cars,6,2.4,21,26,23,,,,,
-1986,BMW,5 Series,5 Series,2.7L V6 ((FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,6,2.7,16,22,18,,,,,
-1986,BMW,5 Series,5 Series,2.7L V6 ((FFS) (MPFI)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,6,2.7,18,22,20,,,,,
-1986,BMW,5 Series,5 Series,3.4L V6 ((GUZZLER) (FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,6,3.4,15,20,16,,,,,
-1986,BMW,5 Series,5 Series,3.4L V6 ((GUZZLER) (FFS) (MPFI)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,6,3.4,14,20,17,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1986,BMW,5 Series,5 Series,"Diesel 2.4L V6 ((DSL,TRBO) (NO-CAT)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Compact Cars,6,2.4,21,26,23,,,,,,2.4L I6 Turbo,Turbocharged
+1986,BMW,5 Series,5 Series,2.7L V6 ((FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,6,2.7,16,22,18,,,,,,2.7L I6 Turbo,Turbocharged
+1986,BMW,5 Series,5 Series,2.7L V6 ((FFS) (MPFI)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,6,2.7,18,22,20,,,,,,2.7L I6 Turbo,Turbocharged
+1986,BMW,5 Series,5 Series,3.4L V6 ((GUZZLER) (FFS) (MPFI)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,6,3.4,15,20,16,,,,,,3.4L I6 Turbo,Turbocharged
+1986,BMW,5 Series,5 Series,3.4L V6 ((GUZZLER) (FFS) (MPFI)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Compact Cars,6,3.4,14,20,17,,,,,,3.4L I6 Turbo,Turbocharged

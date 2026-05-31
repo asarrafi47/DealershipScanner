@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2015,Chevrolet,Colorado,2WD,3.6L V6 (SIDI),Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,3.6,18,25,21,,,,,
-2015,Chevrolet,Colorado,4WD,3.6L V6 (SIDI),Automatic 6-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,3.6,17,24,20,,,,,
-2015,Chevrolet,Colorado,Cab Chassis 2WD,3.6L V6 (SIDI),Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,6,3.6,15,18,16,,,,,
-2015,Chevrolet,Colorado,2WD,2.5L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.5,19,25,22,,,,,
-2015,Chevrolet,Colorado,2WD,2.5L I4 (SIDI),Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.5,20,26,22,,,,,
-2015,Chevrolet,Colorado,4WD,2.5L I4 (SIDI),Automatic 6-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,4,2.5,19,24,21,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2015,Chevrolet,Colorado,2WD,3.6L V6 (SIDI),Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,3.6,18,25,21,,,,,,3.6L V6,
+2015,Chevrolet,Colorado,4WD,3.6L V6 (SIDI),Automatic 6-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,3.6,17,24,20,,,,,,3.6L V6,
+2015,Chevrolet,Colorado,Cab Chassis 2WD,3.6L V6 (SIDI),Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,6,3.6,15,18,16,,,,,,3.6L V6,
+2015,Chevrolet,Colorado,2WD,2.5L I4 (SIDI),Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.5,19,25,22,,,,,,2.5L I4 Turbo,Turbocharged
+2015,Chevrolet,Colorado,2WD,2.5L I4 (SIDI),Automatic 6-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.5,20,26,22,,,,,,2.5L I4 Turbo,Turbocharged
+2015,Chevrolet,Colorado,4WD,2.5L I4 (SIDI),Automatic 6-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,4,2.5,19,24,21,,,,,,2.5L I4 Turbo,Turbocharged

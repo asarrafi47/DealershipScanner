@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2008,Mercury,Mariner,FWD,2.3L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.3,20,26,22,,,,,
-2008,Mercury,Mariner,FWD,3.0L V6,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.0,18,24,20,,,,,
-2008,Mercury,Mariner,Hybrid FWD,Hybrid 2.3L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.3,34,30,32,,,,,
-2008,Mercury,Mariner,4WD,2.3L I4,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.3,19,24,21,,,,,
-2008,Mercury,Mariner,4WD,3.0L V6,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.0,17,22,19,,,,,
-2008,Mercury,Mariner,Hybrid 4WD,Hybrid 2.3L I4,Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.3,29,27,28,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2008,Mercury,Mariner,FWD,2.3L I4,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.3,20,26,22,,,,,,2.3L I4,
+2008,Mercury,Mariner,FWD,3.0L V6,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,6,3.0,18,24,20,,,,,,3.0L V6,
+2008,Mercury,Mariner,Hybrid FWD,Hybrid 2.3L I4,Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 2WD,4,2.3,34,30,32,,,,,,2.3L I4,
+2008,Mercury,Mariner,4WD,2.3L I4,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.3,19,24,21,,,,,,2.3L I4,
+2008,Mercury,Mariner,4WD,3.0L V6,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,6,3.0,17,22,19,,,,,,3.0L V6,
+2008,Mercury,Mariner,Hybrid 4WD,Hybrid 2.3L I4,Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Sport Utility Vehicle - 4WD,4,2.3,29,27,28,,,,,,2.3L I4,

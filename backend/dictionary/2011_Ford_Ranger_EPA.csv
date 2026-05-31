@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2011,Ford,Ranger,2WD,2.3L I4,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.3,19,23,20,,,,,
-2011,Ford,Ranger,2WD,2.3L I4,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.3,22,27,24,,,,,
-2011,Ford,Ranger,2WD,4.0L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,4.0,15,20,17,,,,,
-2011,Ford,Ranger,2WD,4.0L V6,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,4.0,16,21,18,,,,,
-2011,Ford,Ranger,4WD,4.0L V6 (Part-time 4-Wheel Drive),Automatic 5-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,4.0,15,18,16,,,,,
-2011,Ford,Ranger,4WD,4.0L V6 (Part-time 4-Wheel Drive),Manual 5-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,4.0,15,19,17,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2011,Ford,Ranger,2WD,2.3L I4,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.3,19,23,20,,,,,,2.3L I4 Turbo,Turbocharged
+2011,Ford,Ranger,2WD,2.3L I4,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.3,22,27,24,,,,,,2.3L I4 Turbo,Turbocharged
+2011,Ford,Ranger,2WD,4.0L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,4.0,15,20,17,,,,,,4.0L V6 Twin Turbo,Twin Turbocharged
+2011,Ford,Ranger,2WD,4.0L V6,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,4.0,16,21,18,,,,,,4.0L V6 Twin Turbo,Twin Turbocharged
+2011,Ford,Ranger,4WD,4.0L V6 (Part-time 4-Wheel Drive),Automatic 5-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,4.0,15,18,16,,,,,,4.0L V6 Twin Turbo,Twin Turbocharged
+2011,Ford,Ranger,4WD,4.0L V6 (Part-time 4-Wheel Drive),Manual 5-spd,Four-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,4.0,15,19,17,,,,,,4.0L V6 Twin Turbo,Twin Turbocharged

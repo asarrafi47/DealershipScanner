@@ -177,13 +177,18 @@ def normalize_engine_description_storage(raw: Any) -> str | None:
 
     layout: str | None = None
     for rx, prefix in (
+        (re.compile(r"\b(FLAT|BOXER|H)\s*-?\s*4\b", re.I), "Flat-4"),
+        (re.compile(r"\b(FLAT|BOXER|H)\s*-?\s*6\b", re.I), "Flat-6"),
         (re.compile(r"\bV[-\s]?(\d{1,2})\b", re.I), "V"),
         (re.compile(r"\bI[-\s]?(\d{1,2})\b", re.I), "I"),
         (re.compile(r"\bW[-\s]?(\d{1,2})\b", re.I), "W"),
     ):
         mm = rx.search(work)
         if mm:
-            layout = f"{prefix}{int(mm.group(1))}"
+            if prefix in ("Flat-4", "Flat-6"):
+                layout = prefix
+            else:
+                layout = f"{prefix}{int(mm.group(1))}"
             break
 
     out: str | None = None
@@ -350,6 +355,18 @@ def collect_raw_spec_heuristic_updates(raw: dict[str, Any]) -> dict[str, Any]:
     cur_ok = isinstance(cur_tt, str) and cur_tt.strip() in _VALID_TRANSMISSION_TYPES
     if tt and not cur_ok:
         out["transmission_type"] = tt
+
+    from backend.utils.field_clean import normalize_body_style_for_car
+
+    bs_corrected = normalize_body_style_for_car(
+        c.get("body_style"),
+        make=c.get("make"),
+        model=c.get("model"),
+        trim=c.get("trim"),
+        title=c.get("title"),
+    )
+    if bs_corrected and str(c.get("body_style") or "").strip() != bs_corrected:
+        out["body_style"] = bs_corrected
 
     # Normalize title to remove redundant door count patterns
     title = c.get("title")

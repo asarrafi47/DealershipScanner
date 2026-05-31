@@ -1,9 +1,9 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1985,Buick,Skylark,Skylark,2.8L V6 ((FFS) CA model),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,17,24,19,,,,,
-1985,Buick,Skylark,Skylark,2.8L V6 ((FFS) CA model),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,15,22,18,,,,,
-1985,Buick,Skylark,Skylark,2.5L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.5,21,29,24,,,,,
-1985,Buick,Skylark,Skylark,2.5L I4 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.5,21,31,25,,,,,
-1985,Buick,Skylark,Skylark,2.8L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,18,24,20,,,,,
-1985,Buick,Skylark,Skylark,2.8L V6 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,17,24,19,,,,,
-1985,Buick,Skylark,Skylark,2.8L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,18,24,20,,,,,
-1985,Buick,Skylark,Skylark,2.8L V6 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,16,22,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1985,Buick,Skylark,Skylark,2.8L V6 ((FFS) CA model),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,17,24,19,,,,,,2.8L V6,
+1985,Buick,Skylark,Skylark,2.8L V6 ((FFS) CA model),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,15,22,18,,,,,,2.8L V6,
+1985,Buick,Skylark,Skylark,2.5L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.5,21,29,24,,,,,,2.5L I4,
+1985,Buick,Skylark,Skylark,2.5L I4 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.5,21,31,25,,,,,,2.5L I4,
+1985,Buick,Skylark,Skylark,2.8L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,18,24,20,,,,,,2.8L V6,
+1985,Buick,Skylark,Skylark,2.8L V6 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,17,24,19,,,,,,2.8L V6,
+1985,Buick,Skylark,Skylark,2.8L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,18,24,20,,,,,,2.8L V6,
+1985,Buick,Skylark,Skylark,2.8L V6 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,Compact Cars,6,2.8,16,22,18,,,,,,2.8L V6,

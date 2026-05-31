@@ -1,17 +1,17 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2017,Mercedes-Benz,C-Class,C300 4matic Coupe,2.0L I4 (SIDI),Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,29,25,,,,,
-2017,Mercedes-Benz,C-Class,C300 Coupe,2.0L I4 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,30,26,,,,,
-2017,Mercedes-Benz,C-Class,C300 4matic,2.0L I4 (SIDI),Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,31,27,,,,,
-2017,Mercedes-Benz,C-Class,C300,2.0L I4 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,34,28,,,,,
-2017,Mercedes-Benz,C-Class,AMG C63 S Coupe,4.0L V8 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.0,17,23,19,,,,,
-2017,Mercedes-Benz,C-Class,AMG C63 Coupe,4.0L V8 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.0,17,23,19,,,,,
-2017,Mercedes-Benz,C-Class,AMG C63,4.0L V8 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,4.0,18,25,21,,,,,
-2017,Mercedes-Benz,C-Class,AMG C63 S,4.0L V8 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,4.0,18,24,20,,,,,
-2017,Mercedes-Benz,C-Class,C300 4matic Convertible,2.0L I4 (SIDI),Automatic 9-spd,Four-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,22,29,25,,,,,
-2017,Mercedes-Benz,C-Class,C300 Convertible,2.0L I4 (SIDI),Automatic 9-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,31,26,,,,,
-2017,Mercedes-Benz,C-Class,AMG C63 S Convertible,4.0L V8 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.0,17,22,19,,,,,
-2017,Mercedes-Benz,C-Class,AMG C63 Convertible,4.0L V8 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.0,17,22,19,,,,,
-2017,Mercedes-Benz,C-Class,AMG C43 4matic Coupe,3.0L V6 (SIDI),Automatic 9-spd,Four-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,20,28,23,,,,,
-2017,Mercedes-Benz,C-Class,AMG C43 4matic Convertible,3.0L V6 (SIDI),Automatic 9-spd,Four-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,19,26,22,,,,,
-2017,Mercedes-Benz,C-Class,AMG C43 4matic,3.0L V6 (SIDI),Automatic 9-spd,Four-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,20,28,23,,,,,
-2017,Mercedes-Benz,C-Class,C350e,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline / Electricity,Compact Cars,4,2.0,28,32,30,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2017,Mercedes-Benz,C-Class,C300 4matic Coupe,2.0L I4 (SIDI),Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,29,25,,,,,,2.0L I4 Turbo,Turbocharged
+2017,Mercedes-Benz,C-Class,C300 Coupe,2.0L I4 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,30,26,,,,,,2.0L I4 Turbo,Turbocharged
+2017,Mercedes-Benz,C-Class,C300 4matic,2.0L I4 (SIDI),Automatic 7-spd,Four-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,31,27,,,,,,2.0L I4 Turbo,Turbocharged
+2017,Mercedes-Benz,C-Class,C300,2.0L I4 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,34,28,,,,,,2.0L I4 Turbo,Turbocharged
+2017,Mercedes-Benz,C-Class,AMG C63 S Coupe,4.0L V8 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.0,17,23,19,,,,,,4.0L V8 Twin Turbo,Twin Turbocharged
+2017,Mercedes-Benz,C-Class,AMG C63 Coupe,4.0L V8 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.0,17,23,19,,,,,,4.0L V8 Twin Turbo,Twin Turbocharged
+2017,Mercedes-Benz,C-Class,AMG C63,4.0L V8 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,4.0,18,25,21,,,,,,4.0L V8 Twin Turbo,Twin Turbocharged
+2017,Mercedes-Benz,C-Class,AMG C63 S,4.0L V8 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,8,4.0,18,24,20,,,,,,4.0L V8 Twin Turbo,Twin Turbocharged
+2017,Mercedes-Benz,C-Class,C300 4matic Convertible,2.0L I4 (SIDI),Automatic 9-spd,Four-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,22,29,25,,,,,,2.0L I4 Turbo,Turbocharged
+2017,Mercedes-Benz,C-Class,C300 Convertible,2.0L I4 (SIDI),Automatic 9-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,23,31,26,,,,,,2.0L I4 Turbo,Turbocharged
+2017,Mercedes-Benz,C-Class,AMG C63 S Convertible,4.0L V8 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.0,17,22,19,,,,,,4.0L V8 Twin Turbo,Twin Turbocharged
+2017,Mercedes-Benz,C-Class,AMG C63 Convertible,4.0L V8 (SIDI),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.0,17,22,19,,,,,,4.0L V8 Twin Turbo,Twin Turbocharged
+2017,Mercedes-Benz,C-Class,AMG C43 4matic Coupe,3.0L V6 (SIDI),Automatic 9-spd,Four-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,20,28,23,,,,,,3.0L V6 Turbo,Turbocharged
+2017,Mercedes-Benz,C-Class,AMG C43 4matic Convertible,3.0L V6 (SIDI),Automatic 9-spd,Four-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,19,26,22,,,,,,3.0L V6 Turbo,Turbocharged
+2017,Mercedes-Benz,C-Class,AMG C43 4matic,3.0L V6 (SIDI),Automatic 9-spd,Four-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,20,28,23,,,,,,3.0L V6 Turbo,Turbocharged
+2017,Mercedes-Benz,C-Class,C350e,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),Automatic 7-spd,Rear-Wheel Drive,Premium Gasoline / Electricity,Compact Cars,4,2.0,28,32,30,,,,,,2.0L I4,

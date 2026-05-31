@@ -1,8 +1,8 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2003,Ford,Mustang,Mustang,3.8L V6 (2 VALVE),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.8,17,25,20,,,,,
-2003,Ford,Mustang,Mustang,3.8L V6 (2 VALVE),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.8,17,27,21,,,,,
-2003,Ford,Mustang,Mustang,4.6L V8 (2 VALVE),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,4.6,16,22,18,,,,,
-2003,Ford,Mustang,Mustang,4.6L V8 (4 VALVE),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,4.6,16,21,18,,,,,
-2003,Ford,Mustang,Mustang,4.6L V8 (2 VALVE),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,4.6,16,23,19,,,,,
-2003,Ford,Mustang,Mustang,4.6L V8 (4 VALVE),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,4.6,15,23,18,,,,,
-2003,Ford,Mustang,Mustang,4.6L V8 (GUZZLER),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.6,15,21,17,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2003,Ford,Mustang,Mustang,3.8L V6 (2 VALVE),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.8,17,25,20,,,,,,3.8L V6,
+2003,Ford,Mustang,Mustang,3.8L V6 (2 VALVE),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,6,3.8,17,27,21,,,,,,3.8L V6,
+2003,Ford,Mustang,Mustang,4.6L V8 (2 VALVE),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,4.6,16,22,18,,,,,,4.6L V8,
+2003,Ford,Mustang,Mustang,4.6L V8 (4 VALVE),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,4.6,16,21,18,,,,,,4.6L V8,
+2003,Ford,Mustang,Mustang,4.6L V8 (2 VALVE),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,4.6,16,23,19,,,,,,4.6L V8,
+2003,Ford,Mustang,Mustang,4.6L V8 (4 VALVE),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Subcompact Cars,8,4.6,15,23,18,,,,,,4.6L V8,
+2003,Ford,Mustang,Mustang,4.6L V8 (GUZZLER),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,8,4.6,15,21,17,,,,,,4.6L V8,

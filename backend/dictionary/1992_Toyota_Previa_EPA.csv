@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1992,Toyota,Previa,Previa,2.4L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.4,15,20,17,,,,,
-1992,Toyota,Previa,Previa,2.4L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.4,16,20,18,,,,,
-1992,Toyota,Previa,All-Trac,2.4L I4 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Vans,4,2.4,15,19,17,,,,,
-1992,Toyota,Previa,All-Trac,2.4L I4 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Vans,4,2.4,15,19,17,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1992,Toyota,Previa,Previa,2.4L I4 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.4,15,20,17,,,,,,2.4L I4,
+1992,Toyota,Previa,Previa,2.4L I4 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Vans,4,2.4,16,20,18,,,,,,2.4L I4,
+1992,Toyota,Previa,All-Trac,2.4L I4 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Vans,4,2.4,15,19,17,,,,,,2.4L I4,
+1992,Toyota,Previa,All-Trac,2.4L I4 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Vans,4,2.4,15,19,17,,,,,,2.4L I4,

@@ -118,6 +118,16 @@ def test_engine_description_turbo_flag() -> None:
     assert _build_engine_description(flat) == "2.0L I4 Turbo"
 
 
+def test_engine_description_horizontally_opposed_flat6() -> None:
+    flat = {
+        "DisplacementL": "4.0",
+        "EngineConfiguration": "Horizontally opposed",
+        "EngineCylinders": "6",
+        "EngineModel": "MA1",
+    }
+    assert _build_engine_description(flat) == "4.0L Flat-6 MA1"
+
+
 def test_fetch_decode_uses_injected_get_json() -> None:
     sample = {
         "Results": [

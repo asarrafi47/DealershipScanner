@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Coastline Chrysler Dodge Jeep Ram",
+    "url": "https://www.courtesyoc.com",
+    "provider": "dealer_inspire",
+    "dealer_id": "courtesyoc-com"
+  },
+  {
+    "name": "McPeek's Chrysler Dodge Jeep Ram Anaheim",
+    "url": "https://www.mcpeeks.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "mcpeeksdodgeanaheim-com",
+    "inventory_paths": [
+      "/inventory/new/",
+      "/inventory/used/",
+      "/inventory/certified/"
+    ]
+  },
+  {
+    "name": "Moss Bros Chrysler Dodge Jeep RAM San Bernardino",
+    "url": "https://www.mossbroscjdrsanbernardino.com",
+    "provider": "dealer_dot_com",
+    "dealer_id": "mossbroscjdrsanbernardino-com",
+    "dealership_registry_id": 231
+  }
+]

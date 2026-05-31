@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1985,Jeep,Grand Wagoneer,Grand Wagoneer,4.2L V6 ((FFS)),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.2,14,15,14,,,,,
-1985,Jeep,Grand Wagoneer,Grand Wagoneer,5.9L V8 ((FFS)),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.9,10,12,11,,,,,
-1985,Jeep,Grand Wagoneer,Grand Wagoneer,4.2L V6 ((FFS) CA model),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.2,14,16,14,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1985,Jeep,Grand Wagoneer,Grand Wagoneer,4.2L V6 ((FFS)),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.2,14,15,14,,,,,,4.2L V6,
+1985,Jeep,Grand Wagoneer,Grand Wagoneer,5.9L V8 ((FFS)),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,8,5.9,10,12,11,,,,,,5.9L V8,
+1985,Jeep,Grand Wagoneer,Grand Wagoneer,4.2L V6 ((FFS) CA model),Automatic 3-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.2,14,16,14,,,,,,4.2L V6,

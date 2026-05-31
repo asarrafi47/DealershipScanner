@@ -1,31 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>{{ car.title }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ car.title }} — Sarrafi Cars</title>
     <meta name="csrf-token" content="{{ csrf_token }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
 </head>
-<body class="car-detail-page">
+<body class="car-detail-page{% if car_embed %} car-embed{% endif %}" data-car-id="{{ car.id }}"{% if logged_in_user %} data-logged-in="1"{% endif %}>
 
     <div class="page">
 
-        <nav class="topbar">
-            <div class="logo">Sarrafi Cars</div>
-            <div class="nav-links">
-                <a href="{{ url_for('listings') }}">Listings</a>
-                {% if logged_in %}
-                <a href="/dashboard">Dashboard</a>
-                <a href="/inventory">My inventory</a>
-                {% include "_app_logout.html" %}
-                {% else %}
-                <a href="{{ url_for('login_page') }}">Sign in</a>
-                {% endif %}
+        {% set nav_active = "listings" %}
+        {% from '_icons.html' import icon %}
+        {% macro render_sticker_option_price(price) -%}
+            {%- if price is not none -%}
+            <span class="car-sticker-opt-price">{% if price < 0 %}${{ "{:,}".format(price * -1) }} credit{% else %}${{ "{:,}".format(price) }}{% endif %}</span>
+            {%- endif -%}
+        {%- endmacro %}
+        {% macro render_sticker_option_row(entry) %}
+            <div class="car-sticker-opt-row">
+                <span class="car-sticker-opt-name">{{ entry.name }}</span>
+                {{ render_sticker_option_price(entry.price) }}
             </div>
-        </nav>
+        {% endmacro %}
+        {% macro render_sticker_package_entry(entry) %}
+            {% if entry.features %}
+            <details class="car-sticker-package-disclosure">
+                <summary class="car-sticker-package-summary">
+                    <span class="car-sticker-opt-name">{{ entry.name }}</span>
+                    {{ render_sticker_option_price(entry.price) }}
+                </summary>
+                <ul class="car-sticker-package-features">
+                    {% for f in entry.features %}
+                    <li>{{ f.name }}</li>
+                    {% endfor %}
+                </ul>
+            </details>
+            {% else %}
+            {{ render_sticker_option_row(entry) }}
+            {% endif %}
+        {% endmacro %}
+        {% macro render_sticker_option_groups(groups) %}
+            {% for entry in groups %}
+            {% if entry.name %}
+                {% if entry.kind == 'package' %}
+                {{ render_sticker_package_entry(entry) }}
+                {% else %}
+                {{ render_sticker_option_row(entry) }}
+                {% endif %}
+            {% endif %}
+            {% endfor %}
+        {% endmacro %}
+        {% macro render_sticker_option_sections(sections) %}
+            {% set sec_base = sections.base if sections is mapping else none %}
+            {% set sec_packages = sections.packages if sections is mapping and sections.packages is defined else [] %}
+            {% set sec_options = sections.options if sections is mapping else [] %}
+            {% if sec_packages %}
+            <h4 class="car-window-sticker-sub">Packages</h4>
+            <div class="car-window-sticker-opt-list car-window-sticker-opt-list--packages">
+                {% for entry in sec_packages %}
+                {{ render_sticker_package_entry(entry) }}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if sec_options %}
+            <h4 class="car-window-sticker-sub">Options</h4>
+            <div class="car-window-sticker-opt-list car-window-sticker-opt-list--options">
+                {% for entry in sec_options %}
+                {{ render_sticker_option_row(entry) }}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if sec_base %}
+            <h4 class="car-window-sticker-sub">Base price &amp; included equipment</h4>
+            <div class="car-window-sticker-opt-list car-window-sticker-opt-list--base">
+                <div class="car-sticker-opt-row">
+                    <span class="car-sticker-opt-name">{{ sec_base.name or 'Base' }}</span>
+                    {{ render_sticker_option_price(sec_base.price) }}
+                </div>
+                {% for f in sec_base.features or [] %}
+                <div class="car-sticker-opt-row car-sticker-opt-row--included">
+                    <span class="car-sticker-opt-name">{{ f.name }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endmacro %}
+        {% if not car_embed %}
+        {% include "_nav_public.html" %}
+        {% endif %}
 
         <section class="car-detail">
 
-            <button type="button" class="back-link" id="car-back-link" aria-label="Back to results">← Back to results</button>
+            {% if not car_embed %}
+            <button type="button" class="vdp-back" id="car-back-link" aria-label="Back to results">
+                {{ icon('arrow-left', 18) }}
+                <span class="vdp-back__label">Back to results</span>
+            </button>
+            {% endif %}
 
             {% if listing_incomplete_fields %}
             <div class="car-detail-incomplete-banner" role="status">
@@ -39,16 +112,16 @@
             </div>
             {% endif %}
 
-            {% if car.carfax_url %}
-            <p class="carfax-hint">If Carfax shows a verification step, complete it on their site to view the report.</p>
-            {% endif %}
+            {% set listing_vdp_url = car.listing_vdp_url or car.source_url %}
+            {% set dealership_view_url = listing_vdp_url or car.dealer_url %}
+            {% set listing_link_is_vdp = listing_vdp_url and car.dealer_url and listing_vdp_url.rstrip('/') != car.dealer_url.rstrip('/') %}
+            {% set show_premium_features = has_paid_access or (logged_in and not billing_stripe_enabled) %}
+            {% set show_options_tab = logged_in or has_paid_access %}
+            {% set show_ask_tab = true %}
+            {% set has_pricing_insights = market_intel %}
 
-            <div class="car-detail-info-wrapper">
-            <div class="car-detail-layout">
-                {# Prefer VDP/listing URL (source_url); fall back to dealer homepage (dealer_url). #}
-                {% set dealership_view_url = car.source_url or car.dealer_url %}
-
-                {# Col 1: Gallery — JSON in script tag avoids broken data-gallery attributes #}
+            <div class="car-detail-hero">
+                {# Gallery — JSON in script tag avoids broken data-gallery attributes #}
                 <div class="car-detail-gallery" id="car-gallery">
                     <script type="application/json" id="car-gallery-json" nonce="{{ csp_nonce }}">{{ gallery_images | tojson }}</script>
                     <div class="car-gallery-main">
@@ -57,15 +130,16 @@
                                 <img class="car-gallery-main-img" id="car-gallery-main-img" src="{{ (gallery_images[0] if gallery_images else url_for('static', filename='placeholder.svg')) | e }}" alt="{{ car.title }} — photo gallery">
                             </div>
                             {% if gallery_images and gallery_images|length > 1 %}
-                            <button type="button" class="car-gallery-arrow car-gallery-arrow-prev" id="car-gallery-prev-hero" aria-label="Previous image">‹</button>
-                            <button type="button" class="car-gallery-arrow car-gallery-arrow-next" id="car-gallery-next-hero" aria-label="Next image">›</button>
+                            <span class="car-gallery-badge" id="car-gallery-counter-badge" aria-live="polite">1 / {{ gallery_images|length }}</span>
+                            <button type="button" class="car-gallery-arrow car-gallery-arrow-prev" id="car-gallery-prev-hero" aria-label="Previous image">{{ icon('chevron-left', 22) }}</button>
+                            <button type="button" class="car-gallery-arrow car-gallery-arrow-next" id="car-gallery-next-hero" aria-label="Next image">{{ icon('chevron-right', 22) }}</button>
                             {% endif %}
                         </div>
                         {% if gallery_images and gallery_images|length > 1 %}
                         <div class="car-gallery-controls">
-                            <button type="button" class="car-gallery-btn car-gallery-prev" id="car-gallery-prev" aria-label="Previous image">‹</button>
+                            <button type="button" class="car-gallery-btn car-gallery-prev" id="car-gallery-prev" aria-label="Previous image">{{ icon('chevron-left', 18) }}</button>
                             <span class="car-gallery-counter" id="car-gallery-counter">1 of {{ gallery_images|length }}</span>
-                            <button type="button" class="car-gallery-btn car-gallery-next" id="car-gallery-next" aria-label="Next image">›</button>
+                            <button type="button" class="car-gallery-btn car-gallery-next" id="car-gallery-next" aria-label="Next image">{{ icon('chevron-right', 18) }}</button>
                         </div>
                         <div class="car-gallery-thumbs-wrap">
                             <div class="car-gallery-thumbs" id="car-gallery-thumbs" role="tablist"></div>
@@ -74,10 +148,18 @@
                     </div>
                 </div>
 
-                {# Col 2: Single spec sheet (knowledge engine enriches rows server-side) #}
-                <div class="car-detail-info">
-                    <p class="eyebrow">{{ car.dealer_name }}</p>
-                    <h1>{{ car.title }}</h1>
+                <div class="car-detail-info car-detail-info--hero">
+                    <p class="eyebrow car-detail-dealer-eyebrow">{{ car.dealer_name }}</p>
+                    <h1 class="car-detail-title">{{ car.title }}</h1>
+                    {% if (car.trim and car.trim != '—') or (car.mileage is not none and car.mileage != '') %}
+                    <p class="car-detail-hero-meta">
+                        {% if car.trim and car.trim != '—' %}<span>{{ car.trim | fmt_spec }}</span>{% endif %}
+                        {% if car.mileage is not none and car.mileage != '' %}
+                        {% if car.trim and car.trim != '—' %}<span class="car-detail-hero-meta-sep" aria-hidden="true">·</span>{% endif %}
+                        <span>{{ "{:,}".format(car.mileage) }} mi</span>
+                        {% endif %}
+                    </p>
+                    {% endif %}
                     <div class="car-detail-price-row">
                         <p class="car-detail-price">
                             {% if car.price and car.price > 0 %}
@@ -111,52 +193,114 @@
                             <span class="save-btn-label">Sign in to save</span>
                         </a>
                         {% endif %}
+                        {% if logged_in %}
+                        <button type="button"
+                            class="compare-toggle-btn"
+                            data-compare-toggle
+                            data-car-id="{{ car.id }}"
+                            aria-pressed="false"
+                            title="Add to compare (up to 4 vehicles)">
+                            {{ icon('compare', 16) }}
+                            <span class="compare-toggle-btn__label">Compare</span>
+                        </button>
+                        {% else %}
+                        <a href="{{ url_for('login_page') }}" class="compare-toggle-btn compare-toggle-btn--guest" title="Sign in to compare vehicles">
+                            {{ icon('compare', 16) }}
+                            <span class="compare-toggle-btn__label">Sign in to compare</span>
+                        </a>
+                        {% endif %}
                     </div>
+                    <div class="car-hero-actions">
+                        {% if dealership_view_url %}
+                        <a href="{{ dealership_view_url }}" target="_blank" rel="noopener noreferrer" class="car-hero-link car-hero-link--dealer">
+                            <span>{% if listing_link_is_vdp %}View this listing{% else %}View on {{ car.dealer_name or 'dealer site' }}{% endif %}</span>
+                        </a>
+                        {% else %}
+                        <p class="car-hero-link-unavailable">Dealer listing link not available</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
 
-                    {% if market_intel %}
-                    <div class="car-market-panel" role="region" aria-label="Market average for this trim">
-                        <p class="car-market-eyebrow">Market intelligence</p>
-                        <p class="car-market-line">
-                            <span class="car-market-label">Avg listed price</span>
-                            <strong>{{ market_intel.avg_price_display }}</strong>
-                            <span class="car-market-samples">({{ market_intel.sample_count }} active listings)</span>
-                        </p>
-                        <p class="car-market-line">
-                            <span class="car-market-label">This listing</span>
-                            <strong>{{ market_intel.listing_price_display }}</strong>
-                        </p>
-                        <p class="car-market-vs car-market-vs--{{ market_intel.vs_market }}">{{ market_intel.vs_market_label }}</p>
-                        <p class="car-market-cohort">Cohort: {{ market_intel.cohort_label }}</p>
-                        <p class="car-market-disclaimer">Average asking price for similar listings (same make/model/trim, model year, mileage band) in your search region. Not a purchase offer or appraisal.</p>
-                    </div>
+            <div class="car-hero-glance" aria-label="Key specifications">
+                <h2 class="car-hero-glance-title">At a glance</h2>
+                <dl class="car-quick-specs car-quick-specs--hero">
+                    <div class="car-quick-spec-item"><dt>Year</dt><dd>{{ car.year | fmt_spec }}</dd></div>
+                    <div class="car-quick-spec-item"><dt>Mileage</dt><dd>{% if car.mileage is not none and car.mileage != '' %}{{ "{:,}".format(car.mileage) }} mi{% else %}—{% endif %}</dd></div>
+                    <div class="car-quick-spec-item"><dt>Engine</dt><dd>{{ car.engine_display }}</dd></div>
+                    <div class="car-quick-spec-item"><dt>Drivetrain</dt><dd>{{ car.drivetrain_display }}</dd></div>
+                    <div class="car-quick-spec-item"><dt>Fuel</dt><dd>{{ car.fuel_type | fmt_spec }}</dd></div>
+                    <div class="car-quick-spec-item"><dt>Body</dt><dd>{{ car.body_style | fmt_spec }}</dd></div>
+                </dl>
+            </div>
+
+            <div class="car-vdp-tabs-wrap">
+                <div class="car-vdp-tabs" role="tablist" aria-label="Vehicle details">
+                    <button type="button" class="car-vdp-tab car-vdp-tab--active" role="tab" id="car-tab-overview" aria-selected="true" aria-controls="car-panel-overview" data-tab="overview">Overview</button>
+                    <button type="button" class="car-vdp-tab" role="tab" id="car-tab-specs" aria-selected="false" aria-controls="car-panel-specs" data-tab="specs">Specs</button>
+                    {% if show_options_tab %}
+                    <button type="button" class="car-vdp-tab" role="tab" id="car-tab-options" aria-selected="false" aria-controls="car-panel-options" data-tab="options">Options</button>
                     {% endif %}
-
-                    {% if car.kbb and car.kbb.has_data %}
-                    <div class="car-kbb-panel" role="region" aria-label="KBB valuation summary">
-                        <p class="car-kbb-eyebrow">Kelley Blue Book</p>
-                        {% if car.kbb.fair_purchase_display %}
-                        <p class="car-kbb-line"><span class="car-kbb-label">Typical listing / fair purchase</span> <strong>{{ car.kbb.fair_purchase_display }}</strong></p>
-                        {% endif %}
-                        {% if car.kbb.range_display %}
-                        <p class="car-kbb-line"><span class="car-kbb-label">Fair market range</span> <strong>{{ car.kbb.range_display }}</strong></p>
-                        {% endif %}
-                        {% if car.kbb.private_party_display %}
-                        <p class="car-kbb-line"><span class="car-kbb-label">Private party</span> <strong>{{ car.kbb.private_party_display }}</strong></p>
-                        {% endif %}
-                        {% if car.kbb.trade_in_display %}
-                        <p class="car-kbb-line"><span class="car-kbb-label">Trade-in</span> <strong>{{ car.kbb.trade_in_display }}</strong></p>
-                        {% endif %}
-                        {% if car.kbb.vs_listing_label %}
-                        <p class="car-kbb-vs">{{ car.kbb.vs_listing_label }}</p>
-                        {% endif %}
-                        <p class="car-kbb-disclaimer">Values reflect licensed KBB data (equipment, mileage, region). They are not an appraisal or purchase offer.</p>
-                        {% if car.kbb.fetched_at and car.kbb.fetched_at != '—' %}
-                        <p class="car-kbb-meta">Updated {{ car.kbb.fetched_at }}</p>
-                        {% endif %}
-                    </div>
+                    <button type="button" class="car-vdp-tab" role="tab" id="car-tab-history" aria-selected="false" aria-controls="car-panel-history" data-tab="history">History</button>
+                    {% if show_ask_tab %}
+                    <button type="button" class="car-vdp-tab" role="tab" id="car-tab-ask" aria-selected="false" aria-controls="car-panel-ask" data-tab="ask">Ask AI</button>
                     {% endif %}
+                </div>
 
-                    <div class="car-specs car-spec-sheet">
+                <div class="car-vdp-panels">
+                    <section class="car-vdp-panel car-vdp-panel--active" id="car-panel-overview" role="tabpanel" aria-labelledby="car-tab-overview" data-panel="overview">
+                        {% if has_pricing_insights %}
+                        <div class="car-pricing-insights" role="region" aria-label="Pricing insights">
+                            <h2 class="car-vdp-panel-title">Pricing insights</h2>
+                            {% if market_intel %}
+                            <div class="car-pricing-block car-pricing-block--market">
+                                <p class="car-pricing-block-label">Market comparison</p>
+                                <p class="car-market-line">
+                                    <span class="car-market-label">Similar listings avg.</span>
+                                    <strong>{{ market_intel.avg_price_display }}</strong>
+                                    <span class="car-market-samples">({{ market_intel.sample_count }} nearby)</span>
+                                </p>
+                                <p class="car-market-line">
+                                    <span class="car-market-label">This listing</span>
+                                    <strong>{{ market_intel.listing_price_display }}</strong>
+                                </p>
+                                <p class="car-market-vs car-market-vs--{{ market_intel.vs_market }}">{{ market_intel.vs_market_label }}</p>
+                                <p class="car-market-cohort">{{ market_intel.cohort_label }}</p>
+                            </div>
+                            {% endif %}
+                            <p class="car-pricing-disclaimer">Comparisons use similar active listings in our database. Not a purchase offer, appraisal, or dealer quote.</p>
+                        </div>
+                        {% endif %}
+
+                        {% if not has_pricing_insights and not dealer_info %}
+                        <p class="car-vdp-panel-lead">Use the <strong>Specs</strong> tab for the full specification sheet{% if show_options_tab %}, or <strong>Options</strong> for factory equipment{% endif %}.</p>
+                        {% endif %}
+
+                        {% if dealer_info %}
+                        <div class="car-dealer-card car-dealer-card--inline">
+                            <h3 class="dealer-card-heading">Dealership</h3>
+                            <p class="dealer-card-name">{{ dealer_info.name }}</p>
+                            {% if dealer_info.street_address %}
+                            <p class="dealer-card-address">{{ dealer_info.street_address }}</p>
+                            {% endif %}
+                            {% if dealer_info.city or dealer_info.state %}
+                            <p class="dealer-card-location">{{ dealer_info.city }}{% if dealer_info.city and dealer_info.state %}, {% endif %}{{ dealer_info.state }}{% if dealer_info.zip_code %} {{ dealer_info.zip_code }}{% endif %}</p>
+                            {% endif %}
+                            {% set dealer_site = dealer_info.dealer_website_url or dealer_info.website_url %}
+                            {% if dealer_site %}
+                            <a href="{{ dealer_site }}" target="_blank" rel="noopener noreferrer" class="dealer-card-link">Visit dealership website</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </section>
+
+                    <section class="car-vdp-panel car-vdp-panel--specs" id="car-panel-specs" role="tabpanel" aria-labelledby="car-tab-specs" data-panel="specs" hidden>
+                        {% set show_trim_ladder = show_premium_features and trim_ladder %}
+                        {% set show_trim_ladder_upsell = billing_stripe_enabled and not show_premium_features %}
+                        <div class="car-specs-split{% if not show_trim_ladder and not show_trim_ladder_upsell %} car-specs-split--single{% endif %}">
+                        <div class="car-specs-split__col car-specs-split__col--specs">
+                        <h2 class="car-vdp-panel-title">Full specifications</h2>
+                        <div class="car-specs car-spec-sheet">
                         <div class="spec-row">
                             <span class="spec-label">Year</span>
                             <span class="spec-value">{{ car.year | fmt_spec }}</span>
@@ -223,89 +367,116 @@
                             <span class="spec-value">{{ car.stock_number | fmt_spec }}</span>
                         </div>
                         {% endif %}
-                    </div>
+                        </div>
+                        </div>
 
-                    <div class="car-detail-actions">
-                        {% if dealership_view_url %}
-                        <a href="{{ dealership_view_url }}" target="_blank" rel="noopener noreferrer" class="primary-button">View at Dealership</a>
-                        {% else %}
-                        <span class="primary-button car-detail-dealer-link-unavailable">Dealer link not available</span>
+                        <aside class="car-specs-split__col car-specs-split__col--ladder" aria-label="Trim lineup"{% if not show_trim_ladder and not show_trim_ladder_upsell %} hidden{% endif %}>
+                        {% if show_trim_ladder %}
+                        <div class="car-trim-ladder" id="car-trim-ladder" aria-label="{{ trim_ladder.label }}"
+                            data-make="{{ trim_ladder.make | e }}"
+                            data-model="{{ trim_ladder.model | e }}"
+                            data-listing-trim="{{ trim_ladder.listing_trim | e }}">
+                            <h3 class="car-trim-ladder__title">Trim lineup</h3>
+                            {% if trim_ladder.quality == 'high' %}
+                            <p class="car-trim-ladder__confidence">Curated OEM trim order</p>
+                            {% elif trim_ladder.quality == 'medium' and trim_ladder.matched %}
+                            <p class="car-trim-ladder__confidence">Matched from listing data</p>
+                            {% endif %}
+                            <p class="car-trim-ladder__lead" id="car-trim-ladder-lead">
+                                {% if trim_ladder.matched %}
+                                This listing matches <strong>{{ trim_ladder.listing_trim }}</strong> on the {{ trim_ladder.make }} {{ trim_ladder.model }} trim ladder.
+                                {% else %}
+                                Trim ladder for {{ trim_ladder.make }} {{ trim_ladder.model }}. We could not confidently match &ldquo;{{ trim_ladder.listing_trim }}&rdquo; to a rung.
+                                {% endif %}
+                            </p>
+                            {% if trim_ladder.quality == 'high' %}
+                            <p class="car-trim-ladder__confidence">Curated OEM trim order</p>
+                            {% elif not trim_ladder.matched %}
+                            <p class="car-trim-ladder__confidence car-trim-ladder__confidence--low">Trim match uncertain — ladder shown for reference.</p>
+                            {% endif %}
+                            <ol class="car-trim-ladder__timeline" role="list">
+                                {% for step in trim_ladder.steps %}
+                                <li class="car-trim-ladder__step{% if step.is_current %} car-trim-ladder__step--current{% elif step.is_passed %} car-trim-ladder__step--passed{% endif %} car-trim-ladder__step--{{ step.side }}"
+                                    role="listitem"
+                                    data-trim-index="{{ loop.index0 }}"
+                                    data-trim-name="{{ step.name | e }}">
+                                    <button type="button" class="car-trim-ladder__node"
+                                        aria-label="Select {{ step.name }} trim">
+                                        <span class="car-trim-ladder__dot" aria-hidden="true"></span>
+                                    </button>
+                                    <div class="car-trim-ladder__card" role="button" tabindex="0"
+                                        aria-expanded="false"
+                                        aria-controls="car-trim-ladder-panel-{{ loop.index0 }}">
+                                        <div class="car-trim-ladder__card-head">
+                                            <span class="car-trim-ladder__name">{{ step.name }}</span>
+                                            {% if step.is_current %}
+                                            <span class="car-trim-ladder__badge car-trim-ladder__badge--vehicle">This vehicle</span>
+                                            {% endif %}
+                                        </div>
+                                        {% if step.adds %}
+                                        <div class="car-trim-ladder__panel" id="car-trim-ladder-panel-{{ loop.index0 }}">
+                                            <p class="car-trim-ladder__panel-label">What this trim adds</p>
+                                            <ul class="car-trim-ladder__adds">
+                                                {% for item in step.adds %}
+                                                <li>{{ item }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ol>
+                        </div>
+                        {% elif show_trim_ladder_upsell %}
+                        <div class="car-trim-ladder-upsell car-premium-upsell car-premium-upsell--inline" aria-labelledby="car-trim-ladder-upsell-heading">
+                            <h3 id="car-trim-ladder-upsell-heading" class="car-trim-ladder__title">Trim lineup</h3>
+                            <p class="car-packages-hint">See where this vehicle sits on the OEM trim ladder and what each rung adds — included with <a href="{{ url_for('premium_page') }}">Premium</a>.</p>
+                            {% if not logged_in %}
+                            <p class="car-packages-hint"><a href="{{ url_for('login_page') }}">Sign in</a> and upgrade to unlock the trim tree on every listing.</p>
+                            {% endif %}
+                            <p><a href="{{ url_for('premium_page') }}" class="primary-button">View Premium plans</a></p>
+                        </div>
                         {% endif %}
-                    </div>
-                </div>
+                        </aside>
+                        </div>
+                    </section>
 
-                {# Col 3: History + CARFAX #}
-                <div class="car-detail-history">
-                    <h3 class="history-panel-title">Vehicle History Highlights</h3>
-
-                    {# Raw data passed to JS for cleaning — never rendered directly #}
-                    <script type="application/json" id="car-history-json" nonce="{{ csp_nonce }}">{{ car.history_highlights | tojson }}</script>
-
-                    {# JS fills this list; shown only when items exist #}
-                    <ul class="history-highlights-list" id="history-highlights-list" hidden></ul>
-                    {# Shown by default; hidden by JS if there are clean items #}
-                    <p class="history-no-highlights" id="history-no-highlights">Detailed history report available. Click below to view.</p>
-                    {% if car.carfax_url %}
-                    <a href="{{ car.carfax_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View Full CARFAX Report</a>
-                    {% elif car.vin and not car.vin.startswith('unknown-') %}
-                    <a href="https://www.carfax.com/VehicleHistory/p/Report.cfx?vin={{ car.vin }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View Full CARFAX Report</a>
-                    {% elif dealership_view_url %}
-                    <a href="{{ dealership_view_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn carfax-report-btn-secondary">Contact Dealer for History Report</a>
-                    {% endif %}
-                </div>
-
-            </div>
-            </div>
-
-        </section>
-
-        {% if dealer_info %}
-        <section class="car-dealer-card-section">
-            <div class="car-dealer-card">
-                <h3 class="dealer-card-heading">About the Dealership</h3>
-                <p class="dealer-card-name">{{ dealer_info.name }}</p>
-                {% if dealer_info.street_address %}
-                <p class="dealer-card-address">{{ dealer_info.street_address }}</p>
-                {% endif %}
-                {% if dealer_info.city or dealer_info.state %}
-                <p class="dealer-card-location">{{ dealer_info.city }}{% if dealer_info.city and dealer_info.state %}, {% endif %}{{ dealer_info.state }}{% if dealer_info.zip_code %} {{ dealer_info.zip_code }}{% endif %}</p>
-                {% endif %}
-                {% set dealer_site = dealer_info.dealer_website_url or dealer_info.website_url %}
-                {% if dealer_site %}
-                <a href="{{ dealer_site }}" target="_blank" rel="noopener noreferrer" class="dealer-card-link">Visit Dealership Website →</a>
-                {% endif %}
-            </div>
-        </section>
-        {% endif %}
-
-        <section class="car-packages-section" id="car-packages-section" data-car-id="{{ car.id }}" data-skip-ensure="{% if window_sticker_available %}1{% else %}0{% endif %}" data-oem-sticker-url="{{ window_sticker_oem_url or '' }}">
-            <h2 class="car-packages-heading">Packages &amp; window sticker</h2>
-            {% if billing_stripe_enabled and not has_paid_access %}
-            <p class="car-packages-hint">Factory options, colors, and the Monroney window sticker are included with a <a href="{{ url_for('premium_page') }}">premium subscription</a>. We fetch the OEM sticker PDF, analyze options, and show vision-detected equipment when a sticker is not available.</p>
-            {% else %}
+                    {% if show_options_tab %}
+                    <section class="car-vdp-panel" id="car-panel-options" role="tabpanel" aria-labelledby="car-tab-options" data-panel="options" hidden>
+                        {% if logged_in and billing_stripe_enabled and not has_paid_access %}
+                        <div class="car-premium-upsell car-premium-upsell--inline" aria-labelledby="car-premium-upsell-heading">
+                            <h2 id="car-premium-upsell-heading" class="car-vdp-panel-title">Factory options &amp; window sticker</h2>
+                            <p class="car-packages-hint">Detailed equipment, OEM window sticker analysis, and listing assistant are included with <a href="{{ url_for('premium_page') }}">Premium</a>.</p>
+                            <p><a href="{{ url_for('premium_page') }}" class="primary-button">View Premium plans</a></p>
+                        </div>
+                        {% else %}
+                        <div class="car-packages-section car-packages-section--tab" id="car-packages-section" data-car-id="{{ car.id }}" data-show-sticker="{% if show_window_sticker_ui %}1{% else %}0{% endif %}" data-sticker-local="{% if window_sticker_available %}1{% else %}0{% endif %}" data-panel-has-content="{% if packages_panel_has_content %}1{% else %}0{% endif %}" data-oem-sticker-url="{{ window_sticker_oem_url or '' }}">
+                            <h2 class="car-vdp-panel-title">{% if show_window_sticker_ui %}Packages &amp; window sticker{% else %}Packages &amp; equipment{% endif %}</h2>
             {% if hide_photo_analysis %}
-            <p class="car-packages-hint">Options and colors from the OEM window sticker (when available) and listing data.</p>
+            <p class="car-packages-hint">Options and colors from the OEM window sticker (when available), listing data, and equipment visible in listing photos.</p>
             {% else %}
             <p class="car-packages-hint">Options and colors from the OEM window sticker (when available), listing data, and photo analysis.</p>
             {% endif %}
 
-            <div id="car-packages-loading" class="car-packages-loading" {% if window_sticker_available or packages_panel_has_content %}hidden{% endif %} aria-live="polite">
+            <div id="car-packages-loading" class="car-packages-loading" {% if window_sticker_preview_url or packages_panel_has_content %}hidden{% endif %} aria-live="polite">
                 Loading factory equipment data…
             </div>
 
+            {% if show_window_sticker_ui %}
             <div class="car-window-sticker-embed-wrap" id="car-window-sticker-wrap">
                 <div class="car-window-sticker-head">
                     <h3 class="car-window-sticker-title">Window sticker</h3>
                     {% if window_sticker_oem_url %}
-                    <a class="car-window-sticker-open" href="{{ window_sticker_oem_url }}" target="_blank" rel="noopener noreferrer">Open OEM PDF</a>
+                    <a class="car-window-sticker-open" href="{{ window_sticker_oem_url }}" target="_blank" rel="noopener noreferrer">{% if is_cdjr_stellantis %}Open OEM PDF{% else %}Open window sticker{% endif %}</a>
                     {% endif %}
                 </div>
-                <p class="car-window-sticker-loading" id="car-window-sticker-loading" {% if window_sticker_available %}hidden{% endif %}>Loading window sticker…</p>
+                <p class="car-window-sticker-loading" id="car-window-sticker-loading" hidden>Loading window sticker…</p>
                 <div
                     class="car-window-sticker-preview"
                     id="car-window-sticker-preview"
                     data-sticker-preview-api="{{ window_sticker_preview_api_url }}"
-                    {% if not window_sticker_available %}hidden{% endif %}
+                    {% if not window_sticker_preview_url %}hidden{% endif %}
                 >
                     <img
                         id="car-window-sticker-img"
@@ -314,7 +485,20 @@
                         {% if window_sticker_preview_url %}src="{{ window_sticker_preview_url }}"{% endif %}
                     />
                 </div>
-                <div id="car-window-sticker-analyzed" class="car-window-sticker-analyzed"{% if not sticker_spec_lines and not listing_sticker_options %} hidden{% endif %}>
+                <p class="car-window-sticker-unavailable" id="car-window-sticker-unavailable" {% if window_sticker_available or window_sticker_preview_url or window_sticker_pdf_url or listing_sticker_options %}hidden{% endif %}>
+                    Window sticker not loaded yet.{% if listing_vdp_url %} <a href="{{ listing_vdp_url }}" target="_blank" rel="noopener noreferrer">Open the dealer listing</a> if the sticker is available there.{% endif %}
+                </p>
+                {% if sticker_exterior_color or sticker_interior_color %}
+                <div class="car-sticker-colors car-sticker-colors--embed">
+                    {% if sticker_exterior_color %}
+                    <p><span class="car-sticker-color-label">Exterior (sticker):</span> {{ sticker_exterior_color }}</p>
+                    {% endif %}
+                    {% if sticker_interior_color %}
+                    <p><span class="car-sticker-color-label">Interior (sticker):</span> {{ sticker_interior_color }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div id="car-window-sticker-analyzed" class="car-window-sticker-analyzed"{% if not sticker_spec_lines and not listing_sticker_option_sections and not listing_sticker_option_groups and not listing_sticker_options %} hidden{% endif %}>
                     {% if sticker_spec_lines %}
                     <dl class="car-window-sticker-specs">
                         {% for row in sticker_spec_lines %}
@@ -322,19 +506,52 @@
                         {% endfor %}
                     </dl>
                     {% endif %}
-                    {% if listing_sticker_options %}
-                    <h4 class="car-window-sticker-sub">Optional equipment</h4>
-                    <ul class="car-window-sticker-opt-list">
-                        {% for opt in listing_sticker_options %}
-                        <li>{{ opt }}</li>
+                    {% if listing_sticker_option_sections %}
+                    {{ render_sticker_option_sections(listing_sticker_option_sections) }}
+                    {% elif listing_sticker_option_groups or listing_sticker_options %}
+                    {% if listing_sticker_option_groups %}
+                    {% set ns = namespace(packages=[], options=[]) %}
+                    {% for entry in listing_sticker_option_groups %}
+                        {% if entry.kind == 'package' %}
+                            {% set _ = ns.packages.append(entry) %}
+                        {% else %}
+                            {% set _ = ns.options.append(entry) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if ns.packages %}
+                    <h4 class="car-window-sticker-sub">Packages</h4>
+                    <div class="car-window-sticker-opt-list car-window-sticker-opt-list--packages">
+                        {% for entry in ns.packages %}
+                        {{ render_sticker_package_entry(entry) }}
                         {% endfor %}
-                    </ul>
+                    </div>
+                    {% endif %}
+                    {% if ns.options %}
+                    <h4 class="car-window-sticker-sub">Options</h4>
+                    <div class="car-window-sticker-opt-list car-window-sticker-opt-list--options">
+                        {% for entry in ns.options %}
+                        {{ render_sticker_option_row(entry) }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <h4 class="car-window-sticker-sub">Options</h4>
+                    <div class="car-window-sticker-opt-list">
+                        {% for opt in listing_sticker_options %}
+                        <div class="car-sticker-opt-row">
+                            <span class="car-sticker-opt-name">{{ opt.name if opt is mapping else opt }}</span>
+                            {{ render_sticker_option_price(opt.price if opt is mapping else none) }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>
+            {% endif %}
 
             <div class="listing-packages-panel" id="car-packages-panel" {% if not packages_panel_has_content %}hidden{% endif %}>
-                {% if sticker_exterior_color or sticker_interior_color %}
+                {% if (sticker_exterior_color or sticker_interior_color) and not show_window_sticker_ui %}
                 <div class="car-sticker-colors">
                     {% if sticker_exterior_color %}
                     <p><span class="car-sticker-color-label">Exterior (sticker):</span> {{ sticker_exterior_color }}</p>
@@ -345,16 +562,25 @@
                 </div>
                 {% endif %}
 
-                {% if listing_sticker_options %}
+                {% if (listing_sticker_option_sections or listing_sticker_options) and not show_window_sticker_ui %}
                 <h3 class="listing-packages-sub-heading">Window sticker options</h3>
-                <ul class="listing-package-inline-list">
+                <div class="listing-package-inline-list listing-package-inline-list--priced car-window-sticker-opt-list">
+                    {% if listing_sticker_option_sections %}
+                    {{ render_sticker_option_sections(listing_sticker_option_sections) }}
+                    {% elif listing_sticker_option_groups %}
+                    {{ render_sticker_option_groups(listing_sticker_option_groups) }}
+                    {% else %}
                     {% for opt in listing_sticker_options %}
-                    <li>{{ opt }}</li>
+                    <div class="car-sticker-opt-row">
+                        <span class="car-sticker-opt-name">{{ opt.name if opt is mapping else opt }}</span>
+                        {{ render_sticker_option_price(opt.price if opt is mapping else none) }}
+                    </div>
                     {% endfor %}
-                </ul>
+                    {% endif %}
+                </div>
                 {% endif %}
 
-                {% if listing_monroney_options %}
+                {% if listing_monroney_options and not show_window_sticker_ui %}
                 <h3 class="listing-packages-sub-heading">Factory options</h3>
                 <ul class="listing-package-inline-list">
                     {% for opt in listing_monroney_options %}
@@ -363,7 +589,7 @@
                 </ul>
                 {% endif %}
 
-                {% if listing_monroney_standard %}
+                {% if listing_monroney_standard and not show_window_sticker_ui %}
                 <h3 class="listing-packages-sub-heading">Standard equipment</h3>
                 <ul class="listing-package-inline-list">
                     {% for opt in listing_monroney_standard %}
@@ -372,9 +598,10 @@
                 </ul>
                 {% endif %}
 
-                {% if listing_packages_sections %}
+                {% set listing_description_packages = listing_packages_sections | rejectattr('from_vision') | list %}
+                {% if listing_description_packages %}
                 <h3 class="listing-packages-sub-heading">Packages from listing</h3>
-                {% for pkg in listing_packages_sections %}
+                {% for pkg in listing_description_packages %}
                 {% if pkg.features or pkg.evidence %}
                 <details class="listing-package-disclosure">
                     <summary class="listing-package-summary">{{ pkg.name }}</summary>
@@ -394,12 +621,20 @@
                     {% endif %}
                 </details>
                 {% else %}
-                <p class="listing-package-plain">{{ pkg.name }} <span class="listing-package-plain-note">— see window sticker above for full factory equipment.</span></p>
+                <p class="listing-package-plain">{{ pkg.name }}{% if show_window_sticker_ui and (window_sticker_available or listing_sticker_options) %} <span class="listing-package-plain-note">— see window sticker above for full factory equipment.</span>{% endif %}</p>
                 {% endif %}
                 {% endfor %}
                 {% endif %}
 
-                {% if listing_possible_packages and not hide_photo_analysis %}
+                {% if listing_photo_detected_equipment %}
+                <h3 class="listing-packages-sub-heading">Visible in photos (estimated)</h3>
+                <p class="listing-packages-photo-note">Optional equipment guessed from listing photos. Confirm on the window sticker or with the dealer.</p>
+                <ul class="listing-package-inline-list">
+                    {% for f in listing_photo_detected_equipment %}
+                    <li>{{ f }}</li>
+                    {% endfor %}
+                </ul>
+                {% elif listing_possible_packages and not hide_photo_analysis %}
                 <h3 class="listing-packages-sub-heading">Possible packages (photo analysis)</h3>
                 <ul class="listing-package-inline-list">
                     {% for f in listing_possible_packages %}
@@ -408,7 +643,7 @@
                 </ul>
                 {% endif %}
 
-                {% if listing_observed_features and not hide_photo_analysis %}
+                {% if listing_observed_features and not hide_photo_analysis and not listing_photo_detected_equipment %}
                 <h3 class="listing-packages-sub-heading">Observed features (photo analysis)</h3>
                 <ul class="listing-package-inline-list">
                     {% for f in listing_observed_features %}
@@ -417,7 +652,7 @@
                 </ul>
                 {% endif %}
 
-                {% if listing_standalone_features %}
+                {% if listing_standalone_features and not listing_photo_detected_equipment %}
                 <h3 class="listing-packages-sub-heading">Listing description features</h3>
                 <ul class="listing-package-inline-list">
                     {% for f in listing_standalone_features %}
@@ -437,39 +672,109 @@
                 {% endif %}
             </div>
 
-            <p class="listing-packages-empty" id="car-packages-empty" {% if packages_panel_has_content or window_sticker_available %}hidden{% endif %}>
-                No package data yet. If an OEM window sticker exists for this VIN, we will fetch and analyze it automatically.
+            <p class="listing-packages-empty" id="car-packages-empty" {% if packages_panel_has_content or window_sticker_preview_url or window_sticker_oem_url or listing_sticker_options %}hidden{% endif %}>
+                {% if show_window_sticker_ui %}No package data yet. If an OEM window sticker exists for this VIN, we will fetch and analyze it automatically.{% else %}No package data yet for this listing.{% endif %}
             </p>
-            {% endif %}
-        </section>
+                        </div>
+                        {% endif %}
+                    </section>
+                    {% endif %}
 
-        <section class="car-chat-section" id="car-chat-section" data-car-id="{{ car.id }}">
-            <h2 class="car-chat-heading">Ask about this car</h2>
-            {% if billing_stripe_enabled and not has_paid_access %}
-            <p class="car-chat-hint">Car chat is included with a <a href="{{ url_for('premium_page') }}">premium subscription</a>. Subscribe to ask questions about this vehicle.</p>
-            {% else %}
-            <p class="car-chat-hint">AI-generated answers may be incorrect or incomplete. Do not rely on them for VIN verification, pricing, financing, or compliance. They are not from the dealer or from official vehicle records. This feature uses your configured model (<code>LLM_BASE_URL</code> / <code>LLM_MODEL</code>).{% if not session.get('user_id') %} Sign in to allow live web research for comparison-style questions on this site (when the server enables it).{% endif %}</p>
-            <div id="car-chat-messages" class="car-chat-messages" aria-live="polite"></div>
-            <div class="car-chat-input-row">
-                <input type="text" id="car-chat-input" class="car-chat-input" placeholder="e.g. Is this AWD? What engine?" autocomplete="off" />
-                <button type="button" id="car-chat-send" class="car-chat-send primary-button">Send</button>
+                    <section class="car-vdp-panel" id="car-panel-history" role="tabpanel" aria-labelledby="car-tab-history" data-panel="history" hidden>
+                        <h2 class="car-vdp-panel-title">Vehicle history</h2>
+                        {% if car.carfax_url %}
+                        <p class="carfax-hint">If CARFAX shows a verification step, complete it on their site to view the full report.</p>
+                        {% endif %}
+                        <div class="car-detail-history">
+                            <h3 class="history-panel-title">Highlights</h3>
+                            <script type="application/json" id="car-history-json" nonce="{{ csp_nonce }}">{{ car.history_highlights | tojson }}</script>
+                            <ul class="history-highlights-list" id="history-highlights-list" hidden></ul>
+                            <p class="history-no-highlights" id="history-no-highlights">Detailed history report available. Open the full report below.</p>
+                            {% if car.carfax_url %}
+                            <a href="{{ car.carfax_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View full CARFAX report</a>
+                            {% elif car.vin and not car.vin.startswith('unknown-') %}
+                            <a href="https://www.carfax.com/VehicleHistory/p/Report.cfx?vin={{ car.vin }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn">View full CARFAX report</a>
+                            {% elif dealership_view_url %}
+                            <a href="{{ dealership_view_url }}" target="_blank" rel="noopener noreferrer" class="carfax-report-btn carfax-report-btn-secondary">Contact dealer for history</a>
+                            {% endif %}
+                        </div>
+                    </section>
+
+                    {% if show_ask_tab %}
+                    <section class="car-vdp-panel" id="car-panel-ask" role="tabpanel" aria-labelledby="car-tab-ask" data-panel="ask" hidden>
+                        <section class="car-chat-section car-chat-section--tab" id="car-chat-section" data-car-id="{{ car.id }}">
+                            <h2 class="car-vdp-panel-title">Ask about this car</h2>
+                            <p class="car-chat-hint">Answers are generated from this listing and public reference data. They may be incomplete or wrong — do not use them alone for VIN verification, pricing, financing, or legal decisions. They are not from the dealer or government records.{% if not session.get('user_id') %} <a href="{{ url_for('login_page') }}">Sign in</a> for comparison-style questions that may use live web research when enabled.{% endif %}</p>
+                            <details class="car-chat-disclaimer-details">
+                                <summary>Important limitations</summary>
+                                <p>Do not rely on AI replies for purchases, compliance, or safety-critical decisions. Confirm details on the window sticker, CARFAX, and with the dealership.</p>
+                            </details>
+                            <div id="car-chat-messages" class="car-chat-messages" aria-live="polite"></div>
+                            <div class="car-chat-input-row">
+                                <input type="text" id="car-chat-input" class="car-chat-input" placeholder="e.g. Is this AWD? What should I check at the lot?" autocomplete="off" />
+                                <button type="button" id="car-chat-send" class="car-chat-send primary-button">Send</button>
+                            </div>
+                        </section>
+                    </section>
+                    {% endif %}
+                </div>
             </div>
-            {% endif %}
+
         </section>
 
     </div>
 
-    <script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
+    {% set listing_vdp_url = car.listing_vdp_url or car.source_url %}
+    {% set dealership_view_url = listing_vdp_url or car.dealer_url %}
+    {% set listing_link_is_vdp = listing_vdp_url and car.dealer_url and listing_vdp_url.rstrip('/') != car.dealer_url.rstrip('/') %}
+    <div class="car-mobile-cta" id="car-mobile-cta" role="region" aria-label="Quick actions">
+        {% if logged_in %}
+        <button type="button"
+            id="save-btn-mobile"
+            class="car-mobile-cta-save save-btn{% if car_is_saved %} save-btn--saved{% endif %}"
+            data-car-id="{{ car.id }}"
+            aria-label="{% if car_is_saved %}Saved{% else %}Save{% endif %}">
+            <svg class="save-icon" viewBox="0 0 24 24" width="20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span class="save-btn-label">{% if car_is_saved %}Saved{% else %}Save{% endif %}</span>
+        </button>
+        {% endif %}
+        {% if dealership_view_url %}
+        <a href="{{ dealership_view_url }}" target="_blank" rel="noopener noreferrer" class="car-hero-link car-hero-link--dealer car-mobile-cta-dealer">
+            <span>{% if listing_link_is_vdp %}View listing{% else %}Dealer site{% endif %}</span>
+        </a>
+        {% endif %}
+    </div>
+
+    <div class="compare-tray" id="compare-tray" hidden role="region" aria-label="Compare vehicles">
+        <div class="compare-tray__inner">
+            <div class="compare-tray__slots" id="compare-tray-slots"></div>
+            <div class="compare-tray__actions">
+                <a href="/compare" class="primary-button compare-tray__go" id="compare-tray-go">Compare</a>
+                <button type="button" class="compare-tray__clear" id="compare-tray-clear">Clear all</button>
+            </div>
+        </div>
+    </div>
+
+    {% if has_paid_access or (logged_in and not billing_stripe_enabled) %}
     <script src="{{ url_for('static', filename='car_chat.js') }}" nonce="{{ csp_nonce }}"></script>
+    {% endif %}
+    <script src="{{ url_for('static', filename='compare.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
     <script src="{{ url_for('static', filename='car_page.js') }}" nonce="{{ csp_nonce }}"></script>
+    {% if show_premium_features %}
+    <script src="{{ url_for('static', filename='car_trim_ladder.js') }}?v={{ static_cache_ver }}" nonce="{{ csp_nonce }}"></script>
+    {% endif %}
+    {% if has_paid_access or (logged_in and not billing_stripe_enabled) %}
     <script src="{{ url_for('static', filename='car_packages.js') }}" nonce="{{ csp_nonce }}"></script>
+    {% endif %}
     <script nonce="{{ csp_nonce }}">
     (function () {
-        const btn = document.getElementById("save-btn");
-        if (!btn) return;
         const csrf = (document.querySelector('meta[name="csrf-token"]') || {}).content || "";
 
-        btn.addEventListener("click", function () {
+        function wireSave(btn) {
+            if (!btn) return;
+            btn.addEventListener("click", function () {
             btn.disabled = true;
             fetch(`/api/cars/${btn.dataset.carId}/save`, {
                 method: "POST",
@@ -478,16 +783,28 @@
             })
             .then(r => r.ok ? r.json() : Promise.reject())
             .then(data => {
-                if (!data.ok) return;
+                if (!data.ok) {
+                    btn.setAttribute("title", "Could not save — try again");
+                    return;
+                }
                 const saved = data.saved;
-                btn.classList.toggle("save-btn--saved", saved);
-                btn.setAttribute("aria-label", saved ? "Saved" : "Save");
-                btn.setAttribute("title", saved ? "Remove from saved" : "Save this car");
-                btn.querySelector(".save-btn-label").textContent = saved ? "Saved" : "Save";
+                document.querySelectorAll("[data-car-id=\"" + btn.dataset.carId + "\"].save-btn").forEach(function (el) {
+                    el.classList.toggle("save-btn--saved", saved);
+                    el.setAttribute("aria-label", saved ? "Saved" : "Save");
+                    el.setAttribute("title", saved ? "Remove from saved" : "Save this car");
+                    const lbl = el.querySelector(".save-btn-label");
+                    if (lbl) lbl.textContent = saved ? "Saved" : "Save";
+                });
             })
-            .catch(() => {})
+            .catch(function () {
+                btn.setAttribute("title", "Could not save — try again");
+            })
             .finally(() => { btn.disabled = false; });
-        });
+            });
+        }
+
+        wireSave(document.getElementById("save-btn"));
+        wireSave(document.getElementById("save-btn-mobile"));
     })();
     </script>
 </body>

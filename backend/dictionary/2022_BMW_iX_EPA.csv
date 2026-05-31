@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2022,BMW,iX,xDrive50 (20 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,86,87,86,,,,,
-2022,BMW,iX,xDrive50 (21 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,82,84,83,,,,,
-2022,BMW,iX,xDrive50 (22 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,86,85,86,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2022,BMW,iX,xDrive50 (20 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,86,87,86,,,,,,EV Electricity,
+2022,BMW,iX,xDrive50 (21 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,82,84,83,,,,,,EV Electricity,
+2022,BMW,iX,xDrive50 (22 inch wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,86,85,86,,,,,,EV Electricity,

@@ -58,7 +58,7 @@ def test_rich_engine_description_yields_displacement_only() -> None:
         "cylinders": None,
         "fuel_type": "Gas",
     }
-    assert build_engine_display(car, {"cylinders": 4}) == "2.0L I4"
+    assert build_engine_display(car, {"cylinders": 4}) == "2.0L I4 Turbo"
 
 
 def test_master_engine_string_epa_aggregate_stripped_to_liters() -> None:
@@ -91,6 +91,60 @@ def test_build_engine_display_missing_cylinders_no_crash() -> None:
     assert build_engine_display(car, {}) == "2.0L"
 
 
+def test_build_engine_display_porsche_911_gt3_flat6() -> None:
+    car = {
+        "make": "Porsche",
+        "model": "911",
+        "trim": "GT3 w/ Touring Package",
+        "title": "2025 Porsche 911 GT3 w/ Touring Package",
+        "engine_l": "4.0",
+        "cylinders": 6,
+        "engine_description": "4.0L V6",
+        "fuel_type": "Gasoline",
+    }
+    assert build_engine_display(car, {}) == "4.0L Flat-6"
+
+
+def test_build_engine_display_subaru_flat6() -> None:
+    car = {
+        "make": "Subaru",
+        "model": "Outback",
+        "trim": "Wilderness",
+        "engine_l": "2.4",
+        "cylinders": 4,
+        "fuel_type": "Gasoline",
+    }
+    assert build_engine_display(car, {}) == "2.4L Flat-4"
+
+
+def test_build_engine_display_porsche_cayenne_keeps_v6() -> None:
+    car = {
+        "make": "Porsche",
+        "model": "Cayenne",
+        "trim": "S",
+        "engine_l": "3.0",
+        "cylinders": 6,
+        "engine_description": "3.0L V6 Turbo",
+        "fuel_type": "Gasoline",
+    }
+    assert build_engine_display(car, {}) == "3.0L V6 Turbo"
+
+
+def test_build_engine_display_ram_2500_cummins_is_i6_not_v6() -> None:
+    car = {
+        "year": 2018,
+        "make": "Ram",
+        "model": "2500",
+        "trim": "Laramie",
+        "title": "2018 Ram 2500 Laramie Truck Crew Cab I-6 cyl",
+        "engine_l": 6.7,
+        "cylinders": 6,
+        "engine_description": "6.7L V6 Turbo",
+        "fuel_type": "Diesel",
+    }
+    assert build_engine_display(car, {}) == "6.7L I6 Turbo"
+
+
 def test_build_engine_display_layout_from_description_without_cylinder_count() -> None:
     car = {
         "engine_l": "3.5",
@@ -98,7 +152,7 @@ def test_build_engine_display_layout_from_description_without_cylinder_count() -
         "engine_description": "3.5L V6 EcoBoost",
         "fuel_type": "Gas",
     }
-    assert build_engine_display(car, {}) == "3.5L V6"
+    assert build_engine_display(car, {}) == "3.5L V6 Turbo"
 
 
 def test_build_engine_display_jeep_wrangler_392() -> None:
@@ -121,6 +175,81 @@ def test_known_oem_engine_jeep_392() -> None:
     )
     assert hit.get("engine_display") == "6.4L V8"
     assert hit.get("engine_l") == 6.4
+
+
+def test_build_engine_display_etorque_from_stale_sticker_packages() -> None:
+    """Stored ``sticker_engine_display`` without Mild Hybrid still upgrades when eTorque is known."""
+    import json
+
+    from backend.utils.car_serialize import serialize_car_for_api
+
+    car = {
+        "make": "Ram",
+        "model": "1500",
+        "trim": "Big Horn",
+        "year": 2022,
+        "engine_description": "5.7L V8 HEMI MDS VVT eTorque Engine w/ Stop/Start",
+        "fuel_type": "Gasoline",
+        "cylinders": 8,
+        "engine_l": 5.7,
+        "packages": json.dumps(
+            {
+                "sticker_engine_display": "5.7L V8",
+                "sticker_options": ["Big Horn Level 2 Equipment Group"],
+                "sticker_specs": {"Engine": "5.7L V8"},
+            }
+        ),
+    }
+    assert build_engine_display(car, {}) == "5.7L V8 Mild Hybrid"
+    ser = serialize_car_for_api(car, include_verified=False, verified_specs={})
+    assert ser["engine_display"] == "5.7L V8 Mild Hybrid"
+    assert ser["fuel_type"] == "Hybrid"
+
+
+def test_build_engine_display_turbo_from_stale_sticker_packages() -> None:
+    """Stored ``sticker_engine_display`` without Turbo still upgrades when Hurricane is known."""
+    import json
+
+    car = {
+        "make": "Jeep",
+        "model": "Grand Cherokee L",
+        "trim": "Summit",
+        "year": 2025,
+        "engine_description": "3.0L I6 Hurricane Twin Turbo HO Engine",
+        "cylinders": 6,
+        "engine_l": 3.0,
+        "packages": json.dumps(
+            {
+                "sticker_engine_display": "3.0L I6",
+                "sticker_specs": {"Engine": "3.0L I6"},
+            }
+        ),
+    }
+    assert build_engine_display(car, {}) == "3.0L I6 Twin Turbo"
+
+
+def test_car_sticker_packages_need_analysis_etorque_in_engine_description(monkeypatch) -> None:
+    import json
+
+    from backend.enrichment.window_sticker_service import car_sticker_packages_need_analysis
+
+    monkeypatch.setattr(
+        "backend.enrichment.window_sticker_service.window_sticker_available",
+        lambda _car: True,
+    )
+    car = {
+        "vin": "1C6SRFFT6NN1050510",
+        "make": "Ram",
+        "packages": json.dumps(
+            {
+                "sticker_engine_display": "5.7L V8",
+                "sticker_options": ["Night Edition"],
+                "sticker_specs": {"Engine": "5.7L V8"},
+            }
+        ),
+        "engine_description": "5.7L V8 HEMI eTorque Engine",
+    }
+    assert car_sticker_packages_need_analysis(car) is True
 
 
 def test_parse_engine_displacement_from_engine_l() -> None:

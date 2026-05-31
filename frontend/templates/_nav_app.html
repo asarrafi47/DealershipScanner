@@ -1,0 +1,88 @@
+{# Signed-in app navigation — functional, not marketing. #}
+
+{% from '_icons.html' import icon %}
+
+<nav class="topbar topbar--app" aria-label="App">
+
+    <a href="{{ url_for('app_home') }}" class="logo logo--link">Sarrafi Cars</a>
+
+    {% include "_nav_search.html" %}
+
+    <div class="nav-links nav-links--site">
+
+        <a href="{{ url_for('app_home') }}" class="nav-app-link{% if nav_active == 'home' %} nav-app-link--active{% endif %}"
+
+            {% if nav_active == 'home' %}aria-current="page"{% endif %}>
+
+            {{ icon('home', 17, 'nav-app-link__icon') }}
+
+            <span>Home</span>
+
+        </a>
+
+        <a href="{{ url_for('listings') }}" class="nav-app-link{% if nav_active == 'listings' %} nav-app-link--active{% endif %}"
+
+            {% if nav_active == 'listings' %}aria-current="page"{% endif %}>
+
+            {{ icon('inventory', 17, 'nav-app-link__icon') }}
+
+            <span>Inventory</span>
+
+        </a>
+
+        <a href="{{ url_for('find_dealers_page') }}" class="nav-app-link{% if nav_active == 'dealers' %} nav-app-link--active{% endif %}"
+
+            {% if nav_active == 'dealers' %}aria-current="page"{% endif %}>
+
+            {{ icon('dealers', 17, 'nav-app-link__icon') }}
+
+            <span>Find dealers</span>
+
+        </a>
+
+        <a href="{{ url_for('dashboard') }}" class="nav-app-link{% if nav_active == 'dashboard' %} nav-app-link--active{% endif %}"
+
+            {% if nav_active == 'dashboard' %}aria-current="page"{% endif %}>
+
+            {{ icon('dashboard', 17, 'nav-app-link__icon') }}
+
+            <span>Dashboard</span>
+
+        </a>
+
+        {% if show_dealer_inventory_nav %}
+
+        <a href="/inventory" class="nav-app-link{% if nav_active == 'dealer_tools' %} nav-app-link--active{% endif %}">
+
+            {{ icon('tools', 17, 'nav-app-link__icon') }}
+
+            <span>Dealer tools</span>
+
+        </a>
+
+        {% endif %}
+
+    </div>
+
+    <div class="nav-links nav-links--account">
+
+        {% if has_paid_access is defined and not has_paid_access %}
+
+        <a href="{{ url_for('premium_page') }}" class="nav-app-link nav-app-link--premium{% if nav_active == 'premium' %} nav-app-link--active{% endif %}">
+
+            {{ icon('premium', 16, 'nav-app-link__icon') }}
+
+            <span>Premium</span>
+
+        </a>
+
+        {% endif %}
+
+        <span class="nav-app-user" title="{{ logged_in_user }}">{{ icon('user', 16, 'nav-app-link__icon') }}<span class="nav-app-user__name">{{ logged_in_user }}</span></span>
+
+        {% include "_app_logout.html" %}
+
+    </div>
+
+</nav>
+

@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2024,Chevrolet,Blazer,FWD,2.0L I4 (SIDI),Automatic 9-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,22,29,25,,,,,
-2024,Chevrolet,Blazer,FWD,3.6L V6 (SIDI),Automatic 9-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,6,3.6,19,26,22,,,,,
-2024,Chevrolet,Blazer,AWD,2.0L I4 (SIDI),Automatic 9-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,22,27,24,,,,,
-2024,Chevrolet,Blazer,AWD,3.6L V6 (SIDI),Automatic 9-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.6,18,26,21,,,,,
-2024,Chevrolet,Blazer,EV AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,103,88,96,,,,,
-2024,Chevrolet,Blazer,EV RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,99,84,92,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2024,Chevrolet,Blazer,FWD,2.0L I4 (SIDI),Automatic 9-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,4,2.0,22,29,25,,,,,,2.0L I4,
+2024,Chevrolet,Blazer,FWD,3.6L V6 (SIDI),Automatic 9-spd,Front-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 2WD,6,3.6,19,26,22,,,,,,3.6L V6,
+2024,Chevrolet,Blazer,AWD,2.0L I4 (SIDI),Automatic 9-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,4,2.0,22,27,24,,,,,,2.0L I4,
+2024,Chevrolet,Blazer,AWD,3.6L V6 (SIDI),Automatic 9-spd,All-Wheel Drive,Regular Gasoline,Small Sport Utility Vehicle 4WD,6,3.6,18,26,21,,,,,,3.6L V6,
+2024,Chevrolet,Blazer,EV AWD,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,103,88,96,,,,,,EV Electricity,
+2024,Chevrolet,Blazer,EV RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,99,84,92,,,,,,EV Electricity,

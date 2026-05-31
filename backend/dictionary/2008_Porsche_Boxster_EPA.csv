@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2008,Porsche,Boxster,Boxster,2.7L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,2.7,19,26,21,,,,,
-2008,Porsche,Boxster,Boxster,2.7L V6,Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,2.7,20,29,23,,,,,
-2008,Porsche,Boxster,Boxster,2.7L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,2.7,19,28,22,,,,,
-2008,Porsche,Boxster,S,3.4L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.4,18,25,21,,,,,
-2008,Porsche,Boxster,S,3.4L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.4,18,26,21,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2008,Porsche,Boxster,Boxster,2.7L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,2.7,19,26,21,,,,,,2.7L V6 Turbo,Turbocharged
+2008,Porsche,Boxster,Boxster,2.7L V6,Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,2.7,20,29,23,,,,,,2.7L V6 Turbo,Turbocharged
+2008,Porsche,Boxster,Boxster,2.7L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,2.7,19,28,22,,,,,,2.7L V6 Turbo,Turbocharged
+2008,Porsche,Boxster,S,3.4L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.4,18,25,21,,,,,,3.4L V6 Turbo,Turbocharged
+2008,Porsche,Boxster,S,3.4L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,6,3.4,18,26,21,,,,,,3.4L V6 Turbo,Turbocharged

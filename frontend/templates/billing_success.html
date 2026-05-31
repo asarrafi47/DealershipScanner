@@ -9,7 +9,7 @@
         <nav class="topbar">
             <div class="logo">Sarrafi Cars</div>
             <div class="nav-links">
-                <a href="/dashboard">Dashboard</a>
+                <a href="{{ url_for('app_home') }}">Home</a>
                 {% include "_app_logout.html" %}
             </div>
         </nav>
@@ -22,7 +22,7 @@
                     We’re finalizing your subscription{% if org and org.name %} for <strong>{{ org.name }}</strong>{% endif %}.
                 </p>
                 <div style="margin-top: 18px;">
-                    <a class="primary-button full-width" href="/dashboard">Continue</a>
+                    <a class="primary-button full-width" href="{{ url_for('app_home') }}">Continue</a>
                 </div>
             </div>
         </section>

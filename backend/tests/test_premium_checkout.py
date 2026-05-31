@@ -1,4 +1,4 @@
-"""Consumer premium checkout verification (Stripe session, no grant without payment)."""
+"""Consumer premium checkout verification (Stripe subscription session)."""
 
 from __future__ import annotations
 
@@ -23,16 +23,20 @@ def _fresh_app(monkeypatch: pytest.MonkeyPatch, tmp_path, *, admin_email: str = 
 
 
 def _login_admin(client) -> None:
-    client.get("/register")
+    from backend.db.users_db import save_user, sync_env_admin_user_row
+    from backend.utils.roles import ROLE_GENERAL
+
+    uid = save_user("premuser", "prem@example.com", "long-enough-password", role=ROLE_GENERAL)
+    sync_env_admin_user_row(uid)
+    client.get("/login")
     from flask import session
 
     csrf = session.get("_csrf_token")
     client.post(
-        "/register",
+        "/login",
         data={
             "csrf_token": csrf,
-            "username": "premuser",
-            "email": "prem@example.com",
+            "login": "prem@example.com",
             "password": "long-enough-password",
         },
         follow_redirects=True,

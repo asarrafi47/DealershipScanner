@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1985,Audi,4000,s quattro,2.2L V5 ((FFS) CA model),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.2,16,20,18,,,,,
-1985,Audi,4000,s,1.8L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,21,24,23,,,,,
-1985,Audi,4000,s,1.8L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,21,27,24,,,,,
-1985,Audi,4000,s quattro,2.2L V5 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.2,16,20,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1985,Audi,4000,s quattro,2.2L V5 ((FFS) CA model),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.2,16,20,18,,,,,,2.2L V5 Turbo,Turbocharged
+1985,Audi,4000,s,1.8L I4 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,21,24,23,,,,,,1.8L I4 Turbo,Turbocharged
+1985,Audi,4000,s,1.8L I4 ((FFS)),Manual 5-spd,Front-Wheel Drive,Regular Gasoline,Subcompact Cars,4,1.8,21,27,24,,,,,,1.8L I4 Turbo,Turbocharged
+1985,Audi,4000,s quattro,2.2L V5 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Subcompact Cars,5,2.2,16,20,18,,,,,,2.2L V5 Turbo,Turbocharged

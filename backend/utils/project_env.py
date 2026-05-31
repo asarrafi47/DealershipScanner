@@ -2,7 +2,19 @@
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
+
+
+def ensure_backend_on_sys_path() -> None:
+    """
+    Insert ``backend/`` on ``sys.path`` so bare imports (``scraping``, ``oem``, …) resolve.
+
+    Matches ``conftest.py`` and script entrypoints; safe to call repeatedly.
+    """
+    backend_dir = str(Path(__file__).resolve().parents[1])
+    if backend_dir not in sys.path:
+        sys.path.insert(0, backend_dir)
 
 
 def load_project_dotenv(*, override: bool = False) -> None:
@@ -19,17 +31,18 @@ def load_project_dotenv(*, override: bool = False) -> None:
     try:
         from dotenv import load_dotenv, dotenv_values
     except ImportError:
+        ensure_backend_on_sys_path()
         return
     root = Path(__file__).resolve().parents[2]
     env_path = root / ".env"
-    if not env_path.is_file():
-        return
-    load_dotenv(env_path, override=override)
-    # Patch keys that look invalid after merge
-    if not override:
-        dot_vals = dotenv_values(env_path)
-        for key in ("ANTHROPIC_API_KEY",):
-            shell_val = os.environ.get(key, "")
-            dot_val = dot_vals.get(key, "")
-            if dot_val and len(shell_val) < 40 < len(dot_val):
-                os.environ[key] = dot_val
+    if env_path.is_file():
+        load_dotenv(env_path, override=override)
+        # Patch keys that look invalid after merge
+        if not override:
+            dot_vals = dotenv_values(env_path)
+            for key in ("ANTHROPIC_API_KEY",):
+                shell_val = os.environ.get(key, "")
+                dot_val = dot_vals.get(key, "")
+                if dot_val and len(shell_val) < 40 < len(dot_val):
+                    os.environ[key] = dot_val
+    ensure_backend_on_sys_path()

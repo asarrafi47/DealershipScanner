@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2026,Bugatti Rimac,Nevera,R,EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Two Seaters,,,50,51,51,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2026,Bugatti Rimac,Nevera,R,EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Two Seaters,,,50,51,51,,,,,,EV Electricity,

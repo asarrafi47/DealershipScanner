@@ -15,12 +15,15 @@ def test_web_research_playwright_auto_prod_requires_login(monkeypatch: pytest.Mo
     assert m.web_research_playwright_allowed(1) is True
 
 
-def test_web_research_playwright_public_override(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_web_research_playwright_public_override_dev_only(monkeypatch: pytest.MonkeyPatch) -> None:
     from backend.utils import car_chat_policy as m
 
-    monkeypatch.setenv("FLASK_ENV", "production")
+    monkeypatch.setenv("FLASK_ENV", "development")
     monkeypatch.setenv("CAR_CHAT_WEB_RESEARCH_PUBLIC", "1")
     assert m.web_research_playwright_allowed(None) is True
+
+    monkeypatch.setenv("FLASK_ENV", "production")
+    assert m.web_research_playwright_allowed(None) is False
 
 
 def test_web_research_playwright_force_off(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -54,12 +57,14 @@ def test_href_blocks_private_and_allowlist(monkeypatch: pytest.MonkeyPatch) -> N
     assert wr.href_is_acceptable_result("https://evil.com/", allowed_hosts=allow) is False
 
 
-def test_car_chat_global_rate_limit(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_car_chat_global_rate_limit(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     # Set before import: load_project_dotenv() must not re-enable billing from .env.
     monkeypatch.setenv("BILLING_STRIPE_ENABLED", "0")
+    monkeypatch.setenv("CAR_CHAT_MAX_PER_USER_DAILY", "0")
     monkeypatch.setenv("RATE_LIMIT_CAR_CHAT_GLOBAL_PER_MIN", "2")
     monkeypatch.setenv("RATE_LIMIT_CAR_CHAT_PER_IP_PER_MIN", "500")
     monkeypatch.setenv("RATE_LIMIT_CAR_CHAT_PER_MIN", "500")
+    monkeypatch.setenv("RATE_LIMIT_SQLITE_PATH", str(tmp_path / "rate_limits.db"))
 
     import backend.main as main
 

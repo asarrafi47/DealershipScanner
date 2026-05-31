@@ -23,6 +23,7 @@
         const prevHero = document.getElementById("car-gallery-prev-hero");
         const nextHero = document.getElementById("car-gallery-next-hero");
         const counterEl = document.getElementById("car-gallery-counter");
+        const counterBadge = document.getElementById("car-gallery-counter-badge");
         const thumbsEl = document.getElementById("car-gallery-thumbs");
         if (!imgEl) return;
 
@@ -65,7 +66,9 @@
         function show() {
             const url = gallery[activeImageIndex];
             if (url && imgEl) imgEl.src = url;
+            const counterText = activeImageIndex + 1 + " / " + gallery.length;
             if (counterEl) counterEl.textContent = activeImageIndex + 1 + " of " + gallery.length;
+            if (counterBadge) counterBadge.textContent = counterText;
             if (prevBtn) prevBtn.disabled = false;
             if (nextBtn) nextBtn.disabled = false;
             if (prevHero) prevHero.disabled = false;
@@ -281,15 +284,79 @@
         if (noHl) noHl.style.display = "none";
     }
 
+    function initCarVdpTabs() {
+        const tablist = document.querySelector(".car-vdp-tabs");
+        if (!tablist) return;
+
+        const tabs = tablist.querySelectorAll(".car-vdp-tab");
+        const panels = document.querySelectorAll(".car-vdp-panel");
+        if (!tabs.length || !panels.length) return;
+
+        const validIds = new Set();
+        tabs.forEach(function (t) {
+            validIds.add(t.getAttribute("data-tab"));
+        });
+
+        function activate(tabId, opts) {
+            const pushHash = !(opts && opts.skipHash);
+            const target = tabId && validIds.has(tabId) ? tabId : "overview";
+            tabs.forEach(function (t) {
+                const on = t.getAttribute("data-tab") === target;
+                t.classList.toggle("car-vdp-tab--active", on);
+                t.setAttribute("aria-selected", on ? "true" : "false");
+            });
+            panels.forEach(function (p) {
+                const on = p.getAttribute("data-panel") === target;
+                p.classList.toggle("car-vdp-panel--active", on);
+                if (on) {
+                    p.removeAttribute("hidden");
+                } else {
+                    p.setAttribute("hidden", "");
+                }
+            });
+            if (pushHash && target && target !== "overview") {
+                try {
+                    history.replaceState(null, "", "#" + target);
+                } catch (_) {}
+            }
+        }
+
+        const tabArr = Array.from(tabs);
+
+        tabArr.forEach(function (tab, idx) {
+            tab.addEventListener("click", function () {
+                activate(tab.getAttribute("data-tab"));
+            });
+            tab.addEventListener("keydown", function (e) {
+                let next = -1;
+                if (e.key === "ArrowRight") next = (idx + 1) % tabArr.length;
+                if (e.key === "ArrowLeft") next = (idx - 1 + tabArr.length) % tabArr.length;
+                if (e.key === "Home") next = 0;
+                if (e.key === "End") next = tabArr.length - 1;
+                if (next < 0) return;
+                e.preventDefault();
+                tabArr[next].focus();
+                activate(tabArr[next].getAttribute("data-tab"));
+            });
+        });
+
+        const hash = (window.location.hash || "").replace(/^#/, "");
+        if (hash && validIds.has(hash)) {
+            activate(hash, { skipHash: true });
+        }
+    }
+
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", function () {
             initCarBackLink();
             initCarGallery();
             initCarHistoryHighlights();
+            initCarVdpTabs();
         });
     } else {
         initCarBackLink();
         initCarGallery();
         initCarHistoryHighlights();
+        initCarVdpTabs();
     }
 })();

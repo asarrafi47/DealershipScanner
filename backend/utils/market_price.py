@@ -82,46 +82,30 @@ def cohort_key(
 
 
 def _load_dealer_geo() -> dict[str, tuple[float, float]]:
-    out: dict[str, tuple[float, float]] = {}
+    from backend.db.dealer_geo import load_dealer_geo_index
+
     conn = get_conn()
-    cur = conn.cursor()
     try:
-        for url, lat, lon in cur.execute(
-            "SELECT dealer_url, lat, lon FROM dealer_geopoints "
-            "WHERE lat IS NOT NULL AND lon IS NOT NULL"
-        ).fetchall():
-            if url:
-                out[str(url).strip()] = (float(lat), float(lon))
-    except Exception:
-        pass
-    if not out:
-        try:
-            for url, lat, lon in cur.execute(
-                "SELECT website_url, latitude, longitude FROM dealerships "
-                "WHERE latitude IS NOT NULL AND longitude IS NOT NULL"
-            ).fetchall():
-                if url:
-                    out[str(url).strip()] = (float(lat), float(lon))
-        except Exception:
-            pass
-    conn.close()
-    return out
+        return load_dealer_geo_index(conn)
+    finally:
+        conn.close()
 
 
 def _car_coords(
     car: dict[str, Any],
     dealer_geo: dict[str, tuple[float, float]],
 ) -> tuple[float, float] | None:
+    from backend.db.dealer_geo import lookup_dealer_coords
     from backend.db.geo import zip_to_coords
 
+    dest = lookup_dealer_coords(str(car.get("dealer_url") or ""), dealer_geo)
+    if dest:
+        return dest
     zc = str(car.get("zip_code") or "").strip()
     if zc:
         coords = zip_to_coords(zc)
         if coords:
             return (float(coords[0]), float(coords[1]))
-    du = str(car.get("dealer_url") or "").strip()
-    if du and du in dealer_geo:
-        return dealer_geo[du]
     return None
 
 

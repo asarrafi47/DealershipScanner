@@ -1,34 +1,34 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2025,Chevrolet,Silverado,2WD,Diesel 3.0L V6 Diesel,Automatic 10-spd,Rear-Wheel Drive,Diesel,Standard Pickup Trucks 2WD,6,3.0,23,29,26,,,,,
-2025,Chevrolet,Silverado,2WD,2.7L I4 (SIDI; with Sport Mode),Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,4,2.7,17,21,19,,,,,
-2025,Chevrolet,Silverado,2WD,2.7L I4 (SIDI),Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,4,2.7,18,21,19,,,,,
-2025,Chevrolet,Silverado,2WD,5.3L V8 (SIDI; with Sport Mode),Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.3,16,21,18,,,,,
-2025,Chevrolet,Silverado,2WD,5.3L V8 (SIDI),Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.3,16,21,18,,,,,
-2025,Chevrolet,Silverado,4WD,Diesel 3.0L V6 (with Sport Mode) Diesel,Automatic 10-spd,Four-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,6,3.0,22,26,24,,,,,
-2025,Chevrolet,Silverado,4WD,Diesel 3.0L V6 Diesel,Automatic 10-spd,Four-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,6,3.0,22,25,23,,,,,
-2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,Diesel 3.0L V6 (with Sport Mode) Diesel,Automatic 10-spd,Four-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,6,3.0,21,24,23,,,,,
-2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,Diesel 3.0L V6 Diesel,Automatic 10-spd,Four-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,6,3.0,21,24,22,,,,,
-2025,Chevrolet,Silverado,4WD ZR2,Diesel 3.0L V6 Diesel,Automatic 10-spd,Four-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,6,3.0,20,23,21,,,,,
-2025,Chevrolet,Silverado,4WD,2.7L I4 (SIDI; with Sport Mode),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,4,2.7,17,20,18,,,,,
-2025,Chevrolet,Silverado,4WD,2.7L I4 (SIDI),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,4,2.7,17,20,18,,,,,
-2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,2.7L I4 (SIDI; with Sport Mode),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,4,2.7,16,17,16,,,,,
-2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,2.7L I4 (SIDI),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,4,2.7,16,17,16,,,,,
-2025,Chevrolet,Silverado,4WD,FFV 5.3L V8 (SIDI; FFV),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,8,5.3,15,19,17,,,,,
-2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,FFV 5.3L V8 (SIDI; FFV),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,8,5.3,15,19,17,,,,,
-2025,Chevrolet,Silverado,4WD,6.2L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Premium Gasoline,Standard Pickup Trucks 4WD,8,6.2,15,20,17,,,,,
-2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,6.2L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Premium Gasoline,Standard Pickup Trucks 4WD,8,6.2,14,17,15,,,,,
-2025,Chevrolet,Silverado,4WD ZR2,6.2L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Premium Gasoline,Standard Pickup Trucks 4WD,8,6.2,14,17,15,,,,,
-2025,Chevrolet,Silverado,4WD,5.3L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.3,15,19,16,,,,,
-2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,5.3L V8 (SIDI; Municipal),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.3,15,19,16,,,,,
-2025,Chevrolet,Silverado,4WD,5.3L V8 (SIDI; with Sport Mode),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.3,16,19,17,,,,,
-2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,5.3L V8 (SIDI; with Sport Mode),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.3,15,18,16,,,,,
-2025,Chevrolet,Silverado,4WD,5.3L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.3,16,19,17,,,,,
-2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,5.3L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.3,15,18,16,,,,,
-2025,Chevrolet,Silverado,Cab Chassis 2WD,5.3L V8 (SIDI),Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,8,5.3,15,18,16,,,,,
-2025,Chevrolet,Silverado,Cab Chassis 4WD,5.3L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,8,5.3,14,16,15,,,,,
-2025,Chevrolet,Silverado,EV 8WT,EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,74,61,68,,,,,
-2025,Chevrolet,Silverado,EV 5WT (11 kW Charger),EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,77,63,70,,,,,
-2025,Chevrolet,Silverado,EV (11 kW Charger),EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,74,61,68,,,,,
-2025,Chevrolet,Silverado,EV (19 kW Charger),EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,70,59,64,,,,,
-2025,Chevrolet,Silverado,EV 5WT (19 kW Charger),EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,77,63,70,,,,,
-2025,Chevrolet,Silverado,EV 2WT,EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,73,60,66,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2025,Chevrolet,Silverado,2WD,Diesel 3.0L V6 Diesel,Automatic 10-spd,Rear-Wheel Drive,Diesel,Standard Pickup Trucks 2WD,6,3.0,23,29,26,,,,,,3.0L V6 Turbo,Turbocharged
+2025,Chevrolet,Silverado,2WD,2.7L I4 (SIDI; with Sport Mode),Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,4,2.7,17,21,19,,,,,,2.7L I4 Turbo,Turbocharged
+2025,Chevrolet,Silverado,2WD,2.7L I4 (SIDI),Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,4,2.7,18,21,19,,,,,,2.7L I4 Turbo,Turbocharged
+2025,Chevrolet,Silverado,2WD,5.3L V8 (SIDI; with Sport Mode),Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.3,16,21,18,,,,,,5.3L V8,
+2025,Chevrolet,Silverado,2WD,5.3L V8 (SIDI),Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.3,16,21,18,,,,,,5.3L V8,
+2025,Chevrolet,Silverado,4WD,Diesel 3.0L V6 (with Sport Mode) Diesel,Automatic 10-spd,Four-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,6,3.0,22,26,24,,,,,,3.0L V6 Turbo,Turbocharged
+2025,Chevrolet,Silverado,4WD,Diesel 3.0L V6 Diesel,Automatic 10-spd,Four-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,6,3.0,22,25,23,,,,,,3.0L V6 Turbo,Turbocharged
+2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,Diesel 3.0L V6 (with Sport Mode) Diesel,Automatic 10-spd,Four-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,6,3.0,21,24,23,,,,,,3.0L V6 Turbo,Turbocharged
+2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,Diesel 3.0L V6 Diesel,Automatic 10-spd,Four-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,6,3.0,21,24,22,,,,,,3.0L V6 Turbo,Turbocharged
+2025,Chevrolet,Silverado,4WD ZR2,Diesel 3.0L V6 Diesel,Automatic 10-spd,Four-Wheel Drive,Diesel,Standard Pickup Trucks 4WD,6,3.0,20,23,21,,,,,,3.0L V6 Turbo,Turbocharged
+2025,Chevrolet,Silverado,4WD,2.7L I4 (SIDI; with Sport Mode),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,4,2.7,17,20,18,,,,,,2.7L I4 Turbo,Turbocharged
+2025,Chevrolet,Silverado,4WD,2.7L I4 (SIDI),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,4,2.7,17,20,18,,,,,,2.7L I4 Turbo,Turbocharged
+2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,2.7L I4 (SIDI; with Sport Mode),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,4,2.7,16,17,16,,,,,,2.7L I4 Turbo,Turbocharged
+2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,2.7L I4 (SIDI),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,4,2.7,16,17,16,,,,,,2.7L I4 Turbo,Turbocharged
+2025,Chevrolet,Silverado,4WD,FFV 5.3L V8 (SIDI; FFV),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,8,5.3,15,19,17,,,,,,5.3L V8,
+2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,FFV 5.3L V8 (SIDI; FFV),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,8,5.3,15,19,17,,,,,,5.3L V8,
+2025,Chevrolet,Silverado,4WD,6.2L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Premium Gasoline,Standard Pickup Trucks 4WD,8,6.2,15,20,17,,,,,,6.2L V8,
+2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,6.2L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Premium Gasoline,Standard Pickup Trucks 4WD,8,6.2,14,17,15,,,,,,6.2L V8,
+2025,Chevrolet,Silverado,4WD ZR2,6.2L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Premium Gasoline,Standard Pickup Trucks 4WD,8,6.2,14,17,15,,,,,,6.2L V8,
+2025,Chevrolet,Silverado,4WD,5.3L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.3,15,19,16,,,,,,5.3L V8,
+2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,5.3L V8 (SIDI; Municipal),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.3,15,19,16,,,,,,5.3L V8,
+2025,Chevrolet,Silverado,4WD,5.3L V8 (SIDI; with Sport Mode),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.3,16,19,17,,,,,,5.3L V8,
+2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,5.3L V8 (SIDI; with Sport Mode),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.3,15,18,16,,,,,,5.3L V8,
+2025,Chevrolet,Silverado,4WD,5.3L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.3,16,19,17,,,,,,5.3L V8,
+2025,Chevrolet,Silverado,Mud Terrain Tires 4WD,5.3L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.3,15,18,16,,,,,,5.3L V8,
+2025,Chevrolet,Silverado,Cab Chassis 2WD,5.3L V8 (SIDI),Automatic 10-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,8,5.3,15,18,16,,,,,,5.3L V8,
+2025,Chevrolet,Silverado,Cab Chassis 4WD,5.3L V8 (SIDI),Automatic 10-spd,Four-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 4WD,8,5.3,14,16,15,,,,,,5.3L V8,
+2025,Chevrolet,Silverado,EV 8WT,EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,74,61,68,,,,,,EV Electricity,
+2025,Chevrolet,Silverado,EV 5WT (11 kW Charger),EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,77,63,70,,,,,,EV Electricity,
+2025,Chevrolet,Silverado,EV (11 kW Charger),EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,74,61,68,,,,,,EV Electricity,
+2025,Chevrolet,Silverado,EV (19 kW Charger),EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,70,59,64,,,,,,EV Electricity,
+2025,Chevrolet,Silverado,EV 5WT (19 kW Charger),EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,77,63,70,,,,,,EV Electricity,
+2025,Chevrolet,Silverado,EV 2WT,EV Electricity,Automatic (A1),Four-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,73,60,66,,,,,,EV Electricity,

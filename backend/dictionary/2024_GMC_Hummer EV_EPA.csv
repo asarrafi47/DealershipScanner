@@ -1,9 +1,9 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2024,GMC,Hummer EV,Pickup,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,59,48,53,,,,,
-2024,GMC,Hummer EV,Pickup MT Tires,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,55,45,50,,,,,
-2024,GMC,Hummer EV,SUV,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,59,48,53,,,,,
-2024,GMC,Hummer EV,SUV MT Tires,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,55,45,50,,,,,
-2024,GMC,Hummer EV,Pickup 2M20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,58,46,52,,,,,
-2024,GMC,Hummer EV,Pickup MT Tires 2M20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,51,43,47,,,,,
-2024,GMC,Hummer EV,SUV 2M20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,56,46,51,,,,,
-2024,GMC,Hummer EV,SUV MT Tires 2M20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,51,43,47,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2024,GMC,Hummer EV,Pickup,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,59,48,53,,,,,,EV Electricity,
+2024,GMC,Hummer EV,Pickup MT Tires,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,55,45,50,,,,,,EV Electricity,
+2024,GMC,Hummer EV,SUV,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,59,48,53,,,,,,EV Electricity,
+2024,GMC,Hummer EV,SUV MT Tires,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,55,45,50,,,,,,EV Electricity,
+2024,GMC,Hummer EV,Pickup 2M20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,58,46,52,,,,,,EV Electricity,
+2024,GMC,Hummer EV,Pickup MT Tires 2M20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Pickup Trucks 4WD,,,51,43,47,,,,,,EV Electricity,
+2024,GMC,Hummer EV,SUV 2M20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,56,46,51,,,,,,EV Electricity,
+2024,GMC,Hummer EV,SUV MT Tires 2M20,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Standard Sport Utility Vehicle 4WD,,,51,43,47,,,,,,EV Electricity,

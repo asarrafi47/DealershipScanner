@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2006,BMW,M,3 Convertible,3.2L V6 (MOTORSPORT),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,6,3.2,14,21,17,,,,,
-2006,BMW,M,3 Convertible,3.2L V6 (MOTORSPORT),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,6,3.2,14,20,16,,,,,
-2006,BMW,M,3,3.2L V6 (MOTORSPORT),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.2,14,22,17,,,,,
-2006,BMW,M,3,3.2L V6 (MOTORSPORT),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.2,15,21,17,,,,,
-2006,BMW,M,5,5.0L V10,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,10,5.0,11,17,13,,,,,
-2006,BMW,M,6,5.0L V10,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,10,5.0,11,17,13,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2006,BMW,M,3 Convertible,3.2L V6 (MOTORSPORT),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,6,3.2,14,21,17,,,,,,3.2L I6 Turbo,Turbocharged
+2006,BMW,M,3 Convertible,3.2L V6 (MOTORSPORT),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,6,3.2,14,20,16,,,,,,3.2L I6 Turbo,Turbocharged
+2006,BMW,M,3,3.2L V6 (MOTORSPORT),Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.2,14,22,17,,,,,,3.2L I6 Turbo,Turbocharged
+2006,BMW,M,3,3.2L V6 (MOTORSPORT),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.2,15,21,17,,,,,,3.2L I6 Turbo,Turbocharged
+2006,BMW,M,5,5.0L V10,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Midsize Cars,10,5.0,11,17,13,,,,,,5.0L V10 Twin Turbo,Twin Turbocharged
+2006,BMW,M,6,5.0L V10,Automatic (S7),Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,10,5.0,11,17,13,,,,,,5.0L V10 Twin Turbo,Twin Turbocharged

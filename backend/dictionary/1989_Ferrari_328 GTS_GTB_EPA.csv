@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1989,Ferrari,328 GTS/GTB,328 GTS/GTB,3.2L V8 ((GUZZLER) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Two Seaters,8,3.2,11,17,14,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1989,Ferrari,328 GTS/GTB,328 GTS/GTB,3.2L V8 ((GUZZLER) (FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Two Seaters,8,3.2,11,17,14,,,,,,3.2L V8 Twin Turbo,Twin Turbocharged

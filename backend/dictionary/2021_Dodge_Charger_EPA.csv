@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2021,Dodge,Charger,Charger,5.7L V8 Midgrade Gasoline,Automatic 8-spd,Rear-Wheel Drive,Midgrade Gasoline,Large Cars,8,5.7,16,25,19,,,,,
-2021,Dodge,Charger,Charger,3.6L V6,Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Large Cars,6,3.6,19,30,23,,,,,
-2021,Dodge,Charger,Charger,6.4L V8,Automatic 8-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,6.4,15,24,18,,,,,
-2021,Dodge,Charger,AWD,3.6L V6,Automatic 8-spd,All-Wheel Drive,Regular Gasoline,Large Cars,6,3.6,18,27,21,,,,,
-2021,Dodge,Charger,SRT Widebody,6.2L V8 (Hellcat engine),Automatic 8-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,6.2,12,21,15,,,,,
-2021,Dodge,Charger,Widebody,6.4L V8,Automatic 8-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,6.4,15,24,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2021,Dodge,Charger,Charger,5.7L V8 Midgrade Gasoline,Automatic 8-spd,Rear-Wheel Drive,Midgrade Gasoline,Large Cars,8,5.7,16,25,19,,,,,,5.7L V8,
+2021,Dodge,Charger,Charger,3.6L V6,Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline,Large Cars,6,3.6,19,30,23,,,,,,3.6L V6,
+2021,Dodge,Charger,Charger,6.4L V8,Automatic 8-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,6.4,15,24,18,,,,,,6.4L V8,
+2021,Dodge,Charger,AWD,3.6L V6,Automatic 8-spd,All-Wheel Drive,Regular Gasoline,Large Cars,6,3.6,18,27,21,,,,,,3.6L V6,
+2021,Dodge,Charger,SRT Widebody,6.2L V8 (Hellcat engine),Automatic 8-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,6.2,12,21,15,,,,,,6.2L V8,
+2021,Dodge,Charger,Widebody,6.4L V8,Automatic 8-spd,Rear-Wheel Drive,Premium Gasoline,Large Cars,8,6.4,15,24,18,,,,,,6.4L V8,

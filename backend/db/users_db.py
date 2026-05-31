@@ -1,4 +1,5 @@
 import os
+import secrets
 import sqlite3
 import time
 
@@ -131,9 +132,18 @@ def init_users_db():
         ("is_premium", "ALTER TABLE users ADD COLUMN is_premium INTEGER NOT NULL DEFAULT 0"),
         ("premium_stripe_customer_id", "ALTER TABLE users ADD COLUMN premium_stripe_customer_id TEXT"),
         ("premium_stripe_session_id", "ALTER TABLE users ADD COLUMN premium_stripe_session_id TEXT"),
+        (
+            "premium_stripe_subscription_id",
+            "ALTER TABLE users ADD COLUMN premium_stripe_subscription_id TEXT",
+        ),
+        ("google_sub", "ALTER TABLE users ADD COLUMN google_sub TEXT"),
     ):
         if col not in ucols:
             cursor.execute(ddl)
+    cursor.execute(
+        "CREATE UNIQUE INDEX IF NOT EXISTS idx_users_google_sub "
+        "ON users(google_sub) WHERE google_sub IS NOT NULL AND google_sub != ''"
+    )
 
     cursor.execute(
         """
@@ -312,6 +322,7 @@ def get_user_by_login(login_input: str) -> dict | None:
         "totp_secret",
         "mfa_phone",
         "is_premium",
+        "google_sub",
     ):
         if extra in cols:
             want.append(extra)
@@ -517,9 +528,175 @@ def update_org_stripe_subscription(
     conn.close()
 
 
+def user_exists_by_email(email: str) -> bool:
+    e = (email or "").strip().lower()
+    if not e or "@" not in e:
+        return False
+    conn = get_conn()
+    row = conn.execute(
+        "SELECT 1 FROM users WHERE lower(email) = ? LIMIT 1",
+        (e,),
+    ).fetchone()
+    conn.close()
+    return row is not None
+
+
+def get_user_by_google_sub(google_sub: str) -> dict | None:
+    sub = (google_sub or "").strip()
+    if not sub:
+        return None
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(users)")
+    cols = [r[1] for r in cursor.fetchall()]
+    if "google_sub" not in cols:
+        conn.close()
+        return None
+    want = ["id", "username", "email", "google_sub"]
+    for extra in ("role", "org_id", "is_premium"):
+        if extra in cols:
+            want.append(extra)
+    cursor.execute(
+        f"SELECT {', '.join(want)} FROM users WHERE google_sub = ? LIMIT 1",
+        (sub,),
+    )
+    row = cursor.fetchone()
+    conn.close()
+    if not row:
+        return None
+    out: dict = {}
+    for i, k in enumerate(want):
+        out[k] = row[i]
+    out["id"] = int(out["id"])
+    if "role" not in out or out["role"] is None:
+        out["role"] = "dealer_staff"
+    if "is_premium" in out:
+        out["is_premium"] = bool(out["is_premium"])
+    return out
+
+
+def link_user_google_sub(user_id: int, google_sub: str) -> bool:
+    sub = (google_sub or "").strip()
+    if not sub:
+        return False
+    try:
+        uid = int(user_id)
+    except (TypeError, ValueError):
+        return False
+    if uid <= 0:
+        return False
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(users)")
+    cols = {r[1] for r in cursor.fetchall()}
+    if "google_sub" not in cols:
+        conn.close()
+        return False
+    cursor.execute("SELECT google_sub FROM users WHERE id = ?", (uid,))
+    row = cursor.fetchone()
+    if not row:
+        conn.close()
+        return False
+    existing = (row[0] or "").strip()
+    if existing and existing != sub:
+        conn.close()
+        return False
+    if existing == sub:
+        conn.close()
+        return True
+    cursor.execute(
+        "UPDATE users SET google_sub = ? WHERE id = ? AND (google_sub IS NULL OR google_sub = '')",
+        (sub, uid),
+    )
+    ok = cursor.rowcount > 0
+    conn.commit()
+    conn.close()
+    return bool(ok)
+
+
+def user_exists_by_username(username: str) -> bool:
+    u = (username or "").strip()
+    if not u:
+        return False
+    conn = get_conn()
+    row = conn.execute(
+        "SELECT 1 FROM users WHERE lower(username) = lower(?) LIMIT 1",
+        (u,),
+    ).fetchone()
+    conn.close()
+    return row is not None
+
+
+def save_oauth_user(
+    username: str,
+    email: str,
+    google_sub: str,
+    *,
+    role: str = "dealer_staff",
+    org_id: int | None = None,
+) -> int:
+    """Create an app user authenticated via Google (random password hash, not usable for login)."""
+    password_h = hash_password(secrets.token_urlsafe(48))
+    username = (username or "").strip()
+    email = (email or "").strip().lower()
+    sub = (google_sub or "").strip()
+    if not sub:
+        raise ValueError("google_sub required")
+    role_val = (role or "dealer_staff").strip().lower()
+    last_ex: Exception | None = None
+    for attempt in range(6):
+        conn: sqlite3.Connection | None = None
+        try:
+            conn = get_conn()
+            cursor = conn.cursor()
+            cursor.execute("PRAGMA table_info(users)")
+            cols = {r[1] for r in cursor.fetchall()}
+            if "google_sub" not in cols:
+                raise sqlite3.OperationalError("google_sub column missing")
+            fields = ["username", "email", "password", "google_sub"]
+            values: list[object] = [username, email, password_h, sub]
+            if "role" in cols:
+                fields.append("role")
+                values.append(role_val)
+            if "org_id" in cols and org_id is not None:
+                fields.append("org_id")
+                values.append(int(org_id))
+            placeholders = ", ".join("?" for _ in fields)
+            cursor.execute(
+                f"INSERT INTO users ({', '.join(fields)}) VALUES ({placeholders})",
+                tuple(values),
+            )
+            uid = int(cursor.lastrowid)
+            conn.commit()
+            conn.close()
+            return uid
+        except sqlite3.OperationalError as ex:
+            last_ex = ex
+            if "locked" not in str(ex).lower():
+                if conn:
+                    try:
+                        conn.close()
+                    except sqlite3.Error:
+                        pass
+                raise
+            if conn:
+                try:
+                    conn.close()
+                except sqlite3.Error:
+                    pass
+            if attempt >= 5:
+                break
+            time.sleep(0.1 * (attempt + 1))
+    if last_ex:
+        raise last_ex
+    raise RuntimeError("save_oauth_user failed")
+
+
 def save_user(username, email, password, *, role: str = "dealer_staff", org_id: int | None = None) -> int:
     # Hash before opening the DB to avoid holding a SQLite connection during bcrypt.
     password_h = hash_password(password)
+    username = (username or "").strip()
+    email = (email or "").strip().lower()
     role_val = (role or "dealer_staff").strip().lower()
     last_ex: Exception | None = None
     for attempt in range(6):
@@ -643,7 +820,13 @@ def delete_user_by_email(email: str) -> bool:
     return True
 
 
-def grant_user_premium(user_id: int, *, customer_id: str | None = None, session_id: str | None = None) -> None:
+def grant_user_premium(
+    user_id: int,
+    *,
+    customer_id: str | None = None,
+    session_id: str | None = None,
+    subscription_id: str | None = None,
+) -> None:
     """Set is_premium=1 and store Stripe identifiers for a user."""
     try:
         uid = int(user_id)
@@ -656,10 +839,11 @@ def grant_user_premium(user_id: int, *, customer_id: str | None = None, session_
         UPDATE users
         SET is_premium = 1,
             premium_stripe_customer_id = COALESCE(?, premium_stripe_customer_id),
-            premium_stripe_session_id = COALESCE(?, premium_stripe_session_id)
+            premium_stripe_session_id = COALESCE(?, premium_stripe_session_id),
+            premium_stripe_subscription_id = COALESCE(?, premium_stripe_subscription_id)
         WHERE id = ?
         """,
-        (customer_id or None, session_id or None, uid),
+        (customer_id or None, session_id or None, subscription_id or None, uid),
     )
     conn.commit()
     conn.close()

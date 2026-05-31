@@ -48,38 +48,16 @@ def _cylinders_from_engine_blob(blob: str) -> int | None:
     return None
 
 
-_FUEL_CANONICAL: dict[str, str] = {
-    "gasoline": "Gasoline", "gas": "Gasoline", "petrol": "Gasoline",
-    "regular gasoline": "Gasoline", "premium gasoline": "Gasoline",
-    "diesel": "Diesel",
-    "electric": "Electric", "battery electric": "Electric", "bev": "Electric",
-    "hybrid": "Hybrid", "mild hybrid": "Hybrid", "gas / mild hybrid": "Hybrid",
-    "plug-in hybrid": "Plug-In Hybrid", "plug in hybrid": "Plug-In Hybrid", "phev": "Plug-In Hybrid",
-    "hydrogen": "Hydrogen",
-}
-
-_BODY_STYLE_CANONICAL: dict[str, str] = {
-    "sedan": "Sedan", "coupe": "Coupe", "convertible": "Convertible",
-    "hatchback": "Hatchback", "wagon": "Wagon", "suv": "SUV",
-    "sport utility vehicle": "SUV", "crossover": "Crossover",
-    "pickup": "Truck", "pickup truck": "Truck", "truck": "Truck",
-    "minivan": "Minivan", "van": "Van", "roadster": "Roadster",
-}
-
-
 def _canonical_fuel(raw: str) -> str | None:
-    k = raw.strip().lower()
-    for phrase, canonical in _FUEL_CANONICAL.items():
-        if phrase in k or k in phrase:
-            return canonical
-    return None
+    from backend.utils.field_clean import coerce_fuel_type_stored
+
+    return coerce_fuel_type_stored(raw)
 
 
 def _canonical_body(raw: str) -> str | None:
-    k = raw.strip().lower()
-    return _BODY_STYLE_CANONICAL.get(k) or next(
-        (v for phrase, v in _BODY_STYLE_CANONICAL.items() if phrase in k), None
-    )
+    from backend.utils.field_clean import coerce_body_style_stored
+
+    return coerce_body_style_stored(raw)
 
 
 def _walk_json_ld(obj: Any, out: dict[str, Any]) -> None:

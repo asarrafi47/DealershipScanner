@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1994,Toyota,4Runner,2WD,3.0L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.0,15,19,17,,,,,
-1994,Toyota,4Runner,4WD,2.4L I4 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.4,17,20,18,,,,,
-1994,Toyota,4Runner,4WD,3.0L V6 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.0,12,15,13,,,,,
-1994,Toyota,4Runner,4WD,3.0L V6 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.0,13,17,14,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1994,Toyota,4Runner,2WD,3.0L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.0,15,19,17,,,,,,3.0L V6,
+1994,Toyota,4Runner,4WD,2.4L I4 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,4,2.4,17,20,18,,,,,,2.4L I4,
+1994,Toyota,4Runner,4WD,3.0L V6 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.0,12,15,13,,,,,,3.0L V6,
+1994,Toyota,4Runner,4WD,3.0L V6 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,3.0,13,17,14,,,,,,3.0L V6,

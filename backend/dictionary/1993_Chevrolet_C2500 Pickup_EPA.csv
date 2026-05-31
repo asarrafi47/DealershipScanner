@@ -1,3 +1,3 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1993,Chevrolet,C2500 Pickup,2WD,6.2L V8 ((DIESEL) (NO-CAT)) Diesel,Automatic 4-spd,Rear-Wheel Drive,Diesel,Standard Pickup Trucks 2WD,8,6.2,15,20,17,,,,,
-1993,Chevrolet,C2500 Pickup,2WD,Diesel 6.2L V8 ((DIESEL) (NO-CAT)) Diesel,Manual 5-spd,Rear-Wheel Drive,Diesel,Standard Pickup Trucks 2WD,8,6.2,16,20,17,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1993,Chevrolet,C2500 Pickup,2WD,6.2L V8 ((DIESEL) (NO-CAT)) Diesel,Automatic 4-spd,Rear-Wheel Drive,Diesel,Standard Pickup Trucks 2WD,8,6.2,15,20,17,,,,,,6.2L V8,
+1993,Chevrolet,C2500 Pickup,2WD,Diesel 6.2L V8 ((DIESEL) (NO-CAT)) Diesel,Manual 5-spd,Rear-Wheel Drive,Diesel,Standard Pickup Trucks 2WD,8,6.2,16,20,17,,,,,,6.2L V8,

@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1991,Mercedes-Benz,230,TE,2.0L I4 ((FFS)),Manual 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,18,24,20,,,,,
-1991,Mercedes-Benz,230,E,2.0L I4 ((FFS)),Manual 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,18,24,20,,,,,
-1991,Mercedes-Benz,230,E,2.0L I4 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,16,18,17,,,,,
-1991,Mercedes-Benz,230,CE,2.0L I4 ((FFS)),Manual 4-spd,Rear-Wheel Drive,Premium Gasoline,Midsize-Large Station Wagons,4,2.0,18,24,20,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1991,Mercedes-Benz,230,TE,2.0L I4 ((FFS)),Manual 4-spd,Rear-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,18,24,20,,,,,,2.0L I4 Turbo,Turbocharged
+1991,Mercedes-Benz,230,E,2.0L I4 ((FFS)),Manual 4-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,18,24,20,,,,,,2.0L I4 Turbo,Turbocharged
+1991,Mercedes-Benz,230,E,2.0L I4 ((GUZZLER) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,4,2.0,16,18,17,,,,,,2.0L I4 Turbo,Turbocharged
+1991,Mercedes-Benz,230,CE,2.0L I4 ((FFS)),Manual 4-spd,Rear-Wheel Drive,Premium Gasoline,Midsize-Large Station Wagons,4,2.0,18,24,20,,,,,,2.0L I4 Turbo,Turbocharged

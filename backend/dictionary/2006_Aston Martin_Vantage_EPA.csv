@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2006,Aston Martin,Vantage,V8 Vantage,4.3L V8,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,4.3,12,17,14,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2006,Aston Martin,Vantage,V8 Vantage,4.3L V8,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,4.3,12,17,14,,,,,,4.3L V8,

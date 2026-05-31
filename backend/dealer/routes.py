@@ -30,18 +30,23 @@ from backend.db.users_db import (
     get_user_by_login,
     save_user,
     sync_env_admin_user_row,
+    user_exists_by_email,
+    user_exists_by_username,
 )
 from backend.utils.client_ip import client_ip as _client_ip
 from backend.utils.dealer_vin_prefill import build_vehicle_prefill_from_vin
 from backend.utils.ip_rate_limit import allow_request
-from backend.utils.registration_validation import registration_form_error
+from backend.utils.registration_validation import (
+    normalize_registration_email,
+    normalize_registration_username,
+    registration_form_error,
+)
 from backend.utils.roles import (
-    ROLE_ADMIN,
     ROLE_DEALERSHIP_OWNER,
-    email_is_admin,
+    REGISTRATION_ADMIN_BLOCKED_MSG,
     is_admin_role,
     normalize_role,
-    username_is_admin,
+    registration_blocked_by_env_admin,
 )
 
 _log = logging.getLogger(__name__)
@@ -103,29 +108,31 @@ def dealer_register():
                 render_template("dealer_register.html", error="Too many registration attempts. Try again later."),
                 429,
             )
-        username = (request.form.get("username") or "").strip()
-        email = (request.form.get("email") or "").strip()
+        username = normalize_registration_username(request.form.get("username") or "")
+        email = normalize_registration_email(request.form.get("email") or "")
         password = (request.form.get("password") or "")
         org_name = (request.form.get("org_name") or "").strip()
         err = registration_form_error(username, email, password, min_password_len=_MIN_DEALER_PASSWORD)
         if err:
             return render_template("dealer_register.html", error=err)
-        is_admin = email_is_admin(email) or username_is_admin(username)
-        if is_admin:
-            role = ROLE_ADMIN
-            org_id = None
-        else:
-            if not org_name:
-                return render_template("dealer_register.html", error="Organization (dealership) name is required.")
-            try:
-                org_id = create_org(org_name)
-            except sqlite3.IntegrityError:
-                return render_template(
-                    "dealer_register.html", error="That organization name is already in use."
-                )
-            except ValueError as e:
-                return render_template("dealer_register.html", error=str(e))
-            role = ROLE_DEALERSHIP_OWNER
+        if registration_blocked_by_env_admin(email, username):
+            return render_template("dealer_register.html", error=REGISTRATION_ADMIN_BLOCKED_MSG)
+        if user_exists_by_email(email) or user_exists_by_username(username):
+            return render_template(
+                "dealer_register.html",
+                error="That username or email is already registered.",
+            )
+        if not org_name:
+            return render_template("dealer_register.html", error="Organization (dealership) name is required.")
+        try:
+            org_id = create_org(org_name)
+        except sqlite3.IntegrityError:
+            return render_template(
+                "dealer_register.html", error="That organization name is already in use."
+            )
+        except ValueError as e:
+            return render_template("dealer_register.html", error=str(e))
+        role = ROLE_DEALERSHIP_OWNER
         try:
             uid = save_user(username, email, password, role=role, org_id=org_id)
         except sqlite3.IntegrityError:

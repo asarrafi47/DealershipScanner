@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2025,Chrysler,Voyager,Voyager,3.6L V6,Automatic 9-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,3.6,19,28,22,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2025,Chrysler,Voyager,Voyager,3.6L V6,Automatic 9-spd,Front-Wheel Drive,Regular Gasoline,Minivan - 2WD,6,3.6,19,28,22,,,,,,3.6L V6,

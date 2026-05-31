@@ -8,6 +8,7 @@ from typing import Any, Iterator
 from urllib.parse import urlparse
 
 from backend.db.inventory_pg import is_inventory_postgres
+from backend.utils.car_serialize import serialize_car_for_listings_grid as _serialize_car_for_listings_grid
 
 # Default SQLite location for the public scanned inventory. Prefer ``backend/inventory.db``
 # when that file exists (common dev layout next to ``backend/incomplete_listings.db``); otherwise
@@ -33,7 +34,14 @@ def _default_inventory_db_path() -> str:
     return root_p
 
 from backend.utils.car_serialize import car_matches_engine_displacement_l_range, serialize_car_for_api
-from backend.utils.field_clean import compute_data_quality_score, is_effectively_empty
+from backend.utils.field_clean import (
+    coerce_body_style_stored,
+    coerce_fuel_type_stored,
+    compute_data_quality_score,
+    is_effectively_empty,
+    sort_body_style_presets,
+    sort_fuel_type_presets,
+)
 from backend.utils.interior_color_buckets import (
     infer_paint_color_buckets,
     parse_stored_buckets,
@@ -162,9 +170,95 @@ def ensure_cars_table_columns(cursor) -> None:
         ("internal_notes", "TEXT"),
         ("marked_for_review", "INTEGER"),
         ("price_provenance_json", "TEXT"),
+        ("forced_induction", "TEXT"),
     ]:
         if col not in existing:
             cursor.execute(f"ALTER TABLE cars ADD COLUMN {col} {ctype}")
+
+
+# Columns needed for listings grid JSON (excludes multi-MB enrichment blobs).
+LISTINGS_GRID_CAR_COLUMNS: tuple[str, ...] = (
+    "id",
+    "vin",
+    "title",
+    "year",
+    "make",
+    "model",
+    "trim",
+    "price",
+    "mileage",
+    "zip_code",
+    "fuel_type",
+    "cylinders",
+    "transmission",
+    "transmission_type",
+    "drivetrain",
+    "body_style",
+    "exterior_color",
+    "interior_color",
+    "interior_color_buckets",
+    "image_url",
+    "dealer_name",
+    "dealer_url",
+    "dealer_id",
+    "dealership_registry_id",
+    "stock_number",
+    "gallery",
+    "packages",
+    "engine_l",
+    "engine_description",
+    "condition",
+    "data_quality_score",
+    "listing_active",
+    "mpg_city",
+    "mpg_highway",
+    "msrp",
+    "carfax_url",
+    "source_url",
+    "scraped_at",
+    "first_seen_at",
+    "window_sticker_url",
+    "history_highlights",
+    "kbb_fetched_at",
+    "kbb_fair_purchase",
+    "kbb_range_low",
+    "kbb_range_high",
+    "kbb_private_party",
+    "kbb_trade_in",
+)
+
+
+def ensure_cars_listings_indexes(cursor) -> None:
+    """
+    Partial indexes for active listings: facet DISTINCTs, price sort, dealer/geo filters.
+
+    Idempotent (``IF NOT EXISTS``). Safe on SQLite and PostgreSQL.
+    """
+    active = "COALESCE(listing_active, 1) = 1"
+    stmts = [
+        f"CREATE INDEX IF NOT EXISTS idx_cars_active_price "
+        f"ON cars(price) WHERE {active}",
+        f"CREATE INDEX IF NOT EXISTS idx_cars_active_make "
+        f"ON cars(make) WHERE {active} AND make IS NOT NULL",
+        f"CREATE INDEX IF NOT EXISTS idx_cars_active_facet_combo "
+        f"ON cars(make, model, trim, fuel_type, cylinders, drivetrain, body_style) "
+        f"WHERE {active}",
+        f"CREATE INDEX IF NOT EXISTS idx_cars_active_registry "
+        f"ON cars(dealership_registry_id) WHERE {active} "
+        f"AND dealership_registry_id IS NOT NULL",
+        f"CREATE INDEX IF NOT EXISTS idx_cars_active_zip "
+        f"ON cars(zip_code) WHERE {active} AND zip_code IS NOT NULL",
+        f"CREATE INDEX IF NOT EXISTS idx_cars_active_packages "
+        f"ON cars(make, model) WHERE {active} AND packages IS NOT NULL "
+        f"AND packages NOT IN ('{{}}', '[]', 'null', '')",
+    ]
+    for sql in stmts:
+        cursor.execute(sql)
+    if not is_inventory_postgres():
+        try:
+            cursor.execute("ANALYZE cars")
+        except sqlite3.Error:
+            pass
 
 
 def ensure_scan_runs_table(cursor: sqlite3.Cursor) -> None:
@@ -221,6 +315,7 @@ def record_scan_outcomes(outcomes: list[Any], *, finished_at: str) -> int:
                 "gallery_vision": o.get("gallery_vision"),
                 "monroney_vision": o.get("monroney_vision"),
                 "reconcile": o.get("reconcile"),
+                "phase_secs": o.get("phase_secs"),
                 "vins_count": len(o.get("vins") or []) if isinstance(o.get("vins"), list) else None,
             }
             err = o.get("error")
@@ -479,6 +574,7 @@ def init_inventory_db():
     cursor.execute(
         "CREATE INDEX IF NOT EXISTS idx_cars_dealer_listing ON cars(dealer_id, listing_active)"
     )
+    ensure_cars_listings_indexes(cursor)
     ensure_nhtsa_vpic_cache_table(conn)
     ensure_scan_runs_table(cursor)
     try:
@@ -571,11 +667,34 @@ def _lookup_make_country(make: str):
     return None
 
 
+_incomplete_listings_check_fn = None
+_incomplete_car_id_set_cache: tuple[float, set[int]] | None = None
+
+
+def _incomplete_car_ids_for_listings() -> set[int]:
+    """Cached incomplete car ids for grid filter + ``public_incomplete`` pill (O(1) per row)."""
+    global _incomplete_car_id_set_cache
+    token = _inventory_listings_cache_token()
+    if _incomplete_car_id_set_cache is not None and _incomplete_car_id_set_cache[0] == token:
+        return _incomplete_car_id_set_cache[1]
+    try:
+        from backend.db.incomplete_listings_db import get_incomplete_car_id_set
+
+        ids = get_incomplete_car_id_set()
+    except Exception:
+        ids = set()
+    _incomplete_car_id_set_cache = (token, ids)
+    return ids
+
+
 def is_car_incomplete(car: dict) -> bool:
     """True when the row should be hidden from public listings (subset of spec sheet)."""
-    from backend.utils.listing_completeness import is_car_incomplete_for_public_listings
+    global _incomplete_listings_check_fn
+    if _incomplete_listings_check_fn is None:
+        from backend.utils.listing_completeness import is_car_incomplete_for_public_listings
 
-    return is_car_incomplete_for_public_listings(car)
+        _incomplete_listings_check_fn = is_car_incomplete_for_public_listings
+    return _incomplete_listings_check_fn(car)
 
 
 def listings_include_incomplete_cars() -> bool:
@@ -598,14 +717,34 @@ def listings_include_incomplete_cars() -> bool:
     return not is_production_env()
 
 
-def serialize_car_for_listings_grid(car: dict) -> dict[str, Any]:
+def serialize_car_for_listings_grid(
+    car: dict,
+    *,
+    incomplete_ids: set[int] | None = None,
+) -> dict[str, Any]:
     """
-    ``serialize_car_for_api`` plus optional ``public_incomplete`` when that mode is enabled.
+    Lightweight grid JSON for listings (see ``car_serialize.serialize_car_for_listings_grid``).
     """
-    ser = serialize_car_for_api(car, include_verified=False)
-    if listings_include_incomplete_cars() and is_car_incomplete(car):
-        ser["public_incomplete"] = True
-    return ser
+    out = _serialize_car_for_listings_grid(car)
+    if listings_include_incomplete_cars():
+        ids = incomplete_ids if incomplete_ids is not None else _incomplete_car_ids_for_listings()
+        try:
+            cid = int(car.get("id") or 0)
+        except (TypeError, ValueError):
+            cid = 0
+        if cid and cid in ids:
+            out["public_incomplete"] = True
+    return out
+
+
+def listings_grid_bootstrap_cars(limit: int = 48) -> list[dict[str, Any]]:
+    """First page of cached grid cars for SSR (instant paint while full fleet loads)."""
+    try:
+        lim = max(1, min(int(limit), 200))
+    except (TypeError, ValueError):
+        lim = 48
+    cars = listings_grid_serialized_cars()
+    return cars[:lim] if cars else []
 
 
 def refresh_car_data_quality_score(car_id: int) -> None:
@@ -756,6 +895,57 @@ def link_cars_to_dealership_registry(
     return int(total)
 
 
+_registry_backfill_ran = False
+
+
+def backfill_dealership_registry_ids(*, conn=None) -> int:
+    """
+    Set ``dealership_registry_id`` on active cars where host matches registry URLs.
+
+    Idempotent; safe to run after scans or before listings geo load.
+    """
+    from backend.listings.dealer_registry_match import registry_id_by_dealer_host
+
+    total = 0
+    if conn is not None:
+        host_to_reg = registry_id_by_dealer_host(conn)
+        cursor = conn.cursor()
+        for host, reg_id in host_to_reg.items():
+            cursor.execute(
+                """
+                UPDATE cars
+                SET dealership_registry_id = ?
+                WHERE (COALESCE(listing_active, 1) = 1)
+                  AND (dealership_registry_id IS NULL
+                       OR CAST(dealership_registry_id AS INTEGER) <= 0)
+                  AND LOWER(IFNULL(dealer_url, '')) LIKE ?
+                """,
+                (reg_id, f"%{host.lower()}%"),
+            )
+            total += int(cursor.rowcount or 0)
+        conn.commit()
+        return total
+
+    with db_conn() as c:
+        return backfill_dealership_registry_ids(conn=c)
+
+
+def ensure_dealership_registry_backfill() -> int:
+    """Run host→registry backfill once per process (listings geo / first search)."""
+    global _registry_backfill_ran
+    if _registry_backfill_ran:
+        return 0
+    _registry_backfill_ran = True
+    try:
+        n = backfill_dealership_registry_ids()
+        if n:
+            _log.info("Backfilled dealership_registry_id on %s listing(s)", n)
+        return n
+    except Exception as e:
+        _log.warning("dealership_registry backfill skipped: %s", e)
+        return 0
+
+
 def _normalized_interior_bucket_filters(raw) -> set[str] | None:
     if not raw:
         return None
@@ -781,7 +971,10 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 dealer_registry_ids=None,
                 candidate_ids=None,
                 packages_json_contains=None,
+                packages_json_contains_list=None,
                 trim_contains=None,
+                trim_contains_list=None,
+                vehicle_or=None,
                 vin=None,
                 include_incomplete: bool | None = None):
     """
@@ -794,6 +987,9 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     ``packages_json_contains``: optional **literal** substring (case-insensitive) matched against
     the raw ``cars.packages`` TEXT (uses ``INSTR``, not ``LIKE``, so ``%``/``_`` in the needle are
     not SQL wildcards). Hybrid search: ``backend.utils.hybrid_search`` kwargs builder.
+
+    ``packages_json_contains_list``: optional list of substrings; a row matches if **any** needle
+    appears in ``cars.packages`` (OR). Sidebar ``package`` checkboxes map here via GET ``/listings``.
 
     ``max_price`` / ``max_mileage`` when set to ``0`` are applied; they are not treated as
     "unset." ``dealership_registry_id`` must be a positive int; invalid values are ignored.
@@ -838,27 +1034,23 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
             query += f" AND id IN ({_placeholders(ids)})"
             params.extend(ids)
 
+    dealer_registry_filter_ids: list[int] = []
     if dealership_registry_id is not None:
         try:
             dr = int(dealership_registry_id)
         except (TypeError, ValueError):
             dr = 0
         if dr > 0:
-            query += " AND dealership_registry_id = ?"
-            params.append(dr)
+            dealer_registry_filter_ids = [dr]
 
     if dealer_registry_ids:
-        valid_ids = []
         for x in dealer_registry_ids:
             try:
                 i = int(x)
-                if i > 0:
-                    valid_ids.append(i)
+                if i > 0 and i not in dealer_registry_filter_ids:
+                    dealer_registry_filter_ids.append(i)
             except (TypeError, ValueError):
                 continue
-        if valid_ids:
-            query += f" AND dealership_registry_id IN ({_placeholders(valid_ids)})"
-            params.extend(valid_ids)
 
     if vin and str(vin).strip():
         vnorm = re.sub(r"\s+", "", str(vin).strip().upper())[:20]
@@ -895,8 +1087,38 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
             makes = list(dict.fromkeys(normalized))
         else:
             makes = list(makes_for_countries)
-    add_multi_ci("make", makes)
-    add_multi_ci("model", models)
+
+    vehicle_or_clauses: list[str] = []
+    if vehicle_or and isinstance(vehicle_or, list) and len(vehicle_or) >= 2:
+        for branch in vehicle_or[:8]:
+            if not isinstance(branch, dict):
+                continue
+            sub_parts: list[str] = []
+            mk = branch.get("make")
+            if mk and str(mk).strip():
+                sub_parts.append("LOWER(TRIM(IFNULL(make, ''))) = ?")
+                params.append(str(mk).lower().strip())
+            branch_models = branch.get("models") or branch.get("model")
+            if branch_models:
+                if isinstance(branch_models, str):
+                    branch_models = [branch_models]
+                lowered_models = [str(v).lower().strip() for v in branch_models if str(v).strip()]
+                if lowered_models:
+                    sub_parts.append(
+                        f"LOWER(TRIM(IFNULL(model, ''))) IN ({_placeholders(lowered_models)})"
+                    )
+                    params.extend(lowered_models)
+            branch_trim = branch.get("trim_contains")
+            if branch_trim and str(branch_trim).strip():
+                sub_parts.append("INSTR(LOWER(IFNULL(trim, '')), ?) > 0")
+                params.append(str(branch_trim).strip().lower()[:100])
+            if sub_parts:
+                vehicle_or_clauses.append("(" + " AND ".join(sub_parts) + ")")
+        if vehicle_or_clauses:
+            query += " AND (" + " OR ".join(vehicle_or_clauses) + ")"
+    else:
+        add_multi_ci("make", makes)
+        add_multi_ci("model", models)
     add_multi_ci("trim", trims)
     add_multi("fuel_type", fuel_types)
     add_multi("cylinders", [int(c) for c in cylinders] if cylinders else None)
@@ -904,15 +1126,38 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     add_multi("drivetrain", drivetrains)
     add_multi_ci("body_style", body_styles)
 
+    pkg_needles: list[str] = []
+    seen_pkg: set[str] = set()
     if packages_json_contains and str(packages_json_contains).strip():
         needle = str(packages_json_contains).strip().lower()
         if len(needle) > 200:
             needle = needle[:200]
-        # INSTR: literal substring (avoids ``%`` / ``_`` wildcard meaning in ``LIKE``)
-        query += " AND INSTR(LOWER(IFNULL(packages, '')), ?) > 0"
-        params.append(needle)
+        if needle not in seen_pkg:
+            seen_pkg.add(needle)
+            pkg_needles.append(needle)
+    if packages_json_contains_list:
+        for raw_needle in packages_json_contains_list:
+            needle = str(raw_needle or "").strip().lower()
+            if not needle or needle in seen_pkg:
+                continue
+            if len(needle) > 200:
+                needle = needle[:200]
+            seen_pkg.add(needle)
+            pkg_needles.append(needle)
+    if pkg_needles:
+        query += " AND (" + " OR ".join(
+            ["INSTR(LOWER(IFNULL(packages, '')), ?) > 0"] * len(pkg_needles)
+        ) + ")"
+        params.extend(pkg_needles)
 
-    if trim_contains and str(trim_contains).strip():
+    if trim_contains_list:
+        needles = [str(t).strip().lower()[:100] for t in trim_contains_list if str(t).strip()]
+        if needles:
+            query += " AND (" + " OR ".join(
+                ["INSTR(LOWER(IFNULL(trim, '')), ?) > 0"] * len(needles)
+            ) + ")"
+            params.extend(needles)
+    elif trim_contains and str(trim_contains).strip():
         needle = str(trim_contains).strip().lower()
         if len(needle) > 100:
             needle = needle[:100]
@@ -944,6 +1189,20 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
             params.append(mm)
 
     with db_conn(row_factory=sqlite3.Row) as conn:
+        if dealer_registry_filter_ids:
+            from backend.listings.dealer_registry_match import (
+                dealer_registry_sql_filter,
+                registry_id_by_dealer_host,
+            )
+
+            host_map = registry_id_by_dealer_host(conn)
+            clause, extra = dealer_registry_sql_filter(
+                dealer_registry_filter_ids,
+                host_map,
+                placeholders_fn=_placeholders,
+            )
+            query += clause
+            params.extend(extra)
         cursor = conn.cursor()
         cursor.execute(query, params)
         results = [dict(row) for row in cursor.fetchall()]
@@ -989,34 +1248,15 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
         origin = zip_to_coords(zip_code)
         if origin is None:
             return []
-        # Build dealer_url → coords lookup for fallback (cars with null zip_code)
-        dealer_geo: dict[str, tuple] = {}
+        from backend.db.dealer_geo import load_dealer_geo_index, lookup_dealer_coords
+
         with db_conn() as _gc:
-            try:
-                for _url, _lat, _lon in _gc.execute(
-                    "SELECT dealer_url, lat, lon FROM dealer_geopoints WHERE lat IS NOT NULL AND lon IS NOT NULL"
-                ).fetchall():
-                    if _url:
-                        dealer_geo[str(_url).strip()] = (float(_lat), float(_lon))
-            except Exception:
-                pass
-            if not dealer_geo:
-                try:
-                    for _url, _lat, _lon in _gc.execute(
-                        "SELECT website_url, latitude, longitude FROM dealerships "
-                        "WHERE latitude IS NOT NULL AND longitude IS NOT NULL"
-                    ).fetchall():
-                        if _url:
-                            dealer_geo[str(_url).strip()] = (float(_lat), float(_lon))
-                except Exception:
-                    pass
+            dealer_geo = load_dealer_geo_index(_gc)
         filtered = []
         for car in results:
-            dest = zip_to_coords(car.get("zip_code", "") or "")
+            dest = lookup_dealer_coords(str(car.get("dealer_url") or ""), dealer_geo)
             if not dest:
-                # Fallback: dealer geocoords
-                du = str(car.get("dealer_url") or "").strip()
-                dest = dealer_geo.get(du)
+                dest = zip_to_coords(car.get("zip_code", "") or "")
             if dest:
                 dist = haversine(origin[0], origin[1], dest[0], dest[1])
                 if dist <= radius_miles:
@@ -1035,6 +1275,79 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     base = results if inc else [c for c in results if not is_car_incomplete(c)]
     complete = _post_sql_filters(base)
     return _sort_cars_by_price(complete)
+
+
+def search_cars_by_make_model_pairs(
+    pairs: list[tuple[str, str]],
+    *,
+    zip_code: str | None = None,
+    radius_miles: float | None = None,
+    include_incomplete: bool | None = None,
+) -> list[dict]:
+    """Fetch active cars matching any (make, model) pair in one SQL round-trip."""
+    if not pairs:
+        return []
+    if include_incomplete is None:
+        inc = listings_include_incomplete_cars()
+    else:
+        inc = bool(include_incomplete)
+
+    clauses: list[str] = []
+    params: list[Any] = []
+    seen: set[tuple[str, str]] = set()
+    for make, model in pairs[:8]:
+        mk = str(make or "").strip().lower()
+        mo = str(model or "").strip().lower()
+        if not mk or not mo or (mk, mo) in seen:
+            continue
+        seen.add((mk, mo))
+        clauses.append(
+            "(LOWER(TRIM(IFNULL(make, ''))) = ? AND LOWER(TRIM(IFNULL(model, ''))) = ?)"
+        )
+        params.extend([mk, mo])
+    if not clauses:
+        return []
+
+    from backend.db.geo import haversine, zip_to_coords
+
+    query = (
+        "SELECT * FROM cars WHERE (COALESCE(listing_active, 1) = 1)"
+        f" AND ({' OR '.join(clauses)})"
+    )
+    with db_conn(row_factory=sqlite3.Row) as conn:
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        results = [dict(row) for row in cursor.fetchall()]
+
+    if zip_code and radius_miles:
+        origin = zip_to_coords(zip_code)
+        if origin is None:
+            return []
+        from backend.db.dealer_geo import load_dealer_geo_index, lookup_dealer_coords
+
+        with db_conn() as _gc:
+            dealer_geo = load_dealer_geo_index(_gc)
+        filtered = []
+        for car in results:
+            dest = lookup_dealer_coords(str(car.get("dealer_url") or ""), dealer_geo)
+            if not dest:
+                dest = zip_to_coords(car.get("zip_code", "") or "")
+            if dest:
+                dist = haversine(origin[0], origin[1], dest[0], dest[1])
+                if dist <= radius_miles:
+                    car["distance_miles"] = round(dist, 1)
+                    filtered.append(car)
+        for c in filtered:
+            _parse_car_gallery(c)
+            _parse_car_history_highlights(c)
+        base = filtered if inc else [c for c in filtered if not is_car_incomplete(c)]
+        return sorted(base, key=lambda c: c.get("distance_miles", 0))
+
+    for c in results:
+        _parse_car_gallery(c)
+        _parse_car_history_highlights(c)
+    base = results if inc else [c for c in results if not is_car_incomplete(c)]
+    return _sort_cars_by_price(base)
 
 
 def save_car(user_id: int, car_id: int) -> None:
@@ -1264,6 +1577,33 @@ def _normalize_make_capitalization(make: str) -> str:
     return m[0].upper() + m[1:].lower() if m else m
 
 
+def _normalize_facet_key(value: str | None) -> str:
+    return re.sub(r"\s+", " ", (value or "").strip()).lower()
+
+
+def _canonical_facet_label(value: str, *, variants: list[str]) -> str:
+    """Pick one display label for case/spacing variants (``LARIAT`` vs ``Lariat``)."""
+    pool = []
+    for v in variants:
+        s = re.sub(r"\s+", " ", (v or "").strip())
+        if s and s not in pool:
+            pool.append(s)
+    if not pool:
+        return (value or "").strip()
+    if len(pool) == 1:
+        return pool[0]
+
+    def _rank(v: str) -> tuple:
+        letters = sum(c.isalpha() for c in v)
+        all_caps = letters > 0 and v == v.upper()
+        has_lower = any(c.islower() for c in v)
+        has_upper = any(c.isupper() for c in v)
+        mixed = has_lower and has_upper
+        return (mixed, not all_caps, v == v.title(), len(v))
+
+    return max(pool, key=_rank)
+
+
 def _facet_make_valid(make) -> bool:
     """Reject polluted ``make`` values (numeric trims, model names) for facet lists."""
     if is_effectively_empty(make):
@@ -1290,35 +1630,171 @@ def _facet_transmission_sane(val) -> bool:
     return True
 
 
+_facet_options_cache_token: float | None = None
+_facet_options_cache_value: dict[str, Any] | None = None
+_geo_coords_cache_token: float | None = None
+_geo_coords_cache_value: dict[str, Any] | None = None
+_grid_cars_cache_token: float | None = None
+_grid_cars_cache_value: list[dict[str, Any]] | None = None
+_LISTINGS_GRID_CACHE_REV = 4
+
+
+def _inventory_listings_cache_token() -> float:
+    """Invalidate listings caches when SQLite inventory mtime changes (60s bucket on Postgres)."""
+    if is_inventory_postgres():
+        import time
+
+        return float(int(time.time()) // 60)
+    try:
+        return os.path.getmtime(DB_PATH)
+    except OSError:
+        return 0.0
+
+
+def clear_inventory_listings_cache() -> None:
+    """Drop facet/grid caches (tests or admin tools after bulk inventory writes)."""
+    global _facet_options_cache_token, _facet_options_cache_value
+    global _geo_coords_cache_token, _geo_coords_cache_value
+    global _grid_cars_cache_token, _grid_cars_cache_value
+    global _incomplete_car_id_set_cache
+    _facet_options_cache_token = None
+    _facet_options_cache_value = None
+    _geo_coords_cache_token = None
+    _geo_coords_cache_value = None
+    _grid_cars_cache_token = None
+    _grid_cars_cache_value = None
+    _incomplete_car_id_set_cache = None
+
+
+def public_listings_count() -> int:
+    """Approximate count of active inventory rows for marketing/stats (cheap COUNT)."""
+    active = "(COALESCE(listing_active, 1) = 1)"
+    with db_conn() as conn:
+        row = conn.execute(f"SELECT COUNT(*) AS n FROM cars WHERE {active}").fetchone()
+    try:
+        return max(0, int(row[0] if row else 0))
+    except (TypeError, ValueError, IndexError):
+        return 0
+
+
 def listings_grid_serialized_cars() -> list[dict[str, Any]]:
     """
     Per-car JSON for the listings grid (``options.all_cars`` and ``GET /api/listings/cars``).
     Honors :func:`listings_include_incomplete_cars` and :func:`serialize_car_for_listings_grid`.
     """
+    global _grid_cars_cache_token, _grid_cars_cache_value
+    token = _inventory_listings_cache_token()
+    if _grid_cars_cache_value is not None and _grid_cars_cache_token == token:
+        return _grid_cars_cache_value
+
     active = "(COALESCE(listing_active, 1) = 1)"
     inc = listings_include_incomplete_cars()
+    cols = ", ".join(LISTINGS_GRID_CAR_COLUMNS)
     with db_conn(row_factory=sqlite3.Row) as conn2:
         cur = conn2.cursor()
-        cur.execute(f"SELECT * FROM cars WHERE {active} ORDER BY price ASC")
+        cur.execute(
+            f"SELECT {cols} FROM cars WHERE {active} ORDER BY price ASC"
+        )
         all_cars_raw = [dict(r) for r in cur.fetchall()]
+    incomplete_ids = _incomplete_car_ids_for_listings()
     for c in all_cars_raw:
         _parse_car_gallery(c)
-        _parse_car_history_highlights(c)
     out: list[dict[str, Any]] = []
     for c in all_cars_raw:
-        if not inc and is_car_incomplete(c):
-            continue
-        out.append(serialize_car_for_listings_grid(c))
+        if not inc:
+            cid = c.get("id")
+            try:
+                cid_int = int(cid)
+            except (TypeError, ValueError):
+                cid_int = 0
+            if cid_int in incomplete_ids:
+                continue
+        out.append(serialize_car_for_listings_grid(c, incomplete_ids=incomplete_ids))
     # Cars with images float to the top; no-image cars sink to the bottom.
     out.sort(key=lambda c: (0 if c.get("image_url") or c.get("gallery") else 1, c.get("price") or 0))
+    _grid_cars_cache_token = token
+    _grid_cars_cache_value = out
     return out
 
 
-def get_filter_options():
+def listings_grid_cache_etag() -> str:
+    """Cheap cache validator for ``GET /api/listings/cars`` (If-None-Match / 304)."""
+    token = _inventory_listings_cache_token()
+    if _grid_cars_cache_value is not None and _grid_cars_cache_token == token:
+        n = len(_grid_cars_cache_value)
+    else:
+        with db_conn() as conn:
+            row = conn.execute(
+                "SELECT COUNT(*) FROM cars WHERE (COALESCE(listing_active, 1) = 1)"
+            ).fetchone()
+            n = int(row[0] if row else 0)
+    return f'W/"{_LISTINGS_GRID_CACHE_REV}-{token}-{n}"'
+
+
+def listings_geo_coords_maps() -> dict[str, Any]:
+    """
+    ZIP + dealer coordinate maps for client-side radius filtering.
+    Loaded lazily via ``GET /api/listings/geo-coords`` (not embedded in HTML).
+    """
+    global _geo_coords_cache_token, _geo_coords_cache_value
+    token = _inventory_listings_cache_token()
+    if _geo_coords_cache_value is not None and _geo_coords_cache_token == token:
+        return _geo_coords_cache_value
+
+    ensure_dealership_registry_backfill()
+
+    active = "(COALESCE(listing_active, 1) = 1)"
+    from backend.db.dealer_geo import (
+        dealer_coords_client_map,
+        load_dealer_geo_index,
+        load_registry_coords_map,
+    )
+    from backend.db.geo import zip_to_coords
+    from backend.listings.dealer_registry_match import registry_id_by_dealer_host
+
+    zip_coords: dict[str, list[float]] = {}
+    registry_id_by_host: dict[str, int] = {}
+    registry_coords: dict[str, list[float]] = {}
+    with db_conn() as conn:
+        dealer_coords = dealer_coords_client_map(load_dealer_geo_index(conn))
+        registry_coords = load_registry_coords_map(conn)
+        raw_host_map = registry_id_by_dealer_host(conn)
+        registry_id_by_host = {h: rid for h, rid in raw_host_map.items()}
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT DISTINCT zip_code FROM cars WHERE {active} AND zip_code IS NOT NULL")
+        unique_zips = {row[0] for row in cursor.fetchall()}
+    for zip_code in unique_zips:
+        if zip_code and str(zip_code).strip():
+            coords = zip_to_coords(str(zip_code).strip())
+            if coords:
+                zip_coords[str(zip_code).strip()] = [float(coords[0]), float(coords[1])]
+    out = {
+        "zip_coords": zip_coords,
+        "dealer_coords": dealer_coords,
+        "registry_coords": registry_coords,
+        "registry_id_by_host": registry_id_by_host,
+    }
+    _geo_coords_cache_token = token
+    _geo_coords_cache_value = out
+    return out
+
+
+def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
     """
     Returns all filter option data with full relationship maps so the
     frontend can do bidirectional cascading across every dimension.
+
+    ``include_all_cars`` embeds the full grid payload (~12MB); listings HTML loads
+    cars via ``GET /api/listings/cars`` instead (``include_all_cars=False``, default).
+    Facet metadata is cached until inventory.db changes.
     """
+    global _facet_options_cache_token, _facet_options_cache_value
+    token = _inventory_listings_cache_token()
+    if _facet_options_cache_value is not None and _facet_options_cache_token == token:
+        out = dict(_facet_options_cache_value)
+        out["all_cars"] = listings_grid_serialized_cars() if include_all_cars else []
+        return out
+
     active = "(COALESCE(listing_active, 1) = 1)"
 
     with db_conn() as conn:
@@ -1345,7 +1821,7 @@ def get_filter_options():
                         result.append(normalized)
             return result
 
-        fuel_types      = distinct("fuel_type")
+        fuel_types      = sort_fuel_type_presets(distinct("fuel_type"))
         cylinders       = distinct("cylinders")
         transmissions   = [t for t in distinct("transmission") if _facet_transmission_sane(t)]
         drivetrains     = distinct("drivetrain")
@@ -1368,7 +1844,7 @@ def get_filter_options():
                 int_facet_ids.update(infer_paint_color_buckets(int_raw, None))
         exterior_colors = sort_paint_family_ids(ext_facet_ids)
         interior_colors = sort_paint_family_ids(int_facet_ids)
-        body_styles_list = distinct_title_cased("body_style")
+        body_styles_list = sort_body_style_presets(distinct("body_style"))
 
         # Extract packages per make/model for filter cascade
         package_rows: list[dict[str, str]] = []
@@ -1436,29 +1912,57 @@ def get_filter_options():
                 trim = None
             if is_effectively_empty(fuel_type):
                 fuel_type = None
+            else:
+                fuel_type = coerce_fuel_type_stored(fuel_type)
             if is_effectively_empty(drive):
                 drive = None
             if is_effectively_empty(body_st):
                 body_st = None
+            else:
+                body_st = coerce_body_style_stored(body_st)
             car_rows.append((make, model, trim, fuel_type, cyl, drive, body_st))
 
-    # Derive distinct makes/models/trims preserving order, with normalized make capitalization
-    seen_makes  = []
-    seen_models = []  # (make, model)
-    seen_trims  = []  # (make, model, trim)
+    # Derive distinct makes/models/trims with normalized keys (one UI option per logical value).
+    make_variants: dict[str, list[str]] = {}
+    model_variants: dict[tuple[str, str], list[str]] = {}
+    trim_variants: dict[tuple[str, str, str], list[str]] = {}
     for row in car_rows:
         make, model, trim = row[0], row[1], row[2]
-        # Normalize make capitalization to avoid duplicates (e.g., "cadillac" vs "Cadillac")
         make_normalized = _normalize_make_capitalization(make)
-        if make_normalized not in seen_makes:
-            seen_makes.append(make_normalized)
-        if (make_normalized, model) not in seen_models:
-            seen_models.append((make_normalized, model))
-        if (make_normalized, model, trim) not in seen_trims:
-            seen_trims.append((make_normalized, model, trim))
+        make_key = _normalize_facet_key(make_normalized)
+        make_variants.setdefault(make_key, [])
+        if make_normalized not in make_variants[make_key]:
+            make_variants[make_key].append(make_normalized)
 
-    # Full per-car data for client-side live filtering and rendering
-    all_cars = listings_grid_serialized_cars()
+        model_key = _normalize_facet_key(model)
+        mk = (make_key, model_key)
+        model_variants.setdefault(mk, [])
+        if model not in model_variants[mk]:
+            model_variants[mk].append(model)
+
+        if trim is not None and str(trim).strip():
+            trim_key = _normalize_facet_key(trim)
+            tk = (make_key, model_key, trim_key)
+            trim_variants.setdefault(tk, [])
+            if trim not in trim_variants[tk]:
+                trim_variants[tk].append(trim)
+
+    seen_makes: list[str] = []
+    for make_key in sorted(make_variants.keys()):
+        seen_makes.append(_canonical_facet_label("", variants=make_variants[make_key]))
+
+    seen_models: list[tuple[str, str]] = []
+    for (make_key, model_key) in sorted(model_variants.keys()):
+        make_label = _canonical_facet_label("", variants=make_variants[make_key])
+        model_label = _canonical_facet_label("", variants=model_variants[(make_key, model_key)])
+        seen_models.append((make_label, model_label))
+
+    seen_trims: list[tuple[str, str, str | None]] = []
+    for (make_key, model_key, trim_key) in sorted(trim_variants.keys()):
+        make_label = _canonical_facet_label("", variants=make_variants[make_key])
+        model_label = _canonical_facet_label("", variants=model_variants[(make_key, model_key)])
+        trim_label = _canonical_facet_label("", variants=trim_variants[(make_key, model_key, trim_key)])
+        seen_trims.append((make_label, model_label, trim_label))
 
     # Countries that have at least one make in our DB
     country_set = set()
@@ -1473,47 +1977,7 @@ def get_filter_options():
         lst.sort()
     countries = sorted(country_set)
 
-    # Build dealer_url → [lat, lon] mapping.
-    # Primary: dealer_geopoints table (if it exists).
-    # Fallback: dealerships table (latitude/longitude columns, website_url as key).
-    dealer_coords: dict[str, list[float]] = {}
-    with db_conn() as conn:
-        try:
-            rows = conn.execute(
-                "SELECT dealer_url, lat, lon FROM dealer_geopoints "
-                "WHERE lat IS NOT NULL AND lon IS NOT NULL"
-            ).fetchall()
-            for dealer_url, lat, lon in rows:
-                if dealer_url:
-                    dealer_coords[str(dealer_url).strip()] = [float(lat), float(lon)]
-        except Exception:
-            pass
-        if not dealer_coords:
-            try:
-                rows = conn.execute(
-                    "SELECT website_url, latitude, longitude FROM dealerships "
-                    "WHERE latitude IS NOT NULL AND longitude IS NOT NULL"
-                ).fetchall()
-                for website_url, lat, lon in rows:
-                    if website_url:
-                        dealer_coords[str(website_url).strip()] = [float(lat), float(lon)]
-            except Exception:
-                pass
-
-    # Legacy ZIP_COORDS kept for backward compat (may be empty when all car zip_codes are null).
-    from backend.db.geo import zip_to_coords
-    zip_coords: dict[str, list[float]] = {}
-    with db_conn() as conn:
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT DISTINCT zip_code FROM cars WHERE {active} AND zip_code IS NOT NULL")
-        unique_zips = {row[0] for row in cursor.fetchall()}
-    for zip_code in unique_zips:
-        if zip_code and str(zip_code).strip():
-            coords = zip_to_coords(str(zip_code).strip())
-            if coords:
-                zip_coords[str(zip_code).strip()] = [float(coords[0]), float(coords[1])]
-
-    return {
+    facets: dict[str, Any] = {
         "makes":           seen_makes,
         "model_rows":      seen_models,
         "trim_rows":       seen_trims,
@@ -1541,10 +2005,12 @@ def get_filter_options():
             }
             for r in car_rows
         ],
-        # Complete car objects for client-side live rendering
-        "all_cars":        all_cars,
-        # ZIP code → [latitude, longitude] mapping for radius filtering
-        "zip_coords":      zip_coords,
-        # dealer_url → [lat, lon] mapping for dealer-based radius filtering
-        "dealer_coords":   dealer_coords,
+        # Geo maps are lazy-loaded via GET /api/listings/geo-coords (keeps HTML fast).
+        "zip_coords":      {},
+        "dealer_coords":   {},
     }
+    _facet_options_cache_token = token
+    _facet_options_cache_value = dict(facets)
+    out = dict(facets)
+    out["all_cars"] = listings_grid_serialized_cars() if include_all_cars else []
+    return out

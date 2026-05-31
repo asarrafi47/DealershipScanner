@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2025,Maserati,Grancabrio,Folgore,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Subcompact Cars,,,83,81,82,,,,,
-2025,Maserati,Grancabrio,Trofeo,3.0L V6 (SIDI & PFI),Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,17,26,20,,,,,
-2025,Maserati,Grancabrio,Modena,3.0L V6 (SIDI & PFI),Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,17,26,20,,,,,
-2025,Maserati,Grancabrio,Grancabrio,3.0L V6 (SIDI & PFI),Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,17,26,20,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2025,Maserati,Grancabrio,Folgore,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Subcompact Cars,,,83,81,82,,,,,,EV Electricity,
+2025,Maserati,Grancabrio,Trofeo,3.0L V6 (SIDI & PFI),Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,17,26,20,,,,,,3.0L V6 Twin Turbo,Twin Turbocharged
+2025,Maserati,Grancabrio,Modena,3.0L V6 (SIDI & PFI),Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,17,26,20,,,,,,3.0L V6 Turbo,Turbocharged
+2025,Maserati,Grancabrio,Grancabrio,3.0L V6 (SIDI & PFI),Automatic 8-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,6,3.0,17,26,20,,,,,,3.0L V6 Turbo,Turbocharged

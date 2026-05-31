@@ -42,8 +42,8 @@ def test_legacy_mfa_qr_routes_redirect(monkeypatch, tmp_path):
         )
         rv = client.get("/mfa/qr-wait", follow_redirects=False)
         assert rv.status_code in (302, 303)
-        assert (rv.headers.get("Location") or "").endswith("/dashboard")
+        assert (rv.headers.get("Location") or "").endswith("/home")
 
         rv2 = client.get("/mfa/qr-confirm/fake-token", follow_redirects=False)
         assert rv2.status_code in (302, 303)
-        assert (rv2.headers.get("Location") or "").endswith("/dashboard")
+        assert (rv2.headers.get("Location") or "").endswith("/home")

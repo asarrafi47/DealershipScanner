@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2002,Lotus,Esprit,V8,"3.5L V8 (GUZZLER FFS,TURBO)",Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,3.5,14,21,16,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2002,Lotus,Esprit,V8,"3.5L V8 (GUZZLER FFS,TURBO)",Manual 5-spd,Rear-Wheel Drive,Premium Gasoline,Two Seaters,8,3.5,14,21,16,,,,,,3.5L V8 Turbo,Turbocharged

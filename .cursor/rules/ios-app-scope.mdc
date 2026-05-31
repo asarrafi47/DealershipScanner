@@ -1,0 +1,49 @@
+---
+description: iOS app is isolated under ios/ — do not edit website or unrelated backend when working on native app UI.
+globs:
+  - ios/**
+---
+
+# iOS app scope (mandatory)
+
+## Product boundary
+
+**Sarrafi Cars iOS** (`ios/`) is a separate native app, not the website. The website is `frontend/` + server-rendered templates.
+
+## Where to edit
+
+| Task | Edit only |
+|------|-----------|
+| SwiftUI screens, navigation, filters, maps | `ios/SarrafiCars/SarrafiCars/**` |
+| iOS docs, architecture, API notes | `ios/**` |
+| Xcode project | `ios/SarrafiCars/SarrafiCars.xcodeproj/` |
+
+## Where NOT to edit (iOS-only tasks)
+
+- `frontend/templates/`, `frontend/static/` — website
+- `backend/listings/routes.py`, listings HTML — website
+- Unrelated `backend/` refactors, dealer tools, scanners
+
+## Backend exception
+
+Touch `backend/main.py` (or mobile tests) **only** when the user explicitly needs a new/changed **JSON API** for the app. For backend-only iOS work, follow **backend-ios-api-scope** (`.cursor/rules/backend-ios-api-scope.mdc`):
+
+1. Minimal API diff only.
+2. Update `ios/docs/API_CONTRACT.md` and `backend/mobile/contract.py`.
+3. Follow `docs/SECURITY_MASTER_TODO.md` for auth/CSRF work.
+
+## Module layout (see `ios/ARCHITECTURE.md`)
+
+- `App/` — entry, tabs, `AppConfig`, `AppState`
+- `Core/Theme`, `Core/Components` — shared UI
+- `Networking/` — `APIClient`, `Models`
+- `Features/<Feature>/` — one folder per tab/flow
+- `Web/` — WKWebView embeds only
+- `Resources/` — plist, assets
+- `Legacy/` — not compiled; do not revive without request
+
+## Do not
+
+- Move iOS logic into `frontend/static/main.js` or listings templates.
+- Add iOS-only UI to the website “for parity” unless the user asks for website work.
+- Put new Swift files in the flat `SarrafiCars/` root — use the feature folders above.

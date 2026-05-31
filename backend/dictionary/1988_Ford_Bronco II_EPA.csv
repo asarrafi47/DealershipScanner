@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1988,Ford,Bronco II,2WD,2.9L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,6,2.9,15,20,17,,,,,
-1988,Ford,Bronco II,2WD,2.9L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,6,2.9,17,22,19,,,,,
-1988,Ford,Bronco II,4WD,2.9L V6 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,2.9,15,20,17,,,,,
-1988,Ford,Bronco II,4WD,2.9L V6 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,2.9,16,21,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1988,Ford,Bronco II,2WD,2.9L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,6,2.9,15,20,17,,,,,,2.9L V6 Twin Turbo,Twin Turbocharged
+1988,Ford,Bronco II,2WD,2.9L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicle 2WD,6,2.9,17,22,19,,,,,,2.9L V6 Twin Turbo,Twin Turbocharged
+1988,Ford,Bronco II,4WD,2.9L V6 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,2.9,15,20,17,,,,,,2.9L V6 Twin Turbo,Twin Turbocharged
+1988,Ford,Bronco II,4WD,2.9L V6 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,2.9,16,21,18,,,,,,2.9L V6 Twin Turbo,Twin Turbocharged

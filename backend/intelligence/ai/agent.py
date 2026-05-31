@@ -565,3 +565,167 @@ def run_car_page_chat(
         "web_research_used": research_used,
         "web_research_url": research_url if research_used else None,
     }
+
+
+def _compare_listing_block(idx: int, car: dict[str, Any]) -> str:
+    """Compact listing context for one vehicle in a multi-car compare chat."""
+    c = clean_car_row_dict(car)
+    ctx = prepare_car_detail_context(car)
+    verified = ctx.get("verified_specs") or {}
+    engine_line = build_engine_display(c, verified)
+
+    heading_parts = [
+        x
+        for x in (
+            format_display_value(c.get("year")),
+            format_display_value(c.get("make")),
+            format_display_value(c.get("model")),
+            format_display_value(c.get("trim")),
+        )
+        if x != DISPLAY_DASH
+    ]
+    listing_head = " ".join(heading_parts) if heading_parts else f"Vehicle #{c.get('id') or idx}"
+
+    lines = [
+        f"Listing {idx}: {listing_head} (car_id={c.get('id')})",
+        _price_evidence(c.get("price")),
+        _mileage_evidence(c.get("mileage")),
+        _evidence_line("VIN", c.get("vin")),
+        f"Engine (derived): {engine_line}",
+        _evidence_line("Transmission", verified.get("transmission_display") or c.get("transmission")),
+        _evidence_line("Drivetrain", verified.get("drivetrain_display") or c.get("drivetrain")),
+        _evidence_line("Fuel type", c.get("fuel_type")),
+        _evidence_line("Body style", c.get("body_style")),
+        _evidence_line("Exterior", c.get("exterior_color")),
+        _evidence_line("Interior", c.get("interior_color")),
+        _evidence_line("Dealer", c.get("dealer_name")),
+    ]
+    hist = _history_highlights_snippet(c)
+    if hist:
+        lines.append(f"History highlights: {hist[:600]}")
+    desc = (c.get("description") or "").strip() if isinstance(c.get("description"), str) else ""
+    if desc and not is_effectively_empty(desc):
+        lines.append(f"Description excerpt: {desc[:500]}")
+    return "\n".join(lines)
+
+
+def _plain_chat_reply(text: str) -> str:
+    """Strip common markdown so chat bubbles read as plain prose."""
+    s = (text or "").strip()
+    if not s:
+        return s
+    s = re.sub(r"^#{1,6}\s+", "", s, flags=re.MULTILINE)
+    s = re.sub(r"\*\*(.+?)\*\*", r"\1", s)
+    s = re.sub(r"\*(.+?)\*", r"\1", s)
+    s = re.sub(r"^[-*]\s+", "• ", s, flags=re.MULTILINE)
+    s = re.sub(r"\n{3,}", "\n\n", s)
+    return s.strip()
+
+
+def run_compare_chat(
+    cars: list[dict[str, Any]],
+    user_message: str,
+    *,
+    allow_web_research: bool = True,
+) -> dict[str, Any]:
+    """
+    Compare up to four listings side-by-side (Claude Haiku).
+
+    Each item in ``cars`` should be a full SQLite row dict from ``get_car_by_id``.
+    """
+    msg = (user_message or "").strip()
+    if not msg:
+        return {"reply": "", "error": "empty_message"}
+    if not cars:
+        return {"reply": "", "error": "no_cars"}
+    if len(cars) > 4:
+        cars = cars[:4]
+
+    try:
+        import anthropic as _anthropic
+    except ImportError as e:
+        return {"reply": "", "error": f"llm_import:{e}"}
+
+    blocks = [_compare_listing_block(i + 1, car) for i, car in enumerate(cars)]
+    compare_context = "\n\n".join(blocks)
+
+    research_text = ""
+    research_url = ""
+    research_used = False
+    kw_hit = _needs_web_research(msg)
+    if kw_hit and allow_web_research and cars:
+        try:
+            from backend.utils.web_researcher import WebResearcher
+
+            anchor = clean_car_row_dict(cars[0])
+            query = _build_search_query(anchor, msg)
+            if len(cars) > 1:
+                others = []
+                for c in cars[1:3]:
+                    cc = clean_car_row_dict(c)
+                    others.append(
+                        " ".join(
+                            filter(
+                                None,
+                                [
+                                    _clean_spec(cc.get("year")),
+                                    _clean_spec(cc.get("make")),
+                                    _clean_spec(cc.get("model")),
+                                ],
+                            )
+                        )
+                    )
+                if others:
+                    query = f"{query} vs {' vs '.join(others)}"
+            researcher = WebResearcher(timeout_ms=25_000, max_text_chars=2_000)
+            result = researcher.search_and_summarize(query)
+            if result and result.text:
+                research_text = result.text
+                research_url = result.url or ""
+                research_used = True
+        except Exception as exc:
+            _logger.warning("[compare_chat] WebResearcher failed: %s", exc)
+
+    system_parts: list[str] = [
+        "You help shoppers compare up to four active dealership listings side by side.\n\n"
+        "Use the listing blocks below as primary evidence. Compare price, mileage, specs, "
+        "dealer, packages, and history when relevant. When asked for a recommendation, "
+        "weigh trade-offs clearly (value, use case, condition, features) without inventing "
+        "listing-specific facts not shown.\n\n"
+        "STYLE: Plain English only — no markdown, no # headings, no **bold**, no bullet lists. "
+        "Two or three short paragraphs max. Lead with the direct answer in the first sentence.\n\n"
+        "── Listings under comparison ───────────────────────────────────────\n",
+        compare_context,
+    ]
+    if research_used:
+        system_parts += [
+            "\n\n── Internet research (secondary) ───────────────────────────────────\n",
+            f"Source URL: {research_url or 'n/a'}\n\n",
+            research_text,
+        ]
+    else:
+        system_parts.append(
+            "\n\n── External research ─────────────────────────────────────────────\n"
+            "(not fetched — answer from listing blocks and cautious general knowledge.)\n"
+        )
+
+    system = "".join(system_parts)
+
+    try:
+        _client = _anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
+        _resp = _client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=700,
+            system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
+            messages=[{"role": "user", "content": msg}],
+        )
+        reply = _plain_chat_reply(_resp.content[0].text)
+    except Exception as e:
+        return {"reply": "", "error": str(e)[:500]}
+
+    return {
+        "reply": reply,
+        "error": None,
+        "web_research_used": research_used,
+        "web_research_url": research_url if research_used else None,
+    }

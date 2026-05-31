@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2007,Nissan,Titan,2WD,5.6L V8,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.6,12,17,14,,,,,
-2007,Nissan,Titan,4WD,5.6L V8,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.6,12,17,14,,,,,
-2007,Nissan,Titan,2WD,FFV 5.6L V8 (RNG420),Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 2WD,8,5.6,12,17,14,,,,,
-2007,Nissan,Titan,4WD,FFV 5.6L V8 (RNG420),Automatic 5-spd,All-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,8,5.6,12,17,14,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2007,Nissan,Titan,2WD,5.6L V8,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 2WD,8,5.6,12,17,14,,,,,,5.6L V8,
+2007,Nissan,Titan,4WD,5.6L V8,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Standard Pickup Trucks 4WD,8,5.6,12,17,14,,,,,,5.6L V8,
+2007,Nissan,Titan,2WD,FFV 5.6L V8 (RNG420),Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 2WD,8,5.6,12,17,14,,,,,,5.6L V8,
+2007,Nissan,Titan,4WD,FFV 5.6L V8 (RNG420),Automatic 5-spd,All-Wheel Drive,Regular Gasoline / E85,Standard Pickup Trucks 4WD,8,5.6,12,17,14,,,,,,5.6L V8,

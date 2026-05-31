@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2007,GMC,Savana Passenger,Savana 1500/2500 2WD (Passenger),5.3L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.3,13,17,14,,,,,
-2007,GMC,Savana Passenger,Savana 1500 AWD (Passenger),5.3L V8,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.3,13,16,14,,,,,
-2007,GMC,Savana Passenger,Savana 1500 AWD (Passenger),FFV 5.3L V8 (500),Automatic 4-spd,All-Wheel Drive,Regular Gasoline / E85,"Vans, Passenger Type",8,5.3,13,17,14,,,,,
-2007,GMC,Savana Passenger,Savana 1500/2500 2WD (Passenger),FFV 5.3L V8 (460),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline / E85,"Vans, Passenger Type",8,5.3,12,16,14,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2007,GMC,Savana Passenger,Savana 1500/2500 2WD (Passenger),5.3L V8,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.3,13,17,14,,,,,,5.3L V8,
+2007,GMC,Savana Passenger,Savana 1500 AWD (Passenger),5.3L V8,Automatic 4-spd,All-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.3,13,16,14,,,,,,5.3L V8,
+2007,GMC,Savana Passenger,Savana 1500 AWD (Passenger),FFV 5.3L V8 (500),Automatic 4-spd,All-Wheel Drive,Regular Gasoline / E85,"Vans, Passenger Type",8,5.3,13,17,14,,,,,,5.3L V8,
+2007,GMC,Savana Passenger,Savana 1500/2500 2WD (Passenger),FFV 5.3L V8 (460),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline / E85,"Vans, Passenger Type",8,5.3,12,16,14,,,,,,5.3L V8,

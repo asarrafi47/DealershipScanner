@@ -1,8 +1,8 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2026,Hyundai,Ioniq 5,RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,129,100,114,,,,,
-2026,Hyundai,Ioniq 5,Standard range,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,131,100,115,,,,,
-2026,Hyundai,Ioniq 5,AWD (19inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,116,96,106,,,,,
-2026,Hyundai,Ioniq 5,AWD (20inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,108,88,98,,,,,
-2026,Hyundai,Ioniq 5,AWD XRT,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,103,85,94,,,,,
-2026,Hyundai,Ioniq 5,N,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,84,72,78,,,,,
-2026,Hyundai,Ioniq 5,Robo taxi,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,73,69,71,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2026,Hyundai,Ioniq 5,RWD,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,129,100,114,,,,,,EV Electricity,
+2026,Hyundai,Ioniq 5,Standard range,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,131,100,115,,,,,,EV Electricity,
+2026,Hyundai,Ioniq 5,AWD (19inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,116,96,106,,,,,,EV Electricity,
+2026,Hyundai,Ioniq 5,AWD (20inch Wheels),EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,108,88,98,,,,,,EV Electricity,
+2026,Hyundai,Ioniq 5,AWD XRT,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,103,85,94,,,,,,EV Electricity,
+2026,Hyundai,Ioniq 5,N,EV Electricity,Automatic (A1),All-Wheel Drive,Electricity,Small Sport Utility Vehicle 4WD,,,84,72,78,,,,,,EV Electricity,
+2026,Hyundai,Ioniq 5,Robo taxi,EV Electricity,Automatic (A1),Rear-Wheel Drive,Electricity,Small Sport Utility Vehicle 2WD,,,73,69,71,,,,,,EV Electricity,

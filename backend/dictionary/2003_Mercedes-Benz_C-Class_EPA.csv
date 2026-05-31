@@ -1,20 +1,20 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2003,Mercedes-Benz,C-Class,C230 Kompressor,1.8L I4,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.8,20,28,23,,,,,
-2003,Mercedes-Benz,C-Class,C230 Kompressor,1.8L I4,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.8,18,28,22,,,,,
-2003,Mercedes-Benz,C-Class,C230 Kompressor,1.8L I4,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.8,21,29,24,,,,,
-2003,Mercedes-Benz,C-Class,C230 Kompressor,1.8L I4,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.8,19,28,22,,,,,
-2003,Mercedes-Benz,C-Class,C240,2.6L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.6,17,23,19,,,,,
-2003,Mercedes-Benz,C-Class,C240,2.6L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.6,15,24,18,,,,,
-2003,Mercedes-Benz,C-Class,C240 4matic,2.6L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Compact Cars,6,2.6,17,23,19,,,,,
-2003,Mercedes-Benz,C-Class,C32 AMG,3.2L V6 (GUZZLER),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.2,15,19,17,,,,,
-2003,Mercedes-Benz,C-Class,C320,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.2,18,24,20,,,,,
-2003,Mercedes-Benz,C-Class,C320,3.2L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.2,15,23,18,,,,,
-2003,Mercedes-Benz,C-Class,C320 4matic,3.2L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.2,17,23,19,,,,,
-2003,Mercedes-Benz,C-Class,C320 Sports Coupe,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.2,17,23,19,,,,,
-2003,Mercedes-Benz,C-Class,C320 Sports Coupe,3.2L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.2,15,23,18,,,,,
-2003,Mercedes-Benz,C-Class,C240 (Wagon),2.6L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Small Station Wagons,6,2.6,17,23,19,,,,,
-2003,Mercedes-Benz,C-Class,C240 (Wagon),2.6L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Small Station Wagons,6,2.6,15,24,18,,,,,
-2003,Mercedes-Benz,C-Class,C240 4matic (Wagon),2.6L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Small Station Wagons,6,2.6,17,23,19,,,,,
-2003,Mercedes-Benz,C-Class,C320 (Wagon),3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Small Station Wagons,6,3.2,18,24,20,,,,,
-2003,Mercedes-Benz,C-Class,C320 (Wagon),3.2L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Small Station Wagons,6,3.2,15,23,18,,,,,
-2003,Mercedes-Benz,C-Class,C320 4matic (Wagon),3.2L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Small Station Wagons,6,3.2,17,23,19,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2003,Mercedes-Benz,C-Class,C230 Kompressor,1.8L I4,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.8,20,28,23,,,,,,1.8L I4 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C230 Kompressor,1.8L I4,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.8,18,28,22,,,,,,1.8L I4 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C230 Kompressor,1.8L I4,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.8,21,29,24,,,,,,1.8L I4 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C230 Kompressor,1.8L I4,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,1.8,19,28,22,,,,,,1.8L I4 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C240,2.6L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.6,17,23,19,,,,,,2.6L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C240,2.6L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,2.6,15,24,18,,,,,,2.6L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C240 4matic,2.6L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Compact Cars,6,2.6,17,23,19,,,,,,2.6L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C32 AMG,3.2L V6 (GUZZLER),Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.2,15,19,17,,,,,,3.2L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C320,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.2,18,24,20,,,,,,3.2L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C320,3.2L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.2,15,23,18,,,,,,3.2L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C320 4matic,3.2L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.2,17,23,19,,,,,,3.2L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C320 Sports Coupe,3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.2,17,23,19,,,,,,3.2L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C320 Sports Coupe,3.2L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.2,15,23,18,,,,,,3.2L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C240 (Wagon),2.6L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Small Station Wagons,6,2.6,17,23,19,,,,,,2.6L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C240 (Wagon),2.6L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Small Station Wagons,6,2.6,15,24,18,,,,,,2.6L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C240 4matic (Wagon),2.6L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Small Station Wagons,6,2.6,17,23,19,,,,,,2.6L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C320 (Wagon),3.2L V6,Automatic 5-spd,Rear-Wheel Drive,Premium Gasoline,Small Station Wagons,6,3.2,18,24,20,,,,,,3.2L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C320 (Wagon),3.2L V6,Manual 6-spd,Rear-Wheel Drive,Premium Gasoline,Small Station Wagons,6,3.2,15,23,18,,,,,,3.2L V6 Turbo,Turbocharged
+2003,Mercedes-Benz,C-Class,C320 4matic (Wagon),3.2L V6,Automatic 5-spd,All-Wheel Drive,Premium Gasoline,Small Station Wagons,6,3.2,17,23,19,,,,,,3.2L V6 Turbo,Turbocharged

@@ -25,7 +25,10 @@ sys.path.insert(0, str(_REPO_ROOT))
 
 from backend.db.inventory_db import DB_PATH
 
-DICT_DIR = _REPO_ROOT / "DICTIONARY"
+_BACKEND_DIR = _REPO_ROOT / "backend"
+DICT_DIR = _BACKEND_DIR / "dictionary"
+if not any(DICT_DIR.glob("*_EPA.csv")):
+    DICT_DIR = _REPO_ROOT / "DICTIONARY"
 
 logging.basicConfig(
     level=logging.INFO,

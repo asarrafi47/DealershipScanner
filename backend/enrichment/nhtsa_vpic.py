@@ -151,6 +151,8 @@ def _layout_token_from_vpic(engine_configuration: str, cylinders: int | None) ->
     ):
         return f"I{cylinders}"
     if "horizontally opposed" in norm or "opposed" in norm or "boxer" in norm:
+        if cylinders in (4, 6, 12):
+            return f"Flat-{cylinders}"
         return f"H{cylinders}"
 
     return None

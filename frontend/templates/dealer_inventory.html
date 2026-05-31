@@ -12,7 +12,7 @@
     <nav class="topbar">
         <div class="logo">Sarrafi Cars</div>
         <div class="nav-links">
-            <a href="/dashboard">Dashboard</a>
+            <a href="{{ url_for('app_home') }}">Home</a>
             <a href="{{ url_for('listings') }}">Listings</a>
             <a href="/inventory" class="nav-link-active">My inventory</a>
             {% include "_app_logout.html" %}

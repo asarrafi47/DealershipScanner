@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1986,Buick,Riviera,Riviera,3.8L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.8,17,27,20,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1986,Buick,Riviera,Riviera,3.8L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.8,17,27,20,,,,,,3.8L V6,

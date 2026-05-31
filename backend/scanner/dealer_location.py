@@ -46,7 +46,7 @@ _LOCATION_KEY_RE = re.compile(
 )
 
 _LOCATED_AT_RE = re.compile(
-    r"located\s+at\s+(.+?)(?:\.|\||$|\n|·)",
+    r"(?:located\s+at|location\s*:)\s*(.+?)(?:\.|\||$|\n|·)",
     re.I,
 )
 
@@ -357,6 +357,35 @@ def filter_sister_store_vehicles(
                 {"vin": (v.get("vin") or "")[:17], "location": loc[:120]}
             )
     stats["kept"] = len(kept)
+    # Safety: pooled-inventory feeds often tag sister rooftops — do not zero the whole lot.
+    min_keep = 8
+    try:
+        import os
+
+        min_keep = max(1, int((os.environ.get("SCANNER_SISTER_STORE_MIN_KEEP") or "8").strip()))
+    except ValueError:
+        pass
+    safe_raw = (os.environ.get("SCANNER_SISTER_STORE_SAFE") or "1").strip().lower()
+    safe_enabled = safe_raw not in ("0", "false", "no", "off")
+    if (
+        safe_enabled
+        and stats["input"] >= min_keep
+        and len(kept) == 0
+        and stats["excluded"] > 0
+        and stats["matched"] == 0
+    ):
+        log.warning(
+            "Sister-store filter [%s] %s: would exclude entire lot (%d rows) — "
+            "keeping all (set SCANNER_SISTER_STORE_SAFE=0 to allow empty result)",
+            profile.name,
+            source,
+            stats["input"],
+        )
+        stats["aborted_empty"] = True
+        stats["kept"] = stats["input"]
+        stats["excluded"] = 0
+        return vehicles, stats
+
     if stats["excluded"]:
         log.info(
             "Sister-store filter [%s] %s: excluded %d / %d (unknown=%d matched=%d) samples=%s",

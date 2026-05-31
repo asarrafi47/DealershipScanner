@@ -100,8 +100,11 @@ def _spawn_vector_reindex_background() -> None:
 def _admin_session_ok() -> bool:
     if session.get("admin_user_id"):
         return True
-    # App-level admin (APP_ADMIN_EMAILS) can access /dev without a separate dev login
+    from backend.utils.production_security import app_admin_dev_pass_through_allowed
     from backend.utils.roles import is_admin_role
+
+    if not app_admin_dev_pass_through_allowed():
+        return False
     return bool(session.get("user_id")) and is_admin_role(session.get("user_role"))
 
 
@@ -1158,52 +1161,6 @@ def _spawn_inventory_enrich(
         import logging
 
         logging.getLogger("dev_routes").exception("Inventory enrichment background job failed")
-
-
-@dev_bp.route("/api/cars/<int:car_id>/kbb-refresh", methods=["POST"])
-def api_car_kbb_refresh(car_id: int):
-    """
-    Fetch Kelley Blue Book IDWS values for one row (licensed ``KBB_API_KEY`` + CSRF header).
-
-    Optional JSON body: ``{"zip_override": "92618"}`` when the row has no usable ZIP.
-    """
-    from backend.db.inventory_db import get_car_by_id, refresh_car_data_quality_score, update_car_row_partial
-    from backend.enrichment.kbb_idws import patch_from_refresh_result, refresh_kbb_for_vehicle_row
-
-    raw = get_car_by_id(car_id, include_inactive=True)
-    if not raw:
-        return jsonify({"ok": False, "message": "not_found", "car_id": car_id}), 404
-
-    data = request.get_json(silent=True) or {}
-    z_override = (data.get("zip_override") or data.get("zip_code") or "").strip() or None
-
-    res = refresh_kbb_for_vehicle_row(raw, zip_override=z_override)
-    if not res.ok:
-        return (
-            jsonify(
-                {
-                    "ok": False,
-                    "car_id": car_id,
-                    "message": res.message,
-                    "http_status": res.http_status,
-                }
-            ),
-            400,
-        )
-
-    patch = patch_from_refresh_result(res)
-    if patch:
-        update_car_row_partial(car_id, patch)
-        refresh_car_data_quality_score(car_id)
-    return jsonify(
-        {
-            "ok": True,
-            "car_id": car_id,
-            "message": res.message,
-            "updated_fields": sorted(patch.keys()),
-            "normalized": res.normalized,
-        }
-    )
 
 
 @dev_bp.route("/api/cars/<int:car_id>/spec-backfill", methods=["POST"])

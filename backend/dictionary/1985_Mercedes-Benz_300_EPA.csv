@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1985,Mercedes-Benz,300,D/300CD,"Diesel 3.0L V5 ((CALIF) (DSL,TRBO)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Compact Cars,5,3.0,19,20,19,,,,,
-1985,Mercedes-Benz,300,D/300CD,"Diesel 3.0L V5 ((DSL,TRBO)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Compact Cars,5,3.0,19,23,21,,,,,
-1985,Mercedes-Benz,300,SD,"Diesel 3.0L V5 ((DSL,TRBO)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Compact Cars,5,3.0,19,23,21,,,,,
-1985,Mercedes-Benz,300,SD,"Diesel 3.0L V5 ((CALIF) (DSL,TRBO)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Compact Cars,5,3.0,19,20,19,,,,,
-1985,Mercedes-Benz,300,TD,"Diesel 3.0L V5 ((CALIF) (DSL,TRBO)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Midsize-Large Station Wagons,5,3.0,19,20,19,,,,,
-1985,Mercedes-Benz,300,TD,"Diesel 3.0L V5 ((DSL,TRBO)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Midsize-Large Station Wagons,5,3.0,19,23,21,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1985,Mercedes-Benz,300,D/300CD,"Diesel 3.0L V5 ((CALIF) (DSL,TRBO)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Compact Cars,5,3.0,19,20,19,,,,,,3.0L V5 Turbo,Turbocharged
+1985,Mercedes-Benz,300,D/300CD,"Diesel 3.0L V5 ((DSL,TRBO)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Compact Cars,5,3.0,19,23,21,,,,,,3.0L V5 Turbo,Turbocharged
+1985,Mercedes-Benz,300,SD,"Diesel 3.0L V5 ((DSL,TRBO)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Compact Cars,5,3.0,19,23,21,,,,,,3.0L V5 Turbo,Turbocharged
+1985,Mercedes-Benz,300,SD,"Diesel 3.0L V5 ((CALIF) (DSL,TRBO)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Compact Cars,5,3.0,19,20,19,,,,,,3.0L V5 Turbo,Turbocharged
+1985,Mercedes-Benz,300,TD,"Diesel 3.0L V5 ((CALIF) (DSL,TRBO)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Midsize-Large Station Wagons,5,3.0,19,20,19,,,,,,3.0L V5 Turbo,Turbocharged
+1985,Mercedes-Benz,300,TD,"Diesel 3.0L V5 ((DSL,TRBO)) Diesel",Automatic 4-spd,Rear-Wheel Drive,Diesel,Midsize-Large Station Wagons,5,3.0,19,23,21,,,,,,3.0L V5 Turbo,Turbocharged

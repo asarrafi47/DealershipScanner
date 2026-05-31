@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2025,Toyota,Mirai,XLE,FCV (PEFC) Hydrogen,Automatic (variable gear ratios),Rear-Wheel Drive,Hydrogen,Compact Cars,,,76,71,74,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2025,Toyota,Mirai,XLE,FCV (PEFC) Hydrogen,Automatic (variable gear ratios),Rear-Wheel Drive,Hydrogen,Compact Cars,,,76,71,74,,,,,,FCV (PEFC) Hydrogen,

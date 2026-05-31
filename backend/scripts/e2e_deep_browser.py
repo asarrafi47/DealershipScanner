@@ -40,7 +40,7 @@ def main(base: str = BASE) -> int:
         # --- Landing ---
         page.goto(f"{base}/", wait_until="networkidle", timeout=45000)
         page.screenshot(path=str(DEBUG / "01_landing.png"), full_page=True)
-        for sel in [".lp-headline", ".lp-cta-primary", ".lp-marquee-track"]:
+        for sel in [".lp-headline", ".lp-cta-row", ".lp-marquee-track"]:
             if page.locator(sel).count() == 0:
                 note("error", "landing", f"missing {sel}")
         # Broken internal links
@@ -120,7 +120,7 @@ def main(base: str = BASE) -> int:
             title = page.title()
             if "Sarrafi" not in title and str(car_id) not in title:
                 note("warn", "car", f"unexpected title: {title}")
-            if page.locator(".car-chat-section").count() == 0:
+            if page.locator(".car-chat-section, #car-chat-section").count() == 0:
                 note("error", "car", "missing chat section")
             # Spam save / gallery buttons
             for sel in ["#car-chat-send", ".primary-button", "button"]:

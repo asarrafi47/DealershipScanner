@@ -1,8 +1,8 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2009,Toyota,Tacoma,2WD,2.7L I4,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.7,20,26,22,,,,,
-2009,Toyota,Tacoma,2WD,2.7L I4,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.7,19,25,21,,,,,
-2009,Toyota,Tacoma,2WD,4.0L V6,Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,4.0,15,19,17,,,,,
-2009,Toyota,Tacoma,2WD,4.0L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,4.0,17,21,18,,,,,
-2009,Toyota,Tacoma,4WD,2.7L I4,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,4,2.7,17,22,19,,,,,
-2009,Toyota,Tacoma,4WD,4.0L V6,Manual 6-spd,All-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,4.0,14,19,16,,,,,
-2009,Toyota,Tacoma,4WD,4.0L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,4.0,16,20,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2009,Toyota,Tacoma,2WD,2.7L I4,Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.7,20,26,22,,,,,,2.7L I4,
+2009,Toyota,Tacoma,2WD,2.7L I4,Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,4,2.7,19,25,21,,,,,,2.7L I4,
+2009,Toyota,Tacoma,2WD,4.0L V6,Manual 6-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,4.0,15,19,17,,,,,,4.0L V6,
+2009,Toyota,Tacoma,2WD,4.0L V6,Automatic 5-spd,Rear-Wheel Drive,Regular Gasoline,Small Pickup Trucks 2WD,6,4.0,17,21,18,,,,,,4.0L V6,
+2009,Toyota,Tacoma,4WD,2.7L I4,Manual 5-spd,All-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,4,2.7,17,22,19,,,,,,2.7L I4,
+2009,Toyota,Tacoma,4WD,4.0L V6,Manual 6-spd,All-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,4.0,14,19,16,,,,,,4.0L V6,
+2009,Toyota,Tacoma,4WD,4.0L V6,Automatic 5-spd,All-Wheel Drive,Regular Gasoline,Small Pickup Trucks 4WD,6,4.0,16,20,18,,,,,,4.0L V6,

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home — Sarrafi Cars</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+</head>
+<body class="db-page">
+
+<div class="page db-shell">
+
+    {% set nav_active = "home" %}
+    {% include "_nav_public.html" %}
+
+    <header class="db-hero db-hero--compact db-reveal">
+        <div class="db-hero__inner">
+            <div class="db-hero__head">
+                <p class="db-hero-eyebrow">Your home</p>
+                <h1 class="db-hero-title">
+                    {% if logged_in_user %}
+                    Welcome back, {{ logged_in_user }}
+                    {% else %}
+                    Welcome back
+                    {% endif %}
+                </h1>
+                <p class="db-hero-sub">Recommendations, saved cars, and compare — scroll for your feed.</p>
+            </div>
+            <div class="db-hero__actions">
+                <a href="{{ url_for('listings') }}" class="primary-button db-hero-cta" data-nav-listings>
+                    Browse inventory
+                    <svg class="db-hero-cta-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+                <a href="{{ url_for('dashboard') }}" class="secondary-button db-hero-secondary">Dashboard</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="db-layout db-layout--compact">
+
+        <section class="db-panel db-reveal" id="browse-section">
+            <a href="{{ url_for('listings') }}" class="find-cars-card find-cars-card--banner find-cars-card--slim" data-nav-listings>
+                <div class="find-cars-card__main">
+                    <div class="find-cars-card__copy">
+                        <p class="db-eyebrow find-cars-card__eyebrow">Browse inventory</p>
+                        <p class="find-cars-label">Find your next car</p>
+                        <p class="find-cars-sub">Smart search, ZIP + radius, and filters across live dealer listings.</p>
+                    </div>
+                    <span class="find-cars-arrow" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M13 6l6 6-6 6"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="find-cars-tags">
+                    <span class="tag">Make &amp; model</span>
+                    <span class="tag">Price</span>
+                    <span class="tag">Mileage</span>
+                    <span class="tag">Drivetrain</span>
+                    <span class="tag">Fuel type</span>
+                    <span class="tag">ZIP + radius</span>
+                </div>
+            </a>
+        </section>
+
+        {% if recommendations %}
+        <section class="db-panel db-reveal" id="reco-section">
+            <div class="db-panel-header">
+                <div>
+                    <p class="db-eyebrow">{{ recommendations_eyebrow or "Based on your history" }}</p>
+                    <h2 class="db-section-title">{{ recommendations_title or "Recommended for you" }}</h2>
+                    {% if recommendations_hint %}
+                    <p class="db-section-hint">{{ recommendations_hint }}</p>
+                    {% endif %}
+                </div>
+                <div class="reco-nav">
+                    <button type="button" class="reco-nav-btn" id="reco-prev" aria-label="Previous" disabled>
+                        <svg viewBox="0 0 16 16" width="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 3L5 8l5 5"/></svg>
+                    </button>
+                    <button type="button" class="reco-nav-btn" id="reco-next" aria-label="Next">
+                        <svg viewBox="0 0 16 16" width="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="reco-carousel-wrap">
+                <div class="reco-track-outer">
+                    <div class="reco-track" id="reco-track">
+                        {% for car in recommendations %}
+                        <a href="/car/{{ car.id }}" class="reco-card">
+                            {% set img = car.gallery[0] if car.gallery else (car.image_url or '') %}
+                            <div class="reco-card-image" style="background-image:url('{{ img or '/static/placeholder.svg' }}')"></div>
+                            <div class="reco-card-body">
+                                <p class="reco-card-title">{{ car.title }}</p>
+                                {% if car.trim %}<p class="reco-card-trim">{{ car.trim }}</p>{% endif %}
+                                <p class="reco-card-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
+                                <p class="reco-card-meta">{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi &middot; {{ car.fuel_type or '' }}</p>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if recently_compared %}
+        <section class="db-panel db-reveal" id="compared-section">
+            <div class="db-panel-header">
+                <div>
+                    <p class="db-eyebrow">Side by side</p>
+                    <h2 class="db-section-title">Recently compared</h2>
+                    <p class="db-section-hint">Vehicles you opened on the compare page — jump back in or open a listing.</p>
+                </div>
+                <a href="{{ url_for('compare_page') }}" class="db-panel-link">Open compare</a>
+            </div>
+            <div class="saved-grid">
+                {% for car in recently_compared %}
+                <a href="/car/{{ car.id }}" class="saved-card">
+                    <div class="saved-image-wrap">
+                        <div class="saved-image" style="background-image: url('{{ car.gallery[0] if car.gallery else (car.image_url or "/static/placeholder.svg") }}')"></div>
+                    </div>
+                    <div class="saved-info">
+                        <p class="saved-title">{{ car.title }}</p>
+                        {% if car.trim %}<p class="saved-trim">{{ car.trim }}</p>{% endif %}
+                        <p class="saved-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
+                        <p class="saved-meta">{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi{% if car.fuel_type %} &middot; {{ car.fuel_type }}{% endif %}</p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <section class="db-panel db-reveal" id="saved-section">
+            <div class="db-panel-header">
+                <div>
+                    <p class="db-eyebrow">Your list</p>
+                    <h2 class="db-section-title">Saved cars</h2>
+                </div>
+                {% if saved_cars %}
+                <a href="{{ url_for('listings') }}" class="db-panel-link">Browse more</a>
+                {% endif %}
+            </div>
+
+            {% if saved_cars %}
+            <div class="saved-grid">
+                {% for car in saved_cars %}
+                <a href="/car/{{ car.id }}" class="saved-card">
+                    <div class="saved-image-wrap">
+                        <div class="saved-image" style="background-image: url('{{ car.image_url or "/static/placeholder.svg" }}')"></div>
+                    </div>
+                    <div class="saved-info">
+                        <p class="saved-title">{{ car.title }}</p>
+                        {% if car.trim %}<p class="saved-trim">{{ car.trim }}</p>{% endif %}
+                        <p class="saved-price">{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}Call for Price{% endif %}</p>
+                        <p class="saved-meta">{{ "{:,}".format(car.mileage) if car.mileage else '—' }} mi{% if car.fuel_type %} &middot; {{ car.fuel_type }}{% endif %}</p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="saved-empty">
+                <p class="saved-empty-title">No saved cars yet</p>
+                <p class="saved-empty-sub">When you find a car you like, save it from the listing page and it will show up here.</p>
+                <a href="{{ url_for('listings') }}" class="primary-button saved-empty-cta" data-nav-listings>Browse listings</a>
+            </div>
+            {% endif %}
+        </section>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='main.js') }}" nonce="{{ csp_nonce }}"></script>
+<script nonce="{{ csp_nonce }}">
+(function () {
+    let carsPrefetchStarted = false;
+    function prefetchListingsCars() {
+        if (carsPrefetchStarted) return;
+        carsPrefetchStarted = true;
+        fetch("/listings", { credentials: "same-origin" }).catch(() => {});
+        fetch("/api/listings/cars", { credentials: "same-origin" }).catch(() => {});
+    }
+    document.querySelectorAll("[data-nav-listings]").forEach((el) => {
+        el.addEventListener("mouseenter", prefetchListingsCars, { once: true });
+        el.addEventListener("focus", prefetchListingsCars, { once: true });
+        el.addEventListener("click", () => {
+            prefetchListingsCars();
+            el.classList.add("is-nav-loading");
+            el.setAttribute("aria-busy", "true");
+        });
+    });
+})();
+</script>
+<script nonce="{{ csp_nonce }}">
+(function () {
+    const track = document.getElementById("reco-track");
+    const prevBtn = document.getElementById("reco-prev");
+    const nextBtn = document.getElementById("reco-next");
+    if (!track || !prevBtn || !nextBtn) return;
+
+    const cards = track.querySelectorAll(".reco-card");
+    if (!cards.length) return;
+
+    const CARD_W = 240 + 16;
+    const outer = track.parentElement;
+
+    function visibleCount() {
+        return Math.max(1, Math.floor(outer.offsetWidth / CARD_W));
+    }
+
+    let idx = 0;
+    let autoTimer = null;
+
+    function maxIdx() {
+        return Math.max(0, cards.length - visibleCount());
+    }
+
+    function goTo(i) {
+        const cap = maxIdx();
+        idx = Math.max(0, Math.min(i, cap));
+        track.style.transform = "translateX(-" + (idx * CARD_W) + "px)";
+        prevBtn.disabled = idx === 0;
+        nextBtn.disabled = idx >= cap;
+    }
+
+    function startAuto() {
+        stopAuto();
+        autoTimer = setInterval(function () {
+            goTo(idx >= maxIdx() ? 0 : idx + 1);
+        }, 5000);
+    }
+
+    function stopAuto() {
+        clearInterval(autoTimer);
+    }
+
+    prevBtn.addEventListener("click", function () { goTo(idx - 1); startAuto(); });
+    nextBtn.addEventListener("click", function () { goTo(idx + 1); startAuto(); });
+    outer.addEventListener("mouseenter", stopAuto);
+    outer.addEventListener("mouseleave", startAuto);
+    window.addEventListener("resize", function () { goTo(idx); });
+
+    goTo(0);
+    startAuto();
+})();
+</script>
+</body>
+</html>

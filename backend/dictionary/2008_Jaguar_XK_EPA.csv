@@ -1,3 +1,3 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2008,Jaguar,XK,XK,4.2L V8,Automatic 6-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,4.2,16,25,19,,,,,
-2008,Jaguar,XK,Convertible,4.2L V8,Automatic 6-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,4.2,16,25,19,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2008,Jaguar,XK,XK,4.2L V8,Automatic 6-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,4.2,16,25,19,,,,,,4.2L V8 Turbo,Turbocharged
+2008,Jaguar,XK,Convertible,4.2L V8,Automatic 6-spd,Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,4.2,16,25,19,,,,,,4.2L V8 Turbo,Turbocharged

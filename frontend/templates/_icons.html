@@ -1,0 +1,48 @@
+{# Inline SVG icons — no emoji. Usage: {% from '_icons.html' import icon %} {{ icon('home', 18) }} #}
+{% macro icon(name, size=18, class='') -%}
+<svg class="sc-icon{% if class %} {{ class }}{% endif %}" width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+{%- if name == 'home' %}
+  <path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z"/>
+{%- elif name == 'inventory' %}
+  <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+{%- elif name == 'dashboard' %}
+  <rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>
+{%- elif name == 'dealers' %}
+  <path d="M12 21s-7-4.5-7-11a7 7 0 0 1 14 0c0 6.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>
+{%- elif name == 'premium' %}
+  <path d="M12 3l2.2 6.8H21l-5.5 4 2.1 6.7L12 16.5 6.4 20.5l2.1-6.7L3 9.8h6.8L12 3z"/>
+{%- elif name == 'tools' %}
+  <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L5 15l4 4 3.3-4.3a4 4 0 0 0 5.4-5.4l-2.2 2.2-2.9-2.9 2.2-2.2z"/>
+{%- elif name == 'compare' %}
+  <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+{%- elif name == 'arrow-left' %}
+  <path d="M19 12H7M12 17l-5-5 5-5"/>
+{%- elif name == 'arrow-right' %}
+  <path d="M5 12h12M12 7l5 5-5 5"/>
+{%- elif name == 'chevron-left' %}
+  <path d="M15 6l-6 6 6 6"/>
+{%- elif name == 'chevron-right' %}
+  <path d="M9 6l6 6-6 6"/>
+{%- elif name == 'external' %}
+  <path d="M14 5h5v5M10 14 19 9M15 9h-4V5M5 19h4v-4"/>
+{%- elif name == 'chat' %}
+  <path d="M21 14a4 4 0 0 1-4 4H9l-5 3V7a4 4 0 0 1 4-4h9a4 4 0 0 1 4 4v7z"/>
+{%- elif name == 'building' %}
+  <path d="M4 21V5a1 1 0 0 1 1-1h5v16M14 21V9h5a1 1 0 0 1 1 1v11M9 9h2M9 13h2M9 17h2M15 13h2M15 17h2"/>
+{%- elif name == 'chart' %}
+  <path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>
+{%- elif name == 'book' %}
+  <path d="M5 4h8a4 4 0 0 1 4 4v12M5 20h11a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H5v16z"/>
+{%- elif name == 'bell' %}
+  <path d="M18 16H6l1.5-2A5.5 5.5 0 0 0 12 6v0a5.5 5.5 0 0 0 5.5 8L19 16zM10 20a2 2 0 0 0 4 0"/>
+{%- elif name == 'star' %}
+  <path d="M12 3l2.2 6.8H21l-5.5 4 2.1 6.7L12 16.5 6.4 20.5l2.1-6.7L3 9.8h6.8L12 3z"/>
+{%- elif name == 'check' %}
+  <path d="M5 12l4 4L19 6"/>
+{%- elif name == 'user' %}
+  <circle cx="12" cy="8" r="4"/><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/>
+{%- else %}
+  <circle cx="12" cy="12" r="9"/>
+{%- endif %}
+</svg>
+{%- endmacro %}

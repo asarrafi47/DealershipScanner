@@ -1,0 +1,39 @@
+---
+description: Backend work for the Sarrafi Cars iOS app — JSON APIs only; do not change website UI or unrelated backend.
+globs:
+  - backend/**
+---
+
+# Backend for iOS (mandatory scope)
+
+When the user asks for **iOS backend**, **mobile API**, or **API for the app**, work only on what native clients need over HTTP JSON.
+
+## Edit here
+
+| Area | Paths |
+|------|--------|
+| Mobile route handlers | `backend/main.py` (mobile sections) — prefer grouping changes; long-term home is `backend/mobile/` |
+| Mobile contract & index | `backend/mobile/contract.py`, `backend/mobile/README.md` |
+| Serialization shared with grid | `backend/utils/car_serialize.py`, `backend/db/inventory_db.py` (only if iOS payload needs it) |
+| Geo / search / dealers for app | `backend/listings/geo_session.py`, `backend/listings/dealer_locator.py`, `backend/utils/hybrid_search.py` |
+| Auth session (mobile) | `backend/login.py` patterns, `backend/utils/csrf.py`, `backend/db/users_db.py` (minimal) |
+| Tests | `backend/tests/test_mobile_*.py`, `backend/tests/test_car_detail_api.py`, `backend/tests/test_saved_cars_api.py`, `backend/tests/test_listings_perf.py` (API-only) |
+| Contract (client) | `ios/docs/API_CONTRACT.md` — update when routes or shapes change |
+| Security | `docs/SECURITY_MASTER_TODO.md` — SEC-011, SEC-013, SEC-077, SEC-040, etc. |
+
+## Do not edit (iOS-backend tasks)
+
+- `frontend/templates/`, `frontend/static/` — website markup and JS
+- `backend/listings/routes.py` HTML `listings_page` unless a shared helper is required for JSON parity
+- Scanners, dev console, dealer portal, OEM pipelines, vector reindex — unless the user explicitly ties them to a mobile API
+
+## Delivery checklist
+
+1. Match request/response shapes expected by `ios/SarrafiCars/SarrafiCars/Networking/` (`APIClient.swift`, `Models.swift`).
+2. Update `ios/docs/API_CONTRACT.md` and `backend/mobile/contract.py` for new or changed routes.
+3. Add or extend tests under `backend/tests/test_mobile_*.py`.
+4. Re-run **Validation** for touched SEC rows; update **Last verified** and **Changelog** in `docs/SECURITY_MASTER_TODO.md`.
+
+## Parity rule
+
+Website and iOS may share endpoints (e.g. `GET /api/listings/cars`). Prefer **one implementation** used by both. Do not duplicate business logic in `frontend/static/` for behavior the app needs from the server.

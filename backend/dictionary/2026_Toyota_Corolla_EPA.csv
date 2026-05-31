@@ -1,13 +1,13 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2026,Toyota,Corolla,Hybrid SE,Hybrid 1.8L I4 (Hybrid),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,50,43,47,,,,,
-2026,Toyota,Corolla,Hybrid,Hybrid 1.8L I4 (Hybrid),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,53,46,50,,,,,
-2026,Toyota,Corolla,Hybrid SE AWD,Hybrid 1.8L I4 (Hybrid),Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,47,41,44,,,,,
-2026,Toyota,Corolla,Hybrid AWD,Hybrid 1.8L I4 (Hybrid),Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,51,44,48,,,,,
-2026,Toyota,Corolla,(1-mode TM),2.0L I4 (SIDI & PFI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,32,41,35,,,,,
-2026,Toyota,Corolla,(3-mode TM),2.0L I4 (SIDI & PFI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,31,40,34,,,,,
-2026,Toyota,Corolla,Corolla,2.0L I4 (SIDI & PFI),Automatic (AV-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,31,38,34,,,,,
-2026,Toyota,Corolla,Hatchback,2.0L I4 (SIDI & PFI),Automatic (AV-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,32,41,35,,,,,
-2026,Toyota,Corolla,Hatchback XSE,2.0L I4 (SIDI & PFI),Automatic (AV-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,30,38,33,,,,,
-2026,Toyota,Corolla,Hatchback FX,2.0L I4 (SIDI & PFI),Automatic (AV-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,30,38,33,,,,,
-2026,Toyota,Corolla,GR Corolla,1.6L I3 (SIDI & PFI),Manual 6-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,3,1.6,21,28,24,,,,,
-2026,Toyota,Corolla,GR Corolla,1.6L I3 (SIDI & PFI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,3,1.6,19,27,22,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2026,Toyota,Corolla,Hybrid SE,Hybrid 1.8L I4 (Hybrid),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,50,43,47,,,,,,1.8L I4,
+2026,Toyota,Corolla,Hybrid,Hybrid 1.8L I4 (Hybrid),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,53,46,50,,,,,,1.8L I4,
+2026,Toyota,Corolla,Hybrid SE AWD,Hybrid 1.8L I4 (Hybrid),Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,47,41,44,,,,,,1.8L I4,
+2026,Toyota,Corolla,Hybrid AWD,Hybrid 1.8L I4 (Hybrid),Automatic (variable gear ratios),All-Wheel Drive,Regular Gasoline,Compact Cars,4,1.8,51,44,48,,,,,,1.8L I4,
+2026,Toyota,Corolla,(1-mode TM),2.0L I4 (SIDI & PFI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,32,41,35,,,,,,2.0L I4,
+2026,Toyota,Corolla,(3-mode TM),2.0L I4 (SIDI & PFI),Automatic (variable gear ratios),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,31,40,34,,,,,,2.0L I4,
+2026,Toyota,Corolla,Corolla,2.0L I4 (SIDI & PFI),Automatic (AV-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,31,38,34,,,,,,2.0L I4,
+2026,Toyota,Corolla,Hatchback,2.0L I4 (SIDI & PFI),Automatic (AV-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,32,41,35,,,,,,2.0L I4,
+2026,Toyota,Corolla,Hatchback XSE,2.0L I4 (SIDI & PFI),Automatic (AV-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,30,38,33,,,,,,2.0L I4,
+2026,Toyota,Corolla,Hatchback FX,2.0L I4 (SIDI & PFI),Automatic (AV-S10),Front-Wheel Drive,Regular Gasoline,Compact Cars,4,2.0,30,38,33,,,,,,2.0L I4,
+2026,Toyota,Corolla,GR Corolla,1.6L I3 (SIDI & PFI),Manual 6-spd,All-Wheel Drive,Premium Gasoline,Subcompact Cars,3,1.6,21,28,24,,,,,,1.6L I3 Turbo,Turbocharged
+2026,Toyota,Corolla,GR Corolla,1.6L I3 (SIDI & PFI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Subcompact Cars,3,1.6,19,27,22,,,,,,1.6L I3 Turbo,Turbocharged

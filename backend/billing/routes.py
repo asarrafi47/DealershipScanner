@@ -11,10 +11,16 @@ from backend.billing.stripe_billing import (
     construct_webhook_event,
     create_checkout_session,
     create_premium_checkout_session,
+    stripe_subscription_active,
     unix_to_iso,
     verify_premium_checkout_session,
 )
-from backend.db.users_db import get_org, grant_user_premium, update_org_stripe_subscription
+from backend.db.users_db import (
+    get_org,
+    grant_user_premium,
+    revoke_user_premium,
+    update_org_stripe_subscription,
+)
 from backend.utils.roles import is_admin_role
 
 _log = logging.getLogger(__name__)
@@ -45,12 +51,12 @@ def _session_org_id() -> int:
 @bp.route("/required")
 def billing_required():
     if not billing_enabled():
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("app_home"))
     uid = _require_app_login()
     if not uid:
         return redirect(url_for("login_page"))
     if is_admin_role(session.get("user_role")):
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("app_home"))
     org_id = _session_org_id()
     org = get_org(org_id) if org_id else None
     return render_template("billing_required.html", org=org, billing_enabled=True)
@@ -59,15 +65,15 @@ def billing_required():
 @bp.route("/checkout")
 def billing_checkout():
     if not billing_enabled():
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("app_home"))
     uid = _require_app_login()
     if not uid:
         return redirect(url_for("login_page"))
     if is_admin_role(session.get("user_role")):
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("app_home"))
     org_id = _session_org_id()
     if not org_id:
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("app_home"))
     user_email = (session.get("user_email") or "").strip() or ""
     if not user_email:
         # get_user_by_login returns email, but we don't store it in session currently
@@ -83,15 +89,15 @@ def billing_checkout():
 @bp.route("/success")
 def billing_success():
     if not billing_enabled():
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("app_home"))
     uid = _require_app_login()
     if not uid:
         return redirect(url_for("login_page"))
     if is_admin_role(session.get("user_role")):
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("app_home"))
     org_id = _session_org_id()
     if not org_id:
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("app_home"))
     org = get_org(org_id)
     if org:
         session["org_subscription_status"] = (org.get("stripe_subscription_status") or "").strip().lower() or None
@@ -149,7 +155,7 @@ def stripe_webhook():
     return jsonify({"ok": True})
 
 
-# ── Consumer premium (user-level, one-time payment) ──────────────────────────
+# ── Consumer premium (user-level subscription) ───────────────────────────────
 
 @bp.route("/premium/checkout")
 def premium_checkout():
@@ -213,22 +219,47 @@ def premium_webhook():
     etype = (event.get("type") or "").strip()
     obj = ((event.get("data") or {}).get("object") or {}) if isinstance(event.get("data"), dict) else {}
 
-    if etype == "checkout.session.completed":
-        md = obj.get("metadata") or {}
+    def _premium_user_id_from_metadata(o: dict[str, Any]) -> int:
+        md = o.get("metadata") or {}
+        if not isinstance(md, dict):
+            return 0
         raw_uid = (md.get("user_id") or "").strip()
+        try:
+            return int(raw_uid)
+        except (TypeError, ValueError):
+            return 0
+
+    if etype == "checkout.session.completed":
+        user_id = _premium_user_id_from_metadata(obj)
         customer = obj.get("customer")
         session_id = obj.get("id")
-        try:
-            user_id = int(raw_uid)
-        except (TypeError, ValueError):
-            user_id = 0
+        subscription_id = obj.get("subscription")
         if user_id > 0:
             grant_user_premium(
                 user_id,
                 customer_id=str(customer) if customer else None,
                 session_id=str(session_id) if session_id else None,
+                subscription_id=str(subscription_id) if subscription_id else None,
             )
             _log.info("premium granted to user_id=%d via webhook", user_id)
+
+    elif etype in ("customer.subscription.updated", "customer.subscription.deleted"):
+        user_id = _premium_user_id_from_metadata(obj)
+        if user_id <= 0:
+            return jsonify({"ok": True})
+        customer = obj.get("customer")
+        subscription_id = obj.get("id")
+        status = obj.get("status")
+        if etype == "customer.subscription.deleted" or not stripe_subscription_active(status):
+            revoke_user_premium(user_id)
+            _log.info("premium revoked for user_id=%d (status=%s)", user_id, status)
+        else:
+            grant_user_premium(
+                user_id,
+                customer_id=str(customer) if customer else None,
+                subscription_id=str(subscription_id) if subscription_id else None,
+            )
+            _log.info("premium renewed for user_id=%d (status=%s)", user_id, status)
 
     return jsonify({"ok": True})
 

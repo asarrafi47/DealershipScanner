@@ -1,15 +1,15 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2014,MINI,Cooper,Clubvan,1.6L I4,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,26,34,29,,,,,
-2014,MINI,Cooper,Coupe,1.6L I4,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,28,35,30,,,,,
-2014,MINI,Cooper,Coupe,1.6L I4,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,29,36,32,,,,,
-2014,MINI,Cooper,S Coupe,1.6L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,26,34,29,,,,,
-2014,MINI,Cooper,Convertible,1.6L I4,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.6,26,34,29,,,,,
-2014,MINI,Cooper,S Convertible,1.6L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.6,26,34,29,,,,,
-2014,MINI,Cooper,S Coupe,1.6L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,26,34,29,,,,,
-2014,MINI,Cooper,Convertible,1.6L I4,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.6,27,34,30,,,,,
-2014,MINI,Cooper,S Convertible,1.6L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.6,26,34,29,,,,,
-2014,MINI,Cooper,Clubvan,1.6L I4,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,27,34,30,,,,,
-2014,MINI,Cooper,(3-doors),1.5L I3 (SIDI),Automatic (S6),Front-Wheel Drive,Premium Gasoline,Subcompact Cars,3,1.5,28,37,31,,,,,
-2014,MINI,Cooper,(3-doors),1.5L I3 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,3,1.5,29,39,33,,,,,
-2014,MINI,Cooper,S (3-doors),2.0L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,24,34,28,,,,,
-2014,MINI,Cooper,S (3-doors),2.0L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,26,34,29,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2014,MINI,Cooper,Clubvan,1.6L I4,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,26,34,29,,,,,,1.6L I4 Turbo,Turbocharged
+2014,MINI,Cooper,Coupe,1.6L I4,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,28,35,30,,,,,,1.6L I4 Turbo,Turbocharged
+2014,MINI,Cooper,Coupe,1.6L I4,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,29,36,32,,,,,,1.6L I4 Turbo,Turbocharged
+2014,MINI,Cooper,S Coupe,1.6L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,26,34,29,,,,,,1.6L I4 Turbo,Turbocharged
+2014,MINI,Cooper,Convertible,1.6L I4,Automatic (S6),Front-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.6,26,34,29,,,,,,1.6L I4 Turbo,Turbocharged
+2014,MINI,Cooper,S Convertible,1.6L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.6,26,34,29,,,,,,1.6L I4 Turbo,Turbocharged
+2014,MINI,Cooper,S Coupe,1.6L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,26,34,29,,,,,,1.6L I4 Turbo,Turbocharged
+2014,MINI,Cooper,Convertible,1.6L I4,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.6,27,34,30,,,,,,1.6L I4 Turbo,Turbocharged
+2014,MINI,Cooper,S Convertible,1.6L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Premium Gasoline,Minicompact Cars,4,1.6,26,34,29,,,,,,1.6L I4 Turbo,Turbocharged
+2014,MINI,Cooper,Clubvan,1.6L I4,Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Two Seaters,4,1.6,27,34,30,,,,,,1.6L I4 Turbo,Turbocharged
+2014,MINI,Cooper,(3-doors),1.5L I3 (SIDI),Automatic (S6),Front-Wheel Drive,Premium Gasoline,Subcompact Cars,3,1.5,28,37,31,,,,,,1.5L I3 Turbo,Turbocharged
+2014,MINI,Cooper,(3-doors),1.5L I3 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,3,1.5,29,39,33,,,,,,1.5L I3 Turbo,Turbocharged
+2014,MINI,Cooper,S (3-doors),2.0L I4 (SIDI),Manual 6-spd,Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,24,34,28,,,,,,2.0L I4 Turbo,Turbocharged
+2014,MINI,Cooper,S (3-doors),2.0L I4 (SIDI),Automatic (S6),Front-Wheel Drive,Premium Gasoline,Subcompact Cars,4,2.0,26,34,29,,,,,,2.0L I4 Turbo,Turbocharged

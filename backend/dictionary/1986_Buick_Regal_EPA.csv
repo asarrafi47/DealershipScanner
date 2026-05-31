@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1986,Buick,Regal,Regal,3.8L V6 ((FFS)),Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.8,16,22,18,,,,,
-1986,Buick,Regal,Regal,"3.8L V6 ((FFS,TRBO))",Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.8,15,22,18,,,,,
-1986,Buick,Regal,Regal,5.0L V8 ((307) (FFS)),Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,15,21,17,,,,,
-1986,Buick,Regal,Regal,5.0L V8 ((307) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,16,23,19,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1986,Buick,Regal,Regal,3.8L V6 ((FFS)),Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.8,16,22,18,,,,,,3.8L V6,
+1986,Buick,Regal,Regal,"3.8L V6 ((FFS,TRBO))",Automatic 4-spd,Rear-Wheel Drive,Premium Gasoline,Midsize Cars,6,3.8,15,22,18,,,,,,3.8L V6,
+1986,Buick,Regal,Regal,5.0L V8 ((307) (FFS)),Automatic 3-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,15,21,17,,,,,,5.0L V8,
+1986,Buick,Regal,Regal,5.0L V8 ((307) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Midsize Cars,8,5.0,16,23,19,,,,,,5.0L V8,

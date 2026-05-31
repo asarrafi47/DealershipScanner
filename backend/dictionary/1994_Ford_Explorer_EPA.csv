@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1994,Ford,Explorer,2WD,4.0L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,14,19,16,,,,,
-1994,Ford,Explorer,2WD,4.0L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,16,20,18,,,,,
-1994,Ford,Explorer,4WD,4.0L V6 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,14,18,15,,,,,
-1994,Ford,Explorer,4WD,4.0L V6 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,15,20,17,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1994,Ford,Explorer,2WD,4.0L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,14,19,16,,,,,,4.0L V6 Twin Turbo,Twin Turbocharged
+1994,Ford,Explorer,2WD,4.0L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,16,20,18,,,,,,4.0L V6 Twin Turbo,Twin Turbocharged
+1994,Ford,Explorer,4WD,4.0L V6 ((FFS)),Automatic 4-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,14,18,15,,,,,,4.0L V6 Twin Turbo,Twin Turbocharged
+1994,Ford,Explorer,4WD,4.0L V6 ((FFS)),Manual 5-spd,All-Wheel Drive,Regular Gasoline,Special Purpose Vehicles,6,4.0,15,20,17,,,,,,4.0L V6 Twin Turbo,Twin Turbocharged

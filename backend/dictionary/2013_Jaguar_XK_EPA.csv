@@ -1,5 +1,5 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2013,Jaguar,XK,Convertible,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,5.0,15,22,17,,,,,
-2013,Jaguar,XK,Convertible,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,5.0,16,22,18,,,,,
-2013,Jaguar,XK,XK,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,5.0,16,24,19,,,,,
-2013,Jaguar,XK,XK,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,5.0,15,22,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2013,Jaguar,XK,Convertible,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,5.0,15,22,17,,,,,,5.0L V8 Turbo,Turbocharged
+2013,Jaguar,XK,Convertible,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,5.0,16,22,18,,,,,,5.0L V8 Turbo,Turbocharged
+2013,Jaguar,XK,XK,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,5.0,16,24,19,,,,,,5.0L V8 Turbo,Turbocharged
+2013,Jaguar,XK,XK,5.0L V8 (SIDI),Automatic (S6),Rear-Wheel Drive,Premium Gasoline,Minicompact Cars,8,5.0,15,22,18,,,,,,5.0L V8 Turbo,Turbocharged

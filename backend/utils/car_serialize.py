@@ -6,6 +6,7 @@ Templates can use Jinja filters ``format_display_value`` / ``engine_display`` re
 """
 from __future__ import annotations
 
+import json
 import logging
 import math
 import os
@@ -20,6 +21,7 @@ from backend.utils.field_clean import (
     is_spec_overlay_junk,
     normalize_optional_url,
 )
+from backend.utils.safe_listing_url import normalize_listing_image_url
 
 logger = logging.getLogger(__name__)
 
@@ -408,27 +410,153 @@ def _fuel_word(car: dict[str, Any]) -> str:
     return ft[:40]
 
 
-def _cylinder_layout_token(cyl_i: int | None, *text_hints: str | None) -> str:
+def _infer_layout_from_vehicle(
+    make: str | None,
+    model: str | None,
+    trim: str | None,
+    title: str | None,
+    cylinders: int | None,
+) -> str:
     """
-    Short layout label (e.g. ``V8``, ``I4``). Prefer tokens found in listing/EPA text;
-    otherwise use common heuristics by cylinder count.
+    Known flat/boxer engine families when cylinder count matches.
+
+    Overrides generic ``V6`` defaults for Porsche sports cars, Subaru, etc.
     """
+    if cylinders is None or cylinders <= 0:
+        return ""
+    mk = (make or "").strip().lower()
+    mo = (model or "").strip().lower()
+    tr = (trim or "").strip().lower()
+    ti = (title or "").strip().lower()
+    blob = " ".join(x for x in (mk, mo, tr, ti) if x)
+
+    if mk == "subaru":
+        if cylinders == 4:
+            return "Flat-4"
+        if cylinders == 6:
+            return "Flat-6"
+
+    if mk == "porsche":
+        if "taycan" in blob:
+            return ""
+        # Cayenne / Macan / Panamera use V6/V8/Turbo layouts — not flat-6 sports engines.
+        if any(x in blob for x in ("cayenne", "macan", "panamera")):
+            return ""
+        if cylinders == 6:
+            return "Flat-6"
+        if cylinders == 4 and re.search(r"\b718\b", blob):
+            return "Flat-4"
+
+    if mk in ("ram", "dodge") and cylinders == 6:
+        if re.search(r"\b2500\b|\b3500\b|\b4500\b|\b5500\b", blob):
+            return "I6"
+
+    if mk == "ford" and cylinders == 6:
+        if re.search(r"\bf[\s-]?250\b|\bf[\s-]?350\b|\bf[\s-]?450\b|\bf[\s-]?550\b|super\s+duty", blob):
+            return "I6"
+
+    if mk in ("chevrolet", "chevy", "gmc") and cylinders == 6:
+        if re.search(r"\b2500\b|\b3500\b|\b4500\b|\b5500\b|silverado|sierra", blob):
+            return "I6"
+
+    if cylinders == 4:
+        if mo in ("86", "gr86") or re.search(r"\bgr\s*86\b", blob):
+            return "Flat-4"
+        if mo == "brz" or re.search(r"\bbrz\b", blob):
+            return "Flat-4"
+
+    return ""
+
+
+def _layout_token_from_engine_text(blob: str) -> str:
+    """Parse explicit layout tokens from engine description / EPA / VPIC text."""
+    if not blob:
+        return ""
+    up = blob.upper()
+    if re.search(
+        r"\b(?:CUMMINS|DURAMAX|POWER\s+STROKE|POWERSTROKE)\b",
+        up,
+    ):
+        if re.search(r"\bI\s*-?\s*6\b|\bI6\b|\bINLINE\s*-?\s*6\b", up):
+            return "I6"
+    if re.search(r"\bINLINE\s*-?\s*6\b", up) or re.search(r"\bIN[-\s]?LINE\s*-?\s*6\b", up):
+        return "I6"
+    m = re.search(r"\bI\s*-?\s*(\d)\b", up)
+    if m:
+        return f"I{int(m.group(1))}"
+    m = re.search(r"\bV\s*-?\s*(\d{1,2})\b", up)
+    if m:
+        return f"V{int(m.group(1))}"
+    if re.search(r"\b(FLAT|BOXER|H)\s*-?\s*4\b", up) or re.search(r"\bFLAT\s*FOUR\b", up):
+        return "Flat-4"
+    if re.search(r"\b(FLAT|BOXER|H)\s*-?\s*6\b", up) or re.search(r"\bFLAT\s*SIX\b", up):
+        return "Flat-6"
+    if re.search(r"\bINLINE\s*-?\s*6\b", up) or re.search(r"\bIN[-\s]?LINE\s*-?\s*6\b", up):
+        return "I6"
+    if re.search(r"\bHORIZONTALLY\s+OPPOSED\b", up) or re.search(r"\bBOXER\b", up):
+        m = re.search(r"\b(\d)\s*-?\s*CYL", up)
+        if m:
+            n = int(m.group(1))
+            if n == 4:
+                return "Flat-4"
+            if n == 6:
+                return "Flat-6"
+    return ""
+
+
+def _cylinder_layout_token(
+    cyl_i: int | None,
+    *text_hints: str | None,
+    car: dict[str, Any] | None = None,
+) -> str:
+    """
+    Short layout label (e.g. ``V8``, ``I4``, ``Flat-6``). Prefer tokens found in listing/EPA text;
+    then known flat/boxer families by make/model; otherwise use common heuristics by cylinder count.
+    """
+    car = car or {}
+    identity = _infer_layout_from_vehicle(
+        car.get("make"),
+        car.get("model"),
+        car.get("trim"),
+        car.get("title"),
+        cyl_i,
+    )
+
     blob = " ".join(
         p.strip() for p in text_hints if isinstance(p, str) and p.strip()
-    ).upper()
-    if blob:
-        m = re.search(r"\bV\s*-?\s*(\d{1,2})\b", blob)
-        if m:
-            return f"V{int(m.group(1))}"
-        m = re.search(r"\bI\s*-?\s*(\d)\b", blob)
-        if m:
-            return f"I{int(m.group(1))}"
-        if re.search(r"\b(FLAT|H)\s*-?\s*4\b", blob) or re.search(r"\bH4\b", blob):
-            return "H4"
-        if re.search(r"\b(FLAT|H)\s*-?\s*6\b", blob) or re.search(r"\bH6\b", blob):
-            return "H6"
-        if re.search(r"\bINLINE\s*-?\s*6\b", blob) or re.search(r"\bIN[-\s]?LINE\s*-?\s*6\b", blob):
-            return "I6"
+    )
+    if car:
+        blob = " ".join(
+            x
+            for x in (
+                blob,
+                str(car.get("make") or ""),
+                str(car.get("model") or ""),
+                str(car.get("trim") or ""),
+                str(car.get("title") or ""),
+            )
+            if x.strip()
+        )
+
+    from_text = _layout_token_from_engine_text(blob)
+    if identity:
+        # Dealer listings often mislabel Porsche flat-6 as V6 — trust vehicle identity.
+        if not from_text or (
+            from_text == "V6"
+            and identity == "Flat-6"
+            and str(car.get("make") or "").strip().lower() == "porsche"
+        ):
+            return identity
+        if from_text.startswith("V") and identity.startswith("Flat"):
+            return identity
+        if from_text == "V6" and identity == "I6":
+            return identity
+    if from_text:
+        return from_text
+
+    if identity:
+        return identity
+
     try:
         count = int(cyl_i) if cyl_i is not None else 0
     except (TypeError, ValueError):
@@ -545,6 +673,46 @@ def car_matches_engine_displacement_l_range(
     return True
 
 
+def _effective_fuel_type_for_display(car: dict[str, Any], engine_disp: str) -> str | None:
+    """Sticker or eTorque override for buyer-facing fuel type."""
+    eng_text = " ".join(
+        str(x or "")
+        for x in (
+            car.get("engine_description"),
+            engine_disp,
+            car.get("engine_display"),
+        )
+    ).lower()
+    if "diesel" in eng_text:
+        ft = str(car.get("fuel_type") or "").strip().lower()
+        if ft in ("", "gasoline", "gas", "regular", "unleaded"):
+            return "Diesel"
+    raw = car.get("packages")
+    if raw and not is_effectively_empty(raw):
+        try:
+            import json
+
+            parsed = json.loads(raw) if isinstance(raw, str) else raw
+        except (TypeError, ValueError, json.JSONDecodeError):
+            parsed = None
+        if isinstance(parsed, dict):
+            sft = parsed.get("sticker_fuel_type")
+            if isinstance(sft, str) and sft.strip():
+                return sft.strip()
+    if engine_disp and re.search(r"mild\s+hybrid", engine_disp, re.I):
+        return "Hybrid"
+    try:
+        from backend.scanner.window_sticker import car_has_etorque_signal
+
+        if car_has_etorque_signal(car):
+            ft = str(car.get("fuel_type") or "").strip().lower()
+            if ft in ("", "gasoline", "gas", "regular", "unleaded"):
+                return "Hybrid"
+    except Exception:
+        pass
+    return None
+
+
 def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | None = None) -> str:
     """
     Buyer-facing engine line: displacement + layout when known (e.g. ``3.6L V6``, ``6.4L V8``),
@@ -554,13 +722,38 @@ def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | N
     dash = DISPLAY_DASH
     vs = verified_specs or {}
 
+    def _finish(display: str) -> str:
+        if not display or display == dash:
+            return dash
+        try:
+            from backend.scanner.window_sticker import (
+                upgrade_engine_display_for_etorque,
+                upgrade_engine_display_for_turbo,
+            )
+            from backend.utils.forced_induction import apply_forced_induction_to_engine_display
+
+            display = upgrade_engine_display_for_turbo(display, c)
+            display = upgrade_engine_display_for_etorque(display, c)
+            return apply_forced_induction_to_engine_display(display, c)
+        except Exception:
+            return display
+
     sticker_disp = _sticker_engine_display_from_packages(c)
     if sticker_disp:
-        return sticker_disp
+        return _finish(sticker_disp)
 
     trim_disp = _known_trim_engine_display(c)
     if trim_disp:
-        return trim_disp
+        return _finish(trim_disp)
+
+    try:
+        from backend.dictionary.epa_engine import resolve_engine_display_from_epa
+
+        epa_disp = resolve_engine_display_from_epa(c, vs)
+        if epa_disp:
+            return _finish(epa_disp)
+    except Exception:
+        pass
 
     cyl_i = _effective_cylinder_count(c, vs)
     if cyl_i == 0:
@@ -581,12 +774,13 @@ def build_engine_display(car: dict[str, Any], verified_specs: dict[str, Any] | N
         c.get("engine_description"),
         vs.get("master_engine_string"),
         vs.get("epa_engine_description"),
+        car=c,
     )
 
     if lit_f is not None and lit_f > 0:
         if layout:
-            return f"{lit_f:.1f}L {layout}"
-        return f"{lit_f:.1f}L"
+            return _finish(f"{lit_f:.1f}L {layout}")
+        return _finish(f"{lit_f:.1f}L")
 
     return dash
 
@@ -616,12 +810,26 @@ def _sticker_engine_display_from_packages(car: dict[str, Any]) -> str:
         return ""
     disp = parsed.get("sticker_engine_display")
     if isinstance(disp, str) and disp.strip():
-        return disp.strip()[:80]
+        from backend.scanner.window_sticker import (
+            sticker_engine_display_is_valid,
+            upgrade_engine_display_for_etorque,
+            upgrade_engine_display_for_turbo,
+        )
+
+        if sticker_engine_display_is_valid(disp):
+            disp = upgrade_engine_display_for_turbo(disp.strip()[:80], car)
+            return upgrade_engine_display_for_etorque(disp, car)
     specs = parsed.get("sticker_specs")
     if isinstance(specs, dict):
         eng = specs.get("Engine")
         if isinstance(eng, str) and eng.strip():
-            return eng.strip()[:80]
+            from backend.scanner.window_sticker import (
+                upgrade_engine_display_for_etorque,
+                upgrade_engine_display_for_turbo,
+            )
+
+            eng = upgrade_engine_display_for_turbo(eng.strip()[:80], car)
+            return upgrade_engine_display_for_etorque(eng, car)
     return ""
 
 
@@ -806,11 +1014,6 @@ def serialize_car_for_api(
             "id",
             "distance_miles",
             "dealership_registry_id",
-            "kbb_fair_purchase",
-            "kbb_range_low",
-            "kbb_range_high",
-            "kbb_private_party",
-            "kbb_trade_in",
         ):
             out[k] = v
             continue
@@ -832,9 +1035,37 @@ def serialize_car_for_api(
         if url_key in c:
             out[url_key] = normalize_optional_url(c.get(url_key))
 
+    from backend.parsers.vdp_urls import resolve_vehicle_source_url
+
+    src_was_placeholder = is_effectively_empty(c.get("source_url"))
+    detail_was_placeholder = is_effectively_empty(c.get("_detail_url")) and is_effectively_empty(
+        c.get("detail_url")
+    )
+    listing_vdp = resolve_vehicle_source_url(c)
+    if listing_vdp:
+        out["listing_vdp_url"] = listing_vdp
+        if not src_was_placeholder:
+            out["source_url"] = listing_vdp
+    else:
+        out["listing_vdp_url"] = out.get("source_url") or out.get("dealer_url")
+
     out["model"] = model_d
     out["trim"] = trim_d
     out["engine_display"] = engine_disp
+
+    # Forced induction: use stored value or compute on the fly.
+    _fi = c.get("forced_induction") or ""
+    if not _fi.strip():
+        try:
+            from backend.utils.forced_induction import classify_forced_induction_from_car_row
+            _fi = classify_forced_induction_from_car_row(c) or ""
+        except Exception:
+            _fi = ""
+    out["forced_induction"] = _fi or None
+
+    ft_override = _effective_fuel_type_for_display(c, engine_disp)
+    if ft_override:
+        out["fuel_type"] = format_display_value(ft_override)
 
     vcyl = vs.get("cylinders")
     if vcyl is not None and (c.get("cylinders") is None or str(c.get("cylinders")).strip() == ""):
@@ -910,6 +1141,9 @@ def serialize_car_for_api(
         td = format_display_value(pick if pick is not None else td_src)
 
     dealer_d = coerce_drivetrain_stored(c.get("drivetrain"))
+    bs_raw = str(c.get("body_style") or "").lower()
+    if dealer_d == "FWD" and "pickup" in bs_raw:
+        dealer_d = None
     inferred_dd = vs.get("drivetrain_display")
     if _dealer_spec_wins(dealer_d):
         dd = format_display_value(dealer_d)
@@ -939,6 +1173,20 @@ def serialize_car_for_api(
         except Exception:
             pass
 
+    from backend.utils.field_clean import normalize_body_style_for_car
+
+    _bs_raw = out.get("body_style")
+    if _bs_raw and _bs_raw != DISPLAY_DASH:
+        _bs_corrected = normalize_body_style_for_car(
+            str(_bs_raw),
+            make=c.get("make"),
+            model=c.get("model"),
+            trim=c.get("trim"),
+            title=c.get("title"),
+        )
+        if _bs_corrected:
+            out["body_style"] = format_display_value(_bs_corrected)
+
     fill_derived_condition_for_display(c, out)
 
     from backend.utils.interior_color_buckets import infer_paint_color_buckets, parse_stored_buckets
@@ -949,9 +1197,6 @@ def serialize_car_for_api(
         _ib if _ib else infer_paint_color_buckets(c.get("interior_color"), c.get("make"))
     )
 
-    _attach_kbb_listing_summary(c, out)
-
-    # Build package_names list for client-side filtering
     _pkg_names: list[str] = []
     _pkg_raw = out.get("packages")
     if _pkg_raw:
@@ -972,96 +1217,142 @@ def serialize_car_for_api(
     return out
 
 
-def _fmt_usd0(n: float | int | None) -> str | None:
-    if n is None:
-        return None
+_LISTINGS_GRID_GALLERY_MAX = max(1, int(os.environ.get("LISTINGS_GRID_GALLERY_MAX", "4")))
+
+
+def _package_names_from_raw(packages_raw: Any) -> list[str]:
+    names: list[str] = []
+    if is_effectively_empty(packages_raw) or str(packages_raw).strip() in ("{}", "[]"):
+        return names
     try:
-        x = float(n)
-    except (TypeError, ValueError):
-        return None
-    if x <= 0:
-        return None
-    return f"${x:,.0f}"
+        pkg = json.loads(packages_raw) if isinstance(packages_raw, str) else packages_raw
+    except Exception:
+        return names
+    if not isinstance(pkg, dict):
+        return names
+    for entry in pkg.get("packages_normalized") or []:
+        if isinstance(entry, dict):
+            n = (entry.get("canonical_name") or entry.get("name") or "").strip()
+            if n:
+                names.append(n)
+    for n in pkg.get("possible_packages") or []:
+        if isinstance(n, str) and n.strip():
+            names.append(n.strip())
+    return names
 
 
-def _attach_kbb_listing_summary(c: dict[str, Any], out: dict[str, Any]) -> None:
+def _listings_grid_gallery(raw: Any) -> list[str]:
+    if isinstance(raw, list):
+        parsed = raw
+    elif isinstance(raw, str) and raw.strip():
+        try:
+            parsed = json.loads(raw)
+        except Exception:
+            return []
+        if not isinstance(parsed, list):
+            return []
+    else:
+        return []
+    out = filter_spyne_gallery_variants(parsed)
+    safe = [u for u in out if normalize_listing_image_url(u)]
+    return safe[:_LISTINGS_GRID_GALLERY_MAX] if safe else []
+
+
+def _parse_gallery_url_list(raw: Any) -> list[str]:
+    if isinstance(raw, list):
+        parsed = raw
+    elif isinstance(raw, str) and raw.strip():
+        try:
+            parsed = json.loads(raw)
+        except Exception:
+            return []
+        if not isinstance(parsed, list):
+            return []
+    else:
+        return []
+    return [u.strip() for u in parsed if isinstance(u, str) and u.strip()]
+
+
+def _public_gallery_photo_count(raw: Any, *, image_url: Any = None) -> int:
+    """Count public listing photos (same rules as car detail gallery)."""
+    from backend.vision.url_heuristics import filter_public_gallery_urls, heuristic_listing_gallery_fluff_url
+
+    urls = filter_public_gallery_urls(_parse_gallery_url_list(raw))
+    if not urls and image_url:
+        iu = str(image_url).strip()
+        if iu and not heuristic_listing_gallery_fluff_url(iu):
+            urls = [iu]
+    return len(urls)
+
+
+def serialize_car_for_listings_grid(car: dict[str, Any]) -> dict[str, Any]:
     """
-    Adds ``kbb`` summary for templates/API: fair purchase + range vs asking price.
-    Does not expose raw ``kbb_snapshot_json`` on the public car payload.
+    Compact listings grid JSON: filter/cascade fields + card display only.
+
+    Skips full ``serialize_car_for_api`` (EPA merge, transmission heuristics, etc.)
+    to keep ``GET /api/listings/cars`` fast on SQLite (~2.5k rows).
     """
-    fp = c.get("kbb_fair_purchase")
-    lo = c.get("kbb_range_low")
-    hi = c.get("kbb_range_high")
-    fetched = c.get("kbb_fetched_at")
-    has_any = any(
-        x is not None
-        for x in (fp, lo, hi, c.get("kbb_private_party"), c.get("kbb_trade_in"))
-    )
-    if not has_any:
-        out["kbb"] = None
-        return
+    if not car:
+        return {}
+    c = clean_car_row_dict(dict(car))
+    from backend.utils.field_clean import normalize_body_style_for_car
+    from backend.utils.interior_color_buckets import infer_paint_color_buckets, parse_stored_buckets
 
-    price = c.get("price")
-    try:
-        price_f = float(price) if price is not None and str(price).strip() != "" else None
-    except (TypeError, ValueError):
-        price_f = None
-    if price_f is not None and price_f <= 0:
-        price_f = None
+    model_d, trim_d = apply_bmw_model_trim_display(c)
+    ext_fam = infer_paint_color_buckets(c.get("exterior_color"), c.get("make"))
+    _ib = parse_stored_buckets(car.get("interior_color_buckets"))
+    int_fam = _ib if _ib else infer_paint_color_buckets(c.get("interior_color"), c.get("make"))
 
-    vs = None
-    if price_f is not None:
-        if lo is not None and hi is not None:
-            try:
-                lo_f, hi_f = float(lo), float(hi)
-                if price_f < lo_f:
-                    vs = "below_kbb_range"
-                elif price_f > hi_f:
-                    vs = "above_kbb_range"
-                else:
-                    vs = "within_kbb_range"
-            except (TypeError, ValueError):
-                vs = None
-        if vs is None and fp is not None:
-            try:
-                fpp = float(fp)
-                if price_f < fpp * 0.97:
-                    vs = "below_kbb_fair_purchase"
-                elif price_f > fpp * 1.03:
-                    vs = "above_kbb_fair_purchase"
-                else:
-                    vs = "near_kbb_fair_purchase"
-            except (TypeError, ValueError):
-                vs = None
+    def num(key: str) -> Any:
+        return c.get(key)
 
-    labels = {
-        "below_kbb_range": "Below KBB fair market range",
-        "within_kbb_range": "Within KBB fair market range",
-        "above_kbb_range": "Above KBB fair market range",
-        "below_kbb_fair_purchase": "Below KBB typical listing / fair purchase",
-        "near_kbb_fair_purchase": "Close to KBB typical listing / fair purchase",
-        "above_kbb_fair_purchase": "Above KBB typical listing / fair purchase",
+    dt_stored = coerce_drivetrain_stored(c.get("drivetrain"))
+    if dt_stored == "FWD" and "pickup" in str(c.get("body_style") or "").lower():
+        dt_stored = None
+    fuel_display = _effective_fuel_type_for_display(c, c.get("engine_description") or "") or c.get("fuel_type")
+
+    out: dict[str, Any] = {
+        "id": num("id"),
+        "title": format_display_value(c.get("title")),
+        "year": num("year"),
+        "make": format_display_value(c.get("make")),
+        "model": model_d,
+        "trim": trim_d,
+        "price": num("price"),
+        "mileage": num("mileage"),
+        "fuel_type": format_display_value(fuel_display),
+        "cylinders": num("cylinders"),
+        "transmission": format_display_value(c.get("transmission")),
+        "drivetrain": format_display_value(dt_stored),
+        "body_style": format_display_value(
+            normalize_body_style_for_car(
+                c.get("body_style"),
+                make=c.get("make"),
+                model=c.get("model"),
+                trim=c.get("trim"),
+                title=c.get("title"),
+            )
+            or c.get("body_style")
+        ),
+        "exterior_color": format_display_value(c.get("exterior_color")),
+        "interior_color": format_display_value(c.get("interior_color")),
+        "exterior_color_families": ext_fam,
+        "interior_color_families": int_fam,
+        "engine_l": c.get("engine_l"),
+        "engine_description": c.get("engine_description"),
+        "image_url": (img_url := normalize_listing_image_url(c.get("image_url"))),
+        # Grid cards only need a primary image; omit duplicate gallery URLs from JSON.
+        "gallery": [] if img_url else _listings_grid_gallery(c.get("gallery")),
+        "photo_count": _public_gallery_photo_count(c.get("gallery"), image_url=c.get("image_url")),
+        "dealer_name": format_display_value(c.get("dealer_name")),
+        "dealer_url": normalize_optional_url(c.get("dealer_url")),
+        "zip_code": c.get("zip_code"),
+        "dealership_registry_id": num("dealership_registry_id"),
+        "dealer_id": c.get("dealer_id"),
+        "package_names": _package_names_from_raw(c.get("packages")),
+        "data_quality_score": num("data_quality_score"),
     }
-
-    range_txt = None
-    if lo is not None and hi is not None:
-        a, b = _fmt_usd0(lo), _fmt_usd0(hi)
-        if a and b:
-            range_txt = f"{a} – {b}"
-
-    out["kbb"] = {
-        "has_data": True,
-        "fair_purchase": fp,
-        "fair_purchase_display": _fmt_usd0(fp),
-        "range_low": lo,
-        "range_high": hi,
-        "range_display": range_txt,
-        "private_party_display": _fmt_usd0(c.get("kbb_private_party")),
-        "trade_in_display": _fmt_usd0(c.get("kbb_trade_in")),
-        "fetched_at": format_display_value(fetched) if fetched else None,
-        "vs_listing_code": vs,
-        "vs_listing_label": labels.get(vs) if vs else None,
-    }
+    return out
 
 
 def fill_derived_condition_for_display(c: dict[str, Any], out: dict[str, Any]) -> None:

@@ -1,13 +1,13 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1984,Ford,E150 Club Wagon,2WD,4.9L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.9,11,14,12,,,,,
-1984,Ford,E150 Club Wagon,2WD,4.9L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.9,12,15,13,,,,,
-1984,Ford,E150 Club Wagon,2WD,4.9L V6 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.9,13,17,14,,,,,
-1984,Ford,E150 Club Wagon,2WD,5.0L V8,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.0,11,15,13,,,,,
-1984,Ford,E150 Club Wagon,2WD,5.0L V8,Manual 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.0,11,15,13,,,,,
-1984,Ford,E150 Club Wagon,2WD,5.8L V8 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.8,10,11,10,,,,,
-1984,Ford,E150 Club Wagon,2WD,5.8L V8,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.8,10,12,11,,,,,
-1984,Ford,E150 Club Wagon,2WD,4.9L V6 ((FFS) CA model),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.9,11,14,12,,,,,
-1984,Ford,E150 Club Wagon,2WD,4.9L V6 ((FFS) CA model),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.9,12,15,13,,,,,
-1984,Ford,E150 Club Wagon,2WD,4.9L V6 ((FFS) CA model),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.9,12,15,13,,,,,
-1984,Ford,E150 Club Wagon,2WD,5.0L V8 ((FFS) CA model),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.0,11,14,12,,,,,
-1984,Ford,E150 Club Wagon,2WD,5.8L V8 ((FFS) CA model),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.8,9,10,9,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1984,Ford,E150 Club Wagon,2WD,4.9L V6 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.9,11,14,12,,,,,,4.9L V6 Twin Turbo,Twin Turbocharged
+1984,Ford,E150 Club Wagon,2WD,4.9L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.9,12,15,13,,,,,,4.9L V6 Twin Turbo,Twin Turbocharged
+1984,Ford,E150 Club Wagon,2WD,4.9L V6 ((FFS)),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.9,13,17,14,,,,,,4.9L V6 Twin Turbo,Twin Turbocharged
+1984,Ford,E150 Club Wagon,2WD,5.0L V8,Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.0,11,15,13,,,,,,5.0L V8,
+1984,Ford,E150 Club Wagon,2WD,5.0L V8,Manual 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.0,11,15,13,,,,,,5.0L V8,
+1984,Ford,E150 Club Wagon,2WD,5.8L V8 ((FFS)),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.8,10,11,10,,,,,,5.8L V8,
+1984,Ford,E150 Club Wagon,2WD,5.8L V8,Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.8,10,12,11,,,,,,5.8L V8,
+1984,Ford,E150 Club Wagon,2WD,4.9L V6 ((FFS) CA model),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.9,11,14,12,,,,,,4.9L V6 Twin Turbo,Twin Turbocharged
+1984,Ford,E150 Club Wagon,2WD,4.9L V6 ((FFS) CA model),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.9,12,15,13,,,,,,4.9L V6 Twin Turbo,Twin Turbocharged
+1984,Ford,E150 Club Wagon,2WD,4.9L V6 ((FFS) CA model),Manual 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",6,4.9,12,15,13,,,,,,4.9L V6 Twin Turbo,Twin Turbocharged
+1984,Ford,E150 Club Wagon,2WD,5.0L V8 ((FFS) CA model),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.0,11,14,12,,,,,,5.0L V8,
+1984,Ford,E150 Club Wagon,2WD,5.8L V8 ((FFS) CA model),Automatic 3-spd,Front-Wheel Drive,Regular Gasoline,"Vans, Passenger Type",8,5.8,9,10,9,,,,,,5.8L V8,

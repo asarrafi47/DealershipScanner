@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1994,GMC,Rally,G15/25 2WD,4.3L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,14,17,15,,,,,
-1994,GMC,Rally,G15/25 2WD,5.0L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.0,12,17,14,,,,,
-1994,GMC,Rally,G15/25 2WD,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.7,11,16,13,,,,,
-1994,GMC,Rally,G15/25 2WD,Diesel 6.5L V8 ((MPFI) (NO-CAT)) Diesel,Automatic 4-spd,Rear-Wheel Drive,Diesel,Vans,8,6.5,15,19,16,,,,,
-1994,GMC,Rally,G35 2WD,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.7,11,16,13,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1994,GMC,Rally,G15/25 2WD,4.3L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,14,17,15,,,,,,4.3L V6,
+1994,GMC,Rally,G15/25 2WD,5.0L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.0,12,17,14,,,,,,5.0L V8,
+1994,GMC,Rally,G15/25 2WD,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.7,11,16,13,,,,,,5.7L V8,
+1994,GMC,Rally,G15/25 2WD,Diesel 6.5L V8 ((MPFI) (NO-CAT)) Diesel,Automatic 4-spd,Rear-Wheel Drive,Diesel,Vans,8,6.5,15,19,16,,,,,,6.5L V8,
+1994,GMC,Rally,G35 2WD,5.7L V8 ((350 V8) (FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.7,11,16,13,,,,,,5.7L V8,

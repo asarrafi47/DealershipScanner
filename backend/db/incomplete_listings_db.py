@@ -226,6 +226,18 @@ def _attach_listing_display_for_dev(cars: list[dict]) -> None:
         c["listing_model_display"] = ser.get("model")
 
 
+def get_incomplete_car_id_set() -> set[int]:
+    """Car ids flagged incomplete (O(1) membership for listings grid filtering)."""
+    ensure_incomplete_index_built()
+    conn = get_conn()
+    _ensure_schema(conn)
+    cur = conn.cursor()
+    cur.execute("SELECT car_id FROM incomplete_listings")
+    out = {int(r[0]) for r in cur.fetchall() if r and r[0] is not None}
+    conn.close()
+    return out
+
+
 def get_incomplete_cars_for_dev() -> list[dict]:
     """Cars referenced in the incomplete index, newest first, with ``incomplete_missing_fields``."""
     from backend.db.inventory_db import get_cars_by_ids

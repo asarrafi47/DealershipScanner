@@ -1,8 +1,8 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2014,Jeep,Grand Cherokee,SRT8,6.4L V8,Automatic 8-spd,Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,6.4,13,19,15,,,,,
-2014,Jeep,Grand Cherokee,2WD,FFV 3.6L V6 (FFV),Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline / E85,Standard Sport Utility Vehicle 2WD,6,3.6,17,25,20,,,,,
-2014,Jeep,Grand Cherokee,2WD,5.7L V8 Midgrade Gasoline,Automatic 8-spd,Rear-Wheel Drive,Midgrade Gasoline,Standard Sport Utility Vehicle 2WD,8,5.7,14,22,17,,,,,
-2014,Jeep,Grand Cherokee,4WD,FFV 3.6L V6 (FFV),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Sport Utility Vehicle 4WD,6,3.6,17,24,19,,,,,
-2014,Jeep,Grand Cherokee,4WD,5.7L V8 Midgrade Gasoline,Automatic 8-spd,Four-Wheel Drive,Midgrade Gasoline,Standard Sport Utility Vehicle 4WD,8,5.7,14,20,16,,,,,
-2014,Jeep,Grand Cherokee,2WD,Diesel 3.0L V6 Diesel,Automatic 8-spd,Rear-Wheel Drive,Diesel,Standard Sport Utility Vehicle 2WD,6,3.0,22,30,25,,,,,
-2014,Jeep,Grand Cherokee,4WD,Diesel 3.0L V6 Diesel,Automatic 8-spd,Four-Wheel Drive,Diesel,Standard Sport Utility Vehicle 4WD,6,3.0,21,28,24,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2014,Jeep,Grand Cherokee,SRT8,6.4L V8,Automatic 8-spd,Four-Wheel Drive,Premium Gasoline,Standard Sport Utility Vehicle 4WD,8,6.4,13,19,15,,,,,,6.4L V8,
+2014,Jeep,Grand Cherokee,2WD,FFV 3.6L V6 (FFV),Automatic 8-spd,Rear-Wheel Drive,Regular Gasoline / E85,Standard Sport Utility Vehicle 2WD,6,3.6,17,25,20,,,,,,3.6L V6,
+2014,Jeep,Grand Cherokee,2WD,5.7L V8 Midgrade Gasoline,Automatic 8-spd,Rear-Wheel Drive,Midgrade Gasoline,Standard Sport Utility Vehicle 2WD,8,5.7,14,22,17,,,,,,5.7L V8,
+2014,Jeep,Grand Cherokee,4WD,FFV 3.6L V6 (FFV),Automatic 8-spd,Four-Wheel Drive,Regular Gasoline / E85,Standard Sport Utility Vehicle 4WD,6,3.6,17,24,19,,,,,,3.6L V6,
+2014,Jeep,Grand Cherokee,4WD,5.7L V8 Midgrade Gasoline,Automatic 8-spd,Four-Wheel Drive,Midgrade Gasoline,Standard Sport Utility Vehicle 4WD,8,5.7,14,20,16,,,,,,5.7L V8,
+2014,Jeep,Grand Cherokee,2WD,Diesel 3.0L V6 Diesel,Automatic 8-spd,Rear-Wheel Drive,Diesel,Standard Sport Utility Vehicle 2WD,6,3.0,22,30,25,,,,,,3.0L V6,
+2014,Jeep,Grand Cherokee,4WD,Diesel 3.0L V6 Diesel,Automatic 8-spd,Four-Wheel Drive,Diesel,Standard Sport Utility Vehicle 4WD,6,3.0,21,28,24,,,,,,3.0L V6,

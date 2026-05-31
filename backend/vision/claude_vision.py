@@ -33,11 +33,21 @@ _CLASSIFY_PROMPT = """\
 You are classifying car dealership listing photos. For each image I send, tell me:
 - keep: true if it is an actual vehicle photo (exterior shot, interior, engine bay, trunk, wheels, dashboard, seats)
 - keep: false if it is a badge, logo, award, CARFAX report, financing offer, promo banner, captcha, QR code, watermark-only slide, or dealership marketing material
+- quality: "good" | "acceptable" | "poor" — poor = very dark, tiny, heavy watermark, motion blur, or unusable; use "n/a" when keep is false
 
 Respond ONLY with a JSON array, one entry per image, in order:
-[{"idx": 0, "keep": true, "category": "exterior"}, {"idx": 1, "keep": false, "category": "badge"}, ...]
+[{"idx": 0, "keep": true, "category": "exterior", "quality": "good"}, {"idx": 1, "keep": false, "category": "badge", "quality": "n/a"}, ...]
 
-Categories: exterior, interior, engine, wheels, trunk, badge, promo, award, carfax, other_keep, other_drop
+Categories: exterior, interior, engine, wheels, trunk, dashboard, seats, badge, promo, award, carfax, other_keep, other_drop
+"""
+
+_EQUIPMENT_PROMPT = """\
+From these vehicle listing photos, report ONLY optional/upgraded equipment clearly visible.
+Look for: HUD, 360/surround cameras on mirrors or grille, ACC/LKA steering buttons, panoramic sunroof, heated/ventilated seats, premium audio badges, tow hitch, red calipers, night vision grille, blind-spot indicators, digital cluster, wireless charging pad, aftermarket wheels/lift/steps.
+Do NOT list base-trim staples (alloy wheels, power mirrors, fog lights, floor mats).
+Return ONLY JSON:
+{"observed_features": string[], "possible_packages": string[], "detected_adas": string[]}
+Use [] when none. detected_adas tokens: acc, lka, hud, 360_cameras, blind_spot, night_vision, parking_sensors.
 """
 
 
@@ -154,9 +164,12 @@ def _classify_batch(
 
     try:
         import anthropic
+        from backend.vision.claude_rate_limit import anthropic_messages_create
+
         client = anthropic.Anthropic(api_key=api_key)
         with _CLASSIFY_SEM:
-            msg = client.messages.create(
+            msg = anthropic_messages_create(
+                client,
                 model=_CLAUDE_MODEL,
                 max_tokens=512,
                 system=[{"type": "text", "text": _CLASSIFY_PROMPT, "cache_control": {"type": "ephemeral"}}],
@@ -190,7 +203,11 @@ def _classify_batch(
                 continue
             keep = bool(entry.get("keep", True))
             cat = str(entry.get("category") or "unknown")
-            result_map[orig_i] = (orig_i, orig_u, keep, cat)
+            qual = str(entry.get("quality") or "unknown").lower()
+            if keep and qual == "poor":
+                result_map[orig_i] = (orig_i, orig_u, True, f"{cat}:poor")
+            else:
+                result_map[orig_i] = (orig_i, orig_u, keep, cat)
         except (TypeError, ValueError, KeyError):
             continue
 
@@ -282,31 +299,122 @@ def filter_gallery_urls_for_vehicle_listing(
 
     kept.sort(key=_sort_key)
 
-    # Blur + near-duplicate filter on kept images
+    return _finalize_kept_gallery_urls(kept, page_referer)
+
+
+def _finalize_kept_gallery_urls(
+    kept: list[tuple[int, str, str]],
+    page_referer: str | None,
+) -> list[str]:
+    """Blur/dedupe; drop poor-quality only when alternatives exist; never return empty."""
+    from backend.vision.url_heuristics import dealer_lot_photo_score
+
+    poor_only: list[tuple[int, str, str, float]] = []
+    good: list[tuple[int, str, str, float]] = []
+    for i, u, cat in kept:
+        score = dealer_lot_photo_score(u)
+        if ":poor" in cat or cat.endswith(":poor"):
+            poor_only.append((i, u, cat, score))
+        else:
+            good.append((i, u, cat, score))
+
+    work = good if good else poor_only
     final: list[str] = []
     seen_hashes: list[int] = []
-    for _, u, _ in kept:
+    dropped_blur: list[tuple[int, str, str, float]] = []
+
+    for i, u, cat, score in work:
         b64 = _fetch_image_b64(u, page_referer)
         if b64 is None:
-            final.append(u)  # unfetchable → keep
+            final.append(u)
             continue
         try:
             from PIL import Image
+
             raw = base64.b64decode(b64)
             img = Image.open(BytesIO(raw)).convert("RGB")
-
             if _image_is_blurry(img):
                 logger.debug("Dropping blurry image: %s", u[:80])
+                dropped_blur.append((i, u, cat, score))
                 continue
-
             ph = _image_phash(img)
+            if ph is not None and any(_hamming(ph, h) < 8 for h in seen_hashes):
+                logger.debug("Dropping near-duplicate image: %s", u[:80])
+                continue
             if ph is not None:
-                if any(_hamming(ph, h) < 8 for h in seen_hashes):
-                    logger.debug("Dropping near-duplicate image: %s", u[:80])
-                    continue
                 seen_hashes.append(ph)
         except Exception:
             pass
         final.append(u)
 
-    return final if final else [u for _, u, _ in kept]
+    if final:
+        return final
+    if dropped_blur:
+        best = max(dropped_blur, key=lambda t: t[3])
+        return [best[1]]
+    if kept:
+        best_kept = max(kept, key=lambda t: dealer_lot_photo_score(t[1]))
+        return [best_kept[1]]
+    return []
+
+
+def _equipment_batch_enabled() -> bool:
+    raw = (os.environ.get("CLAUDE_VISION_UNIFIED_EQUIPMENT") or "1").strip().lower()
+    return raw not in ("0", "false", "no", "off")
+
+
+def analyze_equipment_from_image_urls(
+    urls: list[str],
+    *,
+    page_referer: str | None = None,
+    max_images: int = 6,
+) -> dict[str, Any]:
+    """
+    One Haiku call with up to *max_images* photos — equipment/ADAS only (no gallery filter).
+    """
+    key = _api_key()
+    if not key or not urls:
+        return {}
+    cap = max(1, min(8, max_images))
+    images_b64: list[str] = []
+    for u in urls[: cap * 2]:
+        if len(images_b64) >= cap:
+            break
+        b64 = _fetch_image_b64(u, page_referer)
+        if b64:
+            images_b64.append(b64)
+    if not images_b64:
+        return {}
+
+    content: list[Any] = []
+    for seq, b64 in enumerate(images_b64):
+        content.append({"type": "text", "text": f"Image {seq}:"})
+        content.append({
+            "type": "image",
+            "source": {"type": "base64", "media_type": "image/jpeg", "data": b64},
+        })
+    content.append({"type": "text", "text": "List visible optional equipment. Return JSON only."})
+
+    try:
+        import anthropic
+        from backend.vision.claude_rate_limit import anthropic_messages_create
+
+        client = anthropic.Anthropic(api_key=key)
+        with _CLASSIFY_SEM:
+            msg = anthropic_messages_create(
+                client,
+                model=_CLAUDE_MODEL,
+                max_tokens=640,
+                system=[{"type": "text", "text": _EQUIPMENT_PROMPT, "cache_control": {"type": "ephemeral"}}],
+                messages=[{"role": "user", "content": content}],
+            )
+        text = msg.content[0].text.strip()
+        if text.startswith("```"):
+            text = text.split("```")[1]
+            if text.startswith("json"):
+                text = text[4:]
+        parsed = json.loads(text)
+        return parsed if isinstance(parsed, dict) else {}
+    except Exception as e:
+        logger.warning("Claude equipment batch failed: %s", e)
+        return {}

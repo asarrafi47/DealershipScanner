@@ -1,21 +1,21 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1984,Volkswagen,Quantum,Quantum,"1.6L I4 ((DSL,TRBO)) Diesel",Automatic 3-spd,,Diesel,Compact Cars,4,1.6,25,31,27,,,,,
-1984,Volkswagen,Quantum,Quantum,"1.6L I4 ((DSL,TRBO)) Diesel",Automatic 3-spd,,Diesel,Compact Cars,4,1.6,25,31,27,,,,,
-1984,Volkswagen,Quantum,Quantum,"1.6L I4 ((DSL,TRBO)) Diesel",Manual 5-spd,,Diesel,Compact Cars,4,1.6,32,35,33,,,,,
-1984,Volkswagen,Quantum,Quantum,"1.6L I4 ((DSL,TRBO)) Diesel",Manual 5-spd,,Diesel,Compact Cars,4,1.6,31,35,33,,,,,
-1984,Volkswagen,Quantum,Quantum,2.1L V5 ((FFS)),Automatic 3-spd,,Regular Gasoline,Compact Cars,5,2.1,16,21,18,,,,,
-1984,Volkswagen,Quantum,Quantum,2.1L V5 ((FFS)),Manual 5-spd,,Regular Gasoline,Compact Cars,5,2.1,16,22,18,,,,,
-1984,Volkswagen,Quantum,Wagon,"1.6L I4 ((DSL,TRBO)) Diesel",Automatic 3-spd,,Diesel,Small Station Wagons,4,1.6,25,31,27,,,,,
-1984,Volkswagen,Quantum,Wagon,"1.6L I4 ((DSL,TRBO)) Diesel",Automatic 3-spd,,Diesel,Small Station Wagons,4,1.6,25,31,27,,,,,
-1984,Volkswagen,Quantum,Wagon,"1.6L I4 ((DSL,TRBO)) Diesel",Manual 5-spd,,Diesel,Small Station Wagons,4,1.6,32,35,33,,,,,
-1984,Volkswagen,Quantum,Wagon,"1.6L I4 ((DSL,TRBO)) Diesel",Manual 5-spd,,Diesel,Small Station Wagons,4,1.6,31,35,33,,,,,
-1984,Volkswagen,Quantum,Wagon,2.1L V5 ((FFS)),Automatic 3-spd,,Regular Gasoline,Small Station Wagons,5,2.1,16,21,18,,,,,
-1984,Volkswagen,Quantum,Wagon,2.1L V5 ((FFS)),Manual 5-spd,,Regular Gasoline,Small Station Wagons,5,2.1,16,21,18,,,,,
-1984,Volkswagen,Quantum,Quantum,"1.6L I4 ((DSL,TRBO) CA model) Diesel",Manual 5-spd,,Diesel,Compact Cars,4,1.6,29,35,31,,,,,
-1984,Volkswagen,Quantum,Quantum,"1.6L I4 ((DSL,TRBO) CA model) Diesel",Manual 5-spd,,Diesel,Compact Cars,4,1.6,28,35,31,,,,,
-1984,Volkswagen,Quantum,Quantum,2.1L V5 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Compact Cars,5,2.1,16,20,18,,,,,
-1984,Volkswagen,Quantum,Quantum,2.1L V5 ((FFS) CA model),Manual 5-spd,,Regular Gasoline,Compact Cars,5,2.1,17,22,19,,,,,
-1984,Volkswagen,Quantum,Wagon,"1.6L I4 ((DSL,TRBO) CA model) Diesel",Manual 5-spd,,Diesel,Small Station Wagons,4,1.6,29,35,31,,,,,
-1984,Volkswagen,Quantum,Wagon,"1.6L I4 ((DSL,TRBO) CA model) Diesel",Manual 5-spd,,Diesel,Small Station Wagons,4,1.6,28,35,31,,,,,
-1984,Volkswagen,Quantum,Wagon,2.1L V5 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Small Station Wagons,5,2.1,16,20,18,,,,,
-1984,Volkswagen,Quantum,Wagon,2.1L V5 ((FFS) CA model),Manual 5-spd,,Regular Gasoline,Small Station Wagons,5,2.1,16,21,18,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1984,Volkswagen,Quantum,Quantum,"1.6L I4 ((DSL,TRBO)) Diesel",Automatic 3-spd,,Diesel,Compact Cars,4,1.6,25,31,27,,,,,,1.6L I4 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Quantum,"1.6L I4 ((DSL,TRBO)) Diesel",Automatic 3-spd,,Diesel,Compact Cars,4,1.6,25,31,27,,,,,,1.6L I4 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Quantum,"1.6L I4 ((DSL,TRBO)) Diesel",Manual 5-spd,,Diesel,Compact Cars,4,1.6,32,35,33,,,,,,1.6L I4 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Quantum,"1.6L I4 ((DSL,TRBO)) Diesel",Manual 5-spd,,Diesel,Compact Cars,4,1.6,31,35,33,,,,,,1.6L I4 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Quantum,2.1L V5 ((FFS)),Automatic 3-spd,,Regular Gasoline,Compact Cars,5,2.1,16,21,18,,,,,,2.1L V5 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Quantum,2.1L V5 ((FFS)),Manual 5-spd,,Regular Gasoline,Compact Cars,5,2.1,16,22,18,,,,,,2.1L V5 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Wagon,"1.6L I4 ((DSL,TRBO)) Diesel",Automatic 3-spd,,Diesel,Small Station Wagons,4,1.6,25,31,27,,,,,,1.6L I4 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Wagon,"1.6L I4 ((DSL,TRBO)) Diesel",Automatic 3-spd,,Diesel,Small Station Wagons,4,1.6,25,31,27,,,,,,1.6L I4 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Wagon,"1.6L I4 ((DSL,TRBO)) Diesel",Manual 5-spd,,Diesel,Small Station Wagons,4,1.6,32,35,33,,,,,,1.6L I4 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Wagon,"1.6L I4 ((DSL,TRBO)) Diesel",Manual 5-spd,,Diesel,Small Station Wagons,4,1.6,31,35,33,,,,,,1.6L I4 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Wagon,2.1L V5 ((FFS)),Automatic 3-spd,,Regular Gasoline,Small Station Wagons,5,2.1,16,21,18,,,,,,2.1L V5 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Wagon,2.1L V5 ((FFS)),Manual 5-spd,,Regular Gasoline,Small Station Wagons,5,2.1,16,21,18,,,,,,2.1L V5 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Quantum,"1.6L I4 ((DSL,TRBO) CA model) Diesel",Manual 5-spd,,Diesel,Compact Cars,4,1.6,29,35,31,,,,,,1.6L I4 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Quantum,"1.6L I4 ((DSL,TRBO) CA model) Diesel",Manual 5-spd,,Diesel,Compact Cars,4,1.6,28,35,31,,,,,,1.6L I4 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Quantum,2.1L V5 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Compact Cars,5,2.1,16,20,18,,,,,,2.1L V5 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Quantum,2.1L V5 ((FFS) CA model),Manual 5-spd,,Regular Gasoline,Compact Cars,5,2.1,17,22,19,,,,,,2.1L V5 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Wagon,"1.6L I4 ((DSL,TRBO) CA model) Diesel",Manual 5-spd,,Diesel,Small Station Wagons,4,1.6,29,35,31,,,,,,1.6L I4 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Wagon,"1.6L I4 ((DSL,TRBO) CA model) Diesel",Manual 5-spd,,Diesel,Small Station Wagons,4,1.6,28,35,31,,,,,,1.6L I4 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Wagon,2.1L V5 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Small Station Wagons,5,2.1,16,20,18,,,,,,2.1L V5 Turbo,Turbocharged
+1984,Volkswagen,Quantum,Wagon,2.1L V5 ((FFS) CA model),Manual 5-spd,,Regular Gasoline,Small Station Wagons,5,2.1,16,21,18,,,,,,2.1L V5 Turbo,Turbocharged

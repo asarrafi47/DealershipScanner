@@ -1,6 +1,6 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2021,MINI,Countryman,Cooper Countryman,1.5L I3 (SIDI),Automatic (AM-S7),Front-Wheel Drive,Premium Gasoline,Midsize Cars,3,1.5,26,33,29,,,,,
-2021,MINI,Countryman,Cooper Countryman All4,1.5L I3 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,3,1.5,23,32,27,,,,,
-2021,MINI,Countryman,Cooper S Countryman,2.0L I4 (SIDI),Automatic (AM-S7),Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,24,33,28,,,,,
-2021,MINI,Countryman,Cooper S Countryman All4,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,23,31,26,,,,,
-2021,MINI,Countryman,Cooper SE Countryman All4,Plug-in Hybrid 1.5L I3 (SIDI; PHEV),Automatic (S6),All-Wheel Drive,Premium Gasoline / Electricity,Midsize Cars,3,1.5,29,30,29,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2021,MINI,Countryman,Cooper Countryman,1.5L I3 (SIDI),Automatic (AM-S7),Front-Wheel Drive,Premium Gasoline,Midsize Cars,3,1.5,26,33,29,,,,,,1.5L I3 Turbo,Turbocharged
+2021,MINI,Countryman,Cooper Countryman All4,1.5L I3 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,3,1.5,23,32,27,,,,,,1.5L I3 Turbo,Turbocharged
+2021,MINI,Countryman,Cooper S Countryman,2.0L I4 (SIDI),Automatic (AM-S7),Front-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,24,33,28,,,,,,2.0L I4 Turbo,Turbocharged
+2021,MINI,Countryman,Cooper S Countryman All4,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Midsize Cars,4,2.0,23,31,26,,,,,,2.0L I4 Turbo,Turbocharged
+2021,MINI,Countryman,Cooper SE Countryman All4,Plug-in Hybrid 1.5L I3 (SIDI; PHEV),Automatic (S6),All-Wheel Drive,Premium Gasoline / Electricity,Midsize Cars,3,1.5,29,30,29,,,,,,1.5L I3,

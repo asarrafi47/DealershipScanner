@@ -19,9 +19,11 @@ up to 10 characters), **semantic search is skipped** and ``search_cars`` is used
 """
 from __future__ import annotations
 
+import json
 import logging
 import os
 import re
+from functools import lru_cache
 from typing import Any
 
 from backend.db.inventory_db import search_cars
@@ -29,6 +31,19 @@ from backend.utils.field_clean import compute_data_quality_score
 
 logger = logging.getLogger(__name__)
 _HYBRID_DEBUG = os.environ.get("HYBRID_SEARCH_DEBUG", "").strip().lower() in ("1", "true", "yes")
+
+
+def _semantic_car_ids(query_text: str, n_results: int) -> list[int]:
+    """pgvector car-id recall; empty when unconfigured or on failure (SQL fallback)."""
+    from backend.vector.pgvector_service import pgvector_configured, query_cars
+
+    if not pgvector_configured():
+        return []
+    try:
+        return query_cars(query_text, n_results=n_results)
+    except Exception as e:
+        logger.warning("Semantic vector query failed, falling back to SQL: %s", e)
+        return []
 
 # Full VIN: no I, O, Q; spaces ignored (NHTSA 17 character standard).
 _LISTING_VIN_FULL_RE = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$", re.I)
@@ -54,20 +69,22 @@ def _parse_listings_car_id_query(q: str) -> list[int] | None:
     return None
 
 
-def expand_inventory_models(make: str | None, model_hint: str) -> list[str]:
+@lru_cache(maxsize=512)
+def _expand_inventory_models_cached(make_key: str, model_hint: str) -> tuple[str, ...]:
     """
-    Map a user/model hint (e.g. ``X5``, ``Accord``) to all distinct ``cars.model`` values in inventory.
-    Uses prefix and word-boundary matching so SQL does not require an exact trim string.
+    Map a user/model hint (e.g. ``X5``, ``Accord``) to distinct ``cars.model`` values in inventory.
+    Cached — hot path for smart search.
     """
     hint = (model_hint or "").strip()
     if not hint:
-        return []
+        return ()
     from backend.db.inventory_db import get_conn
 
     hint_l = hint.lower()
+    make = make_key.strip() or None
     conn = get_conn()
     cur = conn.cursor()
-    if make and str(make).strip():
+    if make:
         cur.execute(
             """
             SELECT DISTINCT model FROM cars
@@ -75,7 +92,7 @@ def expand_inventory_models(make: str | None, model_hint: str) -> list[str]:
               AND LOWER(TRIM(make)) = LOWER(TRIM(?))
               AND (COALESCE(listing_active, 1) = 1)
             """,
-            (str(make).strip(),),
+            (make,),
         )
     else:
         cur.execute(
@@ -102,8 +119,13 @@ def expand_inventory_models(make: str | None, model_hint: str) -> list[str]:
                 seen.add(md)
                 matched.append(md)
     if matched:
-        return sorted(matched, key=len)
-    return [hint]
+        return tuple(sorted(matched, key=len))
+    return (hint,)
+
+
+def expand_inventory_models(make: str | None, model_hint: str) -> list[str]:
+    """Public wrapper around cached model expansion."""
+    return list(_expand_inventory_models_cached(str(make or "").strip(), str(model_hint or "").strip()))
 
 
 def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any]:
@@ -111,31 +133,69 @@ def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any
 
     Optional ``package_contains`` / ``packages_json_contains`` (substring, case-insensitive)
     maps to ``search_cars(..., packages_json_contains=...)`` for JSON text in ``cars.packages``
-    (e.g. ``packages_normalized`` from listing-description parse). Not emitted by
-    ``parse_natural_query`` today; callers may attach it when exposing structured package search.
+    (e.g. ``packages_normalized`` from listing-description parse). ``parse_natural_query`` emits
+    this for equipment keywords and known package names; GET ``package`` checkboxes map to
+    ``packages_json_contains_list``.
     """
     if not filters:
         return {}
     out: dict[str, Any] = {}
-    if filters.get("make"):
-        out["makes"] = [filters["make"]] if not isinstance(filters["make"], list) else filters["make"]
-    if filters.get("model"):
-        raw_model = filters["model"]
-        if isinstance(raw_model, list):
-            expanded: list[str] = []
-            for m in raw_model:
-                expanded.extend(expand_inventory_models(filters.get("make"), str(m)))
-            out["models"] = list(dict.fromkeys(expanded)) if expanded else raw_model
-        else:
-            mk = filters.get("make")
-            expanded = expand_inventory_models(mk if isinstance(mk, str) else None, str(raw_model))
-            out["models"] = expanded
+
+    vehicle_or_raw = filters.get("vehicle_or")
+    if isinstance(vehicle_or_raw, list) and len(vehicle_or_raw) >= 2:
+        expanded_branches: list[dict[str, Any]] = []
+        for branch in vehicle_or_raw:
+            if not isinstance(branch, dict):
+                continue
+            entry: dict[str, Any] = {}
+            mk = branch.get("make")
+            if mk and str(mk).strip():
+                entry["make"] = str(mk).strip()
+            if branch.get("model"):
+                entry["models"] = expand_inventory_models(
+                    entry.get("make") if isinstance(entry.get("make"), str) else None,
+                    str(branch["model"]),
+                )
+            tc = branch.get("trim_contains")
+            if isinstance(tc, str) and tc.strip():
+                entry["trim_contains"] = tc.strip()
+            if entry:
+                expanded_branches.append(entry)
+        if len(expanded_branches) >= 2:
+            out["vehicle_or"] = expanded_branches
+
+    if not out.get("vehicle_or"):
+        if filters.get("make"):
+            raw_make = filters["make"]
+            out["makes"] = raw_make if isinstance(raw_make, list) else [raw_make]
+        if filters.get("model"):
+            raw_model = filters["model"]
+            if isinstance(raw_model, list):
+                expanded: list[str] = []
+                mk = filters.get("make")
+                mk_val = mk[0] if isinstance(mk, list) and mk else mk
+                for m in raw_model:
+                    expanded.extend(expand_inventory_models(mk_val if isinstance(mk_val, str) else None, str(m)))
+                out["models"] = list(dict.fromkeys(expanded)) if expanded else raw_model
+            else:
+                mk = filters.get("make")
+                mk_val = mk[0] if isinstance(mk, list) and mk else mk
+                expanded = expand_inventory_models(mk_val if isinstance(mk_val, str) else None, str(raw_model))
+                out["models"] = expanded
     if filters.get("drivetrain"):
         d = filters["drivetrain"]
         out["drivetrains"] = d if isinstance(d, list) else [d]
     if filters.get("body_style"):
+        from backend.utils.field_clean import body_styles_for_filter
+
         b = filters["body_style"]
-        out["body_styles"] = b if isinstance(b, list) else [b]
+        raw_list = b if isinstance(b, list) else [b]
+        expanded: list[str] = []
+        for item in raw_list:
+            for v in body_styles_for_filter(str(item)):
+                if v not in expanded:
+                    expanded.append(v)
+        out["body_styles"] = expanded
     if filters.get("exterior_color"):
         out["exterior_colors"] = filters["exterior_color"]
     if filters.get("interior_color"):
@@ -162,20 +222,27 @@ def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any
     if filters.get("max_mileage") is not None:
         out["max_mileage"] = filters["max_mileage"]
     pkg = filters.get("packages_json_contains") or filters.get("package_contains")
-    if isinstance(pkg, str) and pkg.strip():
+    if isinstance(pkg, list):
+        needles = [str(p).strip() for p in pkg if str(p).strip()]
+        if needles:
+            out["packages_json_contains_list"] = needles
+    elif isinstance(pkg, str) and pkg.strip():
         out["packages_json_contains"] = pkg.strip()
+    pkg_list = filters.get("packages_json_contains_list") or filters.get("package")
+    if isinstance(pkg_list, list):
+        needles = [str(p).strip() for p in pkg_list if str(p).strip()]
+        if needles:
+            existing = out.get("packages_json_contains_list") or []
+            if isinstance(existing, str):
+                existing = [existing]
+            merged = list(dict.fromkeys([*(existing if isinstance(existing, list) else []), *needles]))
+            out["packages_json_contains_list"] = merged
+            out.pop("packages_json_contains", None)
     ft = filters.get("fuel_type")
     if ft:
-        # Expand canonical label to all DB variants so LIKE-style matches work via IN clause.
-        _FUEL_EXPANSIONS: dict[str, list[str]] = {
-            "gasoline": ["Gasoline", "Gasoline Fuel", "Premium Unleaded", "Regular Unleaded", "Gasoline/Mild Electric Hybrid"],
-            "hybrid": ["Hybrid", "Hybrid Fuel", "Full Hybrid Electric (FHEV)", "Gasoline / Electric"],
-            "electric": ["Electric"],
-            "plug-in hybrid": ["Plug-In Hybrid", "Performance Plug-In Hybrid", "Plug-In Electric/Gas"],
-            "diesel": ["Diesel", "Diesel Fuel"],
-        }
-        expanded = _FUEL_EXPANSIONS.get(str(ft).lower().strip())
-        out["fuel_types"] = expanded if expanded else [str(ft)]
+        from backend.utils.field_clean import fuel_types_for_filter
+
+        out["fuel_types"] = fuel_types_for_filter(str(ft))
     cyl = filters.get("cylinders")
     if cyl is not None:
         try:
@@ -183,7 +250,11 @@ def filters_dict_to_search_cars_kwargs(filters: dict[str, Any]) -> dict[str, Any
         except (TypeError, ValueError):
             pass
     tc = filters.get("trim_contains")
-    if isinstance(tc, str) and tc.strip():
+    if isinstance(tc, list):
+        needles = [str(t).strip() for t in tc if str(t).strip()]
+        if needles:
+            out["trim_contains_list"] = needles
+    elif isinstance(tc, str) and tc.strip():
         out["trim_contains"] = tc.strip()
     return out
 
@@ -239,6 +310,7 @@ def flask_request_to_search_cars_kwargs(request: Any) -> dict[str, Any]:
             return None
 
     pkg_needle = scalar("package_contains") or scalar("pkg")
+    package_filters = [v.strip() for v in g("package") if v.strip()]
     eng_l_min = scalar("engine_l_min") or scalar("engine_displacement_l_min")
     eng_l_max = scalar("engine_l_max") or scalar("engine_displacement_l_max")
     interior_bucket_filters: list[str] = []
@@ -273,6 +345,9 @@ def flask_request_to_search_cars_kwargs(request: Any) -> dict[str, Any]:
     }
     if pkg_needle:
         out["packages_json_contains"] = pkg_needle
+    if package_filters:
+        out["packages_json_contains_list"] = package_filters
+        out.pop("packages_json_contains", None)
     return out
 
 
@@ -319,14 +394,20 @@ def hybrid_search_with_kwargs(
             meta["sql_count"] = len(rows)
             return _sort_sql_rows(rows), meta
 
-    candidate_ids: list[int] = []
-    try:
-        from backend.vector.pgvector_service import query_cars
+    from backend.utils.query_parser import parse_natural_query
 
-        candidate_ids = query_cars(q, n_results=vector_top_k)
-    except Exception as e:
-        logger.warning("Semantic vector query failed, falling back to SQL: %s", e)
-        candidate_ids = []
+    parsed_q = parse_natural_query(q)
+    if not _has_structured_filters(parsed_q):
+        if not sql_kwargs_has_facet_filters(sql_kwargs):
+            meta["mode"] = "no_parse_match"
+            meta["sql_count"] = 0
+            return [], meta
+        rows = search_cars(**sql_kwargs)
+        meta["mode"] = "sql_only"
+        meta["sql_count"] = len(rows)
+        return _sort_sql_rows(rows), meta
+
+    candidate_ids = _semantic_car_ids(q, vector_top_k)
 
     meta["vector_candidate_count"] = len(candidate_ids)
     meta["vector_candidate_ids_head"] = candidate_ids[:20]
@@ -372,7 +453,10 @@ _STRUCTURED_FILTER_KEYS = frozenset(
         "engine_displacement_l_min",
         "engine_displacement_l_max",
         "packages_json_contains",
+        "packages_json_contains_list",
+        "fully_loaded",
         "trim_contains",
+        "vehicle_or",
     }
 )
 
@@ -388,16 +472,187 @@ def _has_structured_filters(filters: dict[str, Any] | None) -> bool:
     return False
 
 
+_FACET_SQL_KWARG_KEYS = frozenset(
+    {
+        "makes",
+        "models",
+        "trims",
+        "fuel_types",
+        "cylinders",
+        "transmissions",
+        "drivetrains",
+        "body_styles",
+        "exterior_colors",
+        "interior_colors",
+        "interior_color_bucket_filters",
+        "countries",
+        "max_price",
+        "max_mileage",
+        "dealership_registry_id",
+        "dealer_registry_ids",
+        "engine_displacement_l_min",
+        "engine_displacement_l_max",
+        "packages_json_contains",
+        "packages_json_contains_list",
+        "vehicle_or",
+    }
+)
+
+NO_PARSE_MATCH_MESSAGE = (
+    "No vehicles matched that search. Try a make, model, VIN, or equipment term."
+)
+
+
+def sql_kwargs_has_facet_filters(sql_kwargs: dict[str, Any] | None) -> bool:
+    """True when GET facet params (not geo alone) constrain the grid."""
+    if not sql_kwargs:
+        return False
+    for k, v in sql_kwargs.items():
+        if k not in _FACET_SQL_KWARG_KEYS:
+            continue
+        if v is None or v == "" or v == []:
+            continue
+        return True
+    return False
+
+
+def query_is_actionable(
+    q: str,
+    filters: dict[str, Any] | None = None,
+    sql_kwargs: dict[str, Any] | None = None,
+) -> bool:
+    """Skip vector/SQL-wide fallback when free text did not parse to anything useful."""
+    q = (q or "").strip()
+    if not q:
+        return sql_kwargs_has_facet_filters(sql_kwargs)
+    if _normalize_listings_vin_query(q) or _parse_listings_car_id_query(q):
+        return True
+    if _has_structured_filters(filters):
+        return True
+    if sql_kwargs_has_facet_filters(sql_kwargs):
+        return True
+    return False
+
+
+def _collect_package_needles(filters: dict[str, Any] | None) -> list[str]:
+    if not filters:
+        return []
+    needles: list[str] = []
+    seen: set[str] = set()
+    pkg = filters.get("packages_json_contains")
+    if isinstance(pkg, str) and pkg.strip():
+        low = pkg.strip().lower()
+        if low not in seen:
+            seen.add(low)
+            needles.append(low)
+    raw_list = filters.get("packages_json_contains_list")
+    if isinstance(raw_list, list):
+        for item in raw_list:
+            low = str(item or "").strip().lower()
+            if low and low not in seen:
+                seen.add(low)
+                needles.append(low)
+    return needles
+
+
+def _package_haystack(car: dict) -> str:
+    parts = [
+        str(car.get("packages") or ""),
+        str(car.get("title") or ""),
+        str(car.get("trim") or ""),
+        str(car.get("engine_description") or ""),
+        str(car.get("exterior_color") or ""),
+        str(car.get("interior_color") or ""),
+    ]
+    return " ".join(parts).lower()
+
+
+def _package_match_count(car: dict, needles: list[str]) -> int:
+    if not needles:
+        return 0
+    hay = _package_haystack(car)
+    return sum(1 for needle in needles if needle in hay)
+
+
+def _packages_json_richness(car: dict) -> int:
+    raw = car.get("packages")
+    if not raw:
+        return 0
+    try:
+        parsed = json.loads(raw) if isinstance(raw, str) else raw
+        if isinstance(parsed, dict):
+            return len(json.dumps(parsed))
+    except (json.JSONDecodeError, TypeError):
+        pass
+    return len(str(raw))
+
+
+def _should_skip_vector_rerank(filters: dict[str, Any] | None, query_text: str) -> bool:
+    """Skip pgvector embed+query when structured parse already narrows/scores results."""
+    if os.environ.get("SMART_SEARCH_SKIP_VECTOR_RERANK", "").strip().lower() in ("1", "true", "yes"):
+        return True
+    if not filters:
+        return False
+    if _collect_package_needles(filters):
+        return True
+    if filters.get("vehicle_or"):
+        return True
+    if filters.get("make") and filters.get("model"):
+        return True
+    if filters.get("make") and _has_structured_filters(filters):
+        return True
+    return False
+
+
+def _rank_smart_search_results(
+    rows: list[dict],
+    query_text: str,
+    filters: dict[str, Any] | None,
+    *,
+    vector_top_k: int,
+) -> list[dict]:
+    """Order SQL results by how closely they match equipment / option intent."""
+    if not rows:
+        return rows
+    needles = _collect_package_needles(filters)
+    fully_loaded = bool((filters or {}).get("fully_loaded"))
+    vector_rank: dict[int, int] = {}
+    q = (query_text or "").strip()
+    if q and not _should_skip_vector_rerank(filters, q):
+        order = _semantic_car_ids(q, min(max(vector_top_k, len(rows)), 80))
+        if order:
+            vector_rank = {int(cid): i for i, cid in enumerate(order)}
+
+    def sort_key(car: dict) -> tuple:
+        cid = int(car.get("id") or 0)
+        return (
+            -_package_match_count(car, needles),
+            -_packages_json_richness(car) if fully_loaded else 0,
+            vector_rank.get(cid, 10**9),
+            -(float(car.get("data_quality_score") or 0) or compute_data_quality_score(car)),
+            _price_key(car),
+        )
+
+    return sorted(rows, key=sort_key)
+
+
+def _maybe_strip_multi_package_sql(filters: dict[str, Any] | None, sql_kwargs: dict[str, Any]) -> dict[str, Any]:
+    """When several equipment terms are parsed, score in Python instead of OR-filtering in SQL."""
+    needles = _collect_package_needles(filters)
+    if len(needles) >= 2:
+        out = dict(sql_kwargs)
+        out.pop("packages_json_contains", None)
+        out.pop("packages_json_contains_list", None)
+        return out
+    return sql_kwargs
+
+
 def _rerank_rows_by_vector(query_text: str, rows: list[dict], *, vector_top_k: int) -> list[dict]:
     """Preserve SQL filter membership; order by semantic similarity when pgvector is available."""
     if not rows or not (query_text or "").strip():
         return rows
-    try:
-        from backend.vector.pgvector_service import query_cars
-
-        vector_order = query_cars(query_text, n_results=max(vector_top_k, len(rows)))
-    except Exception as e:
-        logger.debug("vector rerank skipped: %s", e)
+    vector_order = _semantic_car_ids(query_text, max(vector_top_k, len(rows)))
+    if not vector_order:
         return rows
     if not vector_order:
         return rows
@@ -430,9 +685,21 @@ def hybrid_smart_search(
     """
     q = (query_text or "").strip()
     sql_kwargs = filters_dict_to_search_cars_kwargs(filters or {})
+    sql_kwargs = _maybe_strip_multi_package_sql(filters, sql_kwargs)
     if listing_geo_kwargs:
         sql_kwargs = {**sql_kwargs, **listing_geo_kwargs}
     meta_extra: dict[str, Any] = {"parsed_filters": dict(filters) if filters else {}}
+    package_needles = _collect_package_needles(filters)
+
+    if q and not query_is_actionable(q, filters, sql_kwargs):
+        return [], {
+            "mode": "no_parse_match",
+            "sql_count": 0,
+            "vector_candidate_count": 0,
+            "vector_candidate_ids_head": [],
+            "vector_backend": "pgvector",
+            **meta_extra,
+        }
 
     if _normalize_listings_vin_query(q) or _parse_listings_car_id_query(q):
         rows, meta = hybrid_search_with_kwargs(q, sql_kwargs, vector_top_k=vector_top_k)
@@ -449,11 +716,11 @@ def hybrid_smart_search(
             "vector_backend": "pgvector",
             **meta_extra,
         }
-        if q:
+        if q or package_needles or (filters or {}).get("fully_loaded"):
             before = rows
-            rows = _rerank_rows_by_vector(q, rows, vector_top_k=vector_top_k)
+            rows = _rank_smart_search_results(rows, q, filters, vector_top_k=vector_top_k)
             if rows is not before:
-                meta["mode"] = "sql_first_vector_rerank"
+                meta["mode"] = "sql_first_relevance_rank"
         else:
             rows = _sort_sql_rows(rows)
         return rows, meta

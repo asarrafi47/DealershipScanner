@@ -1,2 +1,2 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1989,Chrysler,New Yorker,New Yorker,3.0L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.0,16,24,19,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1989,Chrysler,New Yorker,New Yorker,3.0L V6 ((FFS)),Automatic 4-spd,Front-Wheel Drive,Regular Gasoline,Midsize Cars,6,3.0,16,24,19,,,,,,3.0L V6,

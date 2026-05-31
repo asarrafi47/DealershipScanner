@@ -238,6 +238,76 @@ def vehicle_list_len(body: Any, *, min_vin_count: int = 3) -> int:
     return len(lst) if lst else 0
 
 
+def max_algolia_nb_hits_from_intercepts(
+    records: list[tuple[str, Any]],
+    dealer_base_url: str,
+) -> int | None:
+    """
+    Largest Algolia ``nbHits`` among intercept blocks that include a vehicle hit list.
+
+    Used when ``pick_total_count_from_intercepts`` returns a page-local total (e.g. 53)
+    while another block reports the full index size (e.g. 387).
+    """
+    best: int | None = None
+    for resp_url, body in records:
+        if not intercept_url_allowed(resp_url, dealer_base_url):
+            continue
+        if not isinstance(body, dict):
+            continue
+        blocks: list[dict[str, Any]] = []
+        results = body.get("results")
+        if isinstance(results, list):
+            blocks.extend(b for b in results if isinstance(b, dict))
+        else:
+            blocks.append(body)
+        for block in blocks:
+            hits = block.get("hits")
+            if not isinstance(hits, list) or _vin_dict_count(hits) < 3:
+                continue
+            nb = block.get("nbHits") or block.get("nb_hits")
+            if nb is not None and isinstance(nb, (int, float)):
+                n = int(nb)
+                if n > 0 and (best is None or n > best):
+                    best = n
+    return best
+
+
+def _vin_dict_count(lst: list) -> int:
+    return sum(
+        1
+        for i in lst
+        if isinstance(i, dict) and ("vin" in i or "VIN" in i or "item_id" in i)
+    )
+
+
+def effective_lot_total_from_intercepts(
+    records: list[tuple[str, Any]],
+    dealer_base_url: str,
+) -> int | None:
+    """Best estimate of full-lot size for pagination / sufficiency (max of page + Algolia hints)."""
+    picked = pick_total_count_from_intercepts(records, dealer_base_url)
+    algolia_max = max_algolia_nb_hits_from_intercepts(records, dealer_base_url)
+    if picked is None and algolia_max is None:
+        return None
+    if picked is None:
+        return algolia_max
+    if algolia_max is None:
+        return picked
+    return max(picked, algolia_max)
+
+
+def max_vehicle_list_len_from_intercepts(
+    records: list[tuple[str, Any]],
+    dealer_base_url: str,
+) -> int:
+    best = 0
+    for resp_url, body in records:
+        if not intercept_url_allowed(resp_url, dealer_base_url):
+            continue
+        best = max(best, vehicle_list_len(body, min_vin_count=1))
+    return best
+
+
 def pick_total_count_from_intercepts(
     records: list[tuple[str, Any]],
     dealer_base_url: str,
@@ -258,10 +328,12 @@ def pick_total_count_from_intercepts(
         tc = get_total_count(body)
         n = vehicle_list_len(body)
         has_tc = 1 if tc is not None and int(tc) > 0 else 0
-        key = (has_tc, n, int(tc) if tc is not None else 0)
+        # Prefer the tightest total for this page (Algolia facet blocks often report index-wide nbHits).
+        tc_i = int(tc) if tc is not None else 0
+        key = (has_tc, n, -tc_i)
         if key > best_key:
             best_key = key
-            best_tc = int(tc) if tc is not None else None
+            best_tc = tc_i if tc_i > 0 else None
 
     if best_tc is not None and best_tc > 0:
         return best_tc

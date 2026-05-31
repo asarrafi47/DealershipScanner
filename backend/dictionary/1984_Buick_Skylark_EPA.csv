@@ -1,9 +1,9 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1984,Buick,Skylark,Skylark,2.5L I4 ((FFS)),Automatic 3-spd,,Regular Gasoline,Compact Cars,4,2.5,20,28,23,,,,,
-1984,Buick,Skylark,Skylark,2.5L I4 ((CAL)(FFS)),Manual 4-spd,,Regular Gasoline,Compact Cars,4,2.5,20,29,23,,,,,
-1984,Buick,Skylark,Skylark,2.8L V6 ((FFS)),Automatic 3-spd,,Regular Gasoline,Compact Cars,6,2.8,17,24,19,,,,,
-1984,Buick,Skylark,Skylark,2.8L V6 ((FFS)),Manual 4-spd,,Regular Gasoline,Compact Cars,6,2.8,17,24,19,,,,,
-1984,Buick,Skylark,Skylark,2.5L I4 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Compact Cars,4,2.5,20,28,23,,,,,
-1984,Buick,Skylark,Skylark,2.5L I4 ((FFS) CA model),Manual 4-spd,,Regular Gasoline,Compact Cars,4,2.5,20,29,23,,,,,
-1984,Buick,Skylark,Skylark,2.8L V6 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Compact Cars,6,2.8,17,23,19,,,,,
-1984,Buick,Skylark,Skylark,2.8L V6 ((FFS) CA model),Manual 4-spd,,Regular Gasoline,Compact Cars,6,2.8,17,24,20,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1984,Buick,Skylark,Skylark,2.5L I4 ((FFS)),Automatic 3-spd,,Regular Gasoline,Compact Cars,4,2.5,20,28,23,,,,,,2.5L I4,
+1984,Buick,Skylark,Skylark,2.5L I4 ((CAL)(FFS)),Manual 4-spd,,Regular Gasoline,Compact Cars,4,2.5,20,29,23,,,,,,2.5L I4,
+1984,Buick,Skylark,Skylark,2.8L V6 ((FFS)),Automatic 3-spd,,Regular Gasoline,Compact Cars,6,2.8,17,24,19,,,,,,2.8L V6,
+1984,Buick,Skylark,Skylark,2.8L V6 ((FFS)),Manual 4-spd,,Regular Gasoline,Compact Cars,6,2.8,17,24,19,,,,,,2.8L V6,
+1984,Buick,Skylark,Skylark,2.5L I4 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Compact Cars,4,2.5,20,28,23,,,,,,2.5L I4,
+1984,Buick,Skylark,Skylark,2.5L I4 ((FFS) CA model),Manual 4-spd,,Regular Gasoline,Compact Cars,4,2.5,20,29,23,,,,,,2.5L I4,
+1984,Buick,Skylark,Skylark,2.8L V6 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Compact Cars,6,2.8,17,23,19,,,,,,2.8L V6,
+1984,Buick,Skylark,Skylark,2.8L V6 ((FFS) CA model),Manual 4-spd,,Regular Gasoline,Compact Cars,6,2.8,17,24,20,,,,,,2.8L V6,

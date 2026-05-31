@@ -1,4 +1,4 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1997,Ford,E150 Club Wagon,E150 Club Wagon,4.2L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.2,12,17,14,,,,,
-1997,Ford,E150 Club Wagon,E150 Club Wagon,4.6L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,4.6,12,17,14,,,,,
-1997,Ford,E150 Club Wagon,E150 Club Wagon,5.4L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.4,11,16,13,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1997,Ford,E150 Club Wagon,E150 Club Wagon,4.2L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.2,12,17,14,,,,,,4.2L V6 Twin Turbo,Twin Turbocharged
+1997,Ford,E150 Club Wagon,E150 Club Wagon,4.6L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,4.6,12,17,14,,,,,,4.6L V8,
+1997,Ford,E150 Club Wagon,E150 Club Wagon,5.4L V8 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,8,5.4,11,16,13,,,,,,5.4L V8,

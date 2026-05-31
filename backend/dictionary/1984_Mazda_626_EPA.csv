@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1984,Mazda,626,626,2.0L I4 ((FFS)),Automatic 3-spd,,Regular Gasoline,Compact Cars,4,2.0,21,26,23,,,,,
-1984,Mazda,626,626,2.0L I4 ((FFS)),Manual 5-spd,,Regular Gasoline,Compact Cars,4,2.0,23,29,25,,,,,
-1984,Mazda,626,626,Diesel 2.0L I4 ((DIESEL)) Diesel,Manual 5-spd,,Diesel,Compact Cars,4,2.0,31,38,33,,,,,
-1984,Mazda,626,626,2.0L I4 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Compact Cars,4,2.0,21,26,23,,,,,
-1984,Mazda,626,626,2.0L I4 ((FFS) CA model),Manual 5-spd,,Regular Gasoline,Compact Cars,4,2.0,23,29,25,,,,,
-1984,Mazda,626,626,Diesel 2.0L I4 ((DIESEL) CA model) Diesel,Manual 5-spd,,Diesel,Compact Cars,4,2.0,31,38,33,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1984,Mazda,626,626,2.0L I4 ((FFS)),Automatic 3-spd,,Regular Gasoline,Compact Cars,4,2.0,21,26,23,,,,,,2.0L I4,
+1984,Mazda,626,626,2.0L I4 ((FFS)),Manual 5-spd,,Regular Gasoline,Compact Cars,4,2.0,23,29,25,,,,,,2.0L I4,
+1984,Mazda,626,626,Diesel 2.0L I4 ((DIESEL)) Diesel,Manual 5-spd,,Diesel,Compact Cars,4,2.0,31,38,33,,,,,,2.0L I4,
+1984,Mazda,626,626,2.0L I4 ((FFS) CA model),Automatic 3-spd,,Regular Gasoline,Compact Cars,4,2.0,21,26,23,,,,,,2.0L I4,
+1984,Mazda,626,626,2.0L I4 ((FFS) CA model),Manual 5-spd,,Regular Gasoline,Compact Cars,4,2.0,23,29,25,,,,,,2.0L I4,
+1984,Mazda,626,626,Diesel 2.0L I4 ((DIESEL) CA model) Diesel,Manual 5-spd,,Diesel,Compact Cars,4,2.0,31,38,33,,,,,,2.0L I4,

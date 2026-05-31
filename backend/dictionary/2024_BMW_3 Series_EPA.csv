@@ -1,7 +1,7 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-2024,BMW,3 Series,330i Sedan,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,25,34,29,,,,,
-2024,BMW,3 Series,330i xDrive Sedan,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,33,27,,,,,
-2024,BMW,3 Series,M340i Sedan,Hybrid 3.0L V6 (SIDI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,23,31,26,,,,,
-2024,BMW,3 Series,M340i xDrive Sedan,Hybrid 3.0L V6 (SIDI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,23,31,26,,,,,
-2024,BMW,3 Series,330e Sedan,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),Automatic (S8),Rear-Wheel Drive,Premium Gasoline / Electricity,Compact Cars,4,2.0,24,32,27,,,,,
-2024,BMW,3 Series,330e xDrive Sedan,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),Automatic (S8),All-Wheel Drive,Premium Gasoline / Electricity,Compact Cars,4,2.0,22,32,26,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+2024,BMW,3 Series,330i Sedan,2.0L I4 (SIDI),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,25,34,29,,,,,,2.0L I4 Turbo,Turbocharged
+2024,BMW,3 Series,330i xDrive Sedan,2.0L I4 (SIDI),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,4,2.0,24,33,27,,,,,,2.0L I4 Turbo,Turbocharged
+2024,BMW,3 Series,M340i Sedan,Hybrid 3.0L V6 (SIDI; Mild Hybrid),Automatic (S8),Rear-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,23,31,26,,,,,,3.0L I6 Turbo,Turbocharged
+2024,BMW,3 Series,M340i xDrive Sedan,Hybrid 3.0L V6 (SIDI; Mild Hybrid),Automatic (S8),All-Wheel Drive,Premium Gasoline,Compact Cars,6,3.0,23,31,26,,,,,,3.0L I6 Turbo,Turbocharged
+2024,BMW,3 Series,330e Sedan,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),Automatic (S8),Rear-Wheel Drive,Premium Gasoline / Electricity,Compact Cars,4,2.0,24,32,27,,,,,,2.0L I4,
+2024,BMW,3 Series,330e xDrive Sedan,Plug-in Hybrid 2.0L I4 (SIDI; PHEV),Automatic (S8),All-Wheel Drive,Premium Gasoline / Electricity,Compact Cars,4,2.0,22,32,26,,,,,,2.0L I4,

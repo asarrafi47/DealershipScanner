@@ -1,0 +1,15 @@
+[Unit]
+Description=Cloudflare tunnel for Sarrafi Cars
+After=network-online.target sarraficars-web.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=sarraficars
+Group=sarraficars
+ExecStart=/usr/local/bin/cloudflared tunnel run --url http://127.0.0.1:5001 sarraficars
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

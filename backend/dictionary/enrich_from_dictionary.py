@@ -78,6 +78,7 @@ FILLABLE_FIELDS = {
     "mpg_highway":    "mpg_highway",
     "body_style":     "bodyStyle",
     "engine_description": "engineOptions",
+    "forced_induction": "forcedInduction",
     "exterior_color": "exteriorColors",
 }
 
@@ -396,11 +397,79 @@ def enrich_car(car: dict, dry_run: bool = False, fill_all: bool = False, *, use_
                 c = extract_color_from_description(combo) or ""
             if c:
                 updates["exterior_color"] = c
+        try:
+            from backend.utils.forced_induction import classify_forced_induction_from_car_row
+
+            fi = classify_forced_induction_from_car_row({**car, **updates})
+            if fi and (fill_all or _is_empty(car.get("forced_induction"))):
+                updates["forced_induction"] = fi
+        except Exception:
+            pass
         return updates
 
     best = _best_row(epa_rows, trim)
     if not best:
         return updates
+
+    try:
+        from backend.dictionary.epa_engine import (
+            engine_fields_need_correction,
+            format_epa_engine_display,
+            pick_epa_engine_row,
+        )
+        from backend.utils.car_serialize import (
+            _effective_cylinder_count,
+            parse_engine_displacement_liters,
+        )
+
+        car_lit = parse_engine_displacement_liters(car)
+        car_cyl = _effective_cylinder_count(car, {})
+        engine_row = pick_epa_engine_row(epa_rows, car, car_lit=car_lit, car_cyl=car_cyl)
+        if engine_row and engine_fields_need_correction(
+            car, engine_row, car_lit=car_lit, car_cyl=car_cyl
+        ):
+            epa_lit = engine_row.get("displacement")
+            epa_cyl = engine_row.get("cylinders")
+            epa_eng = (engine_row.get("engineOptions") or "").strip()
+            if epa_eng:
+                updates["engine_description"] = epa_eng
+            try:
+                lit_f = float(epa_lit)
+                if lit_f > 0:
+                    updates["engine_l"] = lit_f
+            except (TypeError, ValueError):
+                pass
+            try:
+                cyl_i = int(float(epa_cyl))
+                if cyl_i > 0:
+                    updates["cylinders"] = cyl_i
+            except (TypeError, ValueError):
+                pass
+            if format_epa_engine_display(engine_row, car):
+                best = engine_row
+    except Exception:
+        pass
+
+    try:
+        from backend.utils.forced_induction import classify_forced_induction_from_car_row
+
+        merged = {**car, **updates}
+        fi = classify_forced_induction_from_car_row(merged)
+        if fi and (fill_all or _is_empty(car.get("forced_induction"))):
+            updates["forced_induction"] = fi
+    except Exception:
+        pass
+
+    try:
+        from backend.dictionary.epa_engine import enrich_car_engine_from_dictionary
+
+        dict_engine = enrich_car_engine_from_dictionary({**car, **updates}, overwrite=fill_all)
+        if dict_engine:
+            for k, v in dict_engine.items():
+                if fill_all or _is_empty(car.get(k)):
+                    updates[k] = v
+    except Exception:
+        pass
 
     for db_col, csv_col in FILLABLE_FIELDS.items():
         current = car.get(db_col)

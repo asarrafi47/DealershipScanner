@@ -1,3 +1,3 @@
-Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails
-1987,Chevrolet,Astro Passenger,Astro 2WD (passenger),4.3L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,20,17,,,,,
-1987,Chevrolet,Astro Passenger,Astro 2WD (passenger),4.3L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,21,17,,,,,
+Year,Make,Model,Trim,engineOptions,transmissionOptions,drivetrainOptions,fuelType,bodyStyle,cylinders,displacement,mpg_city,mpg_highway,mpg_combined,exteriorColors,Packages,packageDetails,Options,optionDetails,engineDisplay,forcedInduction
+1987,Chevrolet,Astro Passenger,Astro 2WD (passenger),4.3L V6 ((FFS)),Automatic 4-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,20,17,,,,,,4.3L V6,
+1987,Chevrolet,Astro Passenger,Astro 2WD (passenger),4.3L V6 ((FFS)),Manual 5-spd,Rear-Wheel Drive,Regular Gasoline,Vans,6,4.3,15,21,17,,,,,,4.3L V6,

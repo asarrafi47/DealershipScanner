@@ -26,9 +26,13 @@ def is_bcrypt_hash(stored: str) -> bool:
 
 
 def verify_or_legacy(plain: str, stored: str) -> bool:
-    """True if plain matches bcrypt hash or legacy plaintext."""
+    """True if plain matches bcrypt hash; legacy plaintext only outside production (SEC-082)."""
     if not stored:
         return False
     if is_bcrypt_hash(stored):
         return verify_password(plain, stored)
+    from backend.utils.runtime_env import is_production_env
+
+    if is_production_env():
+        return False
     return plain == stored
