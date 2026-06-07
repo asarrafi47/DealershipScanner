@@ -31,6 +31,7 @@ from backend.scanner.cli import (
     load_manifest,
     main,
     run_cli_entry,
+    run_dealer,
 )
 
 __all__ = [
@@ -43,6 +44,7 @@ __all__ = [
     "load_manifest",
     "main",
     "run_cli_entry",
+    "run_dealer",
 ]
 
 if __name__ == "__main__":

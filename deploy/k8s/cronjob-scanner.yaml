@@ -6,7 +6,8 @@ metadata:
 spec:
   # Run every 4 hours
   schedule: "0 */4 * * *"
-  # Never run two scanner jobs at once (SQLite single-writer)
+  # Single pod per schedule. With SQLite on PVC, never run two jobs at once.
+  # For Postgres + parallel shards, use cronjob-scanner-sharded.yaml instead.
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
@@ -26,7 +27,12 @@ spec:
             - name: scanner
               image: REGISTRY/dealership-scanner:latest
               imagePullPolicy: Always
-              command: ["python", "scanner.py", "--dealer", "all"]
+              command: ["python", "scanner.py", "--scan-only"]
+              env:
+                - name: SCANNER_FAST_MODE
+                  value: "1"
+                - name: SCANNER_SCAN_ONLY
+                  value: "1"
               envFrom:
                 - configMapRef:
                     name: dealership-config

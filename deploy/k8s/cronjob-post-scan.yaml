@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dealership-post-scan
+  namespace: dealership
+spec:
+  # Run 30 minutes after inventory scanner (every 4h + offset)
+  schedule: "30 */4 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            app: dealership-post-scan
+        spec:
+          nodeSelector:
+            role: data-node
+          restartPolicy: OnFailure
+          containers:
+            - name: post-scan
+              image: REGISTRY/dealership-scanner:latest
+              imagePullPolicy: Always
+              command: ["python", "post_scan.py", "--hours", "5"]
+              envFrom:
+                - configMapRef:
+                    name: dealership-config
+                - secretRef:
+                    name: dealership-secret
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+              resources:
+                requests:
+                  memory: "512Mi"
+                  cpu: "250m"
+                limits:
+                  memory: "2Gi"
+                  cpu: "1000m"
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: dealership-data-pvc

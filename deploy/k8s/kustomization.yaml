@@ -13,5 +13,7 @@ resources:
   - service-web.yaml
   - ingress.yaml
   - cronjob-scanner.yaml
+  # - cronjob-scanner-sharded.yaml  # enable after INVENTORY_DATABASE_URL migration
+  - cronjob-post-scan.yaml
   - cronjob-enrichment.yaml
   - cronjob-discovery.yaml

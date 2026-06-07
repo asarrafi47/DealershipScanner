@@ -14,11 +14,18 @@ import os
 from dataclasses import dataclass, field
 from typing import Any, Awaitable, Callable
 
-from backend.scanner.scan_efficiency import intercept_feed_is_sufficient
+from backend.scanner.scan_efficiency import intercept_feed_is_sufficient, _intercept_coverage_ratio
 from backend.scanner.scrapers.scanner_intercept_filter import (
     effective_lot_total_from_intercepts,
     max_algolia_nb_hits_from_intercepts,
     max_vehicle_list_len_from_intercepts,
+)
+from backend.scanner.dealer_profile import (
+    get_cached_winning_strategy,
+    manifest_recovery_strategies,
+    manifest_skip_recovery,
+    prioritize_recovery_chain,
+    record_winning_strategy,
 )
 from backend.scanner.scrapers.next_data_inventory import (
     fetch_next_data_json_from_page,
@@ -68,6 +75,111 @@ def _intercept_urls_hint_algolia(intercept_records: list[tuple[str, Any]]) -> bo
     return False
 
 
+def _recovery_hint_filter_enabled() -> bool:
+    raw = (os.environ.get("SCANNER_RECOVERY_HINT_FILTER") or "1").strip().lower()
+    return raw not in ("0", "false", "no", "off")
+
+
+# Full recovery chain order (platform-specific strategies before HTML fallback).
+RECOVERY_STRATEGY_ORDER: tuple[str, ...] = (
+    "dealer_inspire_algolia",
+    "dealer_venom_typesense",
+    "pixel_motion_html",
+    "dealer_on_cosmos",
+    "dealer_eprocess_json",
+    "html_next_data",
+)
+
+_STRATEGY_PLATFORM_HINTS: dict[str, frozenset[str]] = {
+    "dealer_inspire_algolia": frozenset({"algolia", "dealer_inspire"}),
+    "dealer_venom_typesense": frozenset({"typesense", "dealer_venom"}),
+    "pixel_motion_html": frozenset({"pixel_motion"}),
+    "dealer_on_cosmos": frozenset({"dealer_on"}),
+    "dealer_eprocess_json": frozenset({"dealer_eprocess"}),
+    "html_next_data": frozenset({"html_fallback"}),
+}
+
+
+def detect_platform_hints(ctx: RecoveryContext) -> set[str]:
+    """
+    Infer DMS/platform from intercept URLs and saved path HTML.
+    Used to skip irrelevant recovery strategies (each can cost up to 90s).
+    """
+    hints: set[str] = set()
+    for resp_url, _body in ctx.intercept_records:
+        low = str(resp_url or "").lower()
+        if "algolia" in low or "algolianet" in low:
+            hints.add("algolia")
+        if "typesense" in low:
+            hints.add("typesense")
+        if "cosmos/srp/vehicles" in low or "vhcliaa" in low:
+            hints.add("dealer_on")
+        if "dealereprocess" in low or ("/assets/" in low and "vehicle-facts" in low):
+            hints.add("dealer_eprocess")
+
+    combined = "\n".join(h for h in ctx.path_htmls if h)
+    if not combined:
+        return hints
+
+    low = combined.lower()
+    if "dealerinspire" in low or "mvnalgoliaconfig" in low or "maven-algolia" in low:
+        hints.add("dealer_inspire")
+        hints.add("algolia")
+    if "dealervenom" in low or "dv-framework" in low or "typesenseinstantsearchadapter" in low:
+        hints.add("dealer_venom")
+        hints.add("typesense")
+    if "vlpm3vehicle" in low or "pixelmotion" in low:
+        hints.add("pixel_motion")
+    if "dealeron" in low or "vhcliaa" in low or "prsnbaa.dealeron" in low:
+        hints.add("dealer_on")
+    if "dealereprocess" in low:
+        hints.add("dealer_eprocess")
+    return hints
+
+
+def recovery_strategy_names(
+    hints: set[str],
+    *,
+    manifest_strategies: list[str] | None = None,
+    cached_strategy: str | None = None,
+) -> list[str]:
+    """
+    Return ordered recovery strategy names. When platform hints are known, run matching
+    strategies only plus ``html_next_data`` fallback. Unknown platform → full chain.
+
+    Manifest ``recovery_strategies`` overrides hint-based selection when provided.
+    ``cached_strategy`` (from prior successful runs) is moved to the front of the chain.
+    """
+    if manifest_strategies:
+        chain = list(manifest_strategies)
+        if "html_next_data" not in chain:
+            chain.append("html_next_data")
+        return prioritize_recovery_chain(chain, cached_strategy=cached_strategy)
+
+    if not _recovery_hint_filter_enabled() or not hints:
+        chain = list(RECOVERY_STRATEGY_ORDER)
+        return prioritize_recovery_chain(chain, cached_strategy=cached_strategy)
+
+    platform_hints = {h for h in hints if h != "html_fallback"}
+    if not platform_hints:
+        chain = list(RECOVERY_STRATEGY_ORDER)
+        return prioritize_recovery_chain(chain, cached_strategy=cached_strategy)
+
+    selected: list[str] = []
+    for name in RECOVERY_STRATEGY_ORDER:
+        if name == "html_next_data":
+            selected.append(name)
+            continue
+        need = _STRATEGY_PLATFORM_HINTS.get(name, frozenset())
+        if need & platform_hints:
+            selected.append(name)
+    if len(selected) <= 1:
+        chain = list(RECOVERY_STRATEGY_ORDER)
+    else:
+        chain = selected
+    return prioritize_recovery_chain(chain, cached_strategy=cached_strategy)
+
+
 def unique_vin_count(vehicles: list[dict[str, Any]]) -> int:
     seen: set[str] = set()
     for v in vehicles:
@@ -104,6 +216,7 @@ class RecoveryContext:
     path_htmls: list[str | None]
     vehicles: list[dict[str, Any]]
     parse_fn: Callable[[Any], list[dict[str, Any]]]
+    dealer: dict[str, Any] | None = None
 
 
 @dataclass
@@ -135,7 +248,13 @@ def should_run_platform_recovery(ctx: RecoveryContext) -> bool:
         if lot_total is not None and n < int(lot_total * 0.92):
             return True
         if n < _algolia_recovery_floor():
-            return True
+            ratio = _intercept_coverage_ratio()
+            if algolia_max is not None and n >= int(algolia_max * ratio):
+                pass
+            elif lot_total is not None and n >= int(lot_total * ratio):
+                pass
+            else:
+                return True
     if n < _min_rows_for_recovery():
         return True
     best_batch = max_vehicle_list_len_from_intercepts(ctx.intercept_records, ctx.base_url)
@@ -244,6 +363,13 @@ async def recover_inventory(ctx: RecoveryContext) -> RecoveryResult:
     winner: str | None = None
     any_replaced = False
 
+    if manifest_skip_recovery(ctx.dealer):
+        logger.info(
+            "Inventory recovery: %s — skipped (manifest skip_recovery=true)",
+            ctx.dealer_name,
+        )
+        return RecoveryResult(vehicles=vehicles, strategies_tried=tried, winning_strategy=None)
+
     if not should_run_platform_recovery(ctx):
         return RecoveryResult(vehicles=vehicles, strategies_tried=tried, winning_strategy=None)
 
@@ -291,15 +417,45 @@ async def recover_inventory(ctx: RecoveryContext) -> RecoveryResult:
     async def _html() -> list[dict[str, Any]]:
         return await _html_and_next_data(ctx)
 
-    # Algolia direct API first (Tustin, Tuttle-Click, Orange Coast); PixelMotion SSR HTML for CDJR WP sites.
-    for name, fn in (
-        ("dealer_inspire_algolia", _inspire),
-        ("dealer_venom_typesense", _venom),
-        ("pixel_motion_html", _pixel_motion),
-        ("dealer_on_cosmos", _dealer_on),
-        ("dealer_eprocess_json", _eprocess),
-        ("html_next_data", _html),
-    ):
+    strategy_fns: dict[str, StrategyFn] = {
+        "dealer_inspire_algolia": _inspire,
+        "dealer_venom_typesense": _venom,
+        "pixel_motion_html": _pixel_motion,
+        "dealer_on_cosmos": _dealer_on,
+        "dealer_eprocess_json": _eprocess,
+        "html_next_data": _html,
+    }
+    hints = detect_platform_hints(ctx)
+    manifest_chain = manifest_recovery_strategies(ctx.dealer)
+    cached = get_cached_winning_strategy(ctx.dealer_id)
+    chain = recovery_strategy_names(
+        hints,
+        manifest_strategies=manifest_chain,
+        cached_strategy=cached,
+    )
+    if manifest_chain:
+        logger.info(
+            "Inventory recovery: %s — manifest strategies %s",
+            ctx.dealer_name,
+            chain,
+        )
+    elif cached:
+        logger.info(
+            "Inventory recovery: %s — cached winner %s first in chain %s",
+            ctx.dealer_name,
+            cached,
+            chain,
+        )
+    elif hints and chain != list(RECOVERY_STRATEGY_ORDER):
+        logger.info(
+            "Inventory recovery: %s — platform hints %s → strategies %s",
+            ctx.dealer_name,
+            sorted(hints),
+            chain,
+        )
+
+    for name in chain:
+        fn = strategy_fns[name]
         vehicles, replaced, step_winner = await _run_strategy(
             name, fn, ctx=ctx, vehicles=vehicles, tried=tried
         )
@@ -333,6 +489,9 @@ async def recover_inventory(ctx: RecoveryContext) -> RecoveryResult:
             ", ".join(tried),
             unique_vin_count(vehicles),
         )
+
+    if winner:
+        record_winning_strategy(ctx.dealer_id, winner, platform_hints=hints)
 
     return RecoveryResult(
         vehicles=vehicles,

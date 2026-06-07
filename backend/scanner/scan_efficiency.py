@@ -35,6 +35,12 @@ def scanner_fast_mode_enabled() -> bool:
     return raw in ("1", "true", "yes", "on")
 
 
+def scanner_scan_only_enabled() -> bool:
+    """When true, inventory capture runs without inline post-scan (use post_scan.py)."""
+    raw = (os.environ.get("SCANNER_SCAN_ONLY") or "").strip().lower()
+    return raw in ("1", "true", "yes", "on")
+
+
 def apply_fast_mode_env_defaults() -> None:
     """Set conservative defaults when SCANNER_FAST_MODE=1 (only unset vars)."""
     if not scanner_fast_mode_enabled():
@@ -45,17 +51,39 @@ def apply_fast_mode_env_defaults() -> None:
         "yes",
         "on",
     )
-    defaults = {
+    defaults: dict[str, str] = {
         "SCANNER_VDP_EP_MAX": "0",
         "SCANNER_VDP_PRICE_MAX": "80",
         "SCANNER_POST_INTERIOR_VISION": "0",
         "SCANNER_GALLERY_VISION_INLINE": "0",
+        "SCANNER_SCAN_ONLY": "1",
     }
     if completeness:
         defaults.pop("SCANNER_VDP_EP_MAX", None)
         defaults["SCANNER_VDP_PRICE_MAX"] = "0"
     for key, val in defaults.items():
         os.environ.setdefault(key, val)
+
+
+def apply_scan_only_env_defaults() -> None:
+    """Disable post-scan stages when SCANNER_SCAN_ONLY=1 (only unset vars)."""
+    if not scanner_scan_only_enabled():
+        return
+    for key in (
+        "SCANNER_POST_REPAIR",
+        "SCANNER_POST_LISTING_DESCRIPTION",
+        "SCANNER_POST_INTERIOR_VISION",
+        "SCANNER_POST_WINDOW_STICKER",
+        "SCANNER_POST_GAS_PRICES",
+        "SCANNER_POST_DEALER_RATINGS",
+        "SCANNER_POST_LISTING_GAP_FILL",
+        "SCANNER_POST_DICT_ENRICH",
+        "SCANNER_POST_ENRICH",
+        "SCANNER_POST_ENRICH_VISION",
+        "SCANNER_GALLERY_VISION_POST",
+        "SCANNER_GALLERY_VISION_INLINE",
+    ):
+        os.environ.setdefault(key, "0")
 
 
 def inventory_paths_for_dealer(dealer: dict[str, Any] | None = None) -> list[str]:
@@ -166,6 +194,37 @@ def gallery_vision_inline_enabled() -> bool:
         return False
     raw = (os.environ.get("SCANNER_GALLERY_VISION_INLINE") or "").strip().lower()
     return raw in ("1", "true", "yes", "on")
+
+
+def inventory_json_wait_ms(
+    *,
+    json_already_captured: bool,
+    inv_wait_ms: int,
+    pag_wait_ms: int,
+) -> int:
+    """
+    After hydration, avoid waiting the full inventory window when JSON already landed.
+    Saves up to ~15s per inventory path on typical Dealer.com SPA loads.
+    """
+    if json_already_captured:
+        try:
+            tail = int((os.environ.get("SCANNER_INVENTORY_JSON_TAIL_MS") or "2500").strip())
+        except ValueError:
+            tail = 2500
+        return max(300, min(tail, pag_wait_ms, inv_wait_ms))
+    return inv_wait_ms
+
+
+def inventory_idle_loop_sec(json_captured: bool) -> int:
+    """Seconds for post-navigation idle polling (1s steps)."""
+    if json_captured:
+        raw = (os.environ.get("SCANNER_INVENTORY_IDLE_SEC_FOUND") or "2").strip()
+    else:
+        raw = (os.environ.get("SCANNER_INVENTORY_IDLE_SEC_MISSING") or "6").strip()
+    try:
+        return max(0, int(raw))
+    except ValueError:
+        return 2 if json_captured else 6
 
 
 def gallery_vision_post_enabled() -> bool:

@@ -1,0 +1,63 @@
+# Optional: parallel scanner shards when INVENTORY_DATABASE_URL points at Postgres.
+# Apply only after migrating off SQLite on the PVC (see docs/INVENTORY_POSTGRES.md).
+#
+# Example: 3 shards → set spec.completions: 3, SCANNER_SHARD_COUNT=3, and use Indexed Job.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dealership-scanner-sharded
+  namespace: dealership
+spec:
+  schedule: "0 */4 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      completions: 3
+      parallelism: 3
+      completionMode: Indexed
+      template:
+        metadata:
+          labels:
+            app: dealership-scanner
+        spec:
+          nodeSelector:
+            role: data-node
+          restartPolicy: OnFailure
+          containers:
+            - name: scanner
+              image: REGISTRY/dealership-scanner:latest
+              imagePullPolicy: Always
+              command: ["python", "scanner.py", "--scan-only"]
+              env:
+                - name: SCANNER_FAST_MODE
+                  value: "1"
+                - name: SCANNER_SCAN_ONLY
+                  value: "1"
+                - name: SCANNER_PARALLEL_UPSERT
+                  value: "1"
+                - name: SCANNER_SHARD_COUNT
+                  value: "3"
+                - name: SCANNER_MAX_DEALER_CONCURRENCY
+                  value: "6"
+              envFrom:
+                - configMapRef:
+                    name: dealership-config
+                - secretRef:
+                    name: dealership-secret
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+              resources:
+                requests:
+                  memory: "1Gi"
+                  cpu: "500m"
+                limits:
+                  memory: "4Gi"
+                  cpu: "2000m"
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: dealership-data-pvc

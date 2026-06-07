@@ -354,6 +354,17 @@ def init_postgres_inventory(conn: Any) -> None:
 
     cur.execute(
         """
+        CREATE TABLE IF NOT EXISTS dealer_scan_profile (
+            dealer_id TEXT PRIMARY KEY,
+            last_winning_strategy TEXT,
+            platform_hints_json TEXT NOT NULL DEFAULT '[]',
+            updated_at TEXT NOT NULL
+        )
+        """
+    )
+
+    cur.execute(
+        """
         CREATE TABLE IF NOT EXISTS nhtsa_vpic_cache (
             vin TEXT PRIMARY KEY NOT NULL,
             response_json TEXT NOT NULL,
@@ -420,12 +431,19 @@ def init_postgres_inventory(conn: Any) -> None:
             ("sticker_provider", "TEXT NOT NULL DEFAULT 'unknown'"),
             ("sticker_ipacket_fail_count", "INTEGER NOT NULL DEFAULT 0"),
             ("sticker_provider_updated_at", "TEXT"),
+            ("google_place_id", "TEXT"),
+            ("google_rating", "DOUBLE PRECISION"),
+            ("google_review_count", "INTEGER"),
+            ("google_rating_fetched_at", "TEXT"),
         ],
     )
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_dealerships_created ON dealerships(created_at DESC)"
     )
     cur.execute("CREATE INDEX IF NOT EXISTS idx_dealerships_zip ON dealerships(zip_code)")
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_dealerships_google_place ON dealerships(google_place_id)"
+    )
 
     cur.execute(
         """

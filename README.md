@@ -117,7 +117,16 @@ PYTHONPATH=. flask --app backend.main run
 
 ```bash
 python scanner.py --help
+python scanner.py --scan-only          # inventory only (fast cron path)
+python post_scan.py --help             # repair/enrichment for recent VINs
 python discovery.py --help
+```
+
+Production Postgres inventory + parallel scanner writes: [docs/INVENTORY_POSTGRES.md](docs/INVENTORY_POSTGRES.md).
+
+```bash
+# optional SQLite → Postgres migration
+PYTHONPATH=. python backend/scripts/migrate_inventory_sqlite_to_postgres.py --dry-run
 ```
 
 ## What stays out of git (summary)

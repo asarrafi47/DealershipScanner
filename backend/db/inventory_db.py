@@ -4,6 +4,7 @@ import os
 import re
 import sqlite3
 from contextlib import contextmanager
+from dataclasses import dataclass
 from typing import Any, Iterator
 from urllib.parse import urlparse
 
@@ -306,6 +307,7 @@ def record_scan_outcomes(outcomes: list[Any], *, finished_at: str) -> int:
             did = str(o.get("dealer_id") or "").strip()
             if not did:
                 continue
+            inv_recovery = o.get("inventory_recovery") if isinstance(o.get("inventory_recovery"), dict) else {}
             summary = {
                 "inventory_rows": o.get("inventory_rows"),
                 "deduped_rows": o.get("deduped_rows"),
@@ -317,6 +319,7 @@ def record_scan_outcomes(outcomes: list[Any], *, finished_at: str) -> int:
                 "reconcile": o.get("reconcile"),
                 "phase_secs": o.get("phase_secs"),
                 "vins_count": len(o.get("vins") or []) if isinstance(o.get("vins"), list) else None,
+                "recovery_winning_strategy": inv_recovery.get("winning_strategy"),
             }
             err = o.get("error")
             err_s = str(err)[:2000] if err else None
@@ -668,23 +671,54 @@ def _lookup_make_country(make: str):
 
 
 _incomplete_listings_check_fn = None
-_incomplete_car_id_set_cache: tuple[float, set[int]] | None = None
+_incomplete_index_snapshot_cache: tuple[tuple[float, float], "_IncompleteIndexSnapshot"] | None = None
 
 
-def _incomplete_car_ids_for_listings() -> set[int]:
-    """Cached incomplete car ids for grid filter + ``public_incomplete`` pill (O(1) per row)."""
-    global _incomplete_car_id_set_cache
-    token = _inventory_listings_cache_token()
-    if _incomplete_car_id_set_cache is not None and _incomplete_car_id_set_cache[0] == token:
-        return _incomplete_car_id_set_cache[1]
+@dataclass(frozen=True)
+class _IncompleteIndexSnapshot:
+    """Incomplete car ids for listings filters; ``per_row_fallback`` when the index is unavailable."""
+
+    ids: frozenset[int]
+    per_row_fallback: bool = False
+
+
+def _car_id_int(car: dict) -> int:
+    try:
+        return int(car.get("id") or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _car_is_publicly_incomplete(car: dict, snapshot: _IncompleteIndexSnapshot) -> bool:
+    """True when a row should be treated as incomplete for listings (fail closed on bad ids)."""
+    if snapshot.per_row_fallback:
+        return is_car_incomplete(car)
+    cid = _car_id_int(car)
+    if cid <= 0:
+        return is_car_incomplete(car)
+    return cid in snapshot.ids
+
+
+def _incomplete_index_snapshot_for_listings() -> _IncompleteIndexSnapshot:
+    """Cached incomplete index for grid filter + ``public_incomplete`` pill."""
+    global _incomplete_index_snapshot_cache
+    token = _listings_cache_token()
+    if _incomplete_index_snapshot_cache is not None and _incomplete_index_snapshot_cache[0] == token:
+        return _incomplete_index_snapshot_cache[1]
     try:
         from backend.db.incomplete_listings_db import get_incomplete_car_id_set
 
-        ids = get_incomplete_car_id_set()
+        snap = _IncompleteIndexSnapshot(ids=frozenset(get_incomplete_car_id_set()))
     except Exception:
-        ids = set()
-    _incomplete_car_id_set_cache = (token, ids)
-    return ids
+        _log.exception("incomplete_listings index unavailable; using per-row completeness fallback")
+        snap = _IncompleteIndexSnapshot(ids=frozenset(), per_row_fallback=True)
+    _incomplete_index_snapshot_cache = (token, snap)
+    return snap
+
+
+def _incomplete_car_ids_for_listings() -> frozenset[int]:
+    """Legacy helper: id set only (empty when per-row fallback is active)."""
+    return _incomplete_index_snapshot_for_listings().ids
 
 
 def is_car_incomplete(car: dict) -> bool:
@@ -695,6 +729,19 @@ def is_car_incomplete(car: dict) -> bool:
 
         _incomplete_listings_check_fn = is_car_incomplete_for_public_listings
     return _incomplete_listings_check_fn(car)
+
+
+def _filter_public_listings_cars(cars: list[dict], *, include_incomplete: bool) -> list[dict]:
+    """Drop incomplete rows using the cached id set (O(n), same semantics as listings grid)."""
+    if include_incomplete or not cars:
+        return cars
+    snapshot = _incomplete_index_snapshot_for_listings()
+    out: list[dict] = []
+    for c in cars:
+        if _car_is_publicly_incomplete(c, snapshot):
+            continue
+        out.append(c)
+    return out
 
 
 def listings_include_incomplete_cars() -> bool:
@@ -721,19 +768,23 @@ def serialize_car_for_listings_grid(
     car: dict,
     *,
     incomplete_ids: set[int] | None = None,
+    incomplete_snapshot: _IncompleteIndexSnapshot | None = None,
 ) -> dict[str, Any]:
     """
     Lightweight grid JSON for listings (see ``car_serialize.serialize_car_for_listings_grid``).
     """
     out = _serialize_car_for_listings_grid(car)
     if listings_include_incomplete_cars():
-        ids = incomplete_ids if incomplete_ids is not None else _incomplete_car_ids_for_listings()
-        try:
-            cid = int(car.get("id") or 0)
-        except (TypeError, ValueError):
-            cid = 0
-        if cid and cid in ids:
-            out["public_incomplete"] = True
+        if incomplete_snapshot is not None:
+            if _car_is_publicly_incomplete(car, incomplete_snapshot):
+                out["public_incomplete"] = True
+        else:
+            ids = incomplete_ids if incomplete_ids is not None else _incomplete_car_ids_for_listings()
+            cid = _car_id_int(car)
+            if cid > 0 and cid in ids:
+                out["public_incomplete"] = True
+            elif cid <= 0 and is_car_incomplete(car):
+                out["public_incomplete"] = True
     return out
 
 
@@ -773,28 +824,43 @@ def get_incomplete_cars() -> list[dict]:
 
 def get_dealership_issue_stats(limit: int = 10) -> list[dict[str, Any]]:
     """Get dealerships ranked by number of incomplete/problematic listings."""
-    with db_conn() as conn:
-        cursor = conn.cursor()
-        # Query dealerships with the most incomplete or low-quality cars
-        cursor.execute(f"""
+    from backend.db.incomplete_listings_db import DB_PATH as _INC_DB_PATH
+
+    attach_inc = not is_inventory_postgres()
+    sql = """
             SELECT
-                dealer_name,
-                dealer_id,
+                c.dealer_name,
+                c.dealer_id,
                 COUNT(*) as total_cars,
-                SUM(CASE WHEN missing_field_count > 0 THEN 1 ELSE 0 END) as incomplete_count,
-                SUM(CASE WHEN marked_for_review = 1 THEN 1 ELSE 0 END) as flagged_count,
-                ROUND(AVG(COALESCE(data_quality_score, 0)), 2) as avg_quality_score,
-                SUM(CASE WHEN price IS NULL OR price = 0 THEN 1 ELSE 0 END) as no_price_count
-            FROM cars
-            WHERE dealer_name IS NOT NULL AND TRIM(dealer_name) != ''
-            GROUP BY dealer_id, dealer_name
+                SUM(CASE WHEN il.car_id IS NOT NULL THEN 1 ELSE 0 END) as incomplete_count,
+                SUM(CASE WHEN c.marked_for_review = 1 THEN 1 ELSE 0 END) as flagged_count,
+                ROUND(AVG(COALESCE(c.data_quality_score, 0)), 2) as avg_quality_score,
+                SUM(CASE WHEN c.price IS NULL OR c.price = 0 THEN 1 ELSE 0 END) as no_price_count
+            FROM cars c
+            LEFT JOIN {inc_table} il ON il.car_id = c.id
+            WHERE c.dealer_name IS NOT NULL AND TRIM(c.dealer_name) != ''
+            GROUP BY c.dealer_id, c.dealer_name
             HAVING incomplete_count > 0 OR flagged_count > 0
             ORDER BY incomplete_count DESC, flagged_count DESC
             LIMIT ?
-        """, (limit,))
+        """
+    inc_table = "incomplete_listings" if is_inventory_postgres() else "inc_idx.incomplete_listings"
+    with db_conn() as conn:
+        cursor = conn.cursor()
+        if attach_inc:
+            cursor.execute("ATTACH DATABASE ? AS inc_idx", (_INC_DB_PATH,))
+        try:
+            cursor.execute(sql.format(inc_table=inc_table), (limit,))
+            rows = cursor.fetchall()
+        finally:
+            if attach_inc:
+                try:
+                    cursor.execute("DETACH DATABASE inc_idx")
+                except sqlite3.Error:
+                    pass
 
         stats = []
-        for row in cursor.fetchall():
+        for row in rows:
             stats.append({
                 "dealer_name": row[0],
                 "dealer_id": row[1],
@@ -808,17 +874,10 @@ def get_dealership_issue_stats(limit: int = 10) -> list[dict[str, Any]]:
 
 
 def _sort_cars_by_price(cars: list) -> list:
-    """Stable sort: priced vehicles first, unknown/NULL last (avoids TypeError vs None)."""
-    def key(c):
-        p = c.get("price")
-        if p is None:
-            return (1, 0.0)
-        try:
-            return (0, float(p))
-        except (TypeError, ValueError):
-            return (1, 0.0)
+    """Priced + multi-photo first; call-for-price and single-photo listings sink."""
+    from backend.utils.listings_sort import listing_sort_key_by_price
 
-    return sorted(cars, key=key)
+    return sorted(cars, key=listing_sort_key_by_price)
 
 
 def link_cars_to_dealership_registry(
@@ -956,6 +1015,64 @@ def _normalized_interior_bucket_filters(raw) -> set[str] | None:
     return sel or None
 
 
+# Substrings for equipment smart-search (packages JSON, listing text, trim/title).
+_EQUIPMENT_SEARCH_COLUMNS = (
+    "packages",
+    "description",
+    "title",
+    "trim",
+    "engine_description",
+)
+
+
+def _normalize_equipment_needles(
+    single: str | None,
+    needles_list: list | None,
+    needles_all: list | None,
+) -> tuple[str | None, list[str], list[str]]:
+    """Dedupe and cap equipment needles; return (single, or_list, and_list)."""
+    or_needles: list[str] = []
+    and_needles: list[str] = []
+    seen: set[str] = set()
+
+    def add(target: list[str], raw: str) -> None:
+        needle = (raw or "").strip().lower()
+        if not needle or needle in seen:
+            return
+        if len(needle) > 200:
+            needle = needle[:200]
+        seen.add(needle)
+        target.append(needle)
+
+    if needles_all:
+        for raw in needles_all:
+            add(and_needles, str(raw or ""))
+    if single and str(single).strip():
+        add(or_needles, str(single))
+    if needles_list:
+        for raw in needles_list:
+            add(or_needles, str(raw or ""))
+    if len(or_needles) == 1 and not and_needles:
+        return or_needles[0], [], []
+    if len(or_needles) > 1 and not and_needles:
+        return None, or_needles, []
+    if and_needles:
+        return None, [], and_needles
+    return None, or_needles, []
+
+
+def _equipment_needle_sql_clause() -> str:
+    parts = [
+        f"INSTR(LOWER(IFNULL({col}, '')), ?) > 0" for col in _EQUIPMENT_SEARCH_COLUMNS
+    ]
+    return "(" + " OR ".join(parts) + ")"
+
+
+def _equipment_needle_params(needle: str) -> list[str]:
+    """One binding per column in :func:`_equipment_needle_sql_clause`."""
+    return [needle] * len(_EQUIPMENT_SEARCH_COLUMNS)
+
+
 def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 cylinders=None, transmissions=None, drivetrains=None,
                 body_styles=None,
@@ -972,6 +1089,7 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
                 candidate_ids=None,
                 packages_json_contains=None,
                 packages_json_contains_list=None,
+                packages_json_contains_all=None,
                 trim_contains=None,
                 trim_contains_list=None,
                 vehicle_or=None,
@@ -989,7 +1107,11 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     not SQL wildcards). Hybrid search: ``backend.utils.hybrid_search`` kwargs builder.
 
     ``packages_json_contains_list``: optional list of substrings; a row matches if **any** needle
-    appears in ``cars.packages`` (OR). Sidebar ``package`` checkboxes map here via GET ``/listings``.
+    appears in equipment text fields (OR across needles). Sidebar ``package`` checkboxes map here.
+
+    ``packages_json_contains_all``: optional list of substrings; a row must match **every** needle
+    (AND), each needle matched in ``packages``, ``description``, ``title``, ``trim``, or
+    ``engine_description``. Smart search uses this when the user names multiple features.
 
     ``max_price`` / ``max_mileage`` when set to ``0`` are applied; they are not treated as
     "unset." ``dealership_registry_id`` must be a positive int; invalid values are ignored.
@@ -1126,29 +1248,23 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
     add_multi("drivetrain", drivetrains)
     add_multi_ci("body_style", body_styles)
 
-    pkg_needles: list[str] = []
-    seen_pkg: set[str] = set()
-    if packages_json_contains and str(packages_json_contains).strip():
-        needle = str(packages_json_contains).strip().lower()
-        if len(needle) > 200:
-            needle = needle[:200]
-        if needle not in seen_pkg:
-            seen_pkg.add(needle)
-            pkg_needles.append(needle)
-    if packages_json_contains_list:
-        for raw_needle in packages_json_contains_list:
-            needle = str(raw_needle or "").strip().lower()
-            if not needle or needle in seen_pkg:
-                continue
-            if len(needle) > 200:
-                needle = needle[:200]
-            seen_pkg.add(needle)
-            pkg_needles.append(needle)
-    if pkg_needles:
-        query += " AND (" + " OR ".join(
-            ["INSTR(LOWER(IFNULL(packages, '')), ?) > 0"] * len(pkg_needles)
-        ) + ")"
-        params.extend(pkg_needles)
+    pkg_single, pkg_or, pkg_and = _normalize_equipment_needles(
+        packages_json_contains,
+        packages_json_contains_list,
+        packages_json_contains_all,
+    )
+    clause = _equipment_needle_sql_clause()
+    if pkg_single:
+        query += f" AND {clause}"
+        params.extend(_equipment_needle_params(pkg_single))
+    if pkg_or:
+        query += " AND (" + " OR ".join([clause] * len(pkg_or)) + ")"
+        for needle in pkg_or:
+            params.extend(_equipment_needle_params(needle))
+    if pkg_and:
+        for needle in pkg_and:
+            query += f" AND {clause}"
+            params.extend(_equipment_needle_params(needle))
 
     if trim_contains_list:
         needles = [str(t).strip().lower()[:100] for t in trim_contains_list if str(t).strip()]
@@ -1265,14 +1381,19 @@ def search_cars(makes=None, models=None, trims=None, fuel_types=None,
         for c in filtered:
             _parse_car_gallery(c)
             _parse_car_history_highlights(c)
-        base = filtered if inc else [c for c in filtered if not is_car_incomplete(c)]
+        base = _filter_public_listings_cars(filtered, include_incomplete=inc)
         complete = _post_sql_filters(base)
-        return sorted(complete, key=lambda c: c["distance_miles"])
+        from backend.utils.listings_sort import listing_sort_depriority
+
+        return sorted(
+            complete,
+            key=lambda c: (*listing_sort_depriority(c), c["distance_miles"]),
+        )
 
     for c in results:
         _parse_car_gallery(c)
         _parse_car_history_highlights(c)
-    base = results if inc else [c for c in results if not is_car_incomplete(c)]
+    base = _filter_public_listings_cars(results, include_incomplete=inc)
     complete = _post_sql_filters(base)
     return _sort_cars_by_price(complete)
 
@@ -1283,6 +1404,7 @@ def search_cars_by_make_model_pairs(
     zip_code: str | None = None,
     radius_miles: float | None = None,
     include_incomplete: bool | None = None,
+    sql_limit: int | None = 120,
 ) -> list[dict]:
     """Fetch active cars matching any (make, model) pair in one SQL round-trip."""
     if not pairs:
@@ -1313,7 +1435,11 @@ def search_cars_by_make_model_pairs(
     query = (
         "SELECT * FROM cars WHERE (COALESCE(listing_active, 1) = 1)"
         f" AND ({' OR '.join(clauses)})"
+        " ORDER BY CASE WHEN price IS NULL OR price = 0 THEN 1 ELSE 0 END, price ASC"
     )
+    if sql_limit is not None and int(sql_limit) > 0:
+        query += " LIMIT ?"
+        params.append(int(sql_limit))
     with db_conn(row_factory=sqlite3.Row) as conn:
         cursor = conn.cursor()
         cursor.execute(query, params)
@@ -1340,13 +1466,18 @@ def search_cars_by_make_model_pairs(
         for c in filtered:
             _parse_car_gallery(c)
             _parse_car_history_highlights(c)
-        base = filtered if inc else [c for c in filtered if not is_car_incomplete(c)]
-        return sorted(base, key=lambda c: c.get("distance_miles", 0))
+        base = _filter_public_listings_cars(filtered, include_incomplete=inc)
+        from backend.utils.listings_sort import listing_sort_depriority
+
+        return sorted(
+            base,
+            key=lambda c: (*listing_sort_depriority(c), c.get("distance_miles", 0)),
+        )
 
     for c in results:
         _parse_car_gallery(c)
         _parse_car_history_highlights(c)
-    base = results if inc else [c for c in results if not is_car_incomplete(c)]
+    base = _filter_public_listings_cars(results, include_incomplete=inc)
     return _sort_cars_by_price(base)
 
 
@@ -1630,25 +1761,40 @@ def _facet_transmission_sane(val) -> bool:
     return True
 
 
-_facet_options_cache_token: float | None = None
+_facet_options_cache_token: tuple[float, float] | None = None
 _facet_options_cache_value: dict[str, Any] | None = None
-_geo_coords_cache_token: float | None = None
+_geo_coords_cache_token: tuple[float, float] | None = None
 _geo_coords_cache_value: dict[str, Any] | None = None
-_grid_cars_cache_token: float | None = None
+_grid_cars_cache_token: tuple[float, float] | None = None
 _grid_cars_cache_value: list[dict[str, Any]] | None = None
-_LISTINGS_GRID_CACHE_REV = 4
+_LISTINGS_GRID_CACHE_REV = 5
 
 
-def _inventory_listings_cache_token() -> float:
-    """Invalidate listings caches when SQLite inventory mtime changes (60s bucket on Postgres)."""
+def _listings_cache_token() -> tuple[float, float]:
+    """Invalidate listings caches when inventory or incomplete index mtimes change."""
     if is_inventory_postgres():
         import time
 
-        return float(int(time.time()) // 60)
+        bucket = float(int(time.time()) // 60)
+        return (bucket, bucket)
+    inv_mtime = 0.0
+    inc_mtime = 0.0
     try:
-        return os.path.getmtime(DB_PATH)
+        inv_mtime = os.path.getmtime(DB_PATH)
     except OSError:
-        return 0.0
+        pass
+    try:
+        from backend.db.incomplete_listings_db import incomplete_index_db_mtime
+
+        inc_mtime = incomplete_index_db_mtime()
+    except Exception:
+        pass
+    return (inv_mtime, inc_mtime)
+
+
+def _inventory_listings_cache_token() -> tuple[float, float]:
+    """Alias kept for callers outside this module."""
+    return _listings_cache_token()
 
 
 def clear_inventory_listings_cache() -> None:
@@ -1656,14 +1802,14 @@ def clear_inventory_listings_cache() -> None:
     global _facet_options_cache_token, _facet_options_cache_value
     global _geo_coords_cache_token, _geo_coords_cache_value
     global _grid_cars_cache_token, _grid_cars_cache_value
-    global _incomplete_car_id_set_cache
+    global _incomplete_index_snapshot_cache
     _facet_options_cache_token = None
     _facet_options_cache_value = None
     _geo_coords_cache_token = None
     _geo_coords_cache_value = None
     _grid_cars_cache_token = None
     _grid_cars_cache_value = None
-    _incomplete_car_id_set_cache = None
+    _incomplete_index_snapshot_cache = None
 
 
 def public_listings_count() -> int:
@@ -1683,7 +1829,7 @@ def listings_grid_serialized_cars() -> list[dict[str, Any]]:
     Honors :func:`listings_include_incomplete_cars` and :func:`serialize_car_for_listings_grid`.
     """
     global _grid_cars_cache_token, _grid_cars_cache_value
-    token = _inventory_listings_cache_token()
+    token = _listings_cache_token()
     if _grid_cars_cache_value is not None and _grid_cars_cache_token == token:
         return _grid_cars_cache_value
 
@@ -1696,22 +1842,17 @@ def listings_grid_serialized_cars() -> list[dict[str, Any]]:
             f"SELECT {cols} FROM cars WHERE {active} ORDER BY price ASC"
         )
         all_cars_raw = [dict(r) for r in cur.fetchall()]
-    incomplete_ids = _incomplete_car_ids_for_listings()
+    snapshot = _incomplete_index_snapshot_for_listings()
     for c in all_cars_raw:
         _parse_car_gallery(c)
     out: list[dict[str, Any]] = []
     for c in all_cars_raw:
-        if not inc:
-            cid = c.get("id")
-            try:
-                cid_int = int(cid)
-            except (TypeError, ValueError):
-                cid_int = 0
-            if cid_int in incomplete_ids:
-                continue
-        out.append(serialize_car_for_listings_grid(c, incomplete_ids=incomplete_ids))
-    # Cars with images float to the top; no-image cars sink to the bottom.
-    out.sort(key=lambda c: (0 if c.get("image_url") or c.get("gallery") else 1, c.get("price") or 0))
+        if not inc and _car_is_publicly_incomplete(c, snapshot):
+            continue
+        out.append(serialize_car_for_listings_grid(c, incomplete_snapshot=snapshot))
+    from backend.utils.listings_sort import listing_sort_key_by_price
+
+    out.sort(key=listing_sort_key_by_price)
     _grid_cars_cache_token = token
     _grid_cars_cache_value = out
     return out
@@ -1719,7 +1860,7 @@ def listings_grid_serialized_cars() -> list[dict[str, Any]]:
 
 def listings_grid_cache_etag() -> str:
     """Cheap cache validator for ``GET /api/listings/cars`` (If-None-Match / 304)."""
-    token = _inventory_listings_cache_token()
+    token = _listings_cache_token()
     if _grid_cars_cache_value is not None and _grid_cars_cache_token == token:
         n = len(_grid_cars_cache_value)
     else:
@@ -1737,7 +1878,7 @@ def listings_geo_coords_maps() -> dict[str, Any]:
     Loaded lazily via ``GET /api/listings/geo-coords`` (not embedded in HTML).
     """
     global _geo_coords_cache_token, _geo_coords_cache_value
-    token = _inventory_listings_cache_token()
+    token = _listings_cache_token()
     if _geo_coords_cache_value is not None and _geo_coords_cache_token == token:
         return _geo_coords_cache_value
 
@@ -1789,7 +1930,7 @@ def get_filter_options(*, include_all_cars: bool = False) -> dict[str, Any]:
     Facet metadata is cached until inventory.db changes.
     """
     global _facet_options_cache_token, _facet_options_cache_value
-    token = _inventory_listings_cache_token()
+    token = _listings_cache_token()
     if _facet_options_cache_value is not None and _facet_options_cache_token == token:
         out = dict(_facet_options_cache_value)
         out["all_cars"] = listings_grid_serialized_cars() if include_all_cars else []

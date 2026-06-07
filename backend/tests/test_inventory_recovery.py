@@ -63,4 +63,27 @@ def test_should_run_algolia_floor_when_feed_looks_small():
         )
     ]
     rows = [{"vin": f"{i:017d}"} for i in range(53)]
-    assert should_run_platform_recovery(_ctx(vehicles=rows, intercepts=intercepts)) is True
+    assert should_run_platform_recovery(_ctx(vehicles=rows, intercepts=intercepts)) is False
+
+
+def test_recovery_strategy_names_algolia_only():
+    from backend.scanner.inventory_recovery import recovery_strategy_names
+
+    chain = recovery_strategy_names({"algolia", "dealer_inspire"})
+    assert chain == ["dealer_inspire_algolia", "html_next_data"]
+
+
+def test_recovery_strategy_names_unknown_full_chain():
+    from backend.scanner.inventory_recovery import RECOVERY_STRATEGY_ORDER, recovery_strategy_names
+
+    assert recovery_strategy_names(set()) == list(RECOVERY_STRATEGY_ORDER)
+
+
+def test_recovery_strategy_names_cached_winner_first():
+    from backend.scanner.inventory_recovery import recovery_strategy_names
+
+    chain = recovery_strategy_names(
+        {"algolia", "dealer_inspire"},
+        cached_strategy="dealer_inspire_algolia",
+    )
+    assert chain[0] == "dealer_inspire_algolia"
