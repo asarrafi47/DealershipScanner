@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="application-path-prefix" content="{{ request.script_root or '' }}">
+    <title>Scan lab — Dev</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+</head>
+<body>
+<div class="page">
+    <nav class="topbar">
+        <div class="logo">Sarrafi Cars</div>
+        <div class="nav-links">
+            <a href="{{ url_for('dev.dev_dashboard') }}">Dev</a>
+            <a href="{{ url_for('dev.scan_lab_listings') }}">Results</a>
+            <a href="{{ url_for('dev.scan_lab_db') }}">DB</a>
+            {% if admin_username %}<span class="nav-links-meta">Dev: {{ admin_username }}</span>{% endif %}
+        </div>
+    </nav>
+
+    <div class="dev-page">
+        <header class="dev-hero">
+            <p class="db-eyebrow">Temporary dev flow</p>
+            <h1 class="dev-title">Scan lab — {{ lab.zip_code }} / {{ lab.radius_miles }} mi</h1>
+            <p class="dev-sub">
+                One-off manifest scan and results view. Vehicle detail pages use the main app at
+                <code>/car/&lt;id&gt;</code> (options, specs, packages unchanged).
+                Scans use the Mac Mini lite runner (low memory); Claude is off.
+            </p>
+        </header>
+
+        <section class="db-section dev-section">
+            <div class="db-section-header">
+                <p class="db-eyebrow">Manifest</p>
+                <h2 class="db-section-title">92694 · 25 mile dealers</h2>
+            </div>
+            <div class="dev-status-grid">
+                <div class="dev-status-card">
+                    <p class="dev-status-label">Manifest</p>
+                    <p class="dev-status-value {% if lab.manifest_exists %}dev-ok{% else %}dev-bad{% endif %}">
+                        {{ lab.dealer_count }} dealers
+                    </p>
+                    <p class="dev-status-meta"><code>{{ lab.manifest_path }}</code></p>
+                </div>
+                <div class="dev-status-card">
+                    <p class="dev-status-label">Inventory in radius</p>
+                    <p class="dev-status-value dev-ok">{{ summary.total_cars }} cars</p>
+                    <p class="dev-status-meta">{{ summary.incomplete_cars }} incomplete (shown in lab)</p>
+                </div>
+                <div class="dev-status-card">
+                    <p class="dev-status-label">Database</p>
+                    <p class="dev-status-value dev-ok">{{ db_counts.cars }} total cars</p>
+                    <p class="dev-status-meta"><code>{{ lab.inventory_db_path }}</code></p>
+                </div>
+                <div class="dev-status-card">
+                    <p class="dev-status-label">Last scan</p>
+                    <p class="dev-status-value">{{ summary.latest_scan_finished_at or '—' }}</p>
+                    <p class="dev-status-meta">{{ summary.scan_run_rows }} manifest scan_runs loaded</p>
+                </div>
+            </div>
+            <div class="dev-playground-row dev-playground-row--mt">
+                <button type="button" class="primary-button" id="scan-lab-start" {% if not lab.manifest_exists %}disabled{% endif %}>
+                    Run manifest scan (Mac Mini lite)
+                </button>
+                <a class="secondary-button" href="{{ url_for('dev.scan_lab_listings') }}">Browse results</a>
+                <a class="secondary-button" href="{{ url_for('dev.scan_lab_db') }}">Edit DB rows</a>
+            </div>
+            <p class="dev-hint">
+                Scan command: <code>python scanner_mac_mini.py --manifest {{ lab.manifest_path }} --scan-only</code>
+                (serial dealers, 2 VDP pages, no image downloads).
+            </p>
+        </section>
+
+        <section class="db-section dev-section" id="scan-lab-job-panel" {% if not active_job %}hidden{% endif %}>
+            <div class="db-section-header">
+                <p class="db-eyebrow">Scanner</p>
+                <h2 class="db-section-title">Live log</h2>
+            </div>
+            <pre class="dev-scan-log" id="scan-lab-log">{% if active_job %}{{ active_job.log or '' }}{% endif %}</pre>
+        </section>
+
+        <section class="db-section dev-section">
+            <div class="db-section-header">
+                <p class="db-eyebrow">Per dealer</p>
+                <h2 class="db-section-title">Inventory counts</h2>
+            </div>
+            <div class="dev-table-wrap">
+                <table class="dev-table" id="scan-lab-dealer-table">
+                    <thead>
+                        <tr>
+                            <th>Dealer</th>
+                            <th>dealer_id</th>
+                            <th>Cars</th>
+                            <th>Incomplete</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in summary.by_dealer %}
+                        <tr>
+                            <td>{{ row.dealer_name or '—' }}</td>
+                            <td><code>{{ row.dealer_id }}</code></td>
+                            <td>{{ row.car_count }}</td>
+                            <td>{{ row.incomplete_count }}</td>
+                            <td>
+                                <a href="{{ url_for('dev.scan_lab_listings', dealer_id=row.dealer_id) }}">Filter</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="db-section dev-section">
+            <div class="db-section-header">
+                <p class="db-eyebrow">History</p>
+                <h2 class="db-section-title">Recent scan_runs (manifest dealers)</h2>
+            </div>
+            <div class="dev-table-wrap">
+                <table class="dev-table" id="scan-lab-runs-table">
+                    <thead>
+                        <tr>
+                            <th>Finished</th>
+                            <th>Dealer</th>
+                            <th>Upserted</th>
+                            <th>Rows</th>
+                            <th>VDPs</th>
+                            <th>Error</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="6" class="dev-hint">Loading…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script type="application/json" id="scan-lab-boot" nonce="{{ csp_nonce }}">{{ {
+    "active_job_id": (active_job.job_id if active_job else none),
+    "manifest_path": lab.manifest_path
+} | tojson }}</script>
+<script src="{{ url_for('static', filename='dev_scan_lab.js') }}?v={{ static_cache_ver }}"></script>
+</body>
+</html>

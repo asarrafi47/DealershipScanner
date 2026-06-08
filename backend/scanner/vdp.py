@@ -288,6 +288,28 @@ def _vdp_price_max_per_dealer() -> int:
         return 400
 
 
+def _vdp_spec_gap_max_per_dealer() -> int:
+    """Extra VDP visits for inventory rows missing key specs (engine, transmission, …)."""
+    from backend.scanner.scan_efficiency import effective_vdp_spec_gap_max
+
+    return effective_vdp_spec_gap_max(10_000)
+
+
+def _vehicle_needs_spec_gap_vdp(vehicle: dict[str, Any]) -> bool:
+    """True when listing JSON left obvious spec gaps worth a targeted VDP visit."""
+    for key in (
+        "engine_description",
+        "transmission",
+        "drivetrain",
+        "fuel_type",
+        "body_style",
+    ):
+        val = vehicle.get(key)
+        if val is None or (isinstance(val, str) and not str(val).strip()):
+            return True
+    return False
+
+
 def _nav_timeout_ms() -> int:
     raw = (os.environ.get("SCANNER_VDP_NAV_TIMEOUT_MS") or "32000").strip()
     try:
@@ -803,6 +825,8 @@ PAGE_EXTRACT_JS = r"""
     domStickerUrls: [],
     domMonroneyTextSnippets: [],
     domLocationSnippets: [],
+    domDescription: "",
+    domInTransit: false,
     pageTextSample: "",
     vdpPriceHints: [],
     scriptSrcSample: [],
@@ -1529,6 +1553,57 @@ PAGE_EXTRACT_JS = r"""
       pushLocSnippet(lm2[1]);
     }
   } catch (eBody) {}
+  try {
+    function pushDescription(t) {
+      const s = (t || "").trim().replace(/\\s+/g, " ");
+      if (!s || s.length < 60) return;
+      if (!result.domDescription || s.length > result.domDescription.length) {
+        result.domDescription = s.slice(0, 4000);
+      }
+    }
+    const descHeadingRe = /^description\\b/i;
+    const headingTags = ["h1", "h2", "h3", "h4", "h5", "h6", "legend", "label"];
+    for (const tag of headingTags) {
+      document.querySelectorAll(tag).forEach((h) => {
+        const label = (h.textContent || "").trim();
+        if (!descHeadingRe.test(label)) return;
+        let block = h.nextElementSibling;
+        for (let i = 0; i < 4 && block; i++) {
+          const t = (block.innerText || block.textContent || "").trim();
+          if (t.length > 60 && !/^description\\b/i.test(t)) {
+            pushDescription(t);
+            return;
+          }
+          block = block.nextElementSibling;
+        }
+        const section = h.closest("section, article, [class*='description'], [id*='description']");
+        if (section) {
+          const t = (section.innerText || section.textContent || "").trim();
+          if (t.length > 80) pushDescription(t.replace(/^description\\s*/i, ""));
+        }
+      });
+    }
+    for (const sel of (
+      ".vehicle-description, .vdp-description, [class*='vehicle-description'], "
+      + "[class*='vdp-description'], #vehicle-description, .description-content, "
+      + "[data-testid*='description'], [class*='Description']"
+    ).split(", ")) {
+      document.querySelectorAll(sel).forEach((el) => {
+        const t = (el.innerText || el.textContent || "").trim();
+        if (t.length > 60) pushDescription(t);
+      });
+    }
+  } catch (eDesc) {}
+  try {
+    const bodyForTransit = ((document.body && document.body.innerText) || "").slice(0, 16000);
+    if (
+      /vehicle\\s+is\\s+currently\\s+in\\s+transit/i.test(bodyForTransit)
+      || /vehicle\\s+in\\s+transit/i.test(bodyForTransit)
+      || /\\bin\\s+transit\\b/i.test(bodyForTransit)
+    ) {
+      result.domInTransit = true;
+    }
+  } catch (eTransit) {}
   return result;
 }
 """
@@ -2447,7 +2522,16 @@ async def _vdp_visit_one(
                     if "description" not in filled:
                         filled.append("description")
                 rec_specs = rec.get("specs") if isinstance(rec.get("specs"), dict) else {}
-                for sk in ("transmission", "drivetrain", "fuel_type", "body_style", "mpg_city", "mpg_highway"):
+                for sk in (
+                    "engine_description",
+                    "transmission",
+                    "drivetrain",
+                    "fuel_type",
+                    "body_style",
+                    "mpg_city",
+                    "mpg_highway",
+                    "cylinders",
+                ):
                     if rec_specs.get(sk) and not v.get(sk):
                         v[sk] = rec_specs[sk]
                         if sk not in filled:
@@ -2513,6 +2597,17 @@ async def _vdp_visit_one(
                     if not isinstance(prev_txt, list):
                         prev_txt = []
                     v["_monroney_page_texts"] = (prev_txt + clean_snips)[:8]
+
+        if isinstance(last_bundle, dict):
+            dom_desc = str(last_bundle.get("domDescription") or "").strip()
+            if dom_desc and not (v.get("description") or "").strip():
+                v["description"] = dom_desc[:2000]
+                if "description" not in filled:
+                    filled.append("description")
+            if last_bundle.get("domInTransit") is True:
+                v["_in_transit"] = True
+                v["_availability_status"] = "in_transit"
+                v["_availability_source"] = "vdp_dom"
 
         pdiag = _apply_vdp_price_hints(v, last_bundle, success_u)
         out["price_updated"] = bool(pdiag.get("updated"))
@@ -2682,9 +2777,10 @@ async def enrich_vehicles_vdp(
     }
     ep_cap = _vdp_max_per_dealer()
     price_cap = _vdp_price_max_per_dealer()
-    if ep_cap == 0 and price_cap == 0:
+    spec_gap_cap = _vdp_spec_gap_max_per_dealer()
+    if ep_cap == 0 and price_cap == 0 and spec_gap_cap == 0:
         log.info(
-            "VDP: %s — enrichment skipped (SCANNER_VDP_EP_MAX=0 and SCANNER_VDP_PRICE_MAX=0)",
+            "VDP: %s — enrichment skipped (SCANNER_VDP_EP_MAX=0, SCANNER_VDP_PRICE_MAX=0, SCANNER_VDP_SPEC_GAP_MAX=0)",
             dealer_name,
         )
         return stats
@@ -2695,10 +2791,11 @@ async def enrich_vehicles_vdp(
     vehicles.sort(key=lambda v: _vdp_queue_sort_key(v, seed, rotation=rot))
 
     log.info(
-        "VDP: %s — enrichment enabled (EP cap=%d, price-extra cap=%d; rotation=%s)",
+        "VDP: %s — enrichment enabled (EP cap=%d, price-extra cap=%d, spec-gap cap=%d; rotation=%s)",
         dealer_name,
         ep_cap,
         price_cap,
+        spec_gap_cap,
         rot,
     )
 
@@ -2732,6 +2829,31 @@ async def enrich_vehicles_vdp(
             if added >= price_cap:
                 break
             if not listing_price_is_empty(v):
+                continue
+            u = (v.get("_detail_url") or "").strip()
+            if not u.startswith("http"):
+                continue
+            if u in seen_urls:
+                continue
+            vin = (v.get("vin") or "").strip().upper()
+            if not _looks_like_vin17(vin):
+                continue
+            seen_urls.add(u)
+            work.append((v, u, vin))
+            added += 1
+
+    if spec_gap_cap > 0:
+        vehicles.sort(
+            key=lambda v: (
+                -_vdp_field_gap_score(v),
+                -_vdp_public_incomplete_gap_score(v),
+            )
+        )
+        added = 0
+        for v in vehicles:
+            if added >= spec_gap_cap:
+                break
+            if not _vehicle_needs_spec_gap_vdp(v):
                 continue
             u = (v.get("_detail_url") or "").strip()
             if not u.startswith("http"):

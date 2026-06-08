@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="application-path-prefix" content="{{ request.script_root or '' }}">
+    <title>Scan lab DB — Dev</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+</head>
+<body>
+<div class="page">
+    <nav class="topbar">
+        <div class="logo">Sarrafi Cars</div>
+        <div class="nav-links">
+            <a href="{{ url_for('dev.scan_lab_home') }}">Scan lab</a>
+            <a href="{{ url_for('dev.scan_lab_listings') }}">Results</a>
+            {% if admin_username %}<span class="nav-links-meta">Dev: {{ admin_username }}</span>{% endif %}
+        </div>
+    </nav>
+
+    <div class="dev-page">
+        <header class="dev-hero">
+            <p class="db-eyebrow">Database</p>
+            <h1 class="dev-title">Inventory editor (manifest scope)</h1>
+            <p class="dev-sub">
+                SQLite path: <code>{{ lab.inventory_db_path }}</code>.
+                Patch fields via this UI or CLI:
+                <code>sqlite3 {{ lab.inventory_db_path }}</code>.
+                Model specs dictionary:
+                <code>python -m backend.scripts.db_admin</code> (separate tool).
+            </p>
+        </header>
+
+        <section class="db-section dev-section">
+            <form class="admin-filters" method="get" action="{{ url_for('dev.scan_lab_db') }}">
+                <label>Search <input type="search" name="q" value="{{ q }}" placeholder="VIN, stock, make"></label>
+                <label>Dealer
+                    <select name="dealer_id">
+                        <option value="">All</option>
+                        {% for d in lab.dealers %}
+                        <option value="{{ d.dealer_id }}" {% if filter_dealer_id == d.dealer_id %}selected{% endif %}>{{ d.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <button type="submit" class="secondary-button">Search</button>
+            </form>
+
+            <div class="dev-table-wrap dev-playground-row--mt">
+                <table class="dev-table" id="scan-lab-db-table">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>VIN</th>
+                            <th>Vehicle</th>
+                            <th>Price</th>
+                            <th>Dealer</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for car in cars %}
+                        <tr data-car-id="{{ car.id }}">
+                            <td>{{ car.id }}</td>
+                            <td><code>{{ car.vin }}</code></td>
+                            <td>{{ car.year }} {{ car.make }} {{ car.model }} {{ car.trim or '' }}</td>
+                            <td>{% if car.price %}${{ "{:,.0f}".format(car.price) }}{% else %}—{% endif %}</td>
+                            <td><code>{{ car.dealer_id }}</code></td>
+                            <td>
+                                <button type="button" class="secondary-button scan-lab-edit-btn" data-car-id="{{ car.id }}">Edit</button>
+                                <a href="{{ url_for('dev.scan_lab_car_detail', car_id=car.id) }}">VDP</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="6">No rows.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="db-section dev-section" id="scan-lab-editor" hidden>
+            <div class="db-section-header">
+                <p class="db-eyebrow">Row editor</p>
+                <h2 class="db-section-title">Car <span id="scan-lab-edit-id"></span></h2>
+            </div>
+            <p class="dev-hint">Updatable columns: {{ updatable_columns | join(', ') }}</p>
+            <textarea id="scan-lab-edit-json" class="dev-url-textarea" rows="16" spellcheck="false"></textarea>
+            <div class="dev-playground-row dev-playground-row--mt">
+                <button type="button" class="primary-button" id="scan-lab-save">Save PATCH</button>
+                <button type="button" class="secondary-button" id="scan-lab-reload-row">Reload</button>
+            </div>
+            <pre class="dev-scan-log" id="scan-lab-edit-status"></pre>
+        </section>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='dev_scan_lab.js') }}?v={{ static_cache_ver }}"></script>
+</body>
+</html>

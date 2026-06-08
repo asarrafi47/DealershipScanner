@@ -154,22 +154,65 @@ def harvest_gallery_urls_from_html(html: str, page_url: str, *, max_urls: int | 
     return dedupe_urls_order_prefer_large(urls, max_len=mx)
 
 
+_DESCRIPTION_MAX_LEN = 2000
+
+
+def _normalize_description_text(text: str, *, max_len: int = _DESCRIPTION_MAX_LEN) -> str | None:
+    t = " ".join((text or "").split()).strip()
+    if len(t) < 60:
+        return None
+    if "inventory" in t.lower()[:40] and len(t) < 120:
+        return None
+    return t[:max_len]
+
+
 def extract_description_from_html(html: str) -> str | None:
-    """Short dealer description paragraph from meta / common VDP blocks."""
+    """Dealer marketing paragraph from meta, Description headings, or common VDP blocks."""
     from bs4 import BeautifulSoup
 
     if not html:
         return None
     soup = BeautifulSoup(html, "html.parser")
+
+    best: str | None = None
+
+    def _consider(candidate: str | None) -> None:
+        nonlocal best
+        norm = _normalize_description_text(candidate or "")
+        if not norm:
+            return
+        if not best or len(norm) > len(best):
+            best = norm
+
     for sel, attr in (
         ('meta[property="og:description"]', "content"),
         ('meta[name="description"]', "content"),
     ):
         el = soup.select_one(sel)
         if el and el.get(attr):
-            t = str(el[attr]).strip()
-            if len(t) > 40 and "inventory" not in t.lower()[:30]:
-                return t[:300]
+            _consider(str(el[attr]))
+
+    import re
+
+    for heading in soup.find_all(re.compile(r"^h[1-6]$", re.I)):
+        label = heading.get_text(" ", strip=True)
+        if not re.match(r"^description\b", label, re.I):
+            continue
+        sibling = heading.find_next_sibling()
+        for _ in range(4):
+            if not sibling:
+                break
+            if getattr(sibling, "name", None) in ("script", "style"):
+                sibling = sibling.find_next_sibling()
+                continue
+            _consider(sibling.get_text(" ", strip=True))
+            sibling = sibling.find_next_sibling()
+        section = heading.find_parent(["section", "article", "div"])
+        if section:
+            blob = section.get_text(" ", strip=True)
+            blob = re.sub(r"^description\s*", "", blob, flags=re.I)
+            _consider(blob)
+
     for sel in (
         ".vehicle-description",
         ".vdp-description",
@@ -177,13 +220,12 @@ def extract_description_from_html(html: str) -> str | None:
         "[class*='vdp-description']",
         "#vehicle-description",
         ".description-content",
+        "[data-testid*='description']",
     ):
-        el = soup.select_one(sel)
-        if el:
-            t = el.get_text(" ", strip=True)
-            if len(t) > 60:
-                return t[:300]
-    return None
+        for el in soup.select(sel):
+            _consider(el.get_text(" ", strip=True))
+
+    return best
 
 
 def recover_from_detail_page(

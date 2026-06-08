@@ -18,6 +18,8 @@ def test_page_extract_js_screens_vdp_tiles() -> None:
     js = sv.PAGE_EXTRACT_JS
     assert "isLikelyVdpJunkImage" in js
     assert "imgSelectorsSpecific" in js
+    assert "domDescription" in js
+    assert "domInTransit" in js
 
 
 def test_gallery_modal_nudge_js() -> None:

@@ -387,7 +387,12 @@ async def recover_inventory(ctx: RecoveryContext) -> RecoveryResult:
 
     async def _inspire() -> list[dict[str, Any]]:
         return await scrape_dealer_inspire_from_page(
-            ctx.page, ctx.base_url, ctx.dealer_id, ctx.dealer_name, ctx.dealer_url
+            ctx.page,
+            ctx.base_url,
+            ctx.dealer_id,
+            ctx.dealer_name,
+            ctx.dealer_url,
+            dealer=ctx.dealer,
         )
 
     async def _venom() -> list[dict[str, Any]]:

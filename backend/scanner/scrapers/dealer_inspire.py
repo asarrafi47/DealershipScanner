@@ -19,6 +19,12 @@ from typing import Any
 
 import requests
 
+from backend.scanner.scrapers.algolia_scope import (
+    encode_algolia_filter_param,
+    infer_algolia_filters,
+    post_filter_algolia_hits,
+)
+
 logger = logging.getLogger(__name__)
 
 _ALGOLIA_SEARCH_URL = "https://{app_id}-dsn.algolia.net/1/indexes/*/queries"
@@ -122,12 +128,13 @@ def _query_algolia_inventory(
     }
     all_hits: list[dict[str, Any]] = []
     page = 0
+    filt_param = encode_algolia_filter_param(filters)
     while True:
         payload = {
             "requests": [
                 {
                     "indexName": index_name,
-                    "params": f"hitsPerPage={page_size}&page={page}&filters={filters}",
+                    "params": f"hitsPerPage={page_size}&page={page}&filters={filt_param}",
                 }
             ]
         }
@@ -266,6 +273,13 @@ def _map_algolia_hit(hit: dict[str, Any], base_url: str, dealer_id: str, dealer_
     }
     if lot_location:
         row["_lot_location"] = lot_location
+
+    try:
+        from backend.utils.in_transit import apply_in_transit_flags_from_raw
+
+        apply_in_transit_flags_from_raw(hit, source="dealer_inspire_algolia")
+    except ImportError:
+        pass
     return row
 
 
@@ -275,6 +289,8 @@ async def scrape_dealer_inspire_from_page(
     dealer_id: str,
     dealer_name: str,
     dealer_url: str,
+    *,
+    dealer: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """
     Extract Algolia config from already-loaded Playwright page, then query Algolia directly.
@@ -385,8 +401,19 @@ async def scrape_dealer_inspire_from_page(
         logger.debug("DealerInspire: incomplete Algolia config for %s: %s", dealer_name, config)
         return []
 
+    dealer_ctx = dealer if isinstance(dealer, dict) else {
+        "dealer_id": dealer_id,
+        "name": dealer_name,
+        "url": dealer_url,
+    }
+
     logger.info("DealerInspire: querying Algolia app=%s index=%s for %s", app_id, index_name, dealer_name)
-    hits = _query_algolia_inventory(app_id, api_key, index_name)
+    probe_hits = _query_algolia_inventory(app_id, api_key, index_name, page_size=250)
+    filters = infer_algolia_filters(dealer_ctx, index_name=index_name, sample_hits=probe_hits)
+    if filters:
+        logger.info("DealerInspire: Algolia filters for %s: %s", dealer_name, filters)
+    hits = _query_algolia_inventory(app_id, api_key, index_name, filters=filters)
+    hits = post_filter_algolia_hits(hits, dealer_ctx)
     if not hits:
         logger.info("DealerInspire: 0 hits from Algolia for %s", dealer_name)
         return []

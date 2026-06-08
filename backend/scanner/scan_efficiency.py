@@ -20,6 +20,13 @@ INVENTORY_PATHS_CORE: tuple[str, ...] = (
     "/certified-inventory/index.htm",
 )
 
+# DealerInspire / Maven Algolia storefronts.
+INVENTORY_PATHS_DEALER_INSPIRE: tuple[str, ...] = (
+    "/new-vehicles/",
+    "/used-vehicles/",
+    "/certified-pre-owned/",
+)
+
 INVENTORY_PATHS_EXTENDED: tuple[str, ...] = (
     *INVENTORY_PATHS_CORE,
     "/new-inventory/",
@@ -99,6 +106,11 @@ def inventory_paths_for_dealer(dealer: dict[str, Any] | None = None) -> list[str
         out = [str(p).strip() for p in dealer_paths if str(p).strip()]
         if out:
             return out
+    provider = ""
+    if isinstance(dealer, dict):
+        provider = str(dealer.get("provider") or "").strip().lower()
+    if provider == "dealer_inspire":
+        return list(INVENTORY_PATHS_DEALER_INSPIRE)
     return list(INVENTORY_PATHS_CORE)
 
 
@@ -186,6 +198,22 @@ def effective_vdp_price_max(deduped_rows: int) -> int:
     if scanner_fast_mode_enabled():
         return min(80, max(0, deduped_rows // 4))
     return min(400, max(0, deduped_rows))
+
+
+def effective_vdp_spec_gap_max(deduped_rows: int) -> int:
+    """
+    Extra VDP visits for rows missing engine/transmission/etc. after inventory JSON.
+
+    Set ``SCANNER_VDP_SPEC_GAP_MAX`` (e.g. 40) for scan-only runs that skip full EP caps.
+  """
+    raw = (os.environ.get("SCANNER_VDP_SPEC_GAP_MAX") or "").strip()
+    if not raw:
+        return 0
+    try:
+        cap = max(0, min(500, int(raw)))
+    except ValueError:
+        return 0
+    return min(cap, max(0, deduped_rows))
 
 
 def gallery_vision_inline_enabled() -> bool:

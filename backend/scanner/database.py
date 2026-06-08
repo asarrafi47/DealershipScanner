@@ -13,6 +13,8 @@ from backend.utils.analytics_ep import apply_ep_from_scanner_dict
 from backend.utils.car_serialize import infer_engine_l_for_db
 from backend.utils.field_clean import clean_car_row_dict, compute_data_quality_score, is_effectively_empty
 from backend.utils.interior_color_buckets import interior_color_buckets_json
+from backend.utils.in_transit import availability_spec_source_patch
+from backend.utils.spec_provenance import merge_spec_source_json
 
 logger = logging.getLogger(__name__)
 
@@ -231,7 +233,13 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
             dq = compute_data_quality_score(preview)
             interior_buckets_json = interior_color_buckets_json(v.get("interior_color"), v.get("make"))
             spec_src = v.get("spec_source_json")
-            if isinstance(spec_src, dict):
+            avail_patch = availability_spec_source_patch(v)
+            if avail_patch:
+                spec_src = merge_spec_source_json(
+                    spec_src if isinstance(spec_src, str) else (json.dumps(spec_src) if isinstance(spec_src, dict) else None),
+                    avail_patch,
+                )
+            elif isinstance(spec_src, dict):
                 spec_src = json.dumps(spec_src, ensure_ascii=False)
             elif spec_src is not None and not isinstance(spec_src, str):
                 spec_src = str(spec_src)

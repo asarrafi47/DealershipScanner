@@ -17,6 +17,7 @@ import sqlite3
 import subprocess
 import sys
 import threading
+import time
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -46,6 +47,7 @@ from backend.dev.dealers import (
     smart_import_scrape_succeeded,
     upsert_dealer_manifest_row,
 )
+from backend.db.incomplete_listings_db import get_incomplete_listings_count
 from backend.db.inventory_db import (
     get_car_by_id,
     get_car_by_vin,
@@ -243,12 +245,11 @@ def _node_version_string(exe: str) -> str | None:
     return None
 
 
-def _resolve_node_binary() -> tuple[str | None, str | None, str, str | None]:
-    """
-    Return (path, version, status_line, which_path) where *path* runs `node -v` successfully.
-    *which_path* is shutil.which("node") (may be None or a broken path) for diagnostics.
-    Tries: NODE_BINARY, PATH, /opt/homebrew, /usr/local, ~/.nvm/.../node.
-    """
+_NODE_BINARY_CACHE_TTL_S = 60.0
+_node_binary_cache: tuple[float, tuple[str | None, str | None, str, str | None]] | None = None
+
+
+def _probe_node_binary() -> tuple[str | None, str | None, str, str | None]:
     cands: list[str] = []
     seen: set[str] = set()
     for raw in (os.environ.get("NODE_BINARY") or "", os.environ.get("NODE") or ""):
@@ -303,17 +304,33 @@ def _resolve_node_binary() -> tuple[str | None, str | None, str, str | None]:
     return None, None, fail, which
 
 
+def clear_node_binary_cache() -> None:
+    global _node_binary_cache
+    _node_binary_cache = None
+
+
+def _resolve_node_binary(*, force_refresh: bool = False) -> tuple[str | None, str | None, str, str | None]:
+    global _node_binary_cache
+    now = time.monotonic()
+    if (
+        not force_refresh
+        and _node_binary_cache is not None
+        and now - _node_binary_cache[0] < _NODE_BINARY_CACHE_TTL_S
+    ):
+        return _node_binary_cache[1]
+    result = _probe_node_binary()
+    _node_binary_cache = (now, result)
+    return result
+
+
 def _node_for_scanner() -> str:
     """Node binary to pass to Popen; falls back to `node` and may FileNotFoundError."""
     p, _, _, _ = _resolve_node_binary()
     return p or "node"
 
 
-def _dev_status() -> dict[str, Any]:
-    from backend.utils.project_env import load_project_dotenv
-
-    load_project_dotenv()
-
+def _dev_status_shell() -> dict[str, Any]:
+    """Fast status for SSR — avoids Node probing on first paint after login."""
     db_ok = False
     try:
         conn = get_conn()
@@ -327,7 +344,37 @@ def _dev_status() -> dict[str, Any]:
     prod = is_production_env()
     env_file = PROJECT_ROOT / ".env"
     admin_pw_set = bool((os.environ.get("ADMIN_PASSWORD") or "").strip())
-    n_path, n_ver, n_line, n_which = _resolve_node_binary()
+    return {
+        "db_connected": db_ok,
+        "inventory_db_path": str(DB_PATH),
+        "dev_users_db_path": dev_users_db_path(),
+        "dev_registration_open": dev_public_registration_allowed(),
+        "node_executable": None,
+        "node_version": None,
+        "node_status_line": "Checking Node.js…",
+        "node_which": None,
+        "is_production": prod,
+        "admin_password_configured": admin_pw_set or not prod,
+        "dotenv_file_present": env_file.is_file(),
+        "dotenv_file_path": str(env_file),
+    }
+
+
+def _dev_status(*, force_node_refresh: bool = False) -> dict[str, Any]:
+    db_ok = False
+    try:
+        conn = get_conn()
+        conn.cursor().execute("SELECT 1")
+        conn.close()
+        db_ok = True
+    except (OSError, sqlite3.Error):
+        pass
+    from backend.utils.runtime_env import is_production_env
+
+    prod = is_production_env()
+    env_file = PROJECT_ROOT / ".env"
+    admin_pw_set = bool((os.environ.get("ADMIN_PASSWORD") or "").strip())
+    n_path, n_ver, n_line, n_which = _resolve_node_binary(force_refresh=force_node_refresh)
     return {
         "db_connected": db_ok,
         "inventory_db_path": str(DB_PATH),
@@ -684,24 +731,24 @@ def dev_mfa_gone() -> Any:
 
 @dev_bp.route("/")
 def dev_dashboard():
-    from backend.utils.listing_completeness import summarize_incomplete_missing_fields
-
-    incomplete = get_incomplete_cars()
-    dealership_stats = get_dealership_issue_stats(limit=10)
     return render_template(
         "dev.html",
         dealerships=list_recent_dealerships(10),
-        dealership_stats=dealership_stats,
-        status=_dev_status(),
+        dealership_stats=get_dealership_issue_stats(limit=10),
+        status=_dev_status_shell(),
         admin_username=session.get("admin_username") or "",
-        incomplete_cars=incomplete,
-        incomplete_issues_summary=summarize_incomplete_missing_fields(incomplete),
+        incomplete_cars=[],
+        incomplete_count=get_incomplete_listings_count(),
+        incomplete_issues_summary=[],
     )
 
 
 @dev_bp.route("/api/status")
 def api_dev_status():
-    return jsonify({"ok": True, **_dev_status()})
+    force = (request.args.get("refresh") or "").strip().lower() in ("1", "true", "yes", "on")
+    if force:
+        clear_node_binary_cache()
+    return jsonify({"ok": True, **_dev_status(force_node_refresh=force)})
 
 
 @dev_bp.route("/api/dealers")
@@ -709,10 +756,14 @@ def api_dev_dealers():
     return jsonify({"ok": True, "dealerships": list_recent_dealerships(10)})
 
 
+@dev_bp.route("/api/dealership-stats")
+def api_dev_dealership_stats():
+    return jsonify({"ok": True, "stats": get_dealership_issue_stats(limit=10)})
+
+
 @dev_bp.route("/api/incomplete-cars")
 def api_incomplete_cars():
-    from backend.enrichment.knowledge_engine import prepare_car_detail_context
-    from backend.utils.car_serialize import serialize_car_for_api
+    from backend.utils.car_serialize import serialize_car_for_listings_grid
     from backend.utils.listing_completeness import summarize_incomplete_missing_fields
 
     cars = get_incomplete_cars()
@@ -720,11 +771,9 @@ def api_incomplete_cars():
     for c in cars:
         row = dict(c)
         missing = row.pop("incomplete_missing_fields", None) or []
-        row.pop("listing_trim_display", None)
-        row.pop("listing_model_display", None)
-        ctx = prepare_car_detail_context(dict(row))
-        vs = ctx.get("verified_specs") or {}
-        payload = serialize_car_for_api(row, include_verified=False, verified_specs=vs)
+        payload = serialize_car_for_listings_grid(row)
+        payload["listing_trim_display"] = payload.get("trim")
+        payload["listing_model_display"] = payload.get("model")
         payload["incomplete_missing_fields"] = missing
         safe.append(payload)
     return jsonify(
@@ -870,6 +919,10 @@ def api_incomplete_cars_log_issue():
 def api_delete_incomplete_car(car_id: int):
     conn = get_conn()
     cursor = conn.cursor()
+    try:
+        cursor.execute("DELETE FROM saved_cars WHERE car_id = ?", (car_id,))
+    except sqlite3.Error:
+        logging.getLogger("dev_routes").debug("saved_cars cleanup skipped for car_id=%s", car_id)
     cursor.execute("DELETE FROM cars WHERE id = ?", (car_id,))
     deleted = cursor.rowcount
     conn.commit()
@@ -1293,3 +1346,8 @@ def api_car_debug():
             "analytics_ep merge + serialize_car_for_api (condition/interior merge trace)."
         )
     return jsonify(payload)
+
+
+from backend.dev.scan_lab_routes import register_scan_lab_routes
+
+register_scan_lab_routes(dev_bp)

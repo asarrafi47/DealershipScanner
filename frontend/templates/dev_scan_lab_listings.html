@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="application-path-prefix" content="{{ request.script_root or '' }}">
+    <title>Scan lab results — Dev</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ static_cache_ver }}">
+</head>
+<body class="listings-page">
+<div class="page">
+    <nav class="topbar">
+        <div class="logo">Sarrafi Cars</div>
+        <div class="nav-links">
+            <a href="{{ url_for('dev.scan_lab_home') }}">Scan lab</a>
+            <a href="{{ url_for('dev.scan_lab_db') }}">DB</a>
+            {% if admin_username %}<span class="nav-links-meta">Dev: {{ admin_username }}</span>{% endif %}
+        </div>
+    </nav>
+
+    <div class="dev-page">
+        <header class="dev-hero">
+            <p class="db-eyebrow">Dev results</p>
+            <h1 class="dev-title">Scan results — {{ lab.zip_code }} / {{ lab.radius_miles }} mi</h1>
+            <p class="dev-sub" id="scan-lab-listings-sub">
+                Loading inventory…
+                {% if filter_dealer_id %}<span>Filter: <code>{{ filter_dealer_id }}</code>
+                <a href="{{ url_for('dev.scan_lab_listings') }}">(clear)</a></span>{% endif %}
+            </p>
+        </header>
+
+        <section class="db-section dev-section">
+            <form class="admin-filters" method="get" action="{{ url_for('dev.scan_lab_listings') }}" id="scan-lab-filter-form">
+                <label>Dealer
+                    <select name="dealer_id">
+                        <option value="">All manifest dealers</option>
+                        {% for d in lab.dealers %}
+                        <option value="{{ d.dealer_id }}" {% if filter_dealer_id == d.dealer_id %}selected{% endif %}>
+                            {{ d.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <button type="submit" class="secondary-button">Apply</button>
+            </form>
+
+            <div class="dev-table-wrap dev-playground-row--mt">
+                <table class="dev-table scan-lab-results-table">
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Vehicle</th>
+                            <th>Price</th>
+                            <th>Miles</th>
+                            <th>Dealer</th>
+                            <th>DQ</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="scan-lab-listings-tbody">
+                        <tr><td colspan="8">Loading…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="dev-playground-row dev-playground-row--mt">
+                <button type="button" class="secondary-button" id="scan-lab-listings-more" hidden>Load more</button>
+                <span class="dev-hint" id="scan-lab-listings-meta"></span>
+            </div>
+        </section>
+    </div>
+</div>
+<script type="application/json" id="scan-lab-listings-boot" nonce="{{ csp_nonce }}">{{ {
+    "dealer_id": filter_dealer_id,
+    "vdp_base": url_for('dev.scan_lab_home').replace('/scan-lab', '/scan-lab/car')
+} | tojson }}</script>
+<style>
+.scan-lab-thumb { width: 88px; height: 58px; object-fit: cover; border-radius: 6px; background: #eee; }
+.scan-lab-incomplete { background: rgba(255, 193, 7, 0.08); }
+.scan-lab-results-table td { vertical-align: top; }
+</style>
+<script src="{{ url_for('static', filename='dev_scan_lab.js') }}?v={{ static_cache_ver }}"></script>
+</body>
+</html>

@@ -49,6 +49,26 @@ def test_recover_merges_when_thin(monkeypatch) -> None:
     assert out.get("description")
 
 
+CREVIER_STYLE_HTML = """
+<html><body>
+<h2>Description</h2>
+<div class="description-block">
+2024 CERTIFIED PRE-OWNED MINI COOPER SIGNATURE TRIM. NANUQ WHITE EXTERIOR WITH A CARBON BLACK INTERIOR.
+THIS FUEL EFFICIENT MINI GETS A COMBINED 31 MPG. ALSO BACKED BY MINI'S 5 YEAR UNLIMITED MILE WARRANTY
+GOOD THROUGH 05/20/2028! Come see our team at Crevier MINI to take advantage of this amazing deal today!
+</div>
+</body></html>
+"""
+
+
+def test_extract_description_from_description_heading() -> None:
+    desc = rec.extract_description_from_html(CREVIER_STYLE_HTML)
+    assert desc
+    assert "MINI COOPER SIGNATURE" in desc
+    assert "Crevier MINI" in desc
+    assert len(desc) > 100
+
+
 def test_should_extract_thin_gallery(monkeypatch) -> None:
     from backend.scanner import claude_vdp_extract as cve
 

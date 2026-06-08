@@ -20,8 +20,11 @@
   {
     "name": "Crevier BMW",
     "url": "https://www.crevierbmw.com",
-    "provider": "dealer_dot_com",
-    "dealer_id": "crevierbmw-com"
+    "provider": "dealer_inspire",
+    "dealer_id": "crevierbmw-com",
+    "recovery_strategies": ["dealer_inspire_algolia"],
+    "algolia_scope": "on_lot",
+    "algolia_make_guard": true
   },
   {
     "name": "Fletcher Jones Motorcars",

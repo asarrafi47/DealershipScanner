@@ -15,6 +15,7 @@ from typing import Any
 
 from backend.enrichment.knowledge_engine import prepare_car_detail_context
 from backend.utils.car_serialize import DISPLAY_DASH, serialize_car_for_api
+from backend.utils.in_transit import vehicle_is_in_transit
 
 # Human labels for ``listing_missing_field_codes`` / ``incomplete_missing_fields`` (dev UI + summaries).
 INCOMPLETE_FIELD_LABELS: dict[str, str] = {
@@ -36,6 +37,7 @@ INCOMPLETE_FIELD_LABELS: dict[str, str] = {
     "exterior_color": "Exterior color",
     "interior_color": "Interior color",
     "vin": "VIN",
+    "on_lot": "On lot (vehicle in transit)",
 }
 
 # Public listings / incomplete index: spec-sheet fields from ``car.html`` (col 2), minus MPG.
@@ -59,6 +61,7 @@ _PUBLIC_INCOMPLETE_KEYS = frozenset(
         "exterior_color",
         "interior_color",
         "vin",
+        "on_lot",
     }
 )
 
@@ -123,15 +126,25 @@ def _mileage_blank(car_raw: dict[str, Any]) -> bool:
     return False
 
 
-def listing_missing_field_codes(car_raw: dict[str, Any], *, for_public_filter: bool) -> list[str]:
+def listing_missing_field_codes(
+    car_raw: dict[str, Any],
+    *,
+    for_public_filter: bool,
+    detail_ctx: dict[str, Any] | None = None,
+) -> list[str]:
     """
     Ordered-ish stable labels for missing spec-sheet fields.
     When *for_public_filter* is True, only keys in ``_PUBLIC_INCOMPLETE_KEYS`` are returned
     (same codes as the full queue today).
+
+    Pass *detail_ctx* from ``prepare_car_detail_context`` when already computed (avoids duplicate enrichment).
     """
     if not car_raw:
         return []
-    ctx = prepare_car_detail_context(dict(car_raw))
+    if detail_ctx is not None:
+        ctx = detail_ctx
+    else:
+        ctx = prepare_car_detail_context(dict(car_raw))
     vs = ctx.get("verified_specs") or {}
     car = serialize_car_for_api(dict(car_raw), include_verified=False, verified_specs=vs)
     missing: list[str] = []
@@ -189,6 +202,9 @@ def listing_missing_field_codes(car_raw: dict[str, Any], *, for_public_filter: b
         missing.append("vin")
     elif _dash(car.get("vin")):
         missing.append("vin")
+
+    if vehicle_is_in_transit(car_raw):
+        missing.append("on_lot")
 
     if for_public_filter:
         missing = [m for m in missing if m in _PUBLIC_INCOMPLETE_KEYS]

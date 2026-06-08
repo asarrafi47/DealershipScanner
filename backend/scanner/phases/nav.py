@@ -671,6 +671,48 @@ async def try_apply_location_filter(
         a, b = a.lower().strip(), b.lower().strip()
         return SequenceMatcher(None, a, b).ratio()
 
+    _MAKE_TOKENS = frozenset(
+        {
+            "hyundai",
+            "toyota",
+            "honda",
+            "bmw",
+            "mercedes",
+            "benz",
+            "lexus",
+            "kia",
+            "nissan",
+            "mazda",
+            "subaru",
+            "volkswagen",
+            "audi",
+            "jeep",
+            "ram",
+            "dodge",
+            "chrysler",
+            "ford",
+            "chevrolet",
+            "gmc",
+            "cadillac",
+            "acura",
+            "infiniti",
+            "volvo",
+            "porsche",
+            "genesis",
+            "mitsubishi",
+        }
+    )
+
+    def _dealer_signature_tokens(name: str) -> list[str]:
+        """Distinctive tokens (not make-only) so we do not click model trim filters."""
+        return [
+            tok
+            for tok in re.split(r"[^\w]+", (name or "").lower())
+            if len(tok) >= 4
+            and tok not in _MAKE_TOKENS
+            and tok not in {"auto", "motor", "motors", "national", "superstore", "store"}
+        ]
+
     try:
         # Expand the Location filter panel if collapsed.
         expand_selectors = [
@@ -719,26 +761,13 @@ async def try_apply_location_filter(
             except Exception:
                 continue
 
-        # Fallback: all visible labels that look like dealer name + count.
-        if not candidates:
-            try:
-                all_labels = page.locator("label")
-                count = await all_labels.count()
-                for i in range(min(count, 120)):
-                    try:
-                        txt = (await all_labels.nth(i).inner_text()).strip()
-                        if 4 <= len(txt) <= 100:
-                            candidates.append((txt, all_labels.nth(i)))
-                    except Exception:
-                        continue
-            except Exception:
-                pass
-
         if not candidates:
             return False
 
         def _strip_count(s: str) -> str:
             return re.sub(r"\s+\d+\s*$", "", s).strip()
+
+        sig_tokens = _dealer_signature_tokens(dealer_name)
 
         best_label, best_el, best_sim = None, None, 0.0
         for raw_txt, el in candidates:
@@ -750,6 +779,17 @@ async def try_apply_location_filter(
         if best_sim < 0.45 or best_el is None:
             logger.debug(
                 "Location filter [%s]: no close match (best='%s' sim=%.2f)", dealer_name, best_label, best_sim
+            )
+            return False
+
+        label_low = (best_label or "").lower()
+        if sig_tokens and not any(tok in label_low for tok in sig_tokens) and best_sim < 0.72:
+            logger.debug(
+                "Location filter [%s]: rejected '%s' (sim=%.2f, no signature token in %s)",
+                dealer_name,
+                best_label,
+                best_sim,
+                sig_tokens,
             )
             return False
 
