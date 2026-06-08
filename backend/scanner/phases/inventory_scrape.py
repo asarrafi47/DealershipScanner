@@ -43,7 +43,10 @@ async def scrape_inventory_path(
     dealer_name: str,
     inv_wait_ms: int,
     pag_wait_ms: int,
-) -> tuple[list[tuple[str, Any]], str | None, int]:
+    *,
+    dealer_city: str = "",
+    dealer_state: str = "",
+) -> tuple[list[tuple[str, Any]], str | None, int, dict[str, str]]:
     """
     Scrape one inventory path on a dedicated page within ``context``.
     Returns ``(intercept_records, page_html, url_denied_count)``.
@@ -54,7 +57,16 @@ async def scrape_inventory_path(
     local_records: list[tuple[str, Any]] = []
     found_data = {"value": False}
     url_denied = 0
+    card_locations: dict[str, str] = {}
     resp_err = DealerResponseErrorBudget()
+
+    async def _capture_card_locations() -> None:
+        from backend.scanner.inventory_card_location import scrape_inventory_card_locations
+
+        try:
+            card_locations.update(await scrape_inventory_card_locations(page))
+        except Exception:
+            pass
 
     page = await context.new_page()
 
@@ -118,7 +130,14 @@ async def scrape_inventory_path(
         # dealer's cars are returned (avoids pulling sister-store inventory in bulk).
         from backend.scanner.dealer_location import sister_store_filter_enabled as _sse
         if _sse():
-            loc_applied = await try_apply_location_filter(page, dealer_name, pred, pag_wait_ms)
+            loc_applied = await try_apply_location_filter(
+                page,
+                dealer_name,
+                pred,
+                pag_wait_ms,
+                dealer_city=dealer_city,
+                dealer_state=dealer_state,
+            )
             if loc_applied:
                 # Clear any intercepts captured before the filter applied and wait for fresh data.
                 local_records.clear()
@@ -135,6 +154,7 @@ async def scrape_inventory_path(
             if found_data["value"]:
                 break
         await asyncio.sleep(0.5)
+        await _capture_card_locations()
 
         # Quick viewport ping when JSON hasn't landed — avoids dead wait when API-backed payloads are slow
         if not found_data["value"]:
@@ -206,7 +226,7 @@ async def scrape_inventory_path(
                     len(by_vin),
                 )
             html = await page.content()
-            return local_records, html, url_denied
+            return local_records, html, url_denied, card_locations
 
         # Pagination loop — uses only this path's own intercept records
         body_parse_cache: dict[int, list[dict[str, Any]]] = {}
@@ -272,6 +292,7 @@ async def scrape_inventory_path(
                                 except Exception:
                                     pass
                                 await asyncio.sleep(0.35)
+                                await _capture_card_locations()
                                 clicked = True
                                 break
                     except Exception:
@@ -334,6 +355,6 @@ async def scrape_inventory_path(
             await page.close()
         except Exception:
             pass
-    return local_records, html, url_denied
+    return local_records, html, url_denied, card_locations
 
 __all__ = ['scrape_inventory_path']

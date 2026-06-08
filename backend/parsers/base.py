@@ -438,7 +438,7 @@ def _image_url_prefer_score(url: str) -> int:
     return score
 
 
-def dedupe_urls_order_prefer_large(urls: list[str], *, max_len: int) -> list[str]:
+def dedupe_urls_order_prefer_large(urls: list[str], *, max_len: int | None = None) -> list[str]:
     """
     Dedupe by canonical path (after stripping obvious resize params), preserving first
     position in list but swapping in a later URL if it has a higher prefer score.
@@ -459,13 +459,13 @@ def dedupe_urls_order_prefer_large(urls: list[str], *, max_len: int) -> list[str
         if k not in key_to_idx:
             key_to_idx[k] = len(out)
             out.append(nu)
-            if len(out) >= max_len:
+            if max_len is not None and len(out) >= max_len:
                 break
             continue
         i = key_to_idx[k]
         if _image_url_prefer_score(nu) > _image_url_prefer_score(out[i]):
             out[i] = nu
-    return out[:max_len]
+    return out[:max_len] if max_len is not None else out
 
 
 def _looks_like_media_url(s: str) -> bool:

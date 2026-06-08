@@ -252,6 +252,7 @@ def _vdp_field_gap_score(vehicle: dict[str, Any]) -> int:
         "exterior_color",
         "interior_color",
         "engine_description",
+        "description",
     )
     n = 0
     for k in keys:
@@ -310,6 +311,20 @@ def _vehicle_needs_spec_gap_vdp(vehicle: dict[str, Any]) -> bool:
     return False
 
 
+def _vehicle_needs_description_vdp(vehicle: dict[str, Any]) -> bool:
+    """True when dealer notes / description are missing or too short."""
+    desc = str(vehicle.get("description") or "").strip()
+    return len(desc) < 40
+
+
+def _vdp_description_max_per_dealer() -> int:
+    raw = (os.environ.get("SCANNER_VDP_DESCRIPTION_MAX") or "120").strip()
+    try:
+        return max(0, min(2000, int(raw)))
+    except ValueError:
+        return 120
+
+
 def _nav_timeout_ms() -> int:
     raw = (os.environ.get("SCANNER_VDP_NAV_TIMEOUT_MS") or "32000").strip()
     try:
@@ -327,11 +342,9 @@ def _settle_ms() -> int:
 
 
 def _max_vdp_concurrency() -> int:
-    raw = (os.environ.get("SCANNER_MAX_VDP_CONCURRENCY") or "12").strip()
-    try:
-        return max(1, min(64, int(raw)))
-    except ValueError:
-        return 12
+    from backend.scanner.scan_efficiency import effective_vdp_concurrency
+
+    return effective_vdp_concurrency()
 
 
 def _vdp_gallery_min_https() -> int:
@@ -826,6 +839,9 @@ PAGE_EXTRACT_JS = r"""
     domMonroneyTextSnippets: [],
     domLocationSnippets: [],
     domDescription: "",
+    domDealerNotes: "",
+    domPackagesStructured: [],
+    domPackagesSections: [],
     domInTransit: false,
     pageTextSample: "",
     vdpPriceHints: [],
@@ -1082,7 +1098,7 @@ PAGE_EXTRACT_JS = r"""
     for (const el of accordionTriggers.slice(0, 20)) {
       try {
         const t = (el.textContent || "").trim().toLowerCase();
-        if (/spec|feature|convenience|suspension|powertrain|body|safety|seat|entertain|lighting|dimension|equipment/i.test(t)) {
+        if (/spec|feature|convenience|suspension|powertrain|body|safety|seat|entertain|lighting|dimension|equipment|package|option|accessori|standard|dealer notes|included/i.test(t)) {
           el.click();
         }
       } catch (e) {}
@@ -1122,6 +1138,85 @@ PAGE_EXTRACT_JS = r"""
     const t = (el.textContent || "").trim();
     if (t && t.length < 120) result.domBadges.push(t);
   });
+  try {
+    const packageSectionRe = /included packages|packages\\s*&\\s*accessories|packages\\s*&\\s*options|standard features|included options|factory installed|equipment groups/i;
+    const dealerNotesRe = /^dealer notes\b|^seller notes\b|^dealer comments\b|^about this vehicle\b/i;
+    const priceRe = /\\$[\\d,]+(?:\\.\\d{2})?/;
+    const pkgSeen = new Set();
+    function pushPkg(section, name, priceLabel, features) {
+      const n = (name || "").trim().replace(/\\s+/g, " ");
+      if (!n || n.length < 2 || n.length > 180) return;
+      const key = (section + "|" + n + "|" + (priceLabel || "")).toLowerCase();
+      if (pkgSeen.has(key)) return;
+      pkgSeen.add(key);
+      const row = { section: section, name: n, features: (features || []).slice(0, 24) };
+      if (priceLabel) row.price_label = priceLabel;
+      const pm = (priceLabel || n).match(priceRe);
+      if (pm) {
+        const num = parseFloat(pm[0].replace(/[$,]/g, ""));
+        if (isFinite(num) && num > 0) row.price = Math.round(num);
+      }
+      result.domPackagesStructured.push(row);
+    }
+    function sectionRootForHeading(h) {
+      return (
+        h.closest("section, article, [class*='package'], [class*='option'], [class*='feature'], [class*='equipment'], [class*='accessory']")
+        || h.parentElement
+      );
+    }
+    function parsePackageBlock(root, sectionName) {
+      if (!root) return;
+      const rows = root.querySelectorAll(
+        "li, tr, [class*='package-row'], [class*='option-row'], [class*='feature-row'], " +
+        "[class*='package-item'], [class*='option-item'], dt, .row"
+      );
+      rows.forEach((row) => {
+        const txt = (row.innerText || row.textContent || "").trim().replace(/\\s+/g, " ");
+        if (!txt || txt.length < 3 || txt.length > 500) return;
+        const lines = txt.split(/\\n+/).map((x) => x.trim()).filter(Boolean);
+        if (!lines.length) return;
+        const head = lines[0];
+        const pm = head.match(priceRe);
+        let name = head;
+        let priceLabel = "";
+        if (pm) {
+          priceLabel = pm[0];
+          name = head.replace(priceRe, "").trim();
+        }
+        if (!name || name.length < 2) return;
+        const feats = lines.slice(1).filter((ln) => ln.length >= 2 && ln.length <= 160);
+        pushPkg(sectionName, name, priceLabel, feats);
+      });
+    }
+    const headingTags2 = ["h1", "h2", "h3", "h4", "h5", "legend", "button", "[role='button']"];
+    for (const tag of headingTags2) {
+      document.querySelectorAll(tag).forEach((h) => {
+        const label = (h.textContent || "").trim();
+        if (!label || label.length > 120) return;
+        if (dealerNotesRe.test(label)) {
+          const root = sectionRootForHeading(h);
+          const body = root ? (root.innerText || root.textContent || "").trim() : "";
+          const cleaned = body.replace(new RegExp("^" + label.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&"), "i"), "").trim();
+          if (cleaned.length > (result.domDealerNotes || "").length) {
+            result.domDealerNotes = cleaned.slice(0, 4000);
+          }
+          return;
+        }
+        if (!packageSectionRe.test(label)) return;
+        const sectionName = label.toLowerCase().replace(/\\s+/g, "_").slice(0, 60);
+        if (!result.domPackagesSections.includes(sectionName)) {
+          result.domPackagesSections.push(sectionName);
+        }
+        const root = sectionRootForHeading(h);
+        parsePackageBlock(root, sectionName);
+        let sib = h.nextElementSibling;
+        for (let i = 0; i < 3 && sib; i++) {
+          parsePackageBlock(sib, sectionName);
+          sib = sib.nextElementSibling;
+        }
+      });
+    }
+  } catch (ePkg) {}
   try {
     const tabCands = Array.from(
       document.querySelectorAll("a, button, [role='tab'], [data-tab], [data-toggle]")
@@ -1408,13 +1503,14 @@ PAGE_EXTRACT_JS = r"""
   result.domMonroneyTextSnippets = [];
   function pushStickerUrl(raw) {
     const h = absUrl(raw);
-    if (!/^https?:\\/\\//i.test(h)) return;
+    if (!/^https?:\/\//i.test(h)) return;
     const low = h.toLowerCase();
     if (
       low.indexOf("sticker-puller") >= 0 ||
       low.indexOf("autoipacket.com") >= 0 ||
       low.indexOf("ipacket.com") >= 0 ||
-      /monroney|window-sticker|window_sticker|\\/sticker\\//i.test(low)
+      /monroney|window-sticker|window_sticker/i.test(low) ||
+      low.indexOf("/sticker/") >= 0
     ) {
       if (result.domStickerUrls.includes(h)) return;
       result.domStickerUrls.push(h.slice(0, 900));
@@ -1422,7 +1518,7 @@ PAGE_EXTRACT_JS = r"""
   }
   try {
     const html = (document.documentElement && document.documentElement.innerHTML) || "";
-    const stickerRe = /https?:\\/\\/[^"'\\s<>]+sticker-puller\\/download\\/[^"'\\s<>]+/gi;
+    const stickerRe = /https?:\/\/[^"'\\s<>]+sticker-puller\/download\/[^"'\\s<>]+/gi;
     let sm;
     while ((sm = stickerRe.exec(html)) !== null && result.domStickerUrls.length < 8) {
       pushStickerUrl(sm[0]);
@@ -1463,7 +1559,7 @@ PAGE_EXTRACT_JS = r"""
       .forEach((a, idx) => {
         if (idx > 70 || result.domVehicleHistoryUrls.length >= 16) return;
         const h = absUrl(a.getAttribute("href") || "");
-        if (!/^https?:\\/\\//i.test(h)) return;
+        if (!/^https?:\/\//i.test(h)) return;
         const low = h.toLowerCase();
         if (low.indexOf("carfax") < 0 && low.indexOf("autocheck") < 0) return;
         if (result.domVehicleHistoryUrls.includes(h)) return;
@@ -1479,7 +1575,7 @@ PAGE_EXTRACT_JS = r"""
         el.getAttribute("data-vhr-url") ||
         "";
       const h = absUrl(raw);
-      if (!/^https?:\\/\\//i.test(h)) return;
+      if (!/^https?:\/\//i.test(h)) return;
       if (result.domVehicleHistoryUrls.includes(h)) return;
       result.domVehicleHistoryUrls.push(h.slice(0, 900));
     });
@@ -1561,7 +1657,7 @@ PAGE_EXTRACT_JS = r"""
         result.domDescription = s.slice(0, 4000);
       }
     }
-    const descHeadingRe = /^description\\b/i;
+    const descHeadingRe = /^description\b|^dealer notes\b|^seller notes\b|^dealer comments\b/i;
     const headingTags = ["h1", "h2", "h3", "h4", "h5", "h6", "legend", "label"];
     for (const tag of headingTags) {
       document.querySelectorAll(tag).forEach((h) => {
@@ -1628,7 +1724,7 @@ GALLERY_COLLECT_URLS_JS = r"""
     let t = u.trim();
     if (t.startsWith("//")) t = "https:" + t;
     if (t.startsWith("http://")) t = "https://" + t.slice(7);
-    if (!/^https:\\/\\//i.test(t)) return;
+    if (!/^https:\/\//i.test(t)) return;
     const low = t.toLowerCase();
     if (!mightBeRasterUrl(low)) return;
     if (seen.has(t)) return;
@@ -2064,8 +2160,10 @@ async def _vdp_gallery_interaction_loop(
     ordered: list[str] = []
     seen: set[str] = set()
     stall = 0
+    from backend.scanner.scan_efficiency import vdp_gallery_url_max
+
+    cap = vdp_gallery_url_max()
     thumb_rot = [0]
-    cap = max(inventory_gallery_max(), 160)
     settle_sleep = min(1200, max(240, int(settle_ms // 4)))
     try:
         await _vdp_try_open_photo_lightbox(wp)
@@ -2480,7 +2578,9 @@ async def _vdp_visit_one(
 
         cand_gallery: list[str] = []
         gseen: set[str] = set()
-        mx_cap = max(inventory_gallery_max(), 200)
+        from backend.scanner.scan_efficiency import vdp_gallery_url_max
+
+        mx_cap = vdp_gallery_url_max()
 
         def _push_g(batch: list[str]) -> None:
             merge_https_url_batches(cand_gallery, gseen, batch, max_total=mx_cap)
@@ -2556,7 +2656,7 @@ async def _vdp_visit_one(
         gmerge = merge_vdp_gallery_into_vehicle(
             v,
             cand_gallery,
-            max_gallery=inventory_gallery_max(),
+            max_gallery=vdp_gallery_url_max(),
         )
         out["gallery_added"] = int(gmerge.get("added") or 0)
         out["gallery_merge_action"] = gmerge.get("action")
@@ -2599,9 +2699,24 @@ async def _vdp_visit_one(
                     v["_monroney_page_texts"] = (prev_txt + clean_snips)[:8]
 
         if isinstance(last_bundle, dict):
-            dom_desc = str(last_bundle.get("domDescription") or "").strip()
-            if dom_desc and not (v.get("description") or "").strip():
-                v["description"] = dom_desc[:2000]
+            dom_notes = ""
+            try:
+                from backend.scanner.vdp_packages_extract import (
+                    dealer_notes_from_bundle,
+                    merge_vdp_packages_into_vehicle,
+                )
+
+                if merge_vdp_packages_into_vehicle(v, last_bundle):
+                    if "packages" not in filled:
+                        filled.append("packages")
+                dom_notes = dealer_notes_from_bundle(last_bundle)
+            except Exception as _pkg_err:
+                log.debug("VDP packages merge failed for %s: %s", vin[:17], _pkg_err)
+                dom_notes = str(last_bundle.get("domDealerNotes") or "").strip()
+            dom_desc = dom_notes or str(last_bundle.get("domDescription") or "").strip()
+            cur_desc = str(v.get("description") or "").strip()
+            if dom_desc and (not cur_desc or (dom_notes and len(dom_notes) > len(cur_desc))):
+                v["description"] = dom_desc[:4000]
                 if "description" not in filled:
                     filled.append("description")
             if last_bundle.get("domInTransit") is True:
@@ -2778,7 +2893,8 @@ async def enrich_vehicles_vdp(
     ep_cap = _vdp_max_per_dealer()
     price_cap = _vdp_price_max_per_dealer()
     spec_gap_cap = _vdp_spec_gap_max_per_dealer()
-    if ep_cap == 0 and price_cap == 0 and spec_gap_cap == 0:
+    description_cap = _vdp_description_max_per_dealer()
+    if ep_cap == 0 and price_cap == 0 and spec_gap_cap == 0 and description_cap == 0:
         log.info(
             "VDP: %s — enrichment skipped (SCANNER_VDP_EP_MAX=0, SCANNER_VDP_PRICE_MAX=0, SCANNER_VDP_SPEC_GAP_MAX=0)",
             dealer_name,
@@ -2791,11 +2907,12 @@ async def enrich_vehicles_vdp(
     vehicles.sort(key=lambda v: _vdp_queue_sort_key(v, seed, rotation=rot))
 
     log.info(
-        "VDP: %s — enrichment enabled (EP cap=%d, price-extra cap=%d, spec-gap cap=%d; rotation=%s)",
+        "VDP: %s — enrichment enabled (EP cap=%d, price-extra cap=%d, spec-gap cap=%d, description cap=%d; rotation=%s)",
         dealer_name,
         ep_cap,
         price_cap,
         spec_gap_cap,
+        description_cap,
         rot,
     )
 
@@ -2854,6 +2971,25 @@ async def enrich_vehicles_vdp(
             if added >= spec_gap_cap:
                 break
             if not _vehicle_needs_spec_gap_vdp(v):
+                continue
+            u = (v.get("_detail_url") or "").strip()
+            if not u.startswith("http"):
+                continue
+            if u in seen_urls:
+                continue
+            vin = (v.get("vin") or "").strip().upper()
+            if not _looks_like_vin17(vin):
+                continue
+            seen_urls.add(u)
+            work.append((v, u, vin))
+            added += 1
+
+    if description_cap > 0:
+        added = 0
+        for v in vehicles:
+            if added >= description_cap:
+                break
+            if not _vehicle_needs_description_vdp(v):
                 continue
             u = (v.get("_detail_url") or "").strip()
             if not u.startswith("http"):

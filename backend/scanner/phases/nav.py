@@ -659,6 +659,9 @@ async def try_apply_location_filter(
     dealer_name: str,
     pred: Any,
     pag_wait_ms: int,
+    *,
+    dealer_city: str = "",
+    dealer_state: str = "",
 ) -> bool:
     """
     Detect a Location checkbox filter on pooled-inventory sites and click only the entry
@@ -767,23 +770,61 @@ async def try_apply_location_filter(
         def _strip_count(s: str) -> str:
             return re.sub(r"\s+\d+\s*$", "", s).strip()
 
-        sig_tokens = _dealer_signature_tokens(dealer_name)
+        def _norm_city(s: str) -> str:
+            return re.sub(r"\s+", " ", (s or "").strip().lower())
 
-        best_label, best_el, best_sim = None, None, 0.0
+        def _norm_state(s: str) -> str:
+            st = re.sub(r"[^A-Za-z]", "", (s or "").strip().upper())
+            return st[:2] if len(st) >= 2 else ""
+
+        sig_tokens = _dealer_signature_tokens(dealer_name)
+        city_n = _norm_city(dealer_city)
+        state_n = _norm_state(dealer_state)
+
+        best_label, best_el, best_sim, best_reason = None, None, 0.0, "name"
+
         for raw_txt, el in candidates:
             clean = _strip_count(raw_txt)
             sim = _name_sim(dealer_name, clean)
+            reason = "name"
             if sim > best_sim:
-                best_sim, best_label, best_el = sim, clean, el
+                best_sim, best_label, best_el, best_reason = sim, clean, el, reason
+
+        if (best_sim < 0.45 or best_el is None) and city_n:
+            city_state_pat = (
+                f"{city_n}, {state_n.lower()}" if state_n else city_n
+            )
+            for raw_txt, el in candidates:
+                clean = _strip_count(raw_txt)
+                clean_low = clean.lower()
+                city_hit = city_n in clean_low
+                state_hit = (not state_n) or state_n.lower() in clean_low or f", {state_n.lower()}" in clean_low
+                if city_hit and state_hit:
+                    sim = 0.82 if city_state_pat in clean_low else 0.75
+                    if sim > best_sim:
+                        best_sim, best_label, best_el, best_reason = sim, clean, el, "city"
+                elif city_hit and not state_n:
+                    sim = 0.7
+                    if sim > best_sim:
+                        best_sim, best_label, best_el, best_reason = sim, clean, el, "city_only"
 
         if best_sim < 0.45 or best_el is None:
             logger.debug(
-                "Location filter [%s]: no close match (best='%s' sim=%.2f)", dealer_name, best_label, best_sim
+                "Location filter [%s]: no close match (best='%s' sim=%.2f city=%s)",
+                dealer_name,
+                best_label,
+                best_sim,
+                city_n or "?",
             )
             return False
 
         label_low = (best_label or "").lower()
-        if sig_tokens and not any(tok in label_low for tok in sig_tokens) and best_sim < 0.72:
+        if (
+            best_reason == "name"
+            and sig_tokens
+            and not any(tok in label_low for tok in sig_tokens)
+            and best_sim < 0.72
+        ):
             logger.debug(
                 "Location filter [%s]: rejected '%s' (sim=%.2f, no signature token in %s)",
                 dealer_name,
@@ -794,7 +835,11 @@ async def try_apply_location_filter(
             return False
 
         logger.info(
-            "Location filter [%s]: clicking '%s' (sim=%.2f)", dealer_name, best_label, best_sim
+            "Location filter [%s]: clicking '%s' (sim=%.2f, match=%s)",
+            dealer_name,
+            best_label,
+            best_sim,
+            best_reason,
         )
         await best_el.click()
         try:

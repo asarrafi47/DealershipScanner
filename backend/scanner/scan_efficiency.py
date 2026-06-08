@@ -255,6 +255,38 @@ def inventory_idle_loop_sec(json_captured: bool) -> int:
         return 2 if json_captured else 6
 
 
+def effective_vdp_concurrency() -> int:
+    """
+    Parallel VDP browser workers per dealer.
+
+    Default ``4`` (was ``12``) — gallery carousel harvest is heavy per page; override with
+    ``SCANNER_MAX_VDP_CONCURRENCY``.
+    """
+    raw = (os.environ.get("SCANNER_MAX_VDP_CONCURRENCY") or "").strip()
+    if raw:
+        try:
+            return max(1, min(64, int(raw)))
+        except ValueError:
+            pass
+    return 4
+
+
+def vdp_gallery_url_max() -> int | None:
+    """
+    Max HTTPS gallery URLs stored per VDP visit.
+
+    Default ``None`` (no cap — harvest every carousel photo). Set ``SCANNER_VDP_GALLERY_MAX_URLS``
+    to a positive integer to cap storage.
+    """
+    raw = (os.environ.get("SCANNER_VDP_GALLERY_MAX_URLS") or "").strip()
+    if not raw or raw.lower() in ("0", "unlimited", "none", "off"):
+        return None
+    try:
+        return max(4, int(raw))
+    except ValueError:
+        return None
+
+
 def gallery_vision_post_enabled() -> bool:
     """Post-scan gallery cleanup for touched VINs. On with ``--enable-gallery-vision``."""
     raw = (os.environ.get("SCANNER_GALLERY_VISION_POST") or "").strip().lower()

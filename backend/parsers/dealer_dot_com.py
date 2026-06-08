@@ -6,6 +6,7 @@ Parser for dealer.com getInventory API. Maps exact schema:
 import json
 import logging
 import re
+from typing import Any
 from urllib.parse import urljoin
 
 from backend.parsers.vdp_urls import dealer_style_vdp_url_candidates, suggest_dealer_style_vdp_url
@@ -237,6 +238,121 @@ def _extract_history_highlights(obj: dict) -> list[str]:
     return out
 
 
+def _extract_inventory_description(obj: dict) -> str | None:
+    """Long-form listing copy when present in getInventory payloads (no VDP required)."""
+    for key in (
+        "extendedDescription",
+        "description",
+        "sellerNotes",
+        "seller_notes",
+        "dealerComments",
+        "dealer_comments",
+        "comments",
+        "marketingDescription",
+        "vehicleDescription",
+        "dealerDescription",
+        "listingDescription",
+    ):
+        s = _opt_str(obj.get(key))
+        if s and len(s) >= 40:
+            return s[:4000]
+    arr = obj.get("trackingAttributes") or obj.get("tracking_attributes")
+    if isinstance(arr, list):
+        for attr_name in (
+            "Comments",
+            "Description",
+            "Dealer Comments",
+            "Seller Notes",
+            "dealerComments",
+            "extendedDescription",
+        ):
+            v = find_tracking_attr(arr, attr_name, "value")
+            if v is not None:
+                s = _opt_str(norm_str(v))
+                if s and len(s) >= 40:
+                    return s[:4000]
+    return None
+
+
+def _first_carfax_http_url(val: Any) -> str | None:
+    if isinstance(val, str):
+        s = norm_str(val)
+        if s.startswith("http") and "carfax" in s.lower():
+            return s
+        return None
+    if isinstance(val, dict):
+        for k in ("url", "href", "link", "value", "src", "uri"):
+            hit = _first_carfax_http_url(val.get(k))
+            if hit:
+                return hit
+        return None
+    if isinstance(val, list):
+        for item in val:
+            hit = _first_carfax_http_url(item)
+            if hit:
+                return hit
+    return None
+
+
+def _inventory_signals_carfax(obj: dict) -> bool:
+    for key in (
+        "carfaxOneOwner",
+        "showCarfax",
+        "hasCarfaxReport",
+        "carfaxAvailable",
+        "displayCarfax",
+        "carfax",
+    ):
+        v = obj.get(key)
+        if v in (True, 1, "1", "true", "True", "yes", "Yes"):
+            return True
+    for key in ("callout", "callouts", "badges", "Badges", "highlightedAttributes", "highlighted_attributes"):
+        val = obj.get(key)
+        if isinstance(val, list):
+            for item in val:
+                if isinstance(item, str) and "carfax" in item.lower():
+                    return True
+                if isinstance(item, dict):
+                    blob = " ".join(
+                        str(item.get(k) or "")
+                        for k in ("text", "label", "name", "value", "title")
+                    ).lower()
+                    if "carfax" in blob:
+                        return True
+        elif isinstance(val, str) and "carfax" in val.lower():
+            return True
+    return False
+
+
+def _extract_carfax_url(obj: dict, vin: str) -> str | None:
+    """Resolve Carfax / vehicle-history URL from inventory JSON when available."""
+    explicit = norm_str(
+        obj.get("carfax_url")
+        or obj.get("carfaxUrl")
+        or obj.get("carfaxLink")
+        or obj.get("history_report_url")
+        or obj.get("vehicleHistoryUrl")
+        or obj.get("vehicle_history_url")
+        or ""
+    )
+    if explicit.startswith("http"):
+        return explicit
+
+    for key in ("callout", "callouts", "badges", "Badges", "highlightedAttributes", "highlighted_attributes"):
+        hit = _first_carfax_http_url(obj.get(key))
+        if hit:
+            return hit
+
+    vhr_url = obj.get("vhr_url") or obj.get("carfax_token")
+    if vhr_url and isinstance(vhr_url, str) and vhr_url.strip().startswith("http"):
+        return norm_str(vhr_url)
+    if vhr_url and vin and not vin.startswith("unknown"):
+        return f"https://vhr.carfax.com/main?vin={vin}"
+    if _inventory_signals_carfax(obj) and vin and not vin.startswith("unknown"):
+        return f"https://vhr.carfax.com/main?vin={vin}"
+    return explicit if explicit.startswith("http") else None
+
+
 def _pick_vehicle_detail_url(obj: dict, base_url: str) -> str | None:
     """Absolute VDP URL when present in listing payload (used by scanner VDP enrichment)."""
     candidates = [
@@ -411,26 +527,8 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         gallery = gallery if gallery else [FALLBACK_IMAGE_URL]
     exterior_color = _extract_exterior_color(obj)
     fuel_type = _opt_str(obj.get("fuelType") or obj.get("fuel_type"))
-    # Prefer an explicit dealer/feed URL (matches the link customers click). Synthesized
-    # vhr.carfax.com/main?vin=… is a last resort when the feed only provides a token.
-    vhr_url = obj.get("vhr_url") or obj.get("carfax_token")
-    explicit = norm_str(
-        obj.get("carfax_url")
-        or obj.get("carfaxUrl")
-        or obj.get("carfaxLink")
-        or obj.get("history_report_url")
-        or obj.get("vehicleHistoryUrl")
-        or obj.get("vehicle_history_url")
-        or ""
-    )
-    if explicit.startswith("http"):
-        carfax_url = explicit
-    elif vhr_url and isinstance(vhr_url, str) and vhr_url.strip().startswith("http"):
-        carfax_url = norm_str(vhr_url)
-    elif vhr_url and vin and not vin.startswith("unknown"):
-        carfax_url = f"https://vhr.carfax.com/main?vin={vin}"
-    else:
-        carfax_url = explicit if explicit else None
+    description = _extract_inventory_description(obj)
+    carfax_url = _extract_carfax_url(obj, vin)
 
     cyl = norm_int(obj.get("cylinders") or 0)
     if not cyl:
@@ -481,6 +579,7 @@ def _map_vehicle(obj: dict, base_url: str, dealer_id: str, dealer_name: str, dea
         "body_style": _extract_body_style(obj),
         "carfax_url": carfax_url if (carfax_url and str(carfax_url).strip().lower().startswith("http")) else None,
         "history_highlights": _extract_history_highlights(obj),
+        "description": description,
         "cylinders": cyl or None,
     }
     if detail_url:

@@ -19,6 +19,8 @@ def test_page_extract_js_screens_vdp_tiles() -> None:
     assert "isLikelyVdpJunkImage" in js
     assert "imgSelectorsSpecific" in js
     assert "domDescription" in js
+    assert "domDealerNotes" in js
+    assert "domPackagesStructured" in js
     assert "domInTransit" in js
 
 

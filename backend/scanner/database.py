@@ -239,6 +239,17 @@ def upsert_vehicles(vehicles: list[dict]) -> int:
                     spec_src if isinstance(spec_src, str) else (json.dumps(spec_src) if isinstance(spec_src, dict) else None),
                     avail_patch,
                 )
+            lot_loc = str(v.get("_lot_location") or v.get("_inventory_location") or "").strip()
+            if lot_loc:
+                spec_src = merge_spec_source_json(
+                    spec_src if isinstance(spec_src, str) else (json.dumps(spec_src) if isinstance(spec_src, dict) else None),
+                    {
+                        "inventory_lot_location": {
+                            "source": str(v.get("_lot_location_source") or "inventory")[:40],
+                            "value": lot_loc[:200],
+                        },
+                    },
+                )
             elif isinstance(spec_src, dict):
                 spec_src = json.dumps(spec_src, ensure_ascii=False)
             elif spec_src is not None and not isinstance(spec_src, str):

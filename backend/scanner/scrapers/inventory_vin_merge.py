@@ -122,3 +122,11 @@ def merge_inventory_rows_same_vin(dst: dict[str, Any], src: dict[str, Any]) -> N
         sp = 0.0
     if dp <= 0 and sp > 0:
         dst["price"] = src.get("price")
+
+    for k in ("_lot_location", "_inventory_location"):
+        if str(dst.get(k) or "").strip():
+            break
+        sv = str(src.get(k) or "").strip()
+        if sv:
+            dst[k] = sv
+            break

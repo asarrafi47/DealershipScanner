@@ -44,6 +44,12 @@ from backend.utils.gallery_merge import gallery_https_bin_histogram
 
 logger = logging.getLogger("scanner")
 
+
+def log_gallery_bins(dealer_name: str, phase: str, vehicles: list[dict[str, Any]]) -> None:
+    bins = gallery_https_bin_histogram(vehicles)
+    if bins:
+        logger.info("Gallery bins [%s] %s: %s", dealer_name, phase, bins)
+
 def apply_monroney_vision_to_vehicles(vehicles: list[dict[str, Any]]) -> dict[str, Any]:
     """
     Monroney/window-sticker vision is disabled. Pops ``_monroney_page_texts`` from each vehicle
@@ -169,6 +175,16 @@ async def run_dealer(
         inv_paths = inventory_paths_for_dealer(dealer)
         logger.info("Inventory paths: %s — launching %d parallel scrapers", name, len(inv_paths))
         t_inv0 = time.perf_counter()
+        dealer_city = str(dealer.get("city") or "").strip()
+        dealer_state = str(dealer.get("state") or "").strip()
+        try:
+            from backend.scanner.dealer_location import build_dealer_site_profile
+
+            _loc_prof = build_dealer_site_profile(dealer)
+            dealer_city = dealer_city or _loc_prof.city
+            dealer_state = dealer_state or _loc_prof.state
+        except Exception:
+            pass
         path_results = await asyncio.gather(
             *[
                 scrape_inventory_path(
@@ -180,6 +196,8 @@ async def run_dealer(
                     name,
                     inv_wait_ms,
                     pag_wait_ms,
+                    dealer_city=dealer_city,
+                    dealer_state=dealer_state,
                 )
                 for path in inv_paths
             ],
@@ -189,10 +207,13 @@ async def run_dealer(
 
         # Merge results from all paths
         path_htmls: list[str | None] = []
-        for path_records, path_html, path_denied in path_results:
+        merged_card_locations: dict[str, str] = {}
+        for path_records, path_html, path_denied, path_card_locs in path_results:
             intercept_records.extend(path_records)
             gate_stats["url_denied"] += path_denied
             path_htmls.append(path_html)
+            if isinstance(path_card_locs, dict):
+                merged_card_locations.update(path_card_locs)
 
         body_parse_cache: dict[int, list[dict[str, Any]]] = {}
 
@@ -290,6 +311,23 @@ async def run_dealer(
             )
 
         if all_vehicles:
+            if merged_card_locations:
+                try:
+                    from backend.scanner.inventory_card_location import apply_card_locations_to_vehicles
+
+                    card_loc_applied = apply_card_locations_to_vehicles(
+                        all_vehicles, merged_card_locations
+                    )
+                    if card_loc_applied:
+                        result["inventory_card_locations"] = card_loc_applied
+                        logger.info(
+                            "Inventory card locations [%s]: applied %d VIN location hint(s)",
+                            name,
+                            card_loc_applied,
+                        )
+                except Exception as card_loc_e:
+                    logger.debug("Inventory card location merge failed for %s: %s", name, card_loc_e)
+
             # One row per VIN for downstream VDP enrichment (listing payloads may repeat VINs).
             by_vin: dict[str, dict] = {}
             for v in all_vehicles:

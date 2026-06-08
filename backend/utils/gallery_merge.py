@@ -104,7 +104,7 @@ def merge_vdp_gallery_into_vehicle(
     thresh = _replace_if_below()
 
     if len(existing) < thresh:
-        vehicle["gallery"] = cand[:mx]
+        vehicle["gallery"] = cand
         vehicle["image_url"] = cand[0]
         return {
             "action": "replace",

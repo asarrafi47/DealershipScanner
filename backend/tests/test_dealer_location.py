@@ -59,6 +59,17 @@ def test_filter_drops_mismatch_keeps_unknown() -> None:
     assert stats["unknown_location"] == 1
 
 
+def test_classify_city_state_match_for_hendrick_charlotte() -> None:
+    prof = DealerSiteProfile(
+        dealer_id="db-1",
+        name="Rick Hendrick City Chevrolet",
+        url="https://www.citychevrolet.com",
+        city="Charlotte",
+        state="NC",
+    )
+    assert classify_vehicle_location("Charlotte, NC", prof) == "match"
+
+
 def test_build_profile_uses_registry_city(monkeypatch) -> None:
     def fake_get(_id: int):
         return {"city": "Monroe", "state": "NC"}
